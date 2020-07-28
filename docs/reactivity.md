@@ -1,6 +1,6 @@
 # Exploring reactivity
 
-When dealing with state and DOM updates within components, there are to main methods of approaching this;
+When dealing with state and DOM updates within components, there are two main methods of approaching this;
 
 1. Re-render everything as a pure function, and compare the outcome to detect what DOM updates are needed.
    This is how React approaches it.
@@ -12,7 +12,7 @@ The advantage of the pure approach is that it's relatively easy to reason about;
 same output, and your state are just primitive values that are passed around.
 
 However, it becomes more tricky once you need to react to changes in your data, or user input, and produce side effects.
-At this point, you would manually have to manually specify dependencies for your side-effects. And to keep things
+At this point, you would have to manually specify dependencies for your side-effects. And to keep things
 performant, memoizing computations or non-primitive references should be applied, adding further need to use manual
 dependencies to update them when needed.
 
@@ -94,7 +94,7 @@ There are 2 main ways of reacting to changes:
 
 1. explicitly subscribing to changes on an observable
 2. reading observables in functions that "tracks" them while executing the function, and re-execute the function when
- one of them changes. This can be split up 2 two different use cases as well.
+ one of them changes. This can be split up in two different use cases as well.
     1. Using a function to produce a new value that is returned - often called a "computed" or a "selector".
     2. Using a function to produce side effects (like logging, doing API calls, etc). Which is similar manually
      subscribing, but in this case the subscription happens automatically, and on multiple observables at the same time.
@@ -191,7 +191,7 @@ state.count = 2; // now, the watchEffect gets executed again
 
 So, how does this work? Whenever the `watchEffect` function is executing its passed callback function, it keeps track
 of every observable that's being read while executing this function. It than subscribes to each of them, and re-executes
-the passed callback function gain if something changes. It looks similar to this:
+the passed callback function again if something changes. It looks similar to this:
 ```js
 // pseudo code - this is not how it actually works
 function watchEffect(callback) {
@@ -482,7 +482,7 @@ double(2); // write
 // --- subscribe - to a single obsevable or computed
 counter.subscribe((newValue) => console.log(newValue));
 
-// not possibel to listen to multiple at the same time, but a computed + subscriont can be abosed for that
+// not possible to listen to multiple at the same time, but a computed + subscription can be abused for that
 function watchEffect(fn) {
   const comp = ko.computed(fn);
   comp(); // fire immediately to start tracing dependencies
@@ -495,7 +495,7 @@ watchEffect(() => console.log(counter()));
 ### Verdict
 
 Knockout JS is the simplest, both in usage and in features. It doesn't have the issues with passing around primitives,
-since everything is always an observable itself. The downside is that that everything requires () to access, and that
+since everything is always an observable itself. The downside is that everything requires `()` to access, and that
 deep observable initialisation is not done by the library itself.
 Of course, knockout already has DOM bindings that work perfectly with the observables, so that's a big plus.
 
