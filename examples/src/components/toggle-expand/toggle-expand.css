@@ -1,0 +1,8 @@
+[data-component="toggle-expand"] {
+  color: darkgray;
+  padding: 0 20px;
+
+  & p {
+    max-width: 400px;
+  }
+}
