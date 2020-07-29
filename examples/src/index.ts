@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-properties */
-import './components/toggle-expand/ToggleExpand';
 import './index.css';
+import ToggleExpand from './components/toggle-expand/ToggleExpand';
 import RequireContext = __WebpackModuleApi.RequireContext;
 
 const cache: Record<string, string> = {};
@@ -20,6 +20,12 @@ function importAll(r: RequireContext) {
     componentHeading.textContent = path;
     const content = document.querySelector('.example-content');
     content.innerHTML = cache[path];
+
+    document
+      .querySelectorAll('[data-component="toggle-expand"]')
+      .forEach((element: HTMLElement) => {
+        ToggleExpand(element);
+      });
   }
 }
 

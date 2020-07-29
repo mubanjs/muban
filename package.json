@@ -10,7 +10,8 @@
     "lint": "eslint examples/src/*"
   },
   "dependencies": {
-    "@types/webpack-env": "^1.15.2"
+    "@types/webpack-env": "^1.15.2",
+    "knockout": "^3.5.1"
   },
   "devDependencies": {
     "@mediamonks/eslint-config": "^1.1.3",
