@@ -1,0 +1,21 @@
+.tabbed-content {
+  color: darkgray;
+}
+
+.tabs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tabs li {
+  display: inline-block;
+}
+
+.tabs .is-active {
+  color: red;
+}
+
+.tab-content {
+  max-width: 40rem;
+}
