@@ -1,4 +1,6 @@
-import { applyBindingAccessorsToNode, BindingAccessors } from 'knockout';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { applyBindingAccessorsToNode, applyBindingsToNode } from 'knockout';
+import { BindProps } from './JSX';
 
 type ComponentFactory<T extends HTMLElement> = (
   element: T,
@@ -6,6 +8,8 @@ type ComponentFactory<T extends HTMLElement> = (
   setProps: (props: Record<string, unknown>) => void;
   dispose: () => void;
 };
+
+type Binding = BindProps;
 
 type DefineComponentOptions<T extends HTMLElement> = {
   name: string;
@@ -15,7 +19,35 @@ type DefineComponentOptions<T extends HTMLElement> = {
     props: Record<string, unknown>,
     refs: Record<string, HTMLElement>,
     context: { element: T },
-  ) => void;
+  ) => Array<Binding>;
+};
+
+// export const bind = (node: Node, bindings: BindingAccessors | (() => BindingAccessors)) => {
+//   applyBindingAccessorsToNode(node, bindings, {});
+// };
+
+const eventBindings = ['click'];
+
+const applyBindings = (bindings: Array<Binding>) => {
+  bindings.forEach((b) => {
+    const { ref, ...props } = b;
+
+    const bindingProps = Object.entries(props)
+      .filter(([key]) => eventBindings.includes(key))
+      .reduce((acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+      }, {} as Record<string, any>);
+    applyBindingsToNode(ref, bindingProps, {});
+
+    const bindingAccessorProps = Object.entries(props)
+      .filter(([key]) => !eventBindings.includes(key))
+      .reduce((acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+      }, {} as Record<string, any>);
+    applyBindingAccessorsToNode(ref, bindingAccessorProps, {});
+  });
 };
 
 export const defineComponent = <T extends HTMLElement>(
@@ -35,7 +67,10 @@ export const defineComponent = <T extends HTMLElement>(
         return accumulator;
       }, {} as Record<string, any>) ?? {};
 
-    options.setup(resolvedProps, resolvedRefs, { element });
+    const bindings = options.setup(resolvedProps, resolvedRefs, { element });
+
+    console.log('bindings', bindings);
+    applyBindings(bindings);
 
     return {
       setProps(props) {
@@ -46,8 +81,4 @@ export const defineComponent = <T extends HTMLElement>(
       },
     };
   };
-};
-
-export const bind = (node: Node, bindings: BindingAccessors | (() => BindingAccessors)) => {
-  applyBindingAccessorsToNode(node, bindings, {});
 };
