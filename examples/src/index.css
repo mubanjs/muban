@@ -8,7 +8,9 @@ h1 {
   border-bottom: 1px solid #eee;
 }
 
-.component-heading {
-  margin: 8px 20px 16px;
+.component-info {
+  padding: 8px 20px 8px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
 }
 

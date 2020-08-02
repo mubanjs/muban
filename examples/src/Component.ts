@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { applyBindingAccessorsToNode, applyBindingsToNode } from 'knockout';
+import { applyBindingAccessorsToNode, applyBindingsToNode, cleanNode } from 'knockout';
 import { BindProps } from './JSX';
 
-type ComponentFactory<T extends HTMLElement> = (
+export type ComponentFactory<T extends HTMLElement = HTMLElement> = (
   element: T,
 ) => {
   setProps: (props: Record<string, unknown>) => void;
@@ -69,7 +69,6 @@ export const defineComponent = <T extends HTMLElement>(
 
     const bindings = options.setup(resolvedProps, resolvedRefs, { element });
 
-    console.log('bindings', bindings);
     applyBindings(bindings);
 
     return {
@@ -78,6 +77,7 @@ export const defineComponent = <T extends HTMLElement>(
       },
       dispose() {
         console.log('dispose');
+        cleanNode(element);
       },
     };
   };

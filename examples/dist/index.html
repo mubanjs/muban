@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
   </head>
   <body>
     <h1>Example Components</h1>
 
     <div class="main-wrapper">
       <nav class="component-nav">
-        <ul class="component-list">
-
-        </ul>
+        <ul class="component-list"></ul>
       </nav>
-      <h2 class="h3 component-heading"></h2>
+      <div class="component-info">
+        <h2 class="h3 component-heading"></h2>
+        <div class="form-group row">
+          <label class="col-sm-4 col-form-label" for="componentVariation">Select component variation</label>
+          <div class="col-sm-8">
+            <select class="form-control" id="componentVariation">
+            </select>
+          </div>
+        </div>
+      </div>
       <div class="example-content"></div>
     </div>
 
