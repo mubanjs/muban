@@ -1,6 +1,9 @@
-import ToggleExpand from './ToggleExpand.Knockout';
+import ToggleExpandKO from './ToggleExpand.Knockout';
+import ToggleExpandVue from './ToggleExpand.Vue';
+import ToggleExpandReact from './ToggleExpand.React';
 
 export default {
-  reactive: () => ToggleExpand,
-  reactive2: () => ToggleExpand,
+  reactiveReact: () => ToggleExpandReact,
+  reactiveVue: () => ToggleExpandVue,
+  reactiveKO: () => ToggleExpandKO,
 };

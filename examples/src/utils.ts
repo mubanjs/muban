@@ -13,7 +13,7 @@ export function register(
   store[componentName] = components;
 }
 
-export function importAll(r: RequireContext) {
+export function importTemplates(r: RequireContext): void {
   // eslint-disable-next-line no-return-assign
   r.keys().forEach((key) => {
     const componentName = /\/(.*)\//gi.exec(key)?.[1];
@@ -22,6 +22,13 @@ export function importAll(r: RequireContext) {
     } else {
       console.log('no match found for', key);
     }
+  });
+}
+
+export function importMeta(r: RequireContext): void {
+  r.keys().forEach((key) => {
+    const componentName = /\/(.*)\//gi.exec(key)?.[1];
+    register(componentName, r(key).default);
   });
 }
 

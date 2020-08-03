@@ -1,6 +1,6 @@
-import { observable } from 'knockout';
-import { defineComponent } from '../../Component.Knockout';
+import { defineComponent } from '../../Component.Vue';
 import { createElement, Fragment, BindElement } from '../../JSX.Reactive';
+import { ref } from '@vue/reactivity';
 
 export default defineComponent({
   name: 'toggle-expand',
@@ -12,21 +12,21 @@ export default defineComponent({
     expandContent: 'expand-content',
   },
   setup(props, refs, { element }) {
-    console.log('toggle expand!', props, refs, element);
+    console.log('toggle expand Vue:', props, refs, element);
 
-    const isExpanded = observable(props.isExpanded ?? false);
+    const isExpanded = ref(props.isExpanded ?? false);
 
     return (
       <>
         <BindElement
           ref={refs.expandButton}
-          text={() => (isExpanded() ? 'read less...' : 'read more...')}
-          click={() => isExpanded(!isExpanded())}
+          text={() => (isExpanded.value ? 'read less...' : 'read more...')}
+          click={() => (isExpanded.value = !isExpanded.value)}
         />
         <BindElement
           ref={refs.expandContent}
           style={() => ({
-            display: isExpanded() ? 'block' : 'none',
+            display: isExpanded.value ? 'block' : 'none',
           })}
         />
       </>
