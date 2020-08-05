@@ -32,7 +32,7 @@ export function importMeta(r: RequireContext): void {
   });
 }
 
-let activeComponentInstances: Array<ReturnType<ComponentFactory>> = [];
+let activeComponentInstances: Array<{ dispose: () => void }> = [];
 
 function cleanComponents(): void {
   activeComponentInstances.forEach((instance) => instance.dispose());

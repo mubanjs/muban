@@ -1,8 +1,17 @@
 import { defineComponent } from '../../Component.Vue';
 import { createElement, Fragment, BindElement } from '../../JSX.Reactive';
-import { ref } from '@vue/reactivity';
+import { computed, ref } from '@vue/reactivity';
 
-export default defineComponent({
+// eslint-disable-next-line @typescript-eslint/ban-types
+type Props = {
+  isExpanded: boolean;
+};
+type Refs = {
+  expandButton: HTMLButtonElement;
+  expandContent: HTMLDivElement;
+};
+
+export default defineComponent<Props, Refs>({
   name: 'toggle-expand',
   props: {
     isExpanded: Boolean,
@@ -11,23 +20,22 @@ export default defineComponent({
     expandButton: 'expand-button',
     expandContent: 'expand-content',
   },
-  setup(props, refs, { element }) {
-    console.log('toggle expand Vue:', props, refs, element);
-
+  setup(props, refs) {
     const isExpanded = ref(props.isExpanded ?? false);
+    const expandButtonLabel = computed(() => (isExpanded.value ? 'read less...' : 'read more...'));
 
     return (
       <>
         <BindElement
           ref={refs.expandButton}
-          text={() => (isExpanded.value ? 'read less...' : 'read more...')}
+          text={expandButtonLabel}
           click={() => (isExpanded.value = !isExpanded.value)}
         />
         <BindElement
           ref={refs.expandContent}
-          style={() => ({
+          style={computed(() => ({
             display: isExpanded.value ? 'block' : 'none',
-          })}
+          }))}
         />
       </>
     );

@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-properties */
 import './index.css';
 import { importMeta, importTemplates, init } from './utils';
-import './hooks';
+// import './hooks';
 
 // register meta stuff
 importMeta(require.context('./components/', true, /meta.ts$/));

@@ -2,7 +2,8 @@ import { defineComponent } from '../../Component.React';
 import { createElement, Fragment, BindElement } from '../../JSX.React';
 import { useState } from 'tng-hooks';
 
-export default defineComponent({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default defineComponent<Record<string, any>, Record<string, any>>({
   name: 'toggle-expand',
   props: {
     isExpanded: Boolean,

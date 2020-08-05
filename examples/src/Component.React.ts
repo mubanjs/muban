@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TNG } from 'tng-hooks';
 import {
-  Binding,
   ComponentFactory,
+  ComponentReturnValue,
   DefineComponentOptionsReact,
   getProps,
   getRefs,
 } from './Component';
+import { Binding } from './JSX.Reactive';
 // TODO: not sure how much vue-specific stuff gets included in the bundle by this
 
 const applyBindings = (bindings: Array<Binding>) => {
@@ -15,10 +16,10 @@ const applyBindings = (bindings: Array<Binding>) => {
   });
 };
 
-export const defineComponent = <T extends HTMLElement>(
-  options: DefineComponentOptionsReact<T>,
-): ComponentFactory<T> => {
-  return (element) => {
+export const defineComponent = <P extends Record<string, any>, R extends Record<string, any>>(
+  options: DefineComponentOptionsReact<P, R>,
+): ComponentFactory<P> => {
+  const fn: ComponentReturnValue<P> = (element) => {
     const resolvedProps = getProps(options.props, element);
     const resolvedRefs = getRefs(options.refs, element);
 
@@ -29,6 +30,7 @@ export const defineComponent = <T extends HTMLElement>(
     applyBindings(bindings);
 
     return {
+      name: options.name,
       setProps(props) {
         console.log('new props', props);
       },
@@ -37,4 +39,6 @@ export const defineComponent = <T extends HTMLElement>(
       },
     };
   };
+  (fn as ComponentFactory<P>).displayName = options.name;
+  return fn as ComponentFactory<P>;
 };
