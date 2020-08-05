@@ -3,6 +3,10 @@
 import { Ref } from '@vue/reactivity';
 import { ComponentFactory } from './Component';
 
+export type ElementRef<T extends HTMLElement> = ((props: Omit<BindProps<T>, 'ref'>) => void) & {
+  value: T;
+};
+
 export const BindElement = <T extends HTMLElement>(
   props: BindProps<T>,
 ): { type: 'element'; props: BindProps<HTMLElement> } => {
@@ -10,6 +14,12 @@ export const BindElement = <T extends HTMLElement>(
     type: 'element',
     props: props,
   };
+};
+
+export type CollectionRef<T extends HTMLElement> = ((
+  props: Omit<BindProps<Array<T>>, 'ref'>,
+) => void) & {
+  value: Array<T>;
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -22,7 +32,10 @@ export const BindCollection = <T extends HTMLElement>(
   };
 };
 
-type ComponentSetPropsParam<T> = T extends { setProps(props: infer R): void } ? R : T;
+export type ComponentRef<T extends ComponentFactory> = ((
+  props: ComponentSetPropsParam<ReturnType<T>>,
+) => void) & { value: ReturnType<T> };
+export type ComponentSetPropsParam<T> = T extends { setProps(props: infer R): void } ? R : T;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function BindComponent<T extends Pick<ReturnType<ComponentFactory>, 'setProps'>>(

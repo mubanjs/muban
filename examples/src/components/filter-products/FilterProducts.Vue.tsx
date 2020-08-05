@@ -1,15 +1,13 @@
 import { refCollection, refComponent } from '../../Component';
 import { defineComponent } from '../../Component.Vue';
-import { createElement, Fragment, BindComponent } from '../../JSX.Reactive';
+import { createElement, Fragment, ComponentRef } from '../../JSX.Reactive';
 import FilterProductsChecklist from './FilterProductsChecklist.Vue';
-
-type X = ReturnType<typeof FilterProductsChecklist>;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 type Refs = {
-  categories: ReturnType<typeof FilterProductsChecklist>;
-  colors: ReturnType<typeof FilterProductsChecklist>;
+  categories: ComponentRef<typeof FilterProductsChecklist>;
+  colors: ComponentRef<typeof FilterProductsChecklist>;
   cards: Array<HTMLDivElement>;
 };
 
@@ -24,10 +22,7 @@ export default defineComponent<Props, Refs>({
   setup(props, refs) {
     return (
       <>
-        <BindComponent
-          ref={refs.categories}
-          onChange={(value: Array<string>) => console.log('CHANGED', value)}
-        />
+        <refs.categories onChange={(value) => console.log('CHANGED', value)} />
       </>
     );
   },

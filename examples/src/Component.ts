@@ -1,6 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Binding } from './JSX.Reactive';
+import {
+  BindCollection,
+  BindComponent,
+  BindElement,
+  Binding,
+  BindProps,
+  CollectionRef,
+  ComponentRef,
+  ElementRef,
+} from './JSX.Reactive';
 
 export type ComponentFactory<
   P extends Record<string, any> = Record<string, any>
@@ -18,16 +27,16 @@ export type ComponentReturnValue<P extends Record<string, any> = Record<string, 
 type ComponentRefItemElement = {
   type: 'element';
   ref: string;
-  selector: (parent: HTMLElement) => HTMLElement;
+  selector: (parent: HTMLElement) => ElementRef<HTMLElement>;
   isRequired?: boolean;
 };
 type ComponentRefItemCollection = {
   type: 'collection';
   ref: string;
-  selector: (parent: HTMLElement) => Array<HTMLElement>;
+  selector: (parent: HTMLElement) => CollectionRef<HTMLElement>;
   isRequired?: boolean;
 };
-type ComponentRefItemComponent<T extends ReturnType<ComponentFactory>> = {
+type ComponentRefItemComponent<T extends ComponentRef<ComponentFactory>> = {
   type: 'component';
   ref: string;
   selector: (parent: HTMLElement) => T;
@@ -77,7 +86,17 @@ export function refCollection(
   return {
     ref,
     type: 'collection',
-    selector: (parent) => Array.from(parent.querySelectorAll(`[data-ref="${ref}"]`)),
+    selector: (parent) => {
+      const elements = Array.from(parent.querySelectorAll(`[data-ref="${ref}"]`)) as Array<
+        HTMLElement
+      >;
+
+      const fn = (props: Omit<BindProps<any>, 'ref'>) => {
+        return BindCollection({ ref: elements, ...props });
+      };
+      fn.value = elements;
+      return (fn as unknown) as CollectionRef<HTMLElement>;
+    },
     isRequired,
   };
 }
@@ -89,12 +108,20 @@ export function refElement(
   return {
     ref,
     type: 'element',
-    selector: (parent) => parent.querySelector(`[data-ref="${ref}"]`),
+    selector: (parent) => {
+      const element = parent.querySelector(`[data-ref="${ref}"]`) as HTMLElement;
+
+      const fn = (props: Omit<BindProps<any>, 'ref'>) => {
+        return BindElement({ ref: element, ...props });
+      };
+      fn.value = element;
+      return (fn as unknown) as ElementRef<HTMLElement>;
+    },
     isRequired,
   };
 }
 
-export function refComponent<T extends ReturnType<ComponentFactory>>(
+export function refComponent<T extends ComponentRef<ComponentFactory>>(
   component: ComponentFactory,
   { ref, isRequired = true }: { ref?: string; isRequired?: boolean } = {},
 ): ComponentRefItemComponent<T> {
@@ -106,7 +133,12 @@ export function refComponent<T extends ReturnType<ComponentFactory>>(
         ref ? `[data-ref="${ref}"]` : `[data-component="${component.displayName}"]`,
       );
 
-      return component(element) as T;
+      const instance = component(element);
+      const fn = (props: { onChange: (value: Array<string>) => void }) => {
+        return BindComponent({ ref: instance, ...props });
+      };
+      fn.value = instance;
+      return (fn as unknown) as T;
     },
     isRequired,
   };

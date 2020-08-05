@@ -1,14 +1,13 @@
 import { defineComponent } from '../../Component.Vue';
-import { createElement, Fragment, BindElement } from '../../JSX.Reactive';
+import { createElement, Fragment, ElementRef } from '../../JSX.Reactive';
 import { computed, ref } from '@vue/reactivity';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {
   isExpanded: boolean;
 };
 type Refs = {
-  expandButton: HTMLButtonElement;
-  expandContent: HTMLDivElement;
+  expandButton: ElementRef<HTMLButtonElement>;
+  expandContent: ElementRef<HTMLDivElement>;
 };
 
 export default defineComponent<Props, Refs>({
@@ -26,13 +25,11 @@ export default defineComponent<Props, Refs>({
 
     return (
       <>
-        <BindElement
-          ref={refs.expandButton}
+        <refs.expandButton
           text={expandButtonLabel}
           click={() => (isExpanded.value = !isExpanded.value)}
         />
-        <BindElement
-          ref={refs.expandContent}
+        <refs.expandContent
           style={computed(() => ({
             display: isExpanded.value ? 'block' : 'none',
           }))}

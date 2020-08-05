@@ -1,12 +1,12 @@
 import { refCollection } from '../../Component';
 import { defineComponent } from '../../Component.Vue';
-import { createElement, Fragment, BindCollection } from '../../JSX.Reactive';
+import { createElement, Fragment, CollectionRef } from '../../JSX.Reactive';
 
 type Props = {
   onChange?: (value: Array<string>) => void;
 };
 type Refs = {
-  checkboxes: Array<HTMLInputElement>;
+  checkboxes: CollectionRef<HTMLInputElement>;
 };
 
 export default defineComponent<Props, Refs>({
@@ -20,7 +20,7 @@ export default defineComponent<Props, Refs>({
   setup(props, refs) {
     return (
       <>
-        <BindCollection ref={refs.checkboxes} click={() => props.onChange(['foo'])} />
+        <refs.checkboxes click={() => props.onChange(['foo'])} />
       </>
     );
   },

@@ -83,6 +83,7 @@ export const defineComponent = <P extends Record<string, any>, R extends Record<
     const reactiveProps = reactive(resolvedProps);
 
     const bindings = options.setup(reactiveProps as any, resolvedRefs as any, { element });
+    console.log('bindings', bindings);
 
     applyBindings(bindings);
 
