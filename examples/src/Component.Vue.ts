@@ -76,31 +76,32 @@ export const defineComponent = <P extends Record<string, any>, R extends Record<
   options: DefineComponentOptions<P, R>,
 ): ComponentFactory<P> => {
   // TODO: this function doesn't expose the component name, which is something we might want
-  const fn: ComponentReturnValue<P> = (element) => {
-    const resolvedProps = getProps(options.props, element);
-    const resolvedRefs = getRefs(options.refs, element);
+  return Object.assign(
+    ((element) => {
+      const resolvedProps = getProps(options.props, element);
+      const resolvedRefs = getRefs(options.refs, element);
 
-    const reactiveProps = reactive(resolvedProps);
+      const reactiveProps = reactive(resolvedProps);
 
-    const bindings = options.setup(reactiveProps as any, resolvedRefs as any, { element });
-    console.log('bindings', bindings);
+      const bindings = options.setup(reactiveProps as any, resolvedRefs as any, { element });
+      console.log('bindings', bindings);
 
-    applyBindings(bindings);
+      applyBindings(bindings);
 
-    return {
-      name: options.name,
-      setProps(props) {
-        console.log('new props', props);
-        Object.entries(props).forEach(([name, value]) => {
-          // todo check existence and validation
-          reactiveProps[name] = value;
-        });
-      },
-      dispose() {
-        console.log('dispose');
-      },
-    };
-  };
-  (fn as ComponentFactory<P>).displayName = options.name;
-  return fn as ComponentFactory<P>;
+      return {
+        name: options.name,
+        setProps(props) {
+          console.log('new props', props);
+          Object.entries(props).forEach(([name, value]) => {
+            // todo check existence and validation
+            reactiveProps[name] = value;
+          });
+        },
+        dispose() {
+          console.log('dispose');
+        },
+      };
+    }) as ComponentReturnValue<P>,
+    { displayName: options.name },
+  );
 };
