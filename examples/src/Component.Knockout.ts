@@ -10,9 +10,27 @@ import {
   ComponentReturnValue,
   DefineComponentOptions,
   getProps,
-  getRefs,
+  refElement,
 } from './Component';
 import type { Binding } from './JSX.Reactive';
+import typedObjectEntries from './type-utils/typedObjectEntries';
+
+export function getRefs<T extends HTMLElement, R extends Record<string, any>>(
+  refs: R | undefined,
+  element: T,
+): any {
+  return (
+    (refs &&
+      typedObjectEntries(refs).reduce((accumulator, [propName, selector]) => {
+        (accumulator as any)[propName] = (typeof selector === 'string'
+          ? refElement(selector)
+          : selector
+        ).selector(element);
+        return accumulator;
+      }, {} as any)) ??
+    {}
+  );
+}
 
 const eventBindings = ['click'];
 

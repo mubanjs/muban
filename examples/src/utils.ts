@@ -56,6 +56,13 @@ export function initComponent(componentName: string, variation: string) {
 }
 
 export function init() {
+  const unmountButton = document.querySelector('.unmount-button');
+  if (unmountButton) {
+    unmountButton.addEventListener('click', () => {
+      cleanComponents();
+    });
+  }
+
   const list = document.querySelector('.component-list');
   if (list) {
     list.innerHTML = Object.keys(cache)

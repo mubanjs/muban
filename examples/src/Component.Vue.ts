@@ -10,6 +10,7 @@ import {
 import { reactive, unref, watchEffect } from '@vue/runtime-core';
 import type { Binding, BindProps } from './JSX.Reactive';
 import typedObjectEntries from './type-utils/typedObjectEntries';
+import EventEmitter from 'eventemitter3';
 
 type BindingMap<T> = {
   [P in keyof T]: (target: HTMLElement, value: Exclude<T[P], undefined>) => void;
@@ -73,6 +74,12 @@ const applyBindings = (bindings: Array<Binding> | null | undefined) => {
   }
 };
 
+const componentStack: Array<any> = [];
+function getCurrentComponentInstance() {
+  // TODO validation
+  return componentStack[componentStack.length - 1];
+}
+
 export const defineComponent = <P extends Record<string, any>, R extends Record<string, any>>(
   options: DefineComponentOptions<P, R>,
 ): ComponentFactory<P> => {
@@ -84,9 +91,28 @@ export const defineComponent = <P extends Record<string, any>, R extends Record<
 
       const reactiveProps = reactive(resolvedProps);
 
+      const lifecycle = {
+        ee: new EventEmitter(),
+        on(type: string, fn: () => void) {
+          this.ee.on(type, fn);
+        },
+        mount() {
+          console.log('mount');
+          this.ee.emit('mount');
+        },
+        unmount() {
+          console.log('unmount');
+          this.ee.emit('unmount');
+        },
+      };
+
+      componentStack.push(lifecycle);
       const bindings = options.setup(reactiveProps as any, resolvedRefs as any, { element });
+      componentStack.pop();
 
       applyBindings(bindings);
+
+      lifecycle.mount();
 
       return {
         name: options.name,
@@ -99,9 +125,24 @@ export const defineComponent = <P extends Record<string, any>, R extends Record<
         },
         dispose() {
           console.log('dispose');
+          lifecycle.unmount();
+          lifecycle.ee.removeAllListeners();
         },
       };
     }) as ComponentReturnValue<P>,
     { displayName: options.name },
   );
 };
+
+export function onMount(fn: () => void) {
+  const componentInstance = getCurrentComponentInstance();
+  componentInstance.on('mount', () => {
+    fn();
+  });
+}
+export function onUnmount(fn: () => void) {
+  const componentInstance = getCurrentComponentInstance();
+  componentInstance.on('unmount', () => {
+    fn();
+  });
+}
