@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-properties */
+/* eslint-disable no-restricted-properties,@typescript-eslint/no-explicit-any */
 import './index.css';
 import { importMeta, importTemplates, init } from './utils';
 // import './hooks';

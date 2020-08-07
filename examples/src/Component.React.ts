@@ -7,7 +7,7 @@ import {
   getProps,
   getRefs,
 } from './Component';
-import { Binding } from './JSX.Reactive';
+import type { Binding } from './JSX.Reactive';
 // TODO: not sure how much vue-specific stuff gets included in the bundle by this
 
 const applyBindings = (bindings: Array<Binding>) => {

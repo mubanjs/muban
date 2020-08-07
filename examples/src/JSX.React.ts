@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/naming-convention */
 
-import { ComponentFactory } from './Component';
+import type { ComponentFactory } from './Component';
 
 export const BindElement = <T extends HTMLElement>(
   props: BindProps<T>,

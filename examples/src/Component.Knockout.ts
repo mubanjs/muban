@@ -12,32 +12,33 @@ import {
   getProps,
   getRefs,
 } from './Component';
-import { Binding } from './JSX.Reactive';
+import type { Binding } from './JSX.Reactive';
 
 const eventBindings = ['click'];
 
-const applyBindings = (bindings: Array<Binding>) => {
-  bindings.forEach((b) => {
-    if (b.type === 'element') {
-      const { ref, ...props } = b.props;
+const applyBindings = (bindings: Array<Binding> | undefined | null) => {
+  bindings &&
+    bindings.forEach((b) => {
+      if (b.type === 'element') {
+        const { ref, ...props } = b.props;
 
-      const bindingProps = Object.entries(props)
-        .filter(([key]) => eventBindings.includes(key))
-        .reduce((acc, [key, value]) => {
-          acc[key] = value;
-          return acc;
-        }, {} as Record<string, any>);
-      applyBindingsToNode(ref, bindingProps, {});
+        const bindingProps = Object.entries(props)
+          .filter(([key]) => eventBindings.includes(key))
+          .reduce((acc, [key, value]) => {
+            acc[key] = value;
+            return acc;
+          }, {} as Record<string, any>);
+        if (ref) applyBindingsToNode(ref, bindingProps, {});
 
-      const bindingAccessorProps = Object.entries(props)
-        .filter(([key]) => !eventBindings.includes(key))
-        .reduce((acc, [key, value]) => {
-          acc[key] = value;
-          return acc;
-        }, {} as Record<string, any>);
-      applyBindingAccessorsToNode(ref, bindingAccessorProps, {});
-    }
-  });
+        const bindingAccessorProps = Object.entries(props)
+          .filter(([key]) => !eventBindings.includes(key))
+          .reduce((acc, [key, value]) => {
+            acc[key] = value;
+            return acc;
+          }, {} as Record<string, any>);
+        if (ref) applyBindingAccessorsToNode(ref, bindingAccessorProps, {});
+      }
+    });
 };
 
 export const defineComponent = <P extends Record<string, any>, R extends Record<string, any>>(

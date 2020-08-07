@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/naming-convention */
 
-import { Ref } from '@vue/reactivity';
-import { ComponentFactory } from './Component';
+import type { Ref } from '@vue/reactivity';
+import type { ComponentFactory } from './Component';
 
 export type ElementRef<T extends HTMLElement> = ((props: Omit<BindProps<T>, 'ref'>) => void) & {
   value: T;
@@ -39,8 +39,8 @@ export type ComponentSetPropsParam<T> = T extends { setProps(props: infer R): vo
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function BindComponent<T extends Pick<ReturnType<ComponentFactory>, 'setProps'>>(
-  props: { ref: T } & ComponentSetPropsParam<T>,
-): { type: 'component'; props: { ref: T } & ComponentSetPropsParam<T> } {
+  props: { ref: T | undefined } & ComponentSetPropsParam<T>,
+): { type: 'component'; props: { ref: T | undefined } & ComponentSetPropsParam<T> } {
   return {
     type: 'component',
     props: props,
@@ -68,7 +68,7 @@ export type Binding =
 type BindingValue<T> = T | Ref<T>;
 
 export type BindProps<T> = {
-  ref: T;
+  ref: T | undefined;
   text?: BindingValue<string>;
   html?: BindingValue<string>;
   click?: (event: HTMLElementEventMap['click']) => void;

@@ -1,4 +1,4 @@
-import { ComponentFactory } from './Component';
+import type { ComponentFactory } from './Component';
 import RequireContext = __WebpackModuleApi.RequireContext;
 
 const cache: Record<string, string> = {};
@@ -28,7 +28,9 @@ export function importTemplates(r: RequireContext): void {
 export function importMeta(r: RequireContext): void {
   r.keys().forEach((key) => {
     const componentName = /\/(.*)\//gi.exec(key)?.[1];
-    register(componentName, r(key).default);
+    if (componentName) {
+      register(componentName, r(key).default);
+    }
   });
 }
 
@@ -42,39 +44,48 @@ function cleanComponents(): void {
 export function initComponent(componentName: string, variation: string) {
   cleanComponents();
   const content = document.querySelector('.example-content');
-  content.innerHTML = cache[componentName];
+  if (content) {
+    content.innerHTML = cache[componentName];
 
-  document
-    .querySelectorAll(`[data-component="${componentName}"]`)
-    .forEach((element: HTMLElement) => {
-      activeComponentInstances.push(store[componentName][variation]()(element));
+    document.querySelectorAll(`[data-component="${componentName}"]`).forEach((element) => {
+      activeComponentInstances.push(store[componentName][variation]()(element as HTMLElement));
     });
+  } else {
+    console.error('example-content not found');
+  }
 }
 
 export function init() {
   const list = document.querySelector('.component-list');
-  list.innerHTML = Object.keys(cache)
-    .map(
-      (componentName) => `<li><a href="?componentName=${componentName}">${componentName}</a></li>`,
-    )
-    .join('');
+  if (list) {
+    list.innerHTML = Object.keys(cache)
+      .map(
+        (componentName) =>
+          `<li><a href="?componentName=${componentName}">${componentName}</a></li>`,
+      )
+      .join('');
 
-  const componentName = new URL(document.location.href).searchParams.get('componentName');
-  if (cache[componentName]) {
-    const componentHeading = document.querySelector('.component-heading');
-    componentHeading.textContent = componentName;
+    const componentName = new URL(document.location.href).searchParams.get('componentName');
+    if (componentName && cache[componentName]) {
+      const componentHeading = document.querySelector('.component-heading');
+      if (componentHeading) {
+        componentHeading.textContent = componentName;
+      }
 
-    const select = document.getElementById('componentVariation') as HTMLSelectElement;
-    if (store[componentName]) {
-      const options = Object.keys(store[componentName])
-        .map((name) => `<option value="${name}">${name}</option>`)
-        .join('');
-      select.innerHTML = options;
-    }
+      const select = document.getElementById('componentVariation') as HTMLSelectElement;
+      if (store[componentName]) {
+        const options = Object.keys(store[componentName])
+          .map((name) => `<option value="${name}">${name}</option>`)
+          .join('');
+        select.innerHTML = options;
+      }
 
-    select.addEventListener('change', () => {
+      select.addEventListener('change', () => {
+        initComponent(componentName, select.value);
+      });
       initComponent(componentName, select.value);
-    });
-    initComponent(componentName, select.value);
+    }
+  } else {
+    console.error('component-list not found');
   }
 }

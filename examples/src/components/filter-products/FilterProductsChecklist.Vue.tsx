@@ -20,7 +20,7 @@ export default defineComponent<Props, Refs>({
   setup(props, refs) {
     return (
       <>
-        <refs.checkboxes click={() => props.onChange(['foo'])} />
+        <refs.checkboxes click={() => props?.onChange?.(['foo'])} />
       </>
     );
   },

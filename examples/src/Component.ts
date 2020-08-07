@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types */
 
 import {
   BindCollection,
@@ -10,6 +10,7 @@ import {
   ComponentRef,
   ElementRef,
 } from './JSX.Reactive';
+import typedObjectEntries from './type-utils/typedObjectEntries';
 
 export type ComponentFactory<
   P extends Record<string, any> = Record<string, any>
@@ -38,8 +39,8 @@ type ComponentRefItemCollection = {
 };
 type ComponentRefItemComponent<T extends ComponentRef<ComponentFactory>> = {
   type: 'component';
-  ref: string;
-  selector: (parent: HTMLElement) => T;
+  ref?: string;
+  selector: (parent: HTMLElement) => T | undefined;
   isRequired?: boolean;
 };
 
@@ -49,8 +50,8 @@ type ComponentRefItem =
   | ComponentRefItemCollection
   | ComponentRefItemComponent<any>;
 
-type ComponentPropTypes<T extends Record<string, any>> = { [P in keyof T]?: any };
-type ComponentRefTypes<T extends Record<string, any>> = { [P in keyof T]?: ComponentRefItem };
+type ComponentPropTypes<T extends Record<string, any>> = { [P in keyof T]: any };
+type ComponentRefTypes<T extends Record<string, any>> = { [P in keyof T]: ComponentRefItem };
 type ComponentProps<T extends Record<string, any>> = T;
 type ComponentRefs<T extends Record<string, any>> = T;
 
@@ -91,6 +92,10 @@ export function refCollection(
         HTMLElement
       >;
 
+      if (elements.length === 0) {
+        console.error('Elements not found', `[data-ref="${ref}"]`);
+      }
+
       const fn = (props: Omit<BindProps<any>, 'ref'>) => {
         return BindCollection({ ref: elements, ...props });
       };
@@ -109,10 +114,14 @@ export function refElement(
     ref,
     type: 'element',
     selector: (parent) => {
-      const element = parent.querySelector(`[data-ref="${ref}"]`) as HTMLElement;
+      const element = parent.querySelector(`[data-ref="${ref}"]`) as HTMLElement | null;
+
+      if (!element) {
+        console.error('Element not found', `[data-ref="${ref}"]`);
+      }
 
       const fn = (props: Omit<BindProps<any>, 'ref'>) => {
-        return BindElement({ ref: element, ...props });
+        return BindElement({ ref: element ?? undefined, ...props });
       };
       fn.value = element;
       return (fn as unknown) as ElementRef<HTMLElement>;
@@ -129,11 +138,13 @@ export function refComponent<T extends ComponentRef<ComponentFactory>>(
     ref,
     type: 'component',
     selector: (parent) => {
-      const element: HTMLElement = parent.querySelector(
-        ref ? `[data-ref="${ref}"]` : `[data-component="${component.displayName}"]`,
-      );
+      const query = ref ? `[data-ref="${ref}"]` : `[data-component="${component.displayName}"]`;
+      const element: HTMLElement | null = parent.querySelector(query);
 
-      const instance = component(element);
+      if (!element) {
+        console.error('Component not found', query);
+      }
+      const instance = (element && component(element)) ?? undefined;
       const fn = (props: { onChange: (value: Array<string>) => void }) => {
         return BindComponent({ ref: instance, ...props });
       };
@@ -144,23 +155,33 @@ export function refComponent<T extends ComponentRef<ComponentFactory>>(
   };
 }
 
-export function getProps<T extends HTMLElement>(props: Record<string, any>, element: T) {
+export function getProps<T extends HTMLElement>(
+  props: Record<string, any> | undefined,
+  element: T,
+) {
   return (
-    Object.entries(props).reduce((accumulator, [propName, propType]) => {
+    Object.entries(props ?? {}).reduce((accumulator, [propName, propType]) => {
       const value = element.dataset[propName];
-      accumulator[propName] = [Boolean, Number].includes(propType) ? JSON.parse(value) : value;
+      if (value !== undefined) {
+        accumulator[propName] = [Boolean, Number].includes(propType) ? JSON.parse(value) : value;
+      }
       return accumulator;
     }, {} as Record<string, any>) ?? {}
   );
 }
-export function getRefs<T extends HTMLElement>(refs: Record<string, ComponentRefItem>, element: T) {
+export function getRefs<T extends HTMLElement, R extends Record<string, ComponentRefItem>>(
+  refs: R | undefined,
+  element: T,
+): ComponentRefs<R> | {} {
   return (
-    Object.entries(refs).reduce((accumulator, [propName, selector]) => {
-      accumulator[propName] = (typeof selector === 'string'
-        ? refElement(selector)
-        : selector
-      ).selector(element);
-      return accumulator;
-    }, {} as Record<string, any>) ?? {}
+    (refs &&
+      typedObjectEntries(refs).reduce((accumulator, [propName, selector]) => {
+        (accumulator as any)[propName] = (typeof selector === 'string'
+          ? refElement(selector)
+          : selector
+        ).selector(element);
+        return accumulator;
+      }, {} as ComponentRefs<R>)) ??
+    {}
   );
 }

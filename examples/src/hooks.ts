@@ -3,7 +3,7 @@ type Bucket = { slots: Array<Slot<any>>; currentPos: number; maxCount?: number }
 const bucketStack: Array<Bucket> = [];
 
 class Slot<T> {
-  public value: T;
+  public value!: T;
   public isInitialized: boolean = false;
 
   public setInitialValue(value: T) {
