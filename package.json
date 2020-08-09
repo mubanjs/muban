@@ -11,14 +11,19 @@
     "cypress": "cypress open"
   },
   "dependencies": {
+    "@cycle/dom": "^22.7.0",
+    "@cycle/run": "^5.4.0",
+    "@types/lodash": "^4.14.159",
     "@types/webpack-env": "^1.15.2",
     "@vue/reactivity": "^3.0.0-rc.5",
     "@vue/runtime-core": "^3.0.0-rc.5",
     "eventemitter3": "^4.0.4",
     "gsap": "^3.4.2",
     "knockout": "^3.5.1",
+    "lodash": "^4.17.19",
     "tng-hooks": "^4.1.5",
-    "transition-controller": "^2.0.0"
+    "transition-controller": "^2.0.0",
+    "xstream": "^11.12.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^3.7.1",

@@ -238,6 +238,24 @@
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
+"@cycle/dom@^22.7.0":
+  version "22.7.0"
+  resolved "https://registry.yarnpkg.com/@cycle/dom/-/dom-22.7.0.tgz#91b97fdc90129f3a2a73d908adb101c2a5abbf94"
+  integrity sha512-QR6R7lqRTRFdbSVSptPIXLtbJS1DOmSjibwaazrRbLmty9nhtdZDsuzFk6np/R2m8ScfkWSLPPMjVwy0gImSwg==
+  dependencies:
+    "@cycle/run" "^5.2.0"
+    snabbdom "^0.7.4"
+    snabbdom-selector "^4.2.0"
+    xstream "11.x"
+
+"@cycle/run@^5.2.0", "@cycle/run@^5.4.0":
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/@cycle/run/-/run-5.4.0.tgz#d4bdeb9eb7f40ec14c924b96bbfae0fe08f5d710"
+  integrity sha512-IAFwavuZGZP39XjxL7eQyQ9e6xZUMUjvlhFd3lZoyJPavHBbW8GPiCy5SJ3NCxM6trbgQQ8agu7sr72J83clBA==
+  dependencies:
+    quicktask "1.1.0"
+    xstream "10.x || 11.x"
+
 "@cypress/listr-verbose-renderer@0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@cypress/listr-verbose-renderer/-/listr-verbose-renderer-0.4.1.tgz#a77492f4b11dcc7c446a34b3e28721afd33c642a"
@@ -321,6 +339,11 @@
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
+
+"@types/lodash@^4.14.159":
+  version "4.14.159"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.159.tgz#61089719dc6fdd9c5cb46efc827f2571d1517065"
+  integrity sha512-gF7A72f7WQN33DpqOWw9geApQPh4M3PxluMtaHxWHXEGSN12/WbcEk/eNSqWNQcQhF66VSZ06vCF94CrHwXJDg==
 
 "@types/minimatch@*":
   version "3.0.3"
@@ -6026,6 +6049,11 @@ querystringify@^2.1.1:
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.1.1.tgz#60e5a5fd64a7f8bfa4d2ab2ed6fdf4c85bad154e"
   integrity sha512-w7fLxIRCRT7U8Qu53jQnJyPkYZIaR4n5151KMfcJlO/A9397Wxb1amJvROTK6TOnp7PfoAmg/qXiNHI+08jRfA==
 
+quicktask@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/quicktask/-/quicktask-1.1.0.tgz#70795fd5922fb122100e662118c73a06aadd7352"
+  integrity sha512-b3w19IEXnt5auacLAbePVsqPyVQUwmuhJQrrWnVhm4pP8PAMg2U9vFHbAD9XYXXbMDjdLJs0x5NLqwTV8uFK4g==
+
 ramda@0.26.1:
   version "0.26.1"
   resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.26.1.tgz#8d41351eb8111c55353617fc3bbffad8e4d35d06"
@@ -6573,6 +6601,18 @@ slice-ansi@^2.1.0:
     astral-regex "^1.0.0"
     is-fullwidth-code-point "^2.0.0"
 
+snabbdom-selector@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/snabbdom-selector/-/snabbdom-selector-4.2.0.tgz#f5a2719eecfbebf5da18a6bf96f0d9008b4d66c3"
+  integrity sha512-hNIg1xDMxssUeMC/4r3OGxXhm8pbyJ0KIG0pXrA3J5ZQK+FkPa+WA9DYw4ROMLq5/LrfurMNMvy3IMm+0CzcnA==
+  dependencies:
+    tree-selector "^2.1.0"
+
+snabbdom@^0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/snabbdom/-/snabbdom-0.7.4.tgz#817f07e8d3fb870960c3763b8da56f1ba982d31a"
+  integrity sha512-nnN+7uZ2NTIiu7EPMNwSDhmrYXqwlfCP/j72RdzvDPujXyvQxOW7Jl9yuLayzxMHDNWQR7FM6Pcn4wnDpKRe6Q==
+
 snapdragon-node@^2.0.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/snapdragon-node/-/snapdragon-node-2.1.1.tgz#6c175f86ff14bdb0724563e8f3c1b021a286853b"
@@ -6976,7 +7016,7 @@ svgo@^1.0.0:
     unquote "~1.1.1"
     util.promisify "~1.0.0"
 
-symbol-observable@^1.1.0:
+symbol-observable@1.2.0, symbol-observable@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"
   integrity sha512-e900nM8RRtGhlV36KGEU9k65K3mPb1WV70OdjfxlG2EAuM1noi/E/BaW/uMhL7bPEssK8QV57vN3esixjUvcXQ==
@@ -7138,6 +7178,11 @@ transition-controller@^2.0.0:
     "@types/gsap" "^1.19.2"
     lodash "^4.17.11"
     seng-event "^2.0.1"
+
+tree-selector@^2.1.0:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/tree-selector/-/tree-selector-2.1.1.tgz#644af6c3aa361aabdd8ae545b58f82155884fc17"
+  integrity sha512-NVFYU6YzyUHSMS7+qbhdHlBHG5P9IPjycQa+8MnIBDpq/UWEkMD+lAL/56x7Fty+mAq9SWgtg9D4flZfuOZdDg==
 
 ts-loader@^8.0.1:
   version "8.0.1"
@@ -7624,6 +7669,13 @@ ws@^6.2.1:
   integrity sha512-GIyAXC2cB7LjvpgMt9EKS2ldqr0MTrORaleiOno6TweZ6r3TKtoFQWay/2PceJ3RuBasOHzXNn5Lrw1X0bEjqA==
   dependencies:
     async-limiter "~1.0.0"
+
+"xstream@10.x || 11.x", xstream@11.x, xstream@^11.12.0:
+  version "11.12.0"
+  resolved "https://registry.yarnpkg.com/xstream/-/xstream-11.12.0.tgz#a85fded069cc8ac3aedc9538e5d94ab6d0ce845a"
+  integrity sha512-rceZqhyRPJdmDNh8hyFEnOacNrL4pTVkNZzoLvFqOVaIZHbM3bS15ycqI5V9eJXCRMfgEapwzcNzPjkIRUkv2Q==
+  dependencies:
+    symbol-observable "1.2.0"
 
 xtend@^4.0.0, xtend@~4.0.1:
   version "4.0.2"

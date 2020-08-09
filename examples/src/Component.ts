@@ -50,10 +50,10 @@ type ComponentRefItem =
   | ComponentRefItemCollection
   | ComponentRefItemComponent<any>;
 
-type ComponentPropTypes<T extends Record<string, any>> = { [P in keyof T]: any };
-type ComponentRefTypes<T extends Record<string, any>> = { [P in keyof T]: ComponentRefItem };
-type ComponentProps<T extends Record<string, any>> = T;
-type ComponentRefs<T extends Record<string, any>> = T;
+export type ComponentPropTypes<T extends Record<string, any>> = { [P in keyof T]: any };
+export type ComponentRefTypes<T extends Record<string, any>> = { [P in keyof T]: ComponentRefItem };
+export type ComponentProps<T extends Record<string, any>> = T;
+export type ComponentRefs<T extends Record<string, any>> = T;
 
 export type DefineComponentOptions<P extends Record<string, any>, R extends Record<string, any>> = {
   name: string;

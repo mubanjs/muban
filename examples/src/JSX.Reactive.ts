@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/naming-convention */
-
 import type { Ref } from '@vue/reactivity';
 import type { ComponentFactory } from './Component';
 
