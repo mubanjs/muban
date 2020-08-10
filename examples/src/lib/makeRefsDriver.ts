@@ -30,7 +30,6 @@ export type ComponentRefs<T extends Record<string, any>> = T;
 const getRefs = <T extends HTMLElement, R extends Record<string, string>>(refs: R, element: T) => {
   return typedObjectEntries(refs).reduce((accumulator, [propName, selector]) => {
     const el = getRef(selector).selector(element);
-    console.log(el);
     (accumulator as any)[propName] = el;
     return accumulator;
   }, {} as ComponentRefs<R>);
@@ -41,7 +40,6 @@ export const makeRefsDriver = <R extends Record<string, any>>(
   element: HTMLElement,
 ) => {
   return () => {
-    console.log(refsSelection);
     const refs = refsSelection && (getRefs(refsSelection, element) as R);
     return mapValues(refs, (element) => {
       return {

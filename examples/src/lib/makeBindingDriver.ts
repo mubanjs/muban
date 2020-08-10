@@ -3,11 +3,14 @@ import { castArray } from 'lodash';
 
 type BindingValue<T> = T;
 
+export type BindSource = {
+  click?: (event: HTMLElementEventMap['click']) => void;
+};
+
 export type BindProps<T> = {
   target: T | undefined;
   text?: BindingValue<string>;
   html?: BindingValue<string>;
-  click?: (event: HTMLElementEventMap['click']) => void;
   style?: BindingValue<Record<string, string>>;
   css?: BindingValue<Record<string, string>>;
 };
