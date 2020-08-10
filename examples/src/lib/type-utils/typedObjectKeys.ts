@@ -9,6 +9,4 @@ type TypedObjectKeys = <T extends { [key: string]: any }>(
   >
 >;
 
-const typedObjectKeys: TypedObjectKeys = Object.keys;
-
-export default typedObjectKeys;
+export const typedObjectKeys: TypedObjectKeys = Object.keys;

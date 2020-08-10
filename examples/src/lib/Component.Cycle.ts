@@ -7,8 +7,8 @@ import type {
 } from './Component';
 import xs, { Stream } from 'xstream';
 import run from '@cycle/run';
-import { makeRefsDriver } from './lib/cycle/makeRefsDriver';
-import { makeBindingDriver, BindProps } from './lib/cycle/makeBindingDriver';
+import { makeRefsDriver } from './makeRefsDriver';
+import { makeBindingDriver, BindProps } from './makeBindingDriver';
 
 type Sources = {
   refs: Stream<Record<string, any>>;

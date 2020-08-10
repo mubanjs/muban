@@ -9,6 +9,4 @@ type TypedObjectEntries = <T extends { [key: string]: any }>(
   >
 >;
 
-const typedObjectEntries: TypedObjectEntries = Object.entries;
-
-export default typedObjectEntries;
+export const typedObjectEntries: TypedObjectEntries = Object.entries;

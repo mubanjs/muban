@@ -6,6 +6,4 @@ type TypedObjectValues = <T extends { [key: string]: any }>(
   }[keyof T]
 >;
 
-const typedObjectValues: TypedObjectValues = Object.values;
-
-export default typedObjectValues;
+export const typedObjectValues: TypedObjectValues = Object.values;

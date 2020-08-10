@@ -1,4 +1,4 @@
-import type { ComponentFactory } from './Component';
+import type { ComponentFactory } from './lib/Component';
 import RequireContext = __WebpackModuleApi.RequireContext;
 
 const cache: Record<string, string> = {};

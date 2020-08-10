@@ -1,6 +1,6 @@
 import xs from 'xstream';
 import { mapValues } from 'lodash';
-import typedObjectEntries from '../../type-utils/typedObjectEntries';
+import { typedObjectEntries } from './type-utils/typedObjectEntries';
 
 type RefItem = {
   type: 'element';

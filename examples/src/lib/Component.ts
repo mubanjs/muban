@@ -10,7 +10,7 @@ import {
   ComponentRef,
   ElementRef,
 } from './JSX.Reactive';
-import typedObjectEntries from './type-utils/typedObjectEntries';
+import { typedObjectEntries } from './type-utils/typedObjectEntries';
 
 export type ComponentFactory<
   P extends Record<string, any> = Record<string, any>
