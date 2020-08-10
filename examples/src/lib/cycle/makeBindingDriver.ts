@@ -1,31 +1,5 @@
-import { getRefs, ComponentRefTypes } from '../../Component';
-import { Stream } from 'xstream';
-import { castArray, mapValues } from 'lodash';
-
-const xs = Stream;
-
-export const makeRefsDriver = <R extends Record<string, any>>(
-  refsSelection: ComponentRefTypes<R>,
-  element: HTMLElement,
-) => {
-  return () => {
-    const refs = getRefs(refsSelection, element) as R;
-    return mapValues(refs, (element) => {
-      return {
-        element: element.value,
-        events: (eventType: string) => {
-          const event$ = xs.create();
-          let count = 0;
-          element.value.addEventListener(eventType, function (event: any) {
-            // lol
-            event$.shamefullySendNext({ event, count: count++ });
-          });
-          return event$;
-        },
-      };
-    });
-  };
-};
+import type { Stream } from 'xstream';
+import { castArray } from 'lodash';
 
 type BindingValue<T> = T;
 

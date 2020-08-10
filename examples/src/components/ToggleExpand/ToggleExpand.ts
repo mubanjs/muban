@@ -14,8 +14,8 @@ export const elementBinding = <T extends HTMLElement>(
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default defineComponent<Record<string, any>, Record<string, any>>({
-  name: 'toggle-expand',
+export const ToggleExpand = defineComponent<Record<string, any>, Record<string, any>>({
+  name: 'toggleExpand',
   props: {
     isExpanded: Boolean,
   },

@@ -1,11 +1,11 @@
-<link rel="stylesheet" href="./tabbed-content.css" />
+<link rel="stylesheet" href="./TabbedContent.css" />
 
 <!--
 Clicking a tab should show the related tab-content item.
 This is a simple setup and just uses the index
 -->
 
-<div class="tabbed-content" data-component="tabbed-content">
+<div class="tabbed-content" data-component="TabbedContent">
   <ul class="nav nav-tabs">
     <!-- (How do/Can) we handle multiple refs with the same name? -->
     <li class="nav-item"><button class="nav-link active" data-ref="tab">Tab 1</button></li>
@@ -20,14 +20,16 @@ This is a simple setup and just uses the index
 
   Should we also create utils for setting common aria states? Tab Content with "Aria-hidden" etc.
   -->
-  <div class="tab-content" data-ref="tab-content">
+  <div class="tab-content" data-ref="tabContent">
+    <h2>Content 1</h2>
     <p>
       Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque consequatur cum laboriosam
       voluptate voluptatibus. Alias aut autem eligendi perspiciatis provident quae quisquam sapiente
       sequi, vero voluptatibus. Dolores dolorum exercitationem voluptate.
     </p>
   </div>
-  <div class="tab-content" data-ref="tab-content">
+  <div class="tab-content" data-ref="tabContent">
+    <h2>Content 2</h2>
     <p>
       Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque consequatur cum laboriosam
       voluptate voluptatibus. Alias aut autem eligendi perspiciatis provident quae quisquam sapiente
@@ -39,7 +41,8 @@ This is a simple setup and just uses the index
       sequi, vero voluptatibus. Dolores dolorum exercitationem voluptate.
     </p>
   </div>
-  <div class="tab-content" data-ref="tab-content">
+  <div class="tab-content" data-ref="tabContent">
+    <h2>Content 3</h2>
     <p>
       Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque consequatur cum laboriosam
       voluptate voluptatibus. Alias aut autem eligendi perspiciatis provident quae quisquam sapiente
