@@ -10,7 +10,6 @@ import {
   ComponentRef,
   ElementRef,
 } from './JSX.Reactive';
-import { typedObjectEntries } from './type-utils/typedObjectEntries';
 
 export type ComponentFactory<
   P extends Record<string, any> = Record<string, any>
@@ -167,21 +166,5 @@ export function getProps<T extends HTMLElement>(
       }
       return accumulator;
     }, {} as Record<string, any>) ?? {}
-  );
-}
-export function getRefs<T extends HTMLElement, R extends Record<string, ComponentRefItem>>(
-  refs: R | undefined,
-  element: T,
-): ComponentRefs<R> | {} {
-  return (
-    (refs &&
-      typedObjectEntries(refs).reduce((accumulator, [propName, selector]) => {
-        (accumulator as any)[propName] = (typeof selector === 'string'
-          ? refElement(selector)
-          : selector
-        ).selector(element);
-        return accumulator;
-      }, {} as ComponentRefs<R>)) ??
-    {}
   );
 }
