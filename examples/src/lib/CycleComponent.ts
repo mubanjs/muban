@@ -53,30 +53,29 @@ export const defineComponent = <P extends Record<string, any>, R extends Record<
 
     // TODO: get children as source and pass back on the return
     const ToggleExpand = ({ refs }: Sources) => {
-      // const expandButton$ = refs.select('expandButton');
-      // const expandContent$ = refs.select('expandContent');
+      const expandButton$ = refs.select('expandButton');
+      const expandContent$ = refs.select('expandContent');
 
-      // const isExpanded$ = expandButton$
-      //   .events('click')
-      //   .map(({ count }) => count % 2 === 0)
-      //   .startWith(false);
+      const isExpanded$ = expandButton$
+        .events('click')
+        .map(({ count }) => count % 2 === 0)
+        .startWith(false);
 
       return {
-        asd: [
-          // expandButton$.bind({
-          //   text: isExpanded$.map((isExpanded) => (isExpanded ? 'read less...' : 'read more...')),
-          // }),
-          // expandContent$.bind({
-          //   style: {
-          //     display: isExpanded$.map((isExpanded) => (isExpanded ? 'block' : 'none')),
-          //   },
-          // }),
+        refs: [
+          expandButton$.bind({
+            text: isExpanded$.map((isExpanded) => (isExpanded ? 'read less...' : 'read more...')),
+          }),
+          expandContent$.bind({
+            style: {
+              display: isExpanded$.map((isExpanded) => (isExpanded ? 'block' : 'none')),
+            },
+          }),
         ],
       };
     };
 
-    const dispose = run(ToggleExpand as any, {
-      // bindings: bindingsDriver,
+    const dispose = run(ToggleExpand, {
       refs: makeRefBindingDriver(element),
     });
 
