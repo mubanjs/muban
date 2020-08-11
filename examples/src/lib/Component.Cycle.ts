@@ -5,16 +5,9 @@ import type {
   ComponentPropTypes,
   ComponentRefTypes,
 } from './Component';
-import xs, { Stream } from 'xstream';
+import xs from 'xstream';
 import run from '@cycle/run';
-import { makeRefsDriver } from './makeRefsDriver';
-import { makeBindingDriver, BindProps } from './makeBindingDriver';
-
-type Sources = {
-  refs: Stream<Record<string, any>>;
-  binding: Stream<BindProps<HTMLElement>>; // TODO: type
-  // DOM: MainDOMSource;
-};
+import { makeRefBindingDriver, bindingsDriver, RefSelectorSource } from './makeRefBindingDriver';
 
 export type DefineComponentOptionsCycle<
   P extends Record<string, any>,
@@ -29,6 +22,11 @@ export const defineComponent = <P extends Record<string, any>, R extends Record<
   options: DefineComponentOptionsCycle<P, R>,
 ): ComponentFactory<P> => {
   const fn: ComponentReturnValue<P> = (element) => {
+    type Sources = {
+      refs: RefSelectorSource;
+      // DOM: MainDOMSource;
+    };
+
     const TabbedContent = ({ refs }: Sources) => {
       console.log(refs);
       // const { expandButton, expandContent } = refs as any;
@@ -53,40 +51,34 @@ export const defineComponent = <P extends Record<string, any>, R extends Record<
       };
     };
 
-    // // TODO: move function once we know what the parent/children pattern to use
-    // const ToggleExpand = ({ refs }: Sources) => {
-    //   // TODO: fix type
-    //   const { expandButton, expandContent } = refs as any;
+    // TODO: get children as source and pass back on the return
+    const ToggleExpand = ({ refs }: Sources) => {
+      // const expandButton$ = refs.select('expandButton');
+      // const expandContent$ = refs.select('expandContent');
 
-    //   const expanded$ = expandButton
-    //     .events('click')
-    //     .map(({ count }: any) => count % 2 === 0)
-    //     .startWith(false);
+      // const isExpanded$ = expandButton$
+      //   .events('click')
+      //   .map(({ count }) => count % 2 === 0)
+      //   .startWith(false);
 
-    //   return {
-    //     binding: expanded$.map((isExpanded: boolean) => [
-    //       {
-    //         target: expandButton,
-    //         text: isExpanded ? 'read less...' : 'read more...',
-    //       },
-    //       {
-    //         target: expandContent,
-    //         style: {
-    //           display: isExpanded ? 'block' : 'none',
-    //         },
-    //       },
-    //     ]),
-    //   };
-    // };
+      return {
+        asd: [
+          // expandButton$.bind({
+          //   text: isExpanded$.map((isExpanded) => (isExpanded ? 'read less...' : 'read more...')),
+          // }),
+          // expandContent$.bind({
+          //   style: {
+          //     display: isExpanded$.map((isExpanded) => (isExpanded ? 'block' : 'none')),
+          //   },
+          // }),
+        ],
+      };
+    };
 
-    const dispose = run(
-      TabbedContent as any,
-      {
-        // could/should these be a single driver? we also need to account for props and children
-        refs: makeRefsDriver(options.refs!, element),
-        binding: makeBindingDriver(),
-      } as any,
-    );
+    const dispose = run(ToggleExpand as any, {
+      // bindings: bindingsDriver,
+      refs: makeRefBindingDriver(element),
+    });
 
     return {
       name: options.name,
