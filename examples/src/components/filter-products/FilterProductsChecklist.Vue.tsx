@@ -1,18 +1,12 @@
 import { refCollection } from '../../Component';
 import { defineComponent } from '../../Component.Vue';
-import { createElement, Fragment, CollectionRef } from '../../JSX.Reactive';
+import { createElement, Fragment } from '../../JSX.Vue';
+import { propType } from '../../prop-types';
 
-type Props = {
-  onChange?: (value: Array<string>) => void;
-};
-type Refs = {
-  checkboxes: CollectionRef<HTMLInputElement>;
-};
-
-export default defineComponent<Props, Refs>({
+export default defineComponent({
   name: 'filter-products-checklist',
   props: {
-    onChange: Function,
+    onChange: propType.func.shape<(value: Array<string>) => void>().optional,
   },
   refs: {
     checkboxes: refCollection('checkbox'),

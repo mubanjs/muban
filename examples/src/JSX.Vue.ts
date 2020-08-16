@@ -32,13 +32,13 @@ export const BindCollection = <T extends HTMLElement>(
   };
 };
 
-export type ComponentRef<T extends ComponentFactory> = ((
+export type ComponentRef<T extends ComponentFactory<any>> = ((
   props: ComponentSetPropsParam<ReturnType<T>>,
 ) => void) & { value: ReturnType<T> };
 export type ComponentSetPropsParam<T> = T extends { setProps(props: infer R): void } ? R : T;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function BindComponent<T extends Pick<ReturnType<ComponentFactory>, 'setProps'>>(
+export function BindComponent<T extends Pick<ReturnType<ComponentFactory<any>>, 'setProps'>>(
   props: { ref: T | undefined } & ComponentSetPropsParam<T>,
 ): { type: 'component'; props: { ref: T | undefined } & ComponentSetPropsParam<T> } {
   return {

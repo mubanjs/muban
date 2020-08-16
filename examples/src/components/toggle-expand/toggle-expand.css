@@ -1,6 +1,16 @@
 [data-component="toggle-expand"] {
-  color: darkgray;
+  color: green;
   padding: 0 20px;
+
+  & [data-ref="expand-content"] {
+    display: none;
+  }
+
+  &.isExpanded {
+    & [data-ref="expand-content"] {
+      display: block;
+    }
+  }
 
   & p {
     max-width: 400px;

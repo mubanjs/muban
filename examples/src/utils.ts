@@ -4,11 +4,11 @@ import RequireContext = __WebpackModuleApi.RequireContext;
 const cache: Record<string, string> = {};
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const store: Record<string, Record<string, () => ComponentFactory>> = {};
+const store: Record<string, Record<string, () => ComponentFactory<any>>> = {};
 
 export function register(
   componentName: string,
-  components: Record<string, () => ComponentFactory>,
+  components: Record<string, () => ComponentFactory<any>>,
 ): void {
   store[componentName] = components;
 }

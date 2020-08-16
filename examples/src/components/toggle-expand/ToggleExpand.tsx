@@ -1,7 +1,9 @@
 /* eslint-disable react/jsx-key */
+import { isBoolean, optional } from 'isntnt';
 import { defineComponent } from '../../Component.Vue';
-import { createElement, Fragment, ElementRef } from '../../JSX.Reactive';
+import { createElement, Fragment, ElementRef } from '../../JSX.Vue';
 import { computed, ref } from '@vue/reactivity';
+import { propType } from '../../prop-types';
 
 type Props = {
   isExpanded: boolean;
@@ -17,10 +19,10 @@ const useToggle = (initialValue: boolean) => {
   return [state, toggle] as const;
 };
 
-export default defineComponent<Props, Refs>({
+export default defineComponent({
   name: 'toggle-expand',
   props: {
-    isExpanded: Boolean,
+    isExpanded: propType.boolean.validate(optional(isBoolean)),
   },
   refs: {
     expandButton: 'expand-button',

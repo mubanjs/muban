@@ -8,13 +8,16 @@ import {
   BindProps,
   CollectionRef,
   ComponentRef,
+  ComponentSetPropsParam,
   ElementRef,
-} from './JSX.Reactive';
+} from './JSX.Vue';
+import type { PropTypeDefinition, TypedProps } from './prop-types';
 import typedObjectEntries from './type-utils/typedObjectEntries';
 
-export type ComponentFactory<
-  P extends Record<string, any> = Record<string, any>
-> = ComponentReturnValue<P> & ComponentDisplayName;
+export type ComponentFactory<P extends Record<string, PropTypeDefinition>> = ComponentReturnValue<
+  TypedProps<P>
+> &
+  ComponentDisplayName;
 
 export type ComponentDisplayName = { displayName: string };
 export type ComponentReturnValue<P extends Record<string, any> = Record<string, any>> = (
@@ -37,48 +40,56 @@ type ComponentRefItemCollection = {
   selector: (parent: HTMLElement) => CollectionRef<HTMLElement>;
   isRequired?: boolean;
 };
-type ComponentRefItemComponent<T extends ComponentRef<ComponentFactory>> = {
+type ComponentRefItemComponent<T extends ComponentFactory<Record<string, any>>> = {
   type: 'component';
   ref?: string;
-  selector: (parent: HTMLElement) => T | undefined;
+  selector: (parent: HTMLElement) => ComponentRef<T> | undefined;
   isRequired?: boolean;
 };
 
-type ComponentRefItem =
+export type ComponentRefItem =
   | string
   | ComponentRefItemElement
   | ComponentRefItemCollection
   | ComponentRefItemComponent<any>;
 
-type ComponentPropTypes<T extends Record<string, any>> = { [P in keyof T]: any };
-type ComponentRefTypes<T extends Record<string, any>> = { [P in keyof T]: ComponentRefItem };
-type ComponentProps<T extends Record<string, any>> = T;
-type ComponentRefs<T extends Record<string, any>> = T;
+export type TypedRef<T extends ComponentRefItem> = T extends {
+  selector: (parent: HTMLElement) => infer R;
+}
+  ? Exclude<R, undefined>
+  : ElementRef<HTMLElement>;
 
-export type DefineComponentOptions<P extends Record<string, any>, R extends Record<string, any>> = {
-  name: string;
-  props?: ComponentPropTypes<P>;
-  refs?: ComponentRefTypes<R>;
-  setup: (
-    props: ComponentProps<P>,
-    refs: ComponentRefs<R>,
-    context: { element: HTMLElement },
-  ) => undefined | null | Array<Binding>;
+export type TypedRefs<T extends Record<string, ComponentRefItem>> = {
+  [P in keyof T]: TypedRef<T[P]>;
 };
 
-export type DefineComponentOptionsReact<
-  P extends Record<string, any>,
-  R extends Record<string, any>
+export type DefineComponentOptions<
+  P extends Record<string, PropTypeDefinition>,
+  R extends Record<string, ComponentRefItem>
 > = {
   name: string;
-  props?: ComponentPropTypes<P>;
-  refs?: ComponentRefTypes<R>;
-  render: (
-    props: ComponentProps<P>,
-    refs: ComponentRefs<R>,
+  props?: P;
+  refs?: R;
+  setup: (
+    props: TypedProps<P>,
+    refs: TypedRefs<R>,
     context: { element: HTMLElement },
   ) => undefined | null | Array<Binding>;
 };
+
+// export type DefineComponentOptionsReact<
+//   P extends Record<string, any>,
+//   R extends Record<string, any>
+// > = {
+//   name: string;
+//   props?: P;
+//   refs?: R;
+//   render: (
+//     props: ComponentProps<P>,
+//     refs: ComponentRefs<R>,
+//     context: { element: HTMLElement },
+//   ) => undefined | null | Array<Binding>;
+// };
 
 export function refCollection(
   ref: string,
@@ -130,8 +141,8 @@ export function refElement(
   };
 }
 
-export function refComponent<T extends ComponentRef<ComponentFactory>>(
-  component: ComponentFactory,
+export function refComponent<T extends ComponentFactory<any>>(
+  component: T,
   { ref, isRequired = true }: { ref?: string; isRequired?: boolean } = {},
 ): ComponentRefItemComponent<T> {
   return {
@@ -145,34 +156,20 @@ export function refComponent<T extends ComponentRef<ComponentFactory>>(
         console.error('Component not found', query);
       }
       const instance = (element && component(element)) ?? undefined;
-      const fn = (props: { onChange: (value: Array<string>) => void }) => {
+      const fn = (props: ComponentSetPropsParam<ReturnType<T>>) => {
         return BindComponent({ ref: instance, ...props });
       };
       fn.value = instance;
-      return (fn as unknown) as T;
+      return (fn as unknown) as ComponentRef<T>;
     },
     isRequired,
   };
 }
 
-export function getProps<T extends HTMLElement>(
-  props: Record<string, any> | undefined,
-  element: T,
-) {
-  return (
-    Object.entries(props ?? {}).reduce((accumulator, [propName, propType]) => {
-      const value = element.dataset[propName];
-      if (value !== undefined) {
-        accumulator[propName] = [Boolean, Number].includes(propType) ? JSON.parse(value) : value;
-      }
-      return accumulator;
-    }, {} as Record<string, any>) ?? {}
-  );
-}
 export function getRefs<T extends HTMLElement, R extends Record<string, ComponentRefItem>>(
   refs: R | undefined,
   element: T,
-): ComponentRefs<R> | {} {
+): TypedRefs<R> {
   return (
     (refs &&
       typedObjectEntries(refs).reduce((accumulator, [propName, selector]) => {
@@ -181,7 +178,7 @@ export function getRefs<T extends HTMLElement, R extends Record<string, Componen
           : selector
         ).selector(element);
         return accumulator;
-      }, {} as ComponentRefs<R>)) ??
-    {}
+      }, {} as TypedRefs<R>)) ??
+    ({} as TypedRefs<R>)
   );
 }

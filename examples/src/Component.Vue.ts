@@ -1,14 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { getComponentProps } from '../../src/lib/utils/getComponentProps';
+import { createDataAttributePropertySource } from '../../src/lib/utils/property-sources/createDataAttributePropertySource';
+import { createJsonScriptPropertySource } from '../../src/lib/utils/property-sources/createJsonScriptPropertySource';
+import { createReactivePropertySource } from '../../src/lib/utils/property-sources/createReactivePropertySource';
 import {
   ComponentFactory,
+  ComponentRefItem,
   ComponentReturnValue,
   DefineComponentOptions,
-  getProps,
   getRefs,
 } from './Component';
 // TODO: not sure how much vue-specific stuff gets included in the bundle by this
 import { reactive, unref, watchEffect } from '@vue/runtime-core';
-import type { Binding, BindProps } from './JSX.Reactive';
+import type { Binding, BindProps } from './JSX.Vue';
+import type { PropTypeDefinition, TypedProps } from './prop-types';
 import typedObjectEntries from './type-utils/typedObjectEntries';
 import EventEmitter from 'eventemitter3';
 
@@ -80,13 +85,22 @@ function getCurrentComponentInstance() {
   return componentStack[componentStack.length - 1];
 }
 
-export const defineComponent = <P extends Record<string, any>, R extends Record<string, any>>(
+export const defineComponent = <
+  P extends Record<string, PropTypeDefinition>,
+  R extends Record<string, ComponentRefItem>
+>(
   options: DefineComponentOptions<P, R>,
 ): ComponentFactory<P> => {
   // TODO: this function doesn't expose the component name, which is something we might want
   return Object.assign(
     ((element) => {
-      const resolvedProps = getProps(options?.props, element);
+      const sources = [
+        createDataAttributePropertySource(),
+        createJsonScriptPropertySource(),
+        createReactivePropertySource(),
+      ];
+
+      const resolvedProps = getComponentProps(options.props, element, sources);
       const resolvedRefs = getRefs(options?.refs, element);
 
       const reactiveProps = reactive(resolvedProps);
@@ -107,7 +121,7 @@ export const defineComponent = <P extends Record<string, any>, R extends Record<
       };
 
       componentStack.push(lifecycle);
-      const bindings = options.setup(reactiveProps as any, resolvedRefs as any, { element });
+      const bindings = options.setup(reactiveProps as any, resolvedRefs, { element });
       componentStack.pop();
 
       applyBindings(bindings);
@@ -129,7 +143,7 @@ export const defineComponent = <P extends Record<string, any>, R extends Record<
           lifecycle.ee.removeAllListeners();
         },
       };
-    }) as ComponentReturnValue<P>,
+    }) as ComponentReturnValue<TypedProps<P>>,
     { displayName: options.name },
   );
 };

@@ -59,7 +59,7 @@ const reactSettings = {
   },
   extends: ['prettier/react'],
   rules: {
-    'react/jsx-key': 2,
+    // 'react/jsx-key': 2,
     'react/jsx-no-comment-textnodes': 2,
     'react/jsx-no-duplicate-props': 2,
     'react/jsx-no-target-blank': 2,
