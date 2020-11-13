@@ -1,5 +1,6 @@
-import type { ComponentFactory } from './Component';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import RequireContext = __WebpackModuleApi.RequireContext;
+import type { ComponentFactory } from '../../src/lib/Component.types';
 
 const cache: Record<string, string> = {};
 

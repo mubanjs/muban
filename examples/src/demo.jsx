@@ -1,4 +1,4 @@
-import { createElement } from './JSX.Vue';
+import { createElement } from './JSX.ts';
 
 function setup() {
 

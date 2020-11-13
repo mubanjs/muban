@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types */
-import { isString, Static, Predicate, isNumber, Primitive, optional, isDate } from 'isntnt';
+import { isString, isNumber, optional, isDate } from 'isntnt';
+import { propType } from '../../src/lib/utils/props/propDefinitions';
+import type {
+  ExtractType,
+  PropTypeDefinition,
+  TypedProp,
+  TypedProps,
+} from '../../src/lib/utils/props/propDefinitions.types';
 
 // # everything
 // default = required
@@ -22,21 +29,6 @@ import { isString, Static, Predicate, isNumber, Primitive, optional, isDate } fr
 // .date.optional({ defaultValue?: Date})
 // .shape() // does autoConvert
 // .shape.optional({ defaultValue?: Date})
-
-export type PropTypeDefinition<T = any> = {
-  type:
-    | typeof Number
-    | typeof String
-    | typeof Boolean
-    | typeof Date
-    | typeof Array
-    | typeof Object
-    | typeof Function;
-  default?: T extends Primitive ? T : () => T;
-  validator?: Predicate<T>;
-  isOptional?: boolean;
-  shapeType?: Function;
-};
 
 // const getOptional = <T extends {}>(type: T) => {
 //   return {
@@ -98,64 +90,6 @@ export type PropTypeDefinition<T = any> = {
 //     ...getShape(),
 //   },
 // };
-
-const addOptional = <T extends PropTypeDefinition>(obj: T) => ({
-  ...obj,
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  optional: addDefaultValue(
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    addPredicate({
-      ...obj,
-      isOptional: true,
-    }),
-  ),
-});
-const addDefaultValue = <T extends PropTypeDefinition>(obj: T) => ({
-  ...obj,
-  defaultValue: <U extends ConstructorType<T['type']> | undefined>(
-    value: U extends Primitive ? U : () => U,
-  ) =>
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    addPredicate({
-      ...obj,
-      isOptional: true,
-      default: value,
-    }),
-});
-const addPredicate = <T extends PropTypeDefinition>(obj: T) => ({
-  ...obj,
-  validate: <U extends ConstructorType<T['type']> | undefined>(predicate: Predicate<U>) => ({
-    ...obj,
-    validator: predicate,
-  }),
-});
-const addShape = <T extends PropTypeDefinition>(obj: T) => ({
-  ...obj,
-  shape: <T extends Function>() =>
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    generateType(obj.type, {
-      ...obj,
-      shapeType: (true as unknown) as T,
-    }),
-});
-
-const generateType = <T extends PropTypeDefinition['type'], U extends {}>(type: T, obj: U) =>
-  addPredicate(
-    addOptional(
-      addDefaultValue({
-        ...obj,
-        type: type,
-      }),
-    ),
-  );
-
-export const propType = {
-  string: generateType(String, {}),
-  number: generateType(Number, {}),
-  boolean: generateType(Boolean, {}),
-  date: generateType(Date, {}),
-  func: addShape(addOptional({ type: Function })),
-};
 
 // const ptString = addPredicate(
 //   addOptional(
@@ -258,45 +192,6 @@ export const propType = {
 //   //   defaultValue: 1,
 //   // }),
 // };
-
-type OptionalPropertyKeys<T> = {
-  [P in keyof T]: undefined extends T[P] ? P : never;
-}[keyof T];
-type RequiredPropertyKeys<T> = {
-  [P in keyof T]: undefined extends T[P] ? never : P;
-}[keyof T];
-type Keys<T> = keyof T;
-
-// maps String to string, but keeps Date as Date
-// primitives go back to normal, other stuff keep their instance type
-type ConstructorType<T extends PropTypeDefinition['type']> = InstanceType<T> extends InstanceType<
-  typeof String | typeof Boolean | typeof Number
->
-  ? ReturnType<T>
-  : InstanceType<T>;
-
-// if a validator is available, use the type from that predicate
-// otherwise, use the instanceType from passed `type` (e.g. Number or String)
-// type ExtractType<T extends PropTypeDefinition> = 'validator' extends RequiredPropertyKeys<T>
-//   ? Static<Exclude<T['validator'], undefined>>
-//   : ReturnType<T['type']>;
-type ExtractType<T extends PropTypeDefinition> = 'shapeType' extends Keys<T>
-  ? T['shapeType']
-  : 'validator' extends Keys<T>
-  ? Static<Exclude<T['validator'], undefined>>
-  : ConstructorType<T['type']>;
-
-// if required is not undefined, then it's set to false, so the type should become optional
-type ExtractOptionalType<
-  T extends PropTypeDefinition,
-  V extends any
-> = 'isOptional' extends RequiredPropertyKeys<T> ? V | undefined : V;
-
-export type TypedProp<T extends PropTypeDefinition> = ExtractOptionalType<T, ExtractType<T>>;
-
-export type TypedProps<T extends Record<string, PropTypeDefinition>> = {
-  [P in keyof T]: TypedProp<T[P]>;
-};
 
 const dsf = {
   type: Function,

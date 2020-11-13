@@ -5,4 +5,5 @@
 .card-img-top {
   height: 12rem;
   background: lightgray;
+  object-fit: cover;
 }

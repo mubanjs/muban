@@ -3,7 +3,6 @@ import path from 'path';
 import express from 'express';
 import cors from 'cors';
 // const morgan = require('morgan');
-import { logger } from '@storybook/node-logger';
 import exphbs from 'express-handlebars';
 
 import webpack from 'webpack';
@@ -46,7 +45,7 @@ const compiler = webpack({
   },
   plugins: [new webpack.HotModuleReplacementPlugin()],
 });
-import { html } from 'lit-ntml';
+// import { html } from 'lit-ntml';
 import typedObjectEntries from '../examples/src/type-utils/typedObjectEntries';
 
 const port = process.env.PORT || 8080;
@@ -87,13 +86,14 @@ app.get(/storybook_preview\/(.*)/, async (req, res, next) => {
   const props = parseQueryProps(req.query);
   console.log('props', props);
 
-  const content = await html`${(
+  const content = '';
+  /*await html`${(
     await import('../examples/src/components/toggle-expand/ToggleExpand.template')
-  ).template(props)}`;
+  ).template(props)}`;*/
 
   res.render('index', { component: path, content });
 });
 
-app.listen(port, () => logger.info(`Server listening on port ${port}!`));
+app.listen(port, () => console.log(`Server listening on port ${port}!`));
 
 export default app;

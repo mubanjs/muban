@@ -2,7 +2,7 @@
 import type { TimelineMax } from 'gsap';
 import AbstractTransitionController from 'transition-controller';
 import type { IAbstractTransitionControllerOptions } from 'transition-controller/lib/interface/IAbstractTranstitionControllerOptions';
-import { onMount, onUnmount } from './Component.Vue';
+import { onMount, onUnmount } from '../../src/lib/Component.Reactive';
 
 type TransitionHooks = {
   setupTransitionInTimeline?: (timeline: TimelineMax, parent: any, id: string) => void;

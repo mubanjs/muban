@@ -1,7 +1,4 @@
 [data-component="toggle-expand"] {
-  color: green;
-  padding: 0 20px;
-
   & [data-ref="expand-content"] {
     display: none;
   }

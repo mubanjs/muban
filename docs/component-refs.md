@@ -399,3 +399,70 @@ within the template, they always are a boxed value, so they can be passed around
 by exposing all refs on a single object, because they are configured in a single place, doesn't have to follow the same
 logic, it might make more sense when we think about how we pass around those refs to elements to other util functions
 and our own hooks. Not having to convert them to refs ourselves might be the convenient option.
+
+## Current workings
+
+### 1. Specify refs in the component setup
+
+We can define 3 types of refs in the component setup:
+1. single DOM elements (`querySelector`)
+2. a DOM collection (`querySelectorAll`)
+3. A component (select a single element, retrieve component instance)
+4. (do we need a component collection?)
+
+Each of these are configured through a selector function, which receives the required information
+to query the element, and can be passed some options (like required vs optional).
+
+These selector functions return a configuration object that can be used when the component is
+created.
+
+### 2. Creating the component
+
+When a component is created, the selector function that exists on the configuration object is
+executed for each ref (passing the component root element).
+
+The selector function makes sure the right element is selected, runs its validation, and can
+execute other code that is needed for specific ref types (like instantiating a child component).
+
+Ths selector function returns the "object" that is passed to the setup function in the "refs"
+parameter. It's a function with a "value" property attached (to access the actual DOM element, or
+ component).
+ 
+This function is basically a JSX Function Component - that can receive JSX props as the first
+parameter.
+
+### 3. Define the bindings using refs
+
+All bindings will use the refs passed to the setup function. We mainly use JSX, but can also call
+those functions directly.
+
+```jsx
+// using JSX
+return <ref.fooElement text={label} click={onClick} />
+
+// using the JS version of the JSX
+return createElement(ref.fooElement, {text: label, click: onClick})
+
+// using the function directly
+return ref.fooElement({text: label, click: onClick});
+
+
+// or calling the binding directly
+return BindElement({ref: ref.fooElement.value, text: label, click: onClick});
+
+// or defining the node directly
+return {
+  type: 'element',
+  props: {ref: ref.fooElement.value, text: label, click: onClick},
+}
+```
+
+### 4. Executing the bindings
+
+When the setup function get executed, the following happens.
+
+1. JSX is already "transformed" by babel/ts to the JS equivalent
+2. each binding is executed, and the binding function (that is returned from the ref `selector`
+function) is executed, which calls `BindElement` which returns the object with all props.
+3. These bindings are then "executed" to set up the right logic for each specific binding.
+4. Whenever any of observables that are passed as props are changed, the bindings will re-execute.

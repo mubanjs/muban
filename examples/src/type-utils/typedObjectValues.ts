@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type TypedObjectValues = <T extends { [key: string]: any }>(
   obj: T,
 ) => Array<
