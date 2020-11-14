@@ -12,7 +12,7 @@
 
 ## Props
 
-Research: [./docs/component-props.md].
+Research: [component-props](./docs/component-props.md).
 
 **Done**
 + define props as part of component definition
@@ -32,7 +32,7 @@ Research: [./docs/component-props.md].
 
 ## Refs
 
-Research: [./docs/component-refs.md].
+Research: [component-refs](./docs/component-refs.md).
 
 **Done**
 + define refs as part of component definition
@@ -45,6 +45,8 @@ Research: [./docs/component-refs.md].
 + update refs when DOM updates
 + update bindings when refs update
 + destroy ref bindings when component unmounts
++ Rename `refs.foo.value` to either `refs.foo.element(s)` or `refs.foo.component(s)`
++ Add default `self` ref to the component root element, to allow bindings on that as well
 
 **Todo**
 - rename refs to something else, to not conflict with the reactive `ref/unref` functions?
@@ -53,7 +55,6 @@ Research: [./docs/component-refs.md].
 - Add support for optional ref typing
 - Add better "mapping" support over individual refs inside a collection to support reactive ref
   updates (`refs.filters.mapRefs((Ref, index)) => <Ref ... />)` that will call those again)
-- Rename `refs.foo.value` to either `refs.foo.element` or `refs.foo.instance`?
 - Add unit tests
 
 
@@ -67,16 +68,16 @@ Research: [./docs/component-refs.md].
 ## Bindings
 
 **Done**
-+ Can be defined via functions or JSX
++ Can be defined via functions
 + Fully typed
 + Reactive when observable properties are passed
 + Implemented simple text, click, style and class bindings
 + Implement 2-way `checked` binding
 + Cleanup bindings on onmount
 + Rebind when refs change
++ Remove JSX support - too much setup, code complexity and typing issues
 
 **Todo**
-- Figure out if JSX is too complicated, or can interfere with future React integration in projects
 - Implement robust bindings for everything
 - Add unit tests
 
@@ -124,12 +125,11 @@ Research: [./docs/component-refs.md].
 
 ## Runtime dynamic templates
 
-Research: [./docs/component-dynamic-templates.md].
+Research: [component-dynamic-templates](./docs/component-dynamic-templates.md).
 
 **Done**
 + Add `Template` binding with support for extracting data from existing HTML, and re-rendering
   a given template with reactive data.
++ Add linked typings between `template` props and `data` computed for bindTemplate parameters
 
 **Todo**
-- Related to the JSX requirement, add linked typing between the `data` and `template` props for the
- `Template` binding, which isn't really possible in JSX.

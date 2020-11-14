@@ -72,11 +72,15 @@
     /* Advanced Options */
     "skipLibCheck": true,                     /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true,  /* Disallow inconsistently-cased references to the same file. */
-    "importsNotUsedAsValues": "error",         /* Specify emit/checking behavior for imports that are only used for types. */
+    "importsNotUsedAsValues": "error"         /* Specify emit/checking behavior for imports that are only used for types. */
 
-    "outDir": "./examples/dist/",
-    "jsx": "react",
-    "jsxFactory": "createElement",
-    "jsxFragmentFactory": "Fragment"
+//    "outDir": "./examples/dist/",
+//    "jsx": "react",
+//    "jsxFactory": "createElement",
+//    "jsxFragmentFactory": "Fragment"
   }
+//  "include": [
+//    "./src/lib/*",
+//    "./examples/src/*"
+//  ]
 }

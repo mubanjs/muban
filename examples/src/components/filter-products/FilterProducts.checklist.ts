@@ -1,12 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ref } from '@vue/reactivity';
 import { watch, watchEffect } from '@vue/runtime-core';
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { html } from 'lit-html';
 import { ifDefined } from 'lit-html/directives/if-defined';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
-import { createElement, Fragment } from '../../../../src/lib/utils/bindings/JSX';
 import { propType } from '../../../../src/lib/utils/props/propDefinitions';
 import { refCollection } from '../../../../src/lib/utils/refs/refDefinitions';
+import { bind } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 
 const FilterProductsChecklist = defineComponent({
   name: 'filter-products-checklist',
@@ -33,7 +33,7 @@ const FilterProductsChecklist = defineComponent({
       },
     );
 
-    return [<refs.checkboxes checked={selectedItems} />];
+    return [bind(refs.checkboxes, { checked: selectedItems })];
   },
 });
 

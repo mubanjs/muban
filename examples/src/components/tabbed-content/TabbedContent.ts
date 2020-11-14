@@ -5,11 +5,10 @@ import { ifDefined } from 'lit-html/directives/if-defined';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html';
 import { html, TemplateResult } from 'lit-html';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
-import { createElement } from '../../../../src/lib/utils/bindings/JSX';
+import { bind } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { propType } from '../../../../src/lib/utils/props/propDefinitions';
 import { refCollection } from '../../../../src/lib/utils/refs/refDefinitions';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const TabbedContent = defineComponent({
   name: 'tabbed-content',
   props: {
@@ -23,17 +22,17 @@ const TabbedContent = defineComponent({
     const selectedIndex = ref(props.selectedIndex);
 
     return [
-      ...refs.tabs.refs.map((Ref, index) => (
-        <Ref
-          classes={computed(() => ({ active: index === selectedIndex.value }))}
-          click={() => (selectedIndex.value = index)}
-        />
-      )),
-      ...refs.tabContentItems.refs.map((Ref, index) => (
-        <Ref
-          style={computed(() => ({ display: index === selectedIndex.value ? 'block' : 'none' }))}
-        />
-      )),
+      ...refs.tabs.refs.map((Ref, index) =>
+        bind(Ref, {
+          css: computed(() => ({ active: index === selectedIndex.value })),
+          click: () => (selectedIndex.value = index),
+        }),
+      ),
+      ...refs.tabContentItems.refs.map((Ref, index) =>
+        bind(Ref, {
+          style: computed(() => ({ display: index === selectedIndex.value ? 'block' : 'none' })),
+        }),
+      ),
     ];
   },
 });
@@ -77,6 +76,7 @@ type TabbedContentProps = {
   items: Array<TabButtonProps & TabContentItemProps>;
   selectedIndex?: number;
 };
+
 export const tabbedContent = (
   { items, selectedIndex }: TabbedContentProps,
   ref?: string,

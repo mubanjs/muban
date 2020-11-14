@@ -17,12 +17,12 @@ type BindingMap<T> = {
 
 // TODO: these are just prototype bindings
 // eslint-disable-next-line @typescript-eslint/ban-types
-const bindingsMap: BindingMap<Omit<BindProps<any>, 'ref'>> = {
+const bindingsMap: BindingMap<BindProps> = {
   click: clickBinding,
   checked: checkedBinding,
   text: textBinding,
   style: styleBinding,
-  classes: cssBinding,
+  css: cssBinding,
 };
 
 export const applyBindings = (
@@ -31,11 +31,10 @@ export const applyBindings = (
   if (bindings) {
     return bindings.flatMap((binding) => {
       if (binding.type === 'element') {
-        const { ref, ...bindingProps } = binding.props;
         return watch(
-          () => unref(ref),
+          () => unref(binding.ref),
           (element, oldValue, onInvalidate) => {
-            const bindings = typedObjectEntries(bindingProps).flatMap(
+            const bindings = typedObjectEntries(binding.props).flatMap(
               ([bindingName, bindingValue]) => {
                 if (bindingName in bindingsMap && element) {
                   return bindingsMap[bindingName]?.(element, bindingValue as any);
@@ -52,11 +51,10 @@ export const applyBindings = (
           { immediate: true },
         );
       } else if (binding.type === 'collection') {
-        const { ref: refs, ...bindingProps } = binding.props;
         return watch(
-          () => unref(refs),
+          () => unref(binding.ref),
           (elements, oldValue, onInvalidate) => {
-            const bindings = typedObjectEntries(bindingProps).flatMap(
+            const bindings = typedObjectEntries(binding.props).flatMap(
               ([bindingName, bindingValue]) => {
                 if (bindingName in bindingsMap && elements) {
                   return elements.flatMap((element) => {
@@ -75,20 +73,18 @@ export const applyBindings = (
           { immediate: true },
         );
       } else if (binding.type === 'component') {
-        const { ref, ...componentProps } = binding.props;
-        typedObjectEntries(componentProps).map(([propName, bindingValue]) => {
+        typedObjectEntries(binding.props).map(([propName, bindingValue]) => {
           watchEffect(() => {
             // TODO prop validation
-            unref(ref)?.setProps({
+            unref(binding.ref)?.setProps({
               [propName]: unref(bindingValue),
             });
           });
         });
-      } else if (binding.type === 'components') {
-        const { ref: refs, ...componentProps } = binding.props;
-        typedObjectEntries(componentProps).forEach(([propName, bindingValue]) => {
+      } else if (binding.type === 'componentCollection') {
+        typedObjectEntries(binding.props).forEach(([propName, bindingValue]) => {
           watchEffect(() => {
-            const reff = unref(refs);
+            const reff = unref(binding.ref);
             reff?.forEach((ref) => {
               watchEffect(() => {
                 // TODO prop validation
@@ -101,13 +97,13 @@ export const applyBindings = (
         });
       } else if (binding.type === 'template') {
         const { ref, extract, data, template } = binding.props;
-        if (ref && extract) {
-          const extracted = extractFromHTML(ref.value, extract.config);
+        if (ref && ref.element && extract) {
+          const extracted = extractFromHTML(ref.element, extract.config);
           extract.onData(extracted);
         }
         watchEffect(() => {
-          if (ref?.value) {
-            render(template(data.value), ref.value);
+          if (ref?.element) {
+            render(template(data.value), ref.element);
           }
         });
       }

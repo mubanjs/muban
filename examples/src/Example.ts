@@ -4,7 +4,6 @@ import { isBoolean, optional } from 'isntnt';
 import { html } from 'lit-html';
 import type { Story } from '../../muban-storybook/dist/client/preview/types';
 import { defineComponent } from '../../src/lib/Component.Reactive';
-import { createElement } from '../../src/lib/utils/bindings/JSX';
 import { propType } from '../../src/lib/utils/props/propDefinitions';
 import { refElement } from '../../src/lib/utils/refs/refDefinitions';
 import { button } from './components/button/Button';
@@ -109,11 +108,11 @@ const ToggleExpand = defineComponent({
     // return the JSX bindings
     // JSX is optional
     return [
-      // pass the label to the text binding, and the toggle function to the click binding
-      // these will auto-update the HTML whenever the state changes
-      <refs.expandButton text={expandButtonLabel} click={toggleExpanded} />,
-      // toggle the css class of the expanded content based on the state
-      <refs.expandContent classes={computed(() => ({ isExpanded: isExpanded.value }))} />,
+      // // pass the label to the text binding, and the toggle function to the click binding
+      // // these will auto-update the HTML whenever the state changes
+      // <refs.expandButton text={expandButtonLabel} click={toggleExpanded} />,
+      // // toggle the css class of the expanded content based on the state
+      // <refs.expandContent css={computed(() => ({ isExpanded: isExpanded.value }))} />,
     ];
   },
 });

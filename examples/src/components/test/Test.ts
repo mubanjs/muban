@@ -1,8 +1,7 @@
 import { computed, ref } from '@vue/reactivity';
 import { html } from 'lit-html';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
-import { Template } from '../../../../src/lib/utils/bindings/bindingDefinitions';
-import { createElement } from '../../../../src/lib/utils/bindings/JSX';
+import { bind, bindTemplate } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { refComponent, refComponents } from '../../../../src/lib/utils/refs/refDefinitions';
 import { button } from '../button/Button';
 import ProductCard, { productCard } from '../filter-products/FilterProducts.card';
@@ -23,24 +22,24 @@ export default defineComponent({
   },
   setup(props, refs) {
     const shouldRenderToggleExpand = ref(true);
-    const cardsRenderCount = ref(2);
+    const cardsRenderCount = ref<0 | 1 | 2>(2);
 
     return [
-      <refs.toggleExpandUnmount click={() => (shouldRenderToggleExpand.value = false)} />,
-      <refs.toggleExpandRemount click={() => (shouldRenderToggleExpand.value = true)} />,
-      <Template
-        ref={refs.toggleExpandContainer}
-        data={computed(() => ({ shouldRender: shouldRenderToggleExpand.value }))}
-        template={renderToggleExpand}
-      />,
-      <refs.cardsAll click={() => (cardsRenderCount.value = 2)} />,
-      <refs.cardsOne click={() => (cardsRenderCount.value = 1)} />,
-      <refs.cardsNone click={() => (cardsRenderCount.value = 0)} />,
-      <Template
-        ref={refs.cardsContainer}
-        data={computed(() => ({ renderCount: cardsRenderCount.value }))}
-        template={renderCards}
-      />,
+      bind(refs.toggleExpandUnmount, { click: () => (shouldRenderToggleExpand.value = false) }),
+      bind(refs.toggleExpandRemount, { click: () => (shouldRenderToggleExpand.value = true) }),
+      bindTemplate(
+        refs.toggleExpandContainer,
+        computed(() => ({ shouldRender: shouldRenderToggleExpand.value })),
+        renderToggleExpand,
+      ),
+      bind(refs.cardsAll, { click: () => (cardsRenderCount.value = 2) }),
+      bind(refs.cardsOne, { click: () => (cardsRenderCount.value = 1) }),
+      bind(refs.cardsNone, { click: () => (cardsRenderCount.value = 0) }),
+      bindTemplate(
+        refs.cardsContainer,
+        computed(() => ({ renderCount: cardsRenderCount.value })),
+        renderCards,
+      ),
     ];
   },
 });

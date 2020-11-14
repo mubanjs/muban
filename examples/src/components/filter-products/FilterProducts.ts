@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/naming-convention */
-import { computed, reactive, toRaw } from '@vue/reactivity';
+import { computed, reactive } from '@vue/reactivity';
 import { html } from 'lit-html';
 import { ifDefined } from 'lit-html/directives/if-defined';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
 import type { ComponentApi } from '../../../../src/lib/Component.types';
-import { Template } from '../../../../src/lib/utils/bindings/bindingDefinitions';
+import { bind, bindTemplate } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { refComponents, refElement } from '../../../../src/lib/utils/refs/refDefinitions';
-import { createElement, Fragment } from '../../../../src/lib/utils/bindings/JSX';
 import { useTransitionController } from '../../useTransitionController';
 import ProductCard, { productCard, ProductCardProps } from './FilterProducts.card';
 import FilterProductsChecklist, {
@@ -84,34 +83,34 @@ const FilterProducts = defineComponent({
 
     const productData = reactive<Array<ProductCardProps>>([]);
     const { activeFilters, filteredProducts, resetFilters } = useFilters(
-      refs.filters.value,
+      refs.filters.components,
       productData,
     );
 
     return [
-      ...refs.filters.refs.map((Ref) => (
-        <Ref
-          onChange={(filter, value) => {
+      ...refs.filters.refs.map((Ref) =>
+        bind(Ref, {
+          onChange: (filter, value) => {
             const activeFilter = activeFilters.find((f) => f.id === filter);
             if (activeFilter) {
               activeFilter.active = value;
             }
-          }}
-          selected={computed(
+          },
+          selected: computed(
             () =>
               activeFilters
-                .find((filter) => filter.id === Ref.value.props.categoryId)
+                .find((filter) => filter.id === Ref.component?.props.categoryId)
                 ?.active.join(',') || '',
-          )}
-        />
-      )),
-      <refs.resetButton click={resetFilters} />,
-      <Template
-        ref={refs.productsContainer}
-        extract={{ config: extractConfig, onData: (products) => productData.push(...products) }}
-        data={computed(() => ({ products: filteredProducts.value }))}
-        template={productList}
-      />,
+          ),
+        }),
+      ),
+      bind(refs.resetButton, { click: resetFilters }),
+      bindTemplate(
+        refs.productsContainer,
+        computed(() => ({ products: filteredProducts.value })),
+        productList,
+        { config: extractConfig, onData: (products) => productData.push(...products) },
+      ),
     ];
   },
 });

@@ -8,24 +8,19 @@ declare module '@vue/reactivity' {
 }
 
 import { Ref, ref } from '@vue/reactivity';
-import type { ComponentApi, ComponentFactory } from '../../Component.types';
+import type { ComponentFactory } from '../../Component.types';
 import {
   BindCollection,
   BindComponent,
   BindComponents,
   BindElement,
-  BindProps,
 } from '../bindings/bindingDefinitions';
 import type {
-  CollectionRef,
-  ComponentRef,
   ComponentRefItemCollection,
   ComponentRefItemComponent,
-  ComponentRefItemComponents,
+  ComponentRefItemComponentCollection,
   ComponentRefItemElement,
-  ComponentSetPropsParam,
   ComponentsRef,
-  ElementRef,
 } from './refDefinitions.types';
 
 export function refElement(
@@ -35,10 +30,14 @@ export function refElement(
   return {
     ref: refId,
     type: 'element',
-    selector: (parent) => {
+    createRef: (parent) => {
       const elementRef = ref<HTMLElement>();
       const getElement = (initial: boolean = false) => {
-        const element = parent.querySelector<HTMLElement>(`[data-ref="${refId}"]`) ?? undefined;
+        // when ref is not provided, pick the component element itself
+        const element =
+          refId === '_self_'
+            ? parent
+            : parent.querySelector<HTMLElement>(`[data-ref="${refId}"]`) ?? undefined;
         if (isRequired && !element && (initial || elementRef.value !== element)) {
           console.error('Element not found', `[data-ref="${refId}"]`);
         }
@@ -46,22 +45,19 @@ export function refElement(
       };
       elementRef.value = getElement(true);
 
-      // this is the JSX Component function
-      const fn = (props: Omit<BindProps<any>, 'ref'>) => {
-        return BindElement({
-          ref: elementRef,
-          ...props,
-        });
+      return {
+        getBindingDefinition(props) {
+          return BindElement(elementRef, props);
+        },
+        // TODO: this is currently not reactive, so is only correct in the setup function, not in async code or callbacks
+        element: elementRef.value,
+        refreshRefs() {
+          const element = getElement();
+          if (element !== elementRef.value) {
+            elementRef.value = element;
+          }
+        },
       };
-      // TODO: this is currently not reactive, so is only correct in the setup function, not in async code or callbacks
-      fn.value = elementRef.value;
-      fn.refreshRefs = () => {
-        const element = getElement();
-        if (element !== elementRef.value) {
-          elementRef.value = element;
-        }
-      };
-      return (fn as unknown) as ElementRef<HTMLElement>;
     },
     isRequired,
   };
@@ -74,7 +70,7 @@ export function refCollection(
   return {
     ref: refId,
     type: 'collection',
-    selector: (parent) => {
+    createRef: (parent) => {
       const getElements = () => {
         const elements = Array.from(parent.querySelectorAll(`[data-ref="${refId}"]`)) as Array<
           HTMLElement
@@ -86,21 +82,24 @@ export function refCollection(
       };
       const elementsRef = ref(getElements());
 
-      const fn = (props: Omit<BindProps<any>, 'ref'>) => {
-        return BindCollection({ ref: elementsRef, ...props });
+      return {
+        getBindingDefinition(props) {
+          return BindCollection(elementsRef, props);
+        },
+        elements: elementsRef.value,
+        refs: elementsRef.value.map((element) => {
+          return {
+            getBindingDefinition(props) {
+              return BindElement(ref(element), props);
+            },
+            // TODO: this is currently not reactive, so is only correct in the setup function, not in async code or callbacks
+            element: element,
+          };
+        }),
+        refreshRefs() {
+          elementsRef.value = getElements();
+        },
       };
-      fn.value = elementsRef.value;
-      fn.refs = elementsRef.value.map((element) => {
-        const fn = (props: Omit<BindProps<any>, 'ref'>) => {
-          return BindElement({ ref: ref(element), ...props });
-        };
-        fn.value = element;
-        return (fn as unknown) as ElementRef<HTMLElement>;
-      });
-      fn.refreshRefs = () => {
-        elementsRef.value = getElements();
-      };
-      return (fn as unknown) as CollectionRef<HTMLElement>;
     },
     isRequired,
   };
@@ -113,8 +112,8 @@ export function refComponent<T extends ComponentFactory<any>>(
   return {
     ref: refId,
     type: 'component',
-    selector: (parent) => {
-      const instanceRef = ref() as Ref<ComponentApi<any> | undefined>;
+    createRef: (parent) => {
+      const instanceRef = ref() as Ref<ReturnType<T> | undefined>;
 
       const getComponent = (initialRender: boolean = false) => {
         const query = refId
@@ -128,19 +127,20 @@ export function refComponent<T extends ComponentFactory<any>>(
 
         return element === instanceRef.value?.element
           ? instanceRef.value
-          : (element && component(element)) ?? undefined;
+          : (element && (component(element) as ReturnType<T>)) ?? undefined;
       };
 
       instanceRef.value = getComponent(true);
 
-      const fn = (props: ComponentSetPropsParam<ReturnType<T>>) => {
-        return BindComponent({ ref: instanceRef, ...props });
+      return {
+        getBindingDefinition(props) {
+          return BindComponent(instanceRef, props);
+        },
+        component: instanceRef.value,
+        refreshRefs() {
+          instanceRef.value = getComponent();
+        },
       };
-      fn.value = instanceRef.value;
-      fn.refreshRefs = () => {
-        instanceRef.value = getComponent();
-      };
-      return (fn as unknown) as ComponentRef<T>;
     },
     isRequired,
   };
@@ -149,12 +149,12 @@ export function refComponent<T extends ComponentFactory<any>>(
 export function refComponents<T extends ComponentFactory<any>>(
   component: T,
   { ref: refId, isRequired = true }: { ref?: string; isRequired?: boolean } = {},
-): ComponentRefItemComponents<T> {
+): ComponentRefItemComponentCollection<T> {
   return {
     ref: refId,
-    type: 'components',
-    selector: (parent) => {
-      const instancesRef = ref([]) as Ref<Array<ReturnType<ComponentFactory<any>>>>;
+    type: 'componentCollection',
+    createRef: (parent) => {
+      const instancesRef = ref([]) as Ref<Array<ReturnType<T>>>;
 
       const getComponents = () => {
         const query = refId
@@ -167,7 +167,7 @@ export function refComponents<T extends ComponentFactory<any>>(
             .map((instance) => instance.element)
             .indexOf(element);
           if (existingInstance === -1) {
-            return (component as T)(element);
+            return (component as T)(element) as ReturnType<T>;
           } else {
             return instancesRef.value[existingInstance];
           }
@@ -176,21 +176,23 @@ export function refComponents<T extends ComponentFactory<any>>(
 
       instancesRef.value = getComponents();
 
-      const fn = (props: ComponentSetPropsParam<ReturnType<T>>) => {
-        return BindComponents({ ref: instancesRef, ...props });
+      return {
+        getBindingDefinition(props) {
+          return BindComponents(instancesRef, props);
+        },
+        components: instancesRef.value,
+        refs: instancesRef.value.map((instance) => {
+          return {
+            getBindingDefinition(props) {
+              return BindComponent(ref(instance), props);
+            },
+            component: instance,
+          };
+        }) as ComponentsRef<T>['refs'],
+        refreshRefs() {
+          instancesRef.value = getComponents();
+        },
       };
-      fn.value = instancesRef.value;
-      fn.refs = instancesRef.value.map((instance) => {
-        const fn = (props: Omit<BindProps<any>, 'ref'>) => {
-          return BindComponent({ ref: ref(instance), ...props });
-        };
-        fn.value = instance;
-        return (fn as unknown) as ComponentRef<T>;
-      });
-      fn.refreshRefs = () => {
-        instancesRef.value = getComponents();
-      };
-      return (fn as unknown) as ComponentsRef<T>;
     },
     isRequired,
   };

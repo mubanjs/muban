@@ -3,47 +3,51 @@
 import type { Ref } from '@vue/reactivity';
 import type { TemplateResult } from 'lit-html';
 import type { ComponentFactory } from '../../Component.types';
-import type { ComponentSetPropsParam, ElementRef } from '../refs/refDefinitions.types';
+import type { AnyRef, ComponentSetPropsParam, ElementRef } from '../refs/refDefinitions.types';
 
-export const BindElement = <T extends HTMLElement>(
-  props: BindProps<T>,
-): { type: 'element'; props: BindProps<T> } => {
+export function BindElement<T extends HTMLElement>(ref: Ref<T | undefined>, props: BindProps) {
   return {
-    type: 'element',
+    ref,
+    type: 'element' as const,
     props: props,
   };
-};
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BindCollection = <T extends HTMLElement>(
-  props: BindProps<Array<T>>,
-): { type: 'collection'; props: BindProps<Array<T>> } => {
+export function BindCollection<T extends HTMLElement>(ref: Ref<Array<T>>, props: BindProps) {
   return {
-    type: 'collection',
+    ref,
+    type: 'collection' as const,
     props: props,
   };
-};
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function BindComponent<T extends Pick<ReturnType<ComponentFactory<any>>, 'setProps'>>(
-  props: { ref: Ref<T | undefined> } & ComponentSetPropsParam<T>,
-): { type: 'component'; props: { ref: Ref<T | undefined> } & ComponentSetPropsParam<T> } {
+  ref: Ref<T | undefined>,
+  props: ComponentSetPropsParam<T>,
+) {
   return {
-    type: 'component',
+    ref,
+    type: 'component' as const,
     props: props,
   };
 }
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function BindComponents<T extends Pick<ReturnType<ComponentFactory<any>>, 'setProps'>>(
-  props: { ref: Ref<Array<T>> } & ComponentSetPropsParam<T>,
-): { type: 'components'; props: { ref: Ref<Array<T>> } & ComponentSetPropsParam<T> } {
+  ref: Ref<Array<T>>,
+  props: ComponentSetPropsParam<T>,
+) {
   return {
-    type: 'components',
+    ref,
+    type: 'componentCollection' as const,
     props: props,
   };
 }
+
 type TemplateProps<T extends HTMLElement> = {
-  ref: ElementRef<T> | undefined;
+  ref: ElementRef<T, BindProps> | undefined;
   extract?: {
     config: any;
     onData: (data: any) => void;
@@ -60,10 +64,6 @@ export function BindTemplate<T extends HTMLElement>(
   };
 }
 
-export function Template<T extends HTMLElement>(props: TemplateProps<T>): any {
-  return BindTemplate(props);
-}
-
 export type Binding =
   | ReturnType<typeof BindElement>
   | ReturnType<typeof BindCollection>
@@ -73,12 +73,30 @@ export type Binding =
 
 export type BindingValue<T> = Ref<T>;
 
-export type BindProps<T> = {
-  ref: Ref<T | undefined>;
+export type BindProps = {
   text?: BindingValue<string>;
   html?: BindingValue<string>;
   click?: (event: HTMLElementEventMap['click']) => void;
   checked?: Ref<boolean | Array<string>>;
   style?: BindingValue<Record<string, string>>;
-  classes?: BindingValue<Record<string, boolean>>;
+  css?: BindingValue<Record<string, boolean>>;
 };
+
+export function bind<T extends Pick<AnyRef, 'getBindingDefinition'>>(
+  target: T,
+  props: Parameters<T['getBindingDefinition']>[0],
+) {
+  return target.getBindingDefinition(props);
+}
+
+export function bindTemplate<P extends Record<string, unknown>>(
+  target: ElementRef<HTMLElement, BindProps>,
+  data: Ref<P>,
+  template: (props: P) => TemplateResult | Array<TemplateResult>,
+  extract?: {
+    config: any;
+    onData: (data: any) => void;
+  },
+): any {
+  return BindTemplate({ ref: target, data, template, extract });
+}

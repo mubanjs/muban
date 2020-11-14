@@ -5,6 +5,7 @@ declare namespace JSX {
   interface IntrinsicAttributes {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     // css?: any;
+    // css?: BindingValue<Record<string, boolean>>;
   }
 
   interface ElementAttributesProperty {

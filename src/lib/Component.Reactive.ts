@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import typedObjectValues from '../../examples/src/type-utils/typedObjectValues';
 import { applyBindings } from './utils/bindings/applyBindings';
 import { getComponentProps } from './utils/props/getComponentProps';
 import type { PropTypeDefinition, TypedProps } from './utils/props/propDefinitions.types';
+import { createClassListPropertySource } from './utils/props/property-sources/createClassListPropertySource';
 import { getComponentRefs } from './utils/refs/getComponentRefs';
 import { createDataAttributePropertySource } from './utils/props/property-sources/createDataAttributePropertySource';
 import { createJsonScriptPropertySource } from './utils/props/property-sources/createJsonScriptPropertySource';
@@ -12,10 +12,8 @@ import type {
   ComponentReturnValue,
   DefineComponentOptions,
 } from './Component.types';
-// TODO: not sure how much vue-specific stuff gets included in the bundle by this
 import { reactive, toRaw } from '@vue/runtime-core';
 import EventEmitter from 'eventemitter3';
-import type { ElementRef } from './utils/refs/refDefinitions.types';
 import type { ComponentRefItem } from './utils/refs/refDefinitions.types';
 
 // TODO: these are just prototype bindings
@@ -38,6 +36,7 @@ export const defineComponent = <
     ((element) => {
       console.groupCollapsed(`[Create ${options.name}]`);
       const sources = [
+        createClassListPropertySource(),
         createDataAttributePropertySource(),
         createJsonScriptPropertySource(),
         createReactivePropertySource(),
@@ -50,9 +49,9 @@ export const defineComponent = <
       // This should happen before applyBindings is called, since that can update the DOM
       if (Object.keys(resolvedRefs).length > 0) {
         const observer = new MutationObserver(() => {
-          typedObjectValues(resolvedRefs).forEach((refFn) =>
+          Object.values(resolvedRefs).forEach((refFn) =>
             // this cannot be correctly inferred
-            (refFn as ElementRef<HTMLElement>).refreshRefs(),
+            refFn.refreshRefs(),
           );
         });
         observer.observe(element, { attributes: false, childList: true, subtree: true });

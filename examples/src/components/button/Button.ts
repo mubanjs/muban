@@ -6,7 +6,7 @@ type TemplateProps = {
 };
 
 export const button = ({ label }: TemplateProps, ref?: string) => {
-  return html`<button class="btn btn-primary" data-component="button" data-ref=${ifDefined(ref)}>
+  return html`<button data-component="button" data-ref=${ifDefined(ref)} class="btn btn-primary">
     ${label}
   </button>`;
 };

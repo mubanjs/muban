@@ -32,17 +32,24 @@ export function getComponentProps(
         return accumulator;
       }
 
-      const usedSource = availableSources[availableSources.length - 1];
-      if (availableSources.length > 1) {
-        console.warn(
-          `Property "${propName}" is defined in more than one property source: ${availableSources
-            .map((s) => s.sourceName)
-            .join(', ')}. We'll use the last from the list: "${usedSource.sourceName}"`,
+      if (propType.type === Boolean) {
+        accumulator[propName] = availableSources.some((source) =>
+          source.getProp(propName, propType),
         );
-      }
+      } else {
+        // if more than 1 sources, pick the last one (except for booleans
+        const usedSource = availableSources[availableSources.length - 1];
+        if (availableSources.length > 1) {
+          console.warn(
+            `Property "${propName}" is defined in more than one property source: ${availableSources
+              .map((s) => s.sourceName)
+              .join(', ')}. We'll use the last from the list: "${usedSource.sourceName}"`,
+          );
+        }
 
-      // TODO: validation
-      accumulator[propName] = usedSource.getProp(propName, propType);
+        // TODO: validation
+        accumulator[propName] = usedSource.getProp(propName, propType);
+      }
 
       return accumulator;
     }, {} as Record<string, unknown>) ?? {};

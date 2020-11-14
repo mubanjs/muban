@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/naming-convention */
 import { html } from 'lit-html';
 import { ifDefined } from 'lit-html/directives/if-defined';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
-import { createElement, Fragment } from '../../../../src/lib/utils/bindings/JSX';
+import { bind } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { button } from '../button/Button';
 
 const ProductCard = defineComponent({
@@ -12,7 +12,7 @@ const ProductCard = defineComponent({
     cta: 'button-cta',
   },
   setup(props, refs) {
-    return [<refs.cta click={() => console.log('click cta')} />];
+    return [bind(refs.cta, { click: () => console.log('click cta') })];
   },
 });
 export default ProductCard;

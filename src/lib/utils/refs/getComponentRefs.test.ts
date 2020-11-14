@@ -43,10 +43,10 @@ describe('getComponentRefs', () => {
     };
 
     const value = getComponentRefs(refDefinition, element);
-    expect(value.elementString.value.textContent).toEqual('element-string');
-    expect(value.elementRef.value.textContent).toEqual('element-string');
-    expect(value.collectionRef.value.length).toEqual(3);
-    expect(value.componentRef.value.name).toEqual('dummy-1');
-    expect(value.componentRefSpecific.value.name).toEqual('dummy-2');
+    expect(value.elementString.element!.textContent).toEqual('element-string');
+    expect(value.elementRef.element!.textContent).toEqual('element-string');
+    expect(value.collectionRef.elements.length).toEqual(3);
+    expect(value.componentRef.component!.name).toEqual('dummy-1');
+    expect(value.componentRefSpecific.component!.name).toEqual('dummy-2');
   });
 });

@@ -6,16 +6,19 @@ export function getComponentRefs<T extends HTMLElement, R extends Record<string,
   refs: R | undefined,
   element: T,
 ): TypedRefs<R> {
-  return (
-    (refs &&
-      typedObjectEntries(refs).reduce((accumulator, [propName, refDefinition]) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (accumulator as any)[propName] = (typeof refDefinition === 'string'
-          ? refElement(refDefinition)
-          : refDefinition
-        ).selector(element);
-        return accumulator;
-      }, {} as TypedRefs<R>)) ??
-    ({} as TypedRefs<R>)
+  if (!refs) {
+    return {} as TypedRefs<R>;
+  }
+
+  return typedObjectEntries({ ...refs, self: '_self_' } as R).reduce(
+    (accumulator, [propName, refDefinition]) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (accumulator as any)[propName] = (typeof refDefinition === 'string'
+        ? refElement(refDefinition)
+        : refDefinition
+      ).createRef(element);
+      return accumulator;
+    },
+    {} as TypedRefs<R>,
   );
 }
