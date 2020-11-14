@@ -5,7 +5,7 @@ import { ifDefined } from 'lit-html/directives/if-defined';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html';
 import { html, TemplateResult } from 'lit-html';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
-import { bind } from '../../../../src/lib/utils/bindings/bindingDefinitions';
+import { bindMap } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { propType } from '../../../../src/lib/utils/props/propDefinitions';
 import { refCollection } from '../../../../src/lib/utils/refs/refDefinitions';
 
@@ -22,17 +22,13 @@ const TabbedContent = defineComponent({
     const selectedIndex = ref(props.selectedIndex);
 
     return [
-      ...refs.tabs.refs.map((Ref, index) =>
-        bind(Ref, {
-          css: computed(() => ({ active: index === selectedIndex.value })),
-          click: () => (selectedIndex.value = index),
-        }),
-      ),
-      ...refs.tabContentItems.refs.map((Ref, index) =>
-        bind(Ref, {
-          style: computed(() => ({ display: index === selectedIndex.value ? 'block' : 'none' })),
-        }),
-      ),
+      ...bindMap(refs.tabs, (ref, index) => ({
+        css: computed(() => ({ active: index === selectedIndex.value })),
+        click: () => (selectedIndex.value = index),
+      })),
+      ...bindMap(refs.tabContentItems, (ref, index) => ({
+        style: computed(() => ({ display: index === selectedIndex.value ? 'block' : 'none' })),
+      })),
     ];
   },
 });

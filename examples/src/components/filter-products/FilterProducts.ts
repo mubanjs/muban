@@ -4,7 +4,7 @@ import { html } from 'lit-html';
 import { ifDefined } from 'lit-html/directives/if-defined';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
 import type { ComponentApi } from '../../../../src/lib/Component.types';
-import { bind, bindTemplate } from '../../../../src/lib/utils/bindings/bindingDefinitions';
+import { bind, bindMap, bindTemplate } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { refComponents, refElement } from '../../../../src/lib/utils/refs/refDefinitions';
 import { useTransitionController } from '../../useTransitionController';
 import ProductCard, { productCard, ProductCardProps } from './FilterProducts.card';
@@ -88,22 +88,20 @@ const FilterProducts = defineComponent({
     );
 
     return [
-      ...refs.filters.refs.map((Ref) =>
-        bind(Ref, {
-          onChange: (filter, value) => {
-            const activeFilter = activeFilters.find((f) => f.id === filter);
-            if (activeFilter) {
-              activeFilter.active = value;
-            }
-          },
-          selected: computed(
-            () =>
-              activeFilters
-                .find((filter) => filter.id === Ref.component?.props.categoryId)
-                ?.active.join(',') || '',
-          ),
-        }),
-      ),
+      ...bindMap(refs.filters, (ref) => ({
+        onChange: (filter, value) => {
+          const activeFilter = activeFilters.find((f) => f.id === filter);
+          if (activeFilter) {
+            activeFilter.active = value;
+          }
+        },
+        selected: computed(
+          () =>
+            activeFilters
+              .find((filter) => filter.id === ref.component?.props.categoryId)
+              ?.active.join(',') || '',
+        ),
+      })),
       bind(refs.resetButton, { click: resetFilters }),
       bindTemplate(
         refs.productsContainer,

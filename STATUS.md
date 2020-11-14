@@ -47,14 +47,14 @@ Research: [component-refs](./docs/component-refs.md).
 + destroy ref bindings when component unmounts
 + Rename `refs.foo.value` to either `refs.foo.element(s)` or `refs.foo.component(s)`
 + Add default `self` ref to the component root element, to allow bindings on that as well
++ Add `bindMap` util to better map over a collection of elements/components where logic is needed
+  to create the binding values based up on the ref props or array index
 
 **Todo**
 - rename refs to something else, to not conflict with the reactive `ref/unref` functions?
 - Fix ref type if passed as string shorthand
 - Add support for optional refs
 - Add support for optional ref typing
-- Add better "mapping" support over individual refs inside a collection to support reactive ref
-  updates (`refs.filters.mapRefs((Ref, index)) => <Ref ... />)` that will call those again)
 - Add unit tests
 
 

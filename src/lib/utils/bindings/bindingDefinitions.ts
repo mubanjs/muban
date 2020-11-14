@@ -3,6 +3,7 @@
 import type { Ref } from '@vue/reactivity';
 import type { TemplateResult } from 'lit-html';
 import type { ComponentFactory } from '../../Component.types';
+import type { CollectionRef, ComponentsRef } from '../refs/refDefinitions.types';
 import type { AnyRef, ComponentSetPropsParam, ElementRef } from '../refs/refDefinitions.types';
 
 export function BindElement<T extends HTMLElement>(ref: Ref<T | undefined>, props: BindProps) {
@@ -89,6 +90,20 @@ export function bind<T extends Pick<AnyRef, 'getBindingDefinition'>>(
   return target.getBindingDefinition(props);
 }
 
+export function bindMap<
+  T extends Pick<
+    CollectionRef<HTMLElement, BindProps> | ComponentsRef<ComponentFactory<any>>,
+    'refs' | 'getBindingDefinition'
+  >
+>(
+  target: T,
+  getProps: (ref: T['refs'][number], index: number) => Parameters<T['getBindingDefinition']>[0],
+): Array<Binding> {
+  return (target.refs as Array<T['refs'][number]>).map((ref, index) =>
+    bind(ref, getProps(ref, index)),
+  );
+}
+
 export function bindTemplate<P extends Record<string, unknown>>(
   target: ElementRef<HTMLElement, BindProps>,
   data: Ref<P>,
@@ -97,6 +112,9 @@ export function bindTemplate<P extends Record<string, unknown>>(
     config: any;
     onData: (data: any) => void;
   },
-): any {
+): {
+  type: 'template';
+  props: TemplateProps<HTMLElement>;
+} {
   return BindTemplate({ ref: target, data, template, extract });
 }

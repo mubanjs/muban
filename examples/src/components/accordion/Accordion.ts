@@ -4,7 +4,7 @@ import { html } from 'lit-html';
 import { classMap } from 'lit-html/directives/class-map';
 import { ifDefined } from 'lit-html/directives/if-defined';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
-import { bind } from '../../../../src/lib/utils/bindings/bindingDefinitions';
+import { bind, bindMap } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { propType } from '../../../../src/lib/utils/props/propDefinitions';
 import { refComponents } from '../../../../src/lib/utils/refs/refDefinitions';
 
@@ -58,14 +58,12 @@ const Accordion = defineComponent({
       refs.slides.components.findIndex((instance) => !!instance.props.expanded),
     );
     return [
-      ...refs.slides.refs.map((Ref, index) =>
-        bind(Ref, {
-          onChange: (isExpanded) => {
-            activeIndex.value = isExpanded ? index : null;
-          },
-          expanded: computed(() => activeIndex.value === index),
-        }),
-      ),
+      ...bindMap(refs.slides, (ref, index) => ({
+        onChange: (isExpanded) => {
+          activeIndex.value = isExpanded ? index : null;
+        },
+        expanded: computed(() => activeIndex.value === index),
+      })),
     ];
   },
 });
