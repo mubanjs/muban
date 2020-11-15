@@ -24,6 +24,8 @@ Research: [component-props](./docs/component-props.md).
 + read prop from json script
 + read prop from reactive (parent) source
 + Access the props of a child component to reads its initial state
++ Make difference between required/optional input, or the resolved prop is missing a value
+  (possible being undefined)
 
 **Todo**
 - Add (better) parsing and typing of non-primitive props (Arrays of strings, Objects) (Potentially
@@ -76,6 +78,7 @@ Research: [component-refs](./docs/component-refs.md).
 + Cleanup bindings on onmount
 + Rebind when refs change
 + Remove JSX support - too much setup, code complexity and typing issues
++ Improve bindings by allowing refs in binding object values vs the complete object
 
 **Todo**
 - Implement robust bindings for everything

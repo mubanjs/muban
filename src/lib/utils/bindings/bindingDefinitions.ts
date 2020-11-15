@@ -5,6 +5,7 @@ import type { TemplateResult } from 'lit-html';
 import type { ComponentFactory } from '../../Component.types';
 import type { CollectionRef, ComponentsRef } from '../refs/refDefinitions.types';
 import type { AnyRef, ComponentSetPropsParam, ElementRef } from '../refs/refDefinitions.types';
+import type { bindingsList } from './applyBindings';
 
 export function BindElement<T extends HTMLElement>(ref: Ref<T | undefined>, props: BindProps) {
   return {
@@ -73,14 +74,10 @@ export type Binding =
   | ReturnType<typeof BindTemplate>;
 
 export type BindingValue<T> = Ref<T>;
+export type BindingMap<T> = Ref<Record<string, T>> | Record<string, Ref<T>>;
 
 export type BindProps = {
-  text?: BindingValue<string>;
-  html?: BindingValue<string>;
-  click?: (event: HTMLElementEventMap['click']) => void;
-  checked?: Ref<boolean | Array<string>>;
-  style?: BindingValue<Record<string, string>>;
-  css?: BindingValue<Record<string, boolean>>;
+  [P in keyof typeof bindingsList]?: Parameters<typeof bindingsList[P]>[1];
 };
 
 export function bind<T extends Pick<AnyRef, 'getBindingDefinition'>>(

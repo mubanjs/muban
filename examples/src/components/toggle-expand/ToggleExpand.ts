@@ -34,8 +34,8 @@ export default defineComponent({
 
     return [
       bind(refs.expandButton, { text: expandButtonLabel, click: () => toggleExpanded() }),
-      bind(refs.expandContent, {
-        style: computed(() => ({ display: isExpanded.value ? 'block' : 'none' })),
+      bind(refs.self, {
+        css: { isExpanded },
       }),
     ];
   },
