@@ -13,6 +13,7 @@ export type PropTypeDefinition<T = any> = {
   default?: T extends Primitive ? T : () => T;
   validator?: Predicate<T>;
   isOptional?: boolean;
+  hasValue?: boolean;
   // eslint-disable-next-line @typescript-eslint/ban-types
   shapeType?: Function;
 };
@@ -20,9 +21,11 @@ export type PropTypeDefinition<T = any> = {
 type OptionalPropertyKeys<T> = {
   [P in keyof T]: undefined extends T[P] ? P : never;
 }[keyof T];
+// get all keys from an object that are not optional (either ? or |undefined)
 type RequiredPropertyKeys<T> = {
   [P in keyof T]: undefined extends T[P] ? never : P;
 }[keyof T];
+
 type Keys<T> = keyof T;
 
 // maps String to string, but keeps Date as Date
@@ -48,7 +51,7 @@ export type ExtractType<T extends PropTypeDefinition> = 'shapeType' extends Keys
 type ExtractOptionalType<
   T extends PropTypeDefinition,
   V extends any
-> = 'isOptional' extends RequiredPropertyKeys<T> ? V | undefined : V;
+> = 'missingValue' extends RequiredPropertyKeys<T> ? V | undefined : V;
 
 export type TypedProp<T extends PropTypeDefinition> = ExtractOptionalType<T, ExtractType<T>>;
 

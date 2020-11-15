@@ -9,6 +9,7 @@ const addOptional = <T extends PropTypeDefinition>(obj: T) => ({
     addPredicate({
       ...obj,
       isOptional: true,
+      missingValue: true,
     }),
   ),
 });

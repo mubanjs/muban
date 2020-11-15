@@ -205,10 +205,10 @@ type DSF = ExtractType<typeof dsf>;
 const oo1 = { type: String };
 type OO1 = Expect<Equal<string, TypedProp<typeof oo1>>>;
 
-const oo2 = { type: String, isOptional: true };
+const oo2 = { type: String, missingValue: true };
 type OO2 = Expect<Equal<string | undefined, TypedProp<typeof oo2>>>;
 
-const oo3 = { type: String, isOptional: true, default: 'foo' };
+const oo3 = { type: String, missingValue: true, default: 'foo' };
 type OO3 = Expect<Equal<string | undefined, TypedProp<typeof oo3>>>;
 
 const oo4 = { type: String, validator: isNumber };
@@ -217,7 +217,7 @@ type OO4 = Expect<Equal<number, TypedProp<typeof oo4>>>;
 const oo4a = { type: String, validator: optional(isNumber) };
 type OO4a = Expect<Equal<number | undefined, TypedProp<typeof oo4a>>>;
 
-const oo5 = { type: String, validator: isNumber, isOptional: true };
+const oo5 = { type: String, validator: isNumber, missingValue: true };
 type OO5 = Expect<Equal<number | undefined, TypedProp<typeof oo5>>>;
 
 // helper functions
@@ -228,7 +228,7 @@ const p22 = propType.string.optional;
 type P22 = Expect<Equal<string | undefined, TypedProp<typeof p22>>>;
 
 const p23 = propType.string.optional.defaultValue('foo');
-type P23 = Expect<Equal<string | undefined, TypedProp<typeof p23>>>;
+type P23 = Expect<Equal<string, TypedProp<typeof p23>>>;
 
 const p24 = propType.string.validate(isString);
 type P24 = Expect<Equal<string, TypedProp<typeof p24>>>;
@@ -247,7 +247,7 @@ const n22 = propType.number.optional;
 type N22 = Expect<Equal<number | undefined, TypedProp<typeof n22>>>;
 
 const n23 = propType.number.optional.defaultValue(3);
-type N23 = Expect<Equal<number | undefined, TypedProp<typeof n23>>>;
+type N23 = Expect<Equal<number, TypedProp<typeof n23>>>;
 
 const n24 = propType.number.validate(isNumber);
 type N24 = Expect<Equal<number, TypedProp<typeof n24>>>;
@@ -266,7 +266,7 @@ const d22 = propType.date.optional;
 type D22 = Expect<Equal<Date | undefined, TypedProp<typeof d22>>>;
 
 const d23 = propType.date.optional.defaultValue(() => new Date());
-type D23 = Expect<Equal<Date | undefined, TypedProp<typeof d23>>>;
+type D23 = Expect<Equal<Date, TypedProp<typeof d23>>>;
 
 const d24 = propType.date.validate(isDate);
 type D24 = Expect<Equal<Date, TypedProp<typeof d24>>>;
