@@ -12,7 +12,7 @@
 
 ## Props
 
-Research: [component-props](./docs/component-props.md).
+Research: [component-props](docs/research/component-props.md).
 
 **Done**
 + define props as part of component definition
@@ -34,7 +34,7 @@ Research: [component-props](./docs/component-props.md).
 
 ## Refs
 
-Research: [component-refs](./docs/component-refs.md).
+Research: [component-refs](docs/research/component-refs.md).
 
 **Done**
 + define refs as part of component definition
@@ -53,11 +53,16 @@ Research: [component-refs](./docs/component-refs.md).
   to create the binding values based up on the ref props or array index
 
 **Todo**
-- rename refs to something else, to not conflict with the reactive `ref/unref` functions?
+- move the `createRef` out of the `refDefinition`, since it's implementation is too complex to ask
+  users to provide it themselves. Just need to figure out how to type these, probably using the same
+  look up map as used during runtime based on the `type` field.
 - Fix ref type if passed as string shorthand
 - Add support for optional refs
 - Add support for optional ref typing
 - Add unit tests
+
+**Parked**
+- rename refs to something else, to not conflict with the reactive `ref/unref` functions?
 
 
 ## Child components
@@ -128,7 +133,7 @@ Research: [component-refs](./docs/component-refs.md).
 
 ## Runtime dynamic templates
 
-Research: [component-dynamic-templates](./docs/component-dynamic-templates.md).
+Research: [component-dynamic-templates](docs/research/component-dynamic-templates.md).
 
 **Done**
 + Add `Template` binding with support for extracting data from existing HTML, and re-rendering

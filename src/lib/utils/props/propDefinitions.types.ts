@@ -13,7 +13,7 @@ export type PropTypeDefinition<T = any> = {
   default?: T extends Primitive ? T : () => T;
   validator?: Predicate<T>;
   isOptional?: boolean;
-  hasValue?: boolean;
+  missingValue?: boolean;
   // eslint-disable-next-line @typescript-eslint/ban-types
   shapeType?: Function;
 };

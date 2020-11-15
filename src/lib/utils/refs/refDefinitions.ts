@@ -63,10 +63,7 @@ export function refElement(
   };
 }
 
-export function refCollection(
-  refId: string,
-  { isRequired = true }: { isRequired?: boolean } = {},
-): ComponentRefItemCollection {
+export function refCollection(refId: string): ComponentRefItemCollection {
   return {
     ref: refId,
     type: 'collection',
@@ -101,7 +98,6 @@ export function refCollection(
         },
       };
     },
-    isRequired,
   };
 }
 
@@ -148,7 +144,7 @@ export function refComponent<T extends ComponentFactory<any>>(
 
 export function refComponents<T extends ComponentFactory<any>>(
   component: T,
-  { ref: refId, isRequired = true }: { ref?: string; isRequired?: boolean } = {},
+  { ref: refId }: { ref?: string } = {},
 ): ComponentRefItemComponentCollection<T> {
   return {
     ref: refId,
@@ -194,6 +190,5 @@ export function refComponents<T extends ComponentFactory<any>>(
         },
       };
     },
-    isRequired,
   };
 }

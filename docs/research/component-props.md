@@ -1,4 +1,6 @@
-# component-props
+# Component Props
+
+[[toc]]
 
 This document explores how to integrate "outside" props into the component.
 

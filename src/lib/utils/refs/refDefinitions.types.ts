@@ -17,7 +17,6 @@ export type ComponentRefItemCollection = {
   type: 'collection';
   ref: string;
   createRef: (parent: HTMLElement) => CollectionRef<HTMLElement, BindProps>;
-  isRequired?: boolean;
 };
 export type ComponentRefItemComponent<T extends ComponentFactory<Record<string, any>>> = {
   type: 'component';
@@ -29,7 +28,6 @@ export type ComponentRefItemComponentCollection<T extends ComponentFactory<Recor
   type: 'componentCollection';
   ref?: string;
   createRef: (parent: HTMLElement) => ComponentsRef<T>;
-  isRequired?: boolean;
 };
 
 // combination of all of the above

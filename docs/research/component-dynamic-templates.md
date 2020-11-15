@@ -1,4 +1,6 @@
-# component-dynamic-templates
+# Dynamic Templates
+
+[[toc]]
 
 This document explores how to render templates dynamically from within the component based on
 received data or user input.

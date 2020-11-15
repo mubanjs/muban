@@ -1,4 +1,4 @@
-# component-refs
+# Component Refs
 
 This document explores how to select elements from the DOM that are needed in your component code.
 
