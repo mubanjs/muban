@@ -11,7 +11,8 @@ module.exports = {
     ],
     repo: 'mediamonks/muban-component',
     docsDir: 'docs',
-    displayAllHeaders: true,
+    // displayAllHeaders: true,
+    sidebarDepth: 2,
     sidebar: {
       '/research/': [
         '',
