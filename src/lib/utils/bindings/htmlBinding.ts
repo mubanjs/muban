@@ -2,5 +2,6 @@ import { unref, watchEffect } from '@vue/runtime-core';
 import type { BindingValue } from './bindingDefinitions';
 
 export default function (target: HTMLElement, value: BindingValue<string>) {
-  return watchEffect(() => (target.textContent = unref(value)));
+  // TODO: some safety checks encoding
+  return watchEffect(() => (target.innerHTML = unref(value)));
 }
