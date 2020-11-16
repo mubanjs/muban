@@ -9,6 +9,8 @@
 + Setup function receives the props, refs and the component element as arguments
 
 **Todo**
++ Animation setup, with nested component animations
++ Form tooling and validation
 
 ## Props
 
@@ -88,6 +90,7 @@ Research: [component-refs](docs/research/component-refs.md).
 **Todo**
 - Implement robust bindings for everything
 - Add unit tests
+- Figure out how 3rd party DOM bindings can be easily added, including types (extending Interface?)
 
 ## Lifecycle
 

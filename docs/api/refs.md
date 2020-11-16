@@ -1,9 +1,9 @@
 # Refs
 
 Refs have two stages, the definitions - which go inside your component definition, and the resolved
-refs - which you receive in your setup function.
+items - which you receive in your setup function, and use for bindings.
 
-### Ref definition
+## Ref definition
 
 The shape of the definition that you pass to the component is the following:
 
@@ -26,7 +26,7 @@ type ComponentRefItem =
 
 If you don't want to pass this by hand, you can make use of the available helper functions
 
-## refElement
+### refElement
 
 `refElement` selects a single DOM element that has the `data-ref` attribute set.
 
@@ -71,7 +71,7 @@ defineComponent({
 </code-block>
 </code-group>
 
-## refCollection
+### refCollection
 
 `refCollection` selects one or more DOM elements that have the `data-ref` attribute set. If no
 elements are found, the collection will be empty.
@@ -112,7 +112,7 @@ defineComponent({
 </code-block>
 </code-group>
 
-## refComponent
+### refComponent
 
 `refComponent` selects a single DOM element that either has the `data-component` attribute match
 the one from the passed Component, or has the `data-ref` attribute set when that is provided in
@@ -170,7 +170,7 @@ defineComponent({
 </code-block>
 </code-group>
 
-## refComponents
+### refComponents
 
 `refComponents` selects one or more DOM elements that either have the `data-component` attribute
 match the one from the passed Component, or have the `data-ref` attribute set when that is
@@ -222,3 +222,85 @@ defineComponent({
 ```
 </code-block>
 </code-group>
+
+## Ref item
+
+Ref items are "container objects" around the resolved ref definitions to be used in the `setup`
+function of the component.
+
+They are mainly used in the different binding helpers, but contains some additional information
+about the specific refs that could be useful in some situations.
+
+The `type` of each `ref` is inferred from the input you pass, so the properties you can access
+is different between elements and components, or single items vs collections.
+
+The public API for each type of ref can be seen below (note that some internal fields have been
+ omitted here).
+
+```ts
+type ElementRef = {
+  element: HTMLElement | undefined;
+};
+
+type CollectionRef<> = {
+  elements: Array<HTMLElement>;
+  // nested refs for each single individual element
+  refs: Array<ElementRef>;
+};
+
+type ComponentRef = {
+  component: ComponentApi | undefined;
+};
+
+type ComponentsRef = {
+  components: Array<ComponentApi>;
+  // nested refs for each single individual component
+  refs: Array<ComponentRef>;
+};
+```
+
+As you can see, all 4 have a reference to the actual item(s) that they have selected as `element`, 
+`elements`, `component` or `components`. The two collection refs have access to the "item" `refs`,
+a list of "container refs" around each item in the collection, which could be useful when applying
+the individual bindings to each item.
+
+**Example**
+
+```ts
+defineComponent({
+  refs: {
+    singleElement: refElement('single-element'),
+    elementCollection: refCollection('element-collection'),
+    singleComponent: refElement(Component, 'single-element'),
+    componentCollection: refElement(Component, 'element-collection'),
+  },
+  setup(props, refs) {
+    refs.singleElement.element; // HTMLElement
+    refs.elementCollection.elements; // Array<HTMLElement>
+
+    refs.singleComponent.component; // ComponentApi
+    refs.singleComponent.component.props; // Access the component props, useful for intial state
+    refs.componentCollection.components; // Array<ComponentApi>
+    
+    return [
+      bind(refs.singleElement, { text: 'label' }), // bind to single element
+      bind(refs.elementCollection, { text: 'label' }), // bind to all elements in the collection
+      
+      // bind to each ref individually
+      ...refs.elementCollection.refs.map((ref, index) => bind(ref, { text: `item ${index}` })),
+      // but simpler
+      ...bindMap(refs.elementCollection, (ref, index) => ({ text: `item ${index}` })),
+      
+
+      // bind to single component, or to all components int the collection
+      bind(refs.component, { someProps: 'value', onSomethingHappens: () => console.log('Yo') }),
+      bind(refs.elementCollection, { someProps: 'value', onSomethingHappens: () => console.log('Yo') }),
+      
+      // bind to each ref individually
+      ...refs.singleComponent.refs.map((ref, index) => bind(ref, { itemIndex: index })),
+      // but simpler
+      ...bindMap(refs.componentCollection, (ref, index) => ({ itemIndex: index })),
+    ];
+  },
+});
+```
