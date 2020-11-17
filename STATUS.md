@@ -9,6 +9,7 @@
 + Setup function receives the props, refs and the component element as arguments
 
 **Todo**
++ Add API to render your root component/template using lit-html rendering
 + Animation setup, with nested component animations
 + Form tooling and validation
 

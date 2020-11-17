@@ -14,14 +14,13 @@ module.exports = {
     // displayAllHeaders: true,
     sidebarDepth: 2,
     sidebar: {
-      '/research/': [
-        '',
-        'lifecycle',
-        'component-props',
-        'component-refs',
-        'component-dynamic-templates',
+
+      '/guide/': [
+        '', // getting started
+        'component',
         'reactivity',
-        'pure-rendering',
+        'bindings',
+        'template',
       ],
 
       '/api/': [
@@ -33,11 +32,14 @@ module.exports = {
         // 'hooks',
       ],
 
-      '/guide/': [
+      '/research/': [
         '',
+        'lifecycle',
+        'component-props',
+        'component-refs',
+        'component-dynamic-templates',
         'reactivity',
-        'bindings',
-        'template',
+        'pure-rendering',
       ],
 
       // fallback
