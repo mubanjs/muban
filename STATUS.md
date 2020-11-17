@@ -144,3 +144,7 @@ Research: [component-dynamic-templates](docs/research/component-dynamic-template
 + Add linked typings between `template` props and `data` computed for bindTemplate parameters
 
 **Todo**
+- Add a boolean to not re-render the template initially, and only when the passed data changes.
+  This could be useful for when you're never re-rendering based on client-side logic, but only
+  rendering what comes back from the API after interacting with the page (e.g. load more,
+  filtering). This would save an unneeded re-render during page load.

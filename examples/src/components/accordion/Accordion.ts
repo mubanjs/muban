@@ -98,9 +98,8 @@ export type AccordionProps = {
 
 export function accordion({ slides, activeIndex }: AccordionProps) {
   return html`<div data-component=${Accordion.displayName}>
-    ${slides.map(
-      (slide, index) => accordionSlide({ ...slide, expanded: index === activeIndex }),
-      'accordion-slide',
+    ${slides.map((slide, index) =>
+      accordionSlide({ ...slide, expanded: index === activeIndex }, 'accordion-slide'),
     )}
   </div>`;
 }

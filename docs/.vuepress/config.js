@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'muban-component',
+  title: 'Muban',
   description: 'Writing components for server-rendered HTML',
   base: '/muban-component/',
   themeConfig: {
@@ -31,6 +31,13 @@ module.exports = {
         'refs',
         'bindings',
         // 'hooks',
+      ],
+
+      '/guide/': [
+        '',
+        'reactivity',
+        'bindings',
+        'template',
       ],
 
       // fallback
