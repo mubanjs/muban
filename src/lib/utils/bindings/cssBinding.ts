@@ -21,11 +21,9 @@ export default function (
       target.classList.add(...classes.split(/\s/gi));
     } else {
       Object.entries(classes).forEach(([name, shouldHaveClass]) => {
-        unref(name)
-          .split(/\s/gi)
-          .forEach((className) => {
-            target.classList.toggle(className, shouldHaveClass);
-          });
+        name.split(/\s/gi).forEach((className) => {
+          target.classList.toggle(className, unref(shouldHaveClass));
+        });
       });
     }
   });
