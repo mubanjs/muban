@@ -11,17 +11,11 @@ Add `muban` to your project:
 yarn add @muban/muban
 ```
 
-And also the supporting packages:
-```sh
-yarn add @vue/reactivity @vue/runtime-core lit-html
-```
-
 ### Simple component
 
 Create your component:
 ```ts
-import { defineComponent, bind } from '@muban/muban';
-import { ref } from '@vue/reactivity';
+import { defineComponent, bind, ref } from '@muban/muban';
 
 const MyComponent = defineComponent({
   name: 'my-component',
@@ -47,7 +41,7 @@ Then init your component:
 ```ts
 import { mount } from '@muban/muban';
 
-mount(MyComponent, document.body)
+mount(MyComponent, document.body);
 ```
 
 Your page should now display `Hello World` if your component is correctly running.
@@ -56,7 +50,7 @@ Your page should now display `Hello World` if your component is correctly runnin
 
 Create our template:
 ```ts
-import { html } from "lit-html";
+import { html } from "@muban/muban";
 
 type MyComponentProps = {
   welcomeText: string;
