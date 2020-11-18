@@ -32,11 +32,11 @@
     "test": "jest ./src/",
     "cypress": "cypress open",
     "server": "PORT=1338 nodemon --ext ts --exec 'ts-node' server/server.ts",
-    "storybook": "node ./muban-storybook/bin/index.js -p 6006",
-    "build-storybook": "node ./muban-storybook/bin/build.js",
     "check-types": "tsc --project tsconfig.json --noEmit --noUnusedLocals",
     "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
+    "docs:build": "vuepress build docs",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook -o ./dist/storybook"
   },
   "nodemonConfig": {
     "ignore": [
@@ -47,6 +47,7 @@
     ]
   },
   "dependencies": {
+    "@muban/storybook": "7.0.0-alpha.2",
     "@open-wc/lit-helpers": "^0.3.11",
     "@types/cors": "^2.8.7",
     "@types/express": "^4.17.7",

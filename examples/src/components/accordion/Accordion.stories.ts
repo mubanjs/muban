@@ -1,5 +1,6 @@
-import type { Story } from '../../../../muban-storybook/dist/client/preview/types';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Accordion, { accordion, AccordionProps } from './Accordion';
+import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 
 export default {
   title: 'Accordion',
