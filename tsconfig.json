@@ -78,9 +78,9 @@
 //    "jsx": "react",
 //    "jsxFactory": "createElement",
 //    "jsxFragmentFactory": "Fragment"
-  }
-//  "include": [
-//    "./src/lib/*",
-//    "./examples/src/*"
-//  ]
+  },
+  "include": [
+    "./src/*",
+    "./examples/src/*"
+  ]
 }

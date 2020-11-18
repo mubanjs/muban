@@ -4,12 +4,17 @@ import type { ComponentFactory } from '../Component.types';
 export function mount<P extends Record<string, unknown>>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component: ComponentFactory<any>,
-  container: HTMLElement,
-  template?: (props?: P) => TemplateResult | Array<TemplateResult>,
+  container: HTMLElement | null,
+  template?: (props: P) => TemplateResult | Array<TemplateResult>,
   data?: P,
 ): void {
+  if (!container) {
+    console.error(`The received container is null, so nothing can be rendered`);
+    return;
+  }
+
   if (template) {
-    const templateResult = template(data);
+    const templateResult = template(data || ({} as P));
     renderTemplate(templateResult, container);
   }
 

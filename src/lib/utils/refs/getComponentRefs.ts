@@ -1,4 +1,4 @@
-import typedObjectEntries from '../../../../examples/src/type-utils/typedObjectEntries';
+import typedObjectEntries from '../../type-utils/typedObjectEntries';
 import { refElement } from './refDefinitions';
 import type { ComponentRefItem, TypedRefs } from './refDefinitions.types';
 
@@ -6,10 +6,6 @@ export function getComponentRefs<T extends HTMLElement, R extends Record<string,
   refs: R | undefined,
   element: T,
 ): TypedRefs<R> {
-  if (!refs) {
-    return {} as TypedRefs<R>;
-  }
-
   return typedObjectEntries({ ...refs, self: '_self_' } as R).reduce(
     (accumulator, [propName, refDefinition]) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -11,7 +11,30 @@
 //
 // init();
 
+import { ref } from '@vue/reactivity';
+import { html } from 'lit-html';
+import { defineComponent } from '../../src';
+import { bind } from '../../src/lib/utils/bindings/bindingDefinitions';
 import { mount } from '../../src/lib/utils/mount';
-import ToggleExpand, { toggleExpand } from './components/toggle-expand/ToggleExpand';
 
-mount(ToggleExpand, document.getElementById('app')!, toggleExpand, { isExpanded: true });
+const MyComponent = defineComponent({
+  name: 'my-component',
+  setup(props, refs) {
+    console.log('refs', refs);
+    return [bind(refs.self, { text: ref('Hello World') })];
+  },
+});
+
+mount(MyComponent, document.body);
+type MyComponentProps = {
+  welcomeText: string;
+};
+
+function myComponentTemplate({ welcomeText }: MyComponentProps) {
+  return html`<div data-component="my-component">${welcomeText}</div>`;
+}
+
+const appRoot = document.getElementById('app');
+mount(MyComponent, appRoot, myComponentTemplate, {
+  welcomeText: 'Hello',
+});

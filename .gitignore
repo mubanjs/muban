@@ -31,3 +31,10 @@ yarn-error.log*
 /cypress/screenshots
 
 .eslintcache
+
+# npm publish artifects
+/lib
+index.js
+index.d.ts
+/tmp
+/decl

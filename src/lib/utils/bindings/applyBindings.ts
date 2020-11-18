@@ -3,7 +3,7 @@ import { watch, watchEffect } from '@vue/runtime-core';
 import { unref } from '@vue/reactivity';
 import { extractFromHTML } from 'html-extract-data';
 import { render } from 'lit-html';
-import typedObjectEntries from '../../../../examples/src/type-utils/typedObjectEntries';
+import typedObjectEntries from '../../type-utils/typedObjectEntries';
 import type { Binding } from './bindingDefinitions';
 import checkedBinding from './checkedBinding';
 import clickBinding from './clickBinding';

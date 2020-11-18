@@ -46,7 +46,7 @@ const compiler = webpack({
   plugins: [new webpack.HotModuleReplacementPlugin()],
 });
 // import { html } from 'lit-ntml';
-import typedObjectEntries from '../examples/src/type-utils/typedObjectEntries';
+import typedObjectEntries from '../src/lib/type-utils/typedObjectEntries';
 
 const port = process.env.PORT || 8080;
 

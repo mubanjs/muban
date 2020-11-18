@@ -18,17 +18,35 @@ npm i -S @muban/muban
 </code-block>
 </code-group>
 
+And also the supporting packages:
+
+<code-group>
+<code-block title="YARN">
+```sh
+yarn add @vue/reactivity @vue/runtime-core lit-html
+```
+</code-block>
+
+<code-block title="NPM">
+```sh
+npm i -S @vue/reactivity @vue/runtime-core lit-html
+```
+</code-block>
+</code-group>
+
+
 ## Simple component
 
 Create your component:
 ```ts
-import { defineComponent } from '@muban/muban';
-
+import { defineComponent, bind } from '@muban/muban';
+import { ref } from '@vue/reactivity';
+ 
 const MyComponent = defineComponent({
   name: 'my-component',
   setup(props, refs) {
     return [
-      bind(refs.self, { text: 'Hello World'}),
+      bind(refs.self, { text: ref('Hello World')}),
     ] 
   }
 });
@@ -57,6 +75,8 @@ Your page should now display `Hello World` if your component is correctly runnin
 
 Create our template:
 ```ts
+import { html } from "lit-html";
+
 type MyComponentProps = {
   welcomeText: string;
 };

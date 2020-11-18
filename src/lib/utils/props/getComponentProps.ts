@@ -1,4 +1,4 @@
-import typedObjectEntries from '../../../../examples/src/type-utils/typedObjectEntries';
+import typedObjectEntries from '../../type-utils/typedObjectEntries';
 import type { PropTypeDefinition } from './propDefinitions.types';
 
 export type PropertySource = (

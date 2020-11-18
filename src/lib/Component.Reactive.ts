@@ -114,7 +114,6 @@ export const defineComponent = <
           // console.log('new props', props);
           Object.entries(props).forEach(([name, value]) => {
             // todo check existence and validation
-            console.log('[set prop]', name, value);
             reactiveProps[name] = value;
           });
         },
