@@ -16,9 +16,6 @@ import { reactive, toRaw } from '@vue/runtime-core';
 import EventEmitter from 'eventemitter3';
 import type { ComponentRefItem } from './utils/refs/refDefinitions.types';
 
-// TODO: these are just prototype bindings
-// eslint-disable-next-line @typescript-eslint/ban-types
-
 const componentStack: Array<any> = [];
 function getCurrentComponentInstance() {
   // TODO validation
@@ -44,6 +41,19 @@ export const defineComponent = <
 
       const resolvedProps = getComponentProps(options.props, element, sources);
       const resolvedRefs = getComponentRefs(options?.refs, element);
+
+      options.components?.forEach((component) => {
+        Array.from(
+          element.querySelectorAll<HTMLElement>(`[data-component="${component.displayName}"]`),
+        )
+          .filter(
+            () => true,
+            // TODO: only instantiate direct child components, never children of children
+            // TODO: don't init components that have a matching ref above - fix type, add collection
+            //typedObjectValues(resolvedRefs).every((ref) => ref.component.element !== componentElement),
+          )
+          .forEach((componentElement) => component(componentElement));
+      });
 
       // Keep watching for DOM updates, and update elements whenever they become available or are removed
       // This should happen before applyBindings is called, since that can update the DOM
@@ -92,7 +102,6 @@ export const defineComponent = <
       componentStack.pop();
 
       const removeBindingMap = applyBindings(bindings);
-      console.log('removeBindingMap', removeBindingMap);
 
       lifecycle.mount();
 

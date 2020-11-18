@@ -32,6 +32,7 @@ export type DefineComponentOptions<
   R extends Record<string, ComponentRefItem>
 > = {
   name: string;
+  components?: Array<ComponentFactory<any>>;
   props?: P;
   refs?: R;
   setup: (
