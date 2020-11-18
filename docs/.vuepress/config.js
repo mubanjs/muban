@@ -1,7 +1,7 @@
 module.exports = {
   title: 'Muban',
   description: 'Writing components for server-rendered HTML',
-  base: '/muban-component/',
+  base: '/muban/',
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },
@@ -9,7 +9,7 @@ module.exports = {
       { text: 'Api', link: '/api/' },
       { text: 'Research', link: '/research/' },
     ],
-    repo: 'mediamonks/muban-component',
+    repo: 'mubanjs/muban',
     docsDir: 'docs',
     // displayAllHeaders: true,
     sidebarDepth: 2,

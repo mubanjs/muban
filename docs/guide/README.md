@@ -35,14 +35,20 @@ const MyComponent = defineComponent({
 ```
 
 Make sure to have the following HTML on the page:
-```html
-<div data-component="my-component">Hello</div>
+```html {4}
+<html>
+  ...
+  <body>
+    <div data-component="my-component">Hello</div>
+  </body>
+</html>
 ```
 
 Then init your component:
 ```ts
-const rootElement = document.querySelector('[data-component="my-component"]');
-const instance = MyComponent(rootElement);
+import { mount } from '@muban/muban';
+
+mount(MyComponent, document.body)
 ```
 
 Your page should now display `Hello World` if your component is correctly running.
@@ -60,13 +66,24 @@ function myComponentTemplate({ welcomeText }: MyComponentProps) {
 }
 ```
 
-Render your template:
-```ts {1-2}
-const templateResult = myComponentTemplate({ welcomeText: 'Hello' });
-render(templateResult, document.body);
+Make sure to have the following HTML on the page:
+```html {4-6}
+<html>
+  ...
+  <body>
+    <div id="app">
+      <div data-component="my-component">Hello</div>
+    </div>
+  </body>
+</html>
+```
 
-const componentElement = document.querySelector('[data-component="my-component"]');
-const instance = MyComponent(componentElement);
+Render your template:
+```ts
+import { mount } from '@muban/muban';
+
+const appRoot = document.getElementById('app');
+mount(MyComponent, appRoot, myComponentTemplate, { welcomeText: 'Hello' })
 ```
 
 ## Using Storybook

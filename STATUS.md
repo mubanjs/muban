@@ -12,6 +12,9 @@
 + Add API to render your root component/template using lit-html rendering
 + Animation setup, with nested component animations
 + Form tooling and validation
++ Do we need some kind of global component registry to auto-create components without specifying
+  them in our own components?
++ Create a react/vue style Context to share information between deeply nested component trees
 
 ## Props
 
@@ -54,6 +57,8 @@ Research: [component-refs](docs/research/component-refs.md).
 + Add default `self` ref to the component root element, to allow bindings on that as well
 + Add `bindMap` util to better map over a collection of elements/components where logic is needed
   to create the binding values based up on the ref props or array index
++ Add a `components` prop to component definitions to init any child components it finds without
+ having to use explicit refs. Useful for dynamic component rendering.
 
 **Todo**
 - move the `createRef` out of the `refDefinition`, since it's implementation is too complex to ask
@@ -63,6 +68,9 @@ Research: [component-refs](docs/research/component-refs.md).
 - Add support for optional refs
 - Add support for optional ref typing
 - Add unit tests
+- Make sure to don't init global components that are also specified as ref, otherwise you'll get
+  duplicate instances
+- Figure out if we have to limit the depth to which we automatically initialize child components 
 
 **Parked**
 - rename refs to something else, to not conflict with the reactive `ref/unref` functions?
