@@ -80,7 +80,7 @@
 //    "jsxFragmentFactory": "Fragment"
   },
   "include": [
-    "./src/*",
-    "./examples/src/*"
+    "./src/**/*.ts",
+    "./examples/src/**/*.ts"
   ]
 }

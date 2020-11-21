@@ -1,8 +1,8 @@
 module.exports = {
-  plugins: {
-    'postcss-simple-vars': {},
-    'postcss-nesting': {},
-    'postcss-preset-env': {},
-    autoprefixer: {},
-  },
+  plugins: [
+    require('postcss-simple-vars'),
+    require('postcss-nesting'),
+    require('postcss-preset-env'),
+    require('autoprefixer'),
+  ],
 };

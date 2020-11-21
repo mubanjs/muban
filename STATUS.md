@@ -124,6 +124,8 @@ Research: [component-refs](docs/research/component-refs.md).
 
 **Todo**
 - Add runtime (during dev) and build-time template prop validation
+- switch to htm+vhtml for templating
+- create custom directives for lost lit-html functionality
 
 
 ## Styles
@@ -144,6 +146,7 @@ Research: [component-refs](docs/research/component-refs.md).
 - Add proper @muban/storybook framework as NPM module for this new version
 - Add support for component sources (which is more difficult, since templates are now TS
  functions, potentially in the same file, and data is just defined in stories)
+- Make TS component optional
 
 ## Runtime dynamic templates
 
