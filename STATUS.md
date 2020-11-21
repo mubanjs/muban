@@ -7,6 +7,7 @@
  initialize the component
 + Add support for props, refs and a setup function
 + Setup function receives the props, refs and the component element as arguments
++ Implement Provide/Inject/Context support to component tree
 
 **Todo**
 - Add API to render your root component/template using lit-html rendering
@@ -14,7 +15,6 @@
 - Form tooling and validation
 - Do we need some kind of global component registry to auto-create components without specifying
   them in our own components?
-- Create a react/vue style Context to share information between deeply nested component trees
 - focus on package size
 - re-export vue and lit-html types and used methods
 

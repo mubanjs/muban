@@ -1,10 +1,11 @@
+import type { InternalComponentInstance } from '../../Component.types';
 import typedObjectEntries from '../../type-utils/typedObjectEntries';
 import { refElement } from './refDefinitions';
 import type { ComponentRefItem, TypedRefs } from './refDefinitions.types';
 
-export function getComponentRefs<T extends HTMLElement, R extends Record<string, ComponentRefItem>>(
+export function getComponentRefs<R extends Record<string, ComponentRefItem>>(
   refs: R | undefined,
-  element: T,
+  instance: InternalComponentInstance,
 ): TypedRefs<R> {
   return typedObjectEntries({ ...refs, self: '_self_' } as R).reduce(
     (accumulator, [propName, refDefinition]) => {
@@ -12,7 +13,7 @@ export function getComponentRefs<T extends HTMLElement, R extends Record<string,
       (accumulator as any)[propName] = (typeof refDefinition === 'string'
         ? refElement(refDefinition)
         : refDefinition
-      ).createRef(element);
+      ).createRef(instance);
       return accumulator;
     },
     {} as TypedRefs<R>,

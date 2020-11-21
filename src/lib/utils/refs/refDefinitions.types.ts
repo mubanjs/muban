@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Ref } from '@vue/reactivity';
-import type { ComponentFactory } from '../../Component.types';
+import type { ComponentFactory, InternalComponentInstance } from '../../Component.types';
 import type { BindProps } from '../bindings/bindingDefinitions';
 
 /*
@@ -10,24 +10,24 @@ import type { BindProps } from '../bindings/bindingDefinitions';
 export type ComponentRefItemElement = {
   type: 'element';
   ref: string;
-  createRef: (parent: HTMLElement) => ElementRef<HTMLElement, BindProps>;
+  createRef: (instance: InternalComponentInstance) => ElementRef<HTMLElement, BindProps>;
   isRequired?: boolean;
 };
 export type ComponentRefItemCollection = {
   type: 'collection';
   ref: string;
-  createRef: (parent: HTMLElement) => CollectionRef<HTMLElement, BindProps>;
+  createRef: (instance: InternalComponentInstance) => CollectionRef<HTMLElement, BindProps>;
 };
 export type ComponentRefItemComponent<T extends ComponentFactory<Record<string, any>>> = {
   type: 'component';
   ref?: string;
-  createRef: (parent: HTMLElement) => ComponentRef<T>;
+  createRef: (instance: InternalComponentInstance) => ComponentRef<T>;
   isRequired?: boolean;
 };
 export type ComponentRefItemComponentCollection<T extends ComponentFactory<Record<string, any>>> = {
   type: 'componentCollection';
   ref?: string;
-  createRef: (parent: HTMLElement) => ComponentsRef<T>;
+  createRef: (instance: InternalComponentInstance) => ComponentsRef<T>;
 };
 
 // combination of all of the above
@@ -45,6 +45,7 @@ export type ComponentRefItem =
  * - get access to the elements/components related to the ref
  */
 export type ElementRef<T extends HTMLElement, P extends BindProps> = {
+  type: 'element';
   getBindingDefinition: (
     props: P,
   ) => {
@@ -57,6 +58,7 @@ export type ElementRef<T extends HTMLElement, P extends BindProps> = {
 };
 
 export type CollectionRef<T extends HTMLElement, P extends BindProps> = {
+  type: 'collection';
   getBindingDefinition: (
     props: BindProps,
   ) => {
@@ -71,6 +73,7 @@ export type CollectionRef<T extends HTMLElement, P extends BindProps> = {
 };
 
 export type ComponentRef<T extends ComponentFactory<any>> = {
+  type: 'component';
   getBindingDefinition: (
     props: ComponentSetPropsParam<ReturnType<T>>,
   ) => {
@@ -83,6 +86,7 @@ export type ComponentRef<T extends ComponentFactory<any>> = {
 };
 
 export type ComponentsRef<T extends ComponentFactory<any>> = {
+  type: 'componentCollection';
   getBindingDefinition: (
     props: ComponentSetPropsParam<ReturnType<T>>,
   ) => {
@@ -123,7 +127,7 @@ export type ComponentSetPropsParam<T> = T extends { setProps(props: infer R): vo
  *  Fall back to just a normal Element ref if a string is passed
  */
 export type TypedRef<T extends ComponentRefItem> = T extends {
-  createRef: (parent: HTMLElement) => infer R;
+  createRef: (instance: InternalComponentInstance) => infer R;
 }
   ? Exclude<R, undefined>
   : ElementRef<HTMLElement, BindProps>;

@@ -2,7 +2,8 @@
 import { computed, ref } from '@vue/reactivity';
 import { isBoolean, optional } from 'isntnt';
 import { html } from 'lit-html';
-import type { Story } from '../../muban-storybook/dist/client/preview/types';
+import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import { bind } from '../../src';
 import { defineComponent } from '../../src/lib/Component.Reactive';
 import { propType } from '../../src/lib/utils/props/propDefinitions';
 import { refElement } from '../../src/lib/utils/refs/refDefinitions';
@@ -98,7 +99,7 @@ const ToggleExpand = defineComponent({
   },
   // the setup function, runs once per component instance creation, and sets up everything
   // get access to the props and the refs specified above, but resolved to values and DOM elements
-  setup(props, refs) {
+  setup({ props, refs }) {
     // use the toggle hook, initiate it with the initial state from the HTML props
     const [isExpanded, toggleExpanded] = useToggle(props.isExpanded ?? false);
 
@@ -110,9 +111,9 @@ const ToggleExpand = defineComponent({
     return [
       // // pass the label to the text binding, and the toggle function to the click binding
       // // these will auto-update the HTML whenever the state changes
-      // <refs.expandButton text={expandButtonLabel} click={toggleExpanded} />,
+      bind(refs.expandButton, { text: expandButtonLabel, click: () => toggleExpanded() }),
       // // toggle the css class of the expanded content based on the state
-      // <refs.expandContent css={computed(() => ({ isExpanded: isExpanded.value }))} />,
+      bind(refs.expandContent, { css: computed(() => ({ isExpanded: isExpanded.value })) }),
     ];
   },
 });

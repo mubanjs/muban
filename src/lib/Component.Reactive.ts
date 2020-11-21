@@ -11,15 +11,51 @@ import type {
   ComponentFactory,
   ComponentReturnValue,
   DefineComponentOptions,
+  InternalComponentInstance,
 } from './Component.types';
 import { reactive, toRaw } from '@vue/runtime-core';
 import EventEmitter from 'eventemitter3';
 import type { ComponentRefItem } from './utils/refs/refDefinitions.types';
 
-const componentStack: Array<any> = [];
-function getCurrentComponentInstance() {
+let currentInstance: InternalComponentInstance | null;
+
+export function getCurrentComponentInstance(): InternalComponentInstance | null {
   // TODO validation
-  return componentStack[componentStack.length - 1];
+  return currentInstance;
+}
+
+export function createComponentInstance(
+  parent: InternalComponentInstance | undefined,
+  element: HTMLElement,
+  options: DefineComponentOptions<any, any>,
+): InternalComponentInstance {
+  return {
+    parent: parent ?? null,
+    element,
+    props: {},
+    reactiveProps: reactive({}),
+    refs: {} as any,
+    provides: {},
+    options,
+    children: [],
+    removeBindingsList: [],
+    ee: new EventEmitter(),
+    on(type: string, fn: () => void) {
+      this.ee.on(type, fn);
+    },
+    mount() {
+      console.log('[mount]', options.name);
+      this.ee.emit('mount');
+    },
+    unmount() {
+      console.group(`[Destroy ${options.name}]`);
+      console.log('[unmount]', options.name);
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      this.removeBindingsList?.forEach((binding) => binding?.());
+      this.ee.emit('unmount');
+      console.groupEnd();
+    },
+  };
 }
 
 export const defineComponent = <
@@ -30,8 +66,10 @@ export const defineComponent = <
 ): ComponentFactory<P> => {
   // TODO: this function doesn't expose the component name, which is something we might want
   return Object.assign(
-    ((element) => {
-      console.groupCollapsed(`[Create ${options.name}]`);
+    ((element, createOptions = {}) => {
+      const instance = createComponentInstance(createOptions.parent, element, options);
+
+      console.group(`[Create ${options.name}]`);
       const sources = [
         createClassListPropertySource(),
         createDataAttributePropertySource(),
@@ -39,27 +77,43 @@ export const defineComponent = <
         createReactivePropertySource(),
       ];
 
-      const resolvedProps = getComponentProps(options.props, element, sources);
-      const resolvedRefs = getComponentRefs(options?.refs, element);
+      instance.props = getComponentProps(options.props, element, sources);
+      instance.reactiveProps = reactive(instance.props);
 
-      options.components?.forEach((component) => {
-        Array.from(
-          element.querySelectorAll<HTMLElement>(`[data-component="${component.displayName}"]`),
-        )
-          .filter(
-            () => true,
-            // TODO: only instantiate direct child components, never children of children
-            // TODO: don't init components that have a matching ref above - fix type, add collection
-            //typedObjectValues(resolvedRefs).every((ref) => ref.component.element !== componentElement),
+      instance.refs = getComponentRefs(options?.refs, instance);
+
+      instance.children.push(
+        ...Object.values(instance.refs).flatMap((refItem) => {
+          if (refItem.type === 'component') {
+            return refItem.component;
+          }
+          if (refItem.type === 'componentCollection') {
+            return refItem.components;
+          }
+          return [];
+        }),
+      );
+
+      instance.children.push(
+        ...(options.components?.flatMap((component) =>
+          Array.from(
+            element.querySelectorAll<HTMLElement>(`[data-component="${component.displayName}"]`),
           )
-          .forEach((componentElement) => component(componentElement));
-      });
+            .filter(
+              () => true,
+              // TODO: only instantiate direct child components, never children of children
+              // TODO: don't init components that have a matching ref above - fix type, add collection
+              //typedObjectValues(resolvedRefs).every((ref) => ref.component.element !== componentElement),
+            )
+            .map((componentElement) => component(componentElement, { parent: instance })),
+        ) || []),
+      );
 
       // Keep watching for DOM updates, and update elements whenever they become available or are removed
       // This should happen before applyBindings is called, since that can update the DOM
-      if (Object.keys(resolvedRefs).length > 0) {
+      if (Object.keys(instance.refs).length > 0) {
         const observer = new MutationObserver(() => {
-          Object.values(resolvedRefs).forEach((refFn) =>
+          Object.values(instance.refs).forEach((refFn) =>
             // this cannot be correctly inferred
             refFn.refreshRefs(),
           );
@@ -68,42 +122,17 @@ export const defineComponent = <
         // TODO: detect for own element DOM removal to auto-unmount?
       }
 
-      const reactiveProps = reactive(resolvedProps);
-
-      const lifecycle = {
-        ee: new EventEmitter(),
-        on(type: string, fn: () => void) {
-          this.ee.on(type, fn);
-        },
-        mount() {
-          console.log('[mount]', options.name);
-          this.ee.emit('mount');
-        },
-        unmount() {
-          console.groupCollapsed(`[Destroy ${options.name}]`);
-          console.log('[unmount]', options.name);
-          // eslint-disable-next-line @typescript-eslint/no-use-before-define
-          removeBindingMap?.forEach((binding) => binding?.());
-          this.ee.emit('unmount');
-          console.groupEnd();
-        },
-      };
-
       const observer = new MutationObserver((mutations) => {
         const removedNodes = mutations.flatMap((mutation) => Array.from(mutation.removedNodes));
         if (removedNodes.some((node) => node === element || node.contains(element))) {
-          lifecycle.unmount();
+          instance.unmount();
         }
       });
       observer.observe(document, { attributes: false, childList: true, subtree: true });
 
-      componentStack.push(lifecycle);
-      const bindings = options.setup(reactiveProps as any, resolvedRefs, { element });
-      componentStack.pop();
-
-      const removeBindingMap = applyBindings(bindings);
-
-      lifecycle.mount();
+      if (!createOptions.parent) {
+        setupComponent(instance);
+      }
 
       console.groupEnd();
       return {
@@ -114,19 +143,22 @@ export const defineComponent = <
           // console.log('new props', props);
           Object.entries(props).forEach(([name, value]) => {
             // todo check existence and validation
-            reactiveProps[name] = value;
+            instance.reactiveProps[name] = value;
           });
         },
         get props() {
-          return toRaw(reactiveProps);
+          return toRaw(instance.reactiveProps);
         },
         get element() {
           return element;
         },
+        setup() {
+          setupComponent(instance);
+        },
         dispose() {
           console.log('dispose');
-          lifecycle.unmount();
-          lifecycle.ee.removeAllListeners();
+          instance.unmount();
+          instance.ee.removeAllListeners();
         },
       };
     }) as ComponentReturnValue<TypedProps<P>>,
@@ -134,14 +166,38 @@ export const defineComponent = <
   );
 };
 
+function setupComponent(instance: InternalComponentInstance) {
+  currentInstance = instance;
+  const bindings = instance.options.setup({
+    props: instance.reactiveProps,
+    refs: instance.refs,
+    element: instance.element,
+  });
+  currentInstance = null;
+
+  instance.children.forEach((component) => component.setup());
+
+  instance.removeBindingsList = applyBindings(bindings);
+
+  instance.mount();
+}
+
 export function onMount(fn: () => void) {
   const componentInstance = getCurrentComponentInstance();
+  if (!componentInstance) {
+    console.error(`onMount() can only be used inside setup().`);
+    return;
+  }
   componentInstance.on('mount', () => {
     fn();
   });
 }
 export function onUnmount(fn: () => void) {
   const componentInstance = getCurrentComponentInstance();
+  if (!componentInstance) {
+    console.error(`onUnmount() can only be used inside setup().`);
+    return;
+  }
   componentInstance.on('unmount', () => {
     fn();
   });

@@ -21,7 +21,7 @@ const AccordionSlide = defineComponent({
     slideHeading: 'slide-heading',
     slideContent: 'slide-content',
   },
-  setup(props, refs) {
+  setup({ props, refs }) {
     // const [isToggled, toggle] = useToggle(false);
     //
     // watch(
@@ -53,10 +53,11 @@ const Accordion = defineComponent({
   refs: {
     slides: refComponents(AccordionSlide),
   },
-  setup(props, refs) {
+  setup({ refs }) {
     const activeIndex = ref<null | number>(
       refs.slides.components.findIndex((instance) => !!instance.props.expanded),
     );
+
     return [
       ...bindMap(refs.slides, (ref, index) => ({
         onChange: (isExpanded) => {

@@ -19,7 +19,7 @@ const FilterProductsChecklist = defineComponent({
   refs: {
     checkboxes: refCollection('checkbox'),
   },
-  setup(props, refs) {
+  setup({ props, refs }) {
     const selectedItems = ref<Array<string>>([]);
 
     watchEffect(() => {

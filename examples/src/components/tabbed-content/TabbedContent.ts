@@ -18,7 +18,7 @@ const TabbedContent = defineComponent({
     tabs: refCollection('tab'),
     tabContentItems: refCollection('tab-content'),
   },
-  setup(props, refs) {
+  setup({ props, refs }) {
     const selectedIndex = ref(props.selectedIndex);
 
     return [

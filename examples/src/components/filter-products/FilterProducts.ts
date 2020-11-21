@@ -71,7 +71,7 @@ const FilterProducts = defineComponent({
     cards: refComponents(ProductCard),
     resetButton: refElement('btn-reset', { isRequired: false }),
   },
-  setup(props, refs, { element }) {
+  setup({ refs, element }) {
     useTransitionController(refs, {
       setupTransitionInTimeline(timeline) {
         timeline.fromTo(element, 2, { opacity: 0 }, { opacity: 1 });

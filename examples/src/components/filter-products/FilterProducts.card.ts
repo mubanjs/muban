@@ -11,7 +11,7 @@ const ProductCard = defineComponent({
   refs: {
     cta: 'button-cta',
   },
-  setup(props, refs) {
+  setup({ refs }) {
     return [bind(refs.cta, { click: () => console.log('click cta') })];
   },
 });

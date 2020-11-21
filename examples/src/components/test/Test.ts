@@ -20,7 +20,7 @@ export default defineComponent({
     cardsContainer: 'cards-container',
     cards: refComponents(ProductCard),
   },
-  setup(props, refs) {
+  setup({ refs }) {
     const shouldRenderToggleExpand = ref(true);
     const cardsRenderCount = ref<0 | 1 | 2>(2);
 

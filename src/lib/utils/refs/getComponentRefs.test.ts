@@ -1,5 +1,5 @@
 import dedent from 'ts-dedent';
-import { defineComponent } from '../../Component.Reactive';
+import { createComponentInstance, defineComponent } from '../../Component.Reactive';
 import { getComponentRefs } from './getComponentRefs';
 import { refCollection, refComponent, refElement } from './refDefinitions';
 
@@ -42,7 +42,9 @@ describe('getComponentRefs', () => {
       componentRefSpecific: refComponent(Dummy2, { ref: 'component-ref' }),
     };
 
-    const value = getComponentRefs(refDefinition, element);
+    const instance = createComponentInstance(undefined, element, { name: 'foo', setup: () => [] });
+
+    const value = getComponentRefs(refDefinition, instance);
     expect(value.elementString.element!.textContent).toEqual('element-string');
     expect(value.elementRef.element!.textContent).toEqual('element-string');
     expect(value.collectionRef.elements.length).toEqual(3);

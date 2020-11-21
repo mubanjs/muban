@@ -19,7 +19,7 @@ import { mount } from '../../src/lib/utils/mount';
 
 const MyComponent = defineComponent({
   name: 'my-component',
-  setup(props, refs) {
+  setup({ refs }) {
     console.log('refs', refs);
     return [bind(refs.self, { text: ref('Hello World') })];
   },

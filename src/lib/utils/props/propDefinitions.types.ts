@@ -18,9 +18,10 @@ export type PropTypeDefinition<T = any> = {
   shapeType?: Function;
 };
 
-type OptionalPropertyKeys<T> = {
-  [P in keyof T]: undefined extends T[P] ? P : never;
-}[keyof T];
+// type OptionalPropertyKeys<T> = {
+//   [P in keyof T]: undefined extends T[P] ? P : never;
+// }[keyof T];
+
 // get all keys from an object that are not optional (either ? or |undefined)
 type RequiredPropertyKeys<T> = {
   [P in keyof T]: undefined extends T[P] ? never : P;

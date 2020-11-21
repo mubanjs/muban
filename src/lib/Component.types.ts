@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types */
+import type EventEmitter from 'eventemitter3';
 import type { Binding } from './utils/bindings/bindingDefinitions';
 import type { PropTypeDefinition, TypedProps } from './utils/props/propDefinitions.types';
 import type { ComponentRefItem, TypedRefs } from './utils/refs/refDefinitions.types';
@@ -16,14 +17,36 @@ export type ComponentFactory<P extends Record<string, PropTypeDefinition>> = Com
 > &
   ComponentDisplayName;
 
+export type InternalComponentInstance = {
+  parent: InternalComponentInstance | null;
+  element: HTMLElement;
+  props: Record<string, unknown>;
+  reactiveProps: Record<string, unknown>;
+  refs: TypedRefs<Record<string, ComponentRefItem>>;
+  provides: Record<string, unknown>;
+  children: Array<ComponentApi<any>>;
+  removeBindingsList?: Array<(() => void) | undefined>;
+  options: DefineComponentOptions<any, any>;
+  ee: EventEmitter;
+  on: (type: string, fn: () => void) => void;
+  mount: () => void;
+  unmount: () => void;
+};
+
+type ComponentCreateOptions = Partial<{
+  parent?: InternalComponentInstance;
+}>;
+
 export type ComponentDisplayName = { displayName: string };
 export type ComponentReturnValue<P extends Record<string, any> = Record<string, any>> = (
   element: HTMLElement,
+  options?: ComponentCreateOptions,
 ) => {
   readonly name: string;
   setProps: (props: P) => void;
   readonly props: P;
   readonly element: HTMLElement;
+  setup: () => void;
   dispose: () => void;
 };
 
@@ -35,9 +58,9 @@ export type DefineComponentOptions<
   components?: Array<ComponentFactory<any>>;
   props?: P;
   refs?: R;
-  setup: (
-    props: TypedProps<P>,
-    refs: TypedRefs<R>,
-    context: { element: HTMLElement },
-  ) => undefined | null | Array<Binding>;
+  setup: (context: {
+    props: TypedProps<P>;
+    refs: TypedRefs<R>;
+    element: HTMLElement;
+  }) => undefined | null | Array<Binding>;
 };

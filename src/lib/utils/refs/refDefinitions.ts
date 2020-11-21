@@ -30,14 +30,14 @@ export function refElement(
   return {
     ref: refId,
     type: 'element',
-    createRef: (parent) => {
+    createRef: (instance) => {
       const elementRef = ref<HTMLElement>();
       const getElement = (initial: boolean = false) => {
         // when ref is not provided, pick the component element itself
         const element =
           refId === '_self_'
-            ? parent
-            : parent.querySelector<HTMLElement>(`[data-ref="${refId}"]`) ?? undefined;
+            ? instance.element
+            : instance.element.querySelector<HTMLElement>(`[data-ref="${refId}"]`) ?? undefined;
         if (isRequired && !element && (initial || elementRef.value !== element)) {
           console.error('Element not found', `[data-ref="${refId}"]`);
         }
@@ -46,6 +46,7 @@ export function refElement(
       elementRef.value = getElement(true);
 
       return {
+        type: 'element',
         getBindingDefinition(props) {
           return BindElement(elementRef, props);
         },
@@ -67,11 +68,11 @@ export function refCollection(refId: string): ComponentRefItemCollection {
   return {
     ref: refId,
     type: 'collection',
-    createRef: (parent) => {
+    createRef: (instance) => {
       const getElements = () => {
-        const elements = Array.from(parent.querySelectorAll(`[data-ref="${refId}"]`)) as Array<
-          HTMLElement
-        >;
+        const elements = Array.from(
+          instance.element.querySelectorAll(`[data-ref="${refId}"]`),
+        ) as Array<HTMLElement>;
         if (elements.length === 0) {
           console.error('Elements not found', `[data-ref="${refId}"]`);
         }
@@ -80,12 +81,14 @@ export function refCollection(refId: string): ComponentRefItemCollection {
       const elementsRef = ref(getElements());
 
       return {
+        type: 'collection',
         getBindingDefinition(props) {
           return BindCollection(elementsRef, props);
         },
         elements: elementsRef.value,
         refs: elementsRef.value.map((element) => {
           return {
+            type: 'element',
             getBindingDefinition(props) {
               return BindElement(ref(element), props);
             },
@@ -108,14 +111,14 @@ export function refComponent<T extends ComponentFactory<any>>(
   return {
     ref: refId,
     type: 'component',
-    createRef: (parent) => {
+    createRef: (instance) => {
       const instanceRef = ref() as Ref<ReturnType<T> | undefined>;
 
       const getComponent = (initialRender: boolean = false) => {
         const query = refId
           ? `[data-ref="${refId}"]`
           : `[data-component="${component.displayName}"]`;
-        const element = parent.querySelector<HTMLElement>(query) ?? undefined;
+        const element = instance.element.querySelector<HTMLElement>(query) ?? undefined;
 
         if (initialRender && isRequired && !element) {
           console.error('Component not found', query);
@@ -123,12 +126,13 @@ export function refComponent<T extends ComponentFactory<any>>(
 
         return element === instanceRef.value?.element
           ? instanceRef.value
-          : (element && (component(element) as ReturnType<T>)) ?? undefined;
+          : (element && (component(element, { parent: instance }) as ReturnType<T>)) ?? undefined;
       };
 
       instanceRef.value = getComponent(true);
 
       return {
+        type: 'component',
         getBindingDefinition(props) {
           return BindComponent(instanceRef, props);
         },
@@ -149,21 +153,21 @@ export function refComponents<T extends ComponentFactory<any>>(
   return {
     ref: refId,
     type: 'componentCollection',
-    createRef: (parent) => {
+    createRef: (instance) => {
       const instancesRef = ref([]) as Ref<Array<ReturnType<T>>>;
 
       const getComponents = () => {
         const query = refId
           ? `[data-ref="${refId}"]`
           : `[data-component="${component.displayName}"]`;
-        const elements: Array<HTMLElement> = Array.from(parent.querySelectorAll(query));
+        const elements: Array<HTMLElement> = Array.from(instance.element.querySelectorAll(query));
 
         return elements.map((element) => {
           const existingInstance = instancesRef.value
             .map((instance) => instance.element)
             .indexOf(element);
           if (existingInstance === -1) {
-            return (component as T)(element) as ReturnType<T>;
+            return (component as T)(element, { parent: instance }) as ReturnType<T>;
           } else {
             return instancesRef.value[existingInstance];
           }
@@ -173,12 +177,14 @@ export function refComponents<T extends ComponentFactory<any>>(
       instancesRef.value = getComponents();
 
       return {
+        type: 'componentCollection',
         getBindingDefinition(props) {
           return BindComponents(instancesRef, props);
         },
         components: instancesRef.value,
         refs: instancesRef.value.map((instance) => {
           return {
+            type: 'component',
             getBindingDefinition(props) {
               return BindComponent(ref(instance), props);
             },
