@@ -10,7 +10,9 @@ import type { BindProps } from '../bindings/bindingDefinitions';
 export type ComponentRefItemElement = {
   type: 'element';
   ref: string;
-  createRef: (instance: InternalComponentInstance) => ElementRef<HTMLElement, BindProps>;
+  createRef: (
+    instance: InternalComponentInstance,
+  ) => ElementRef<HTMLElement | undefined, BindProps>;
   isRequired?: boolean;
 };
 export type ComponentRefItemCollection = {
@@ -44,7 +46,7 @@ export type ComponentRefItem =
  * - applying bindings
  * - get access to the elements/components related to the ref
  */
-export type ElementRef<T extends HTMLElement, P extends BindProps> = {
+export type ElementRef<T extends HTMLElement | undefined, P extends BindProps> = {
   type: 'element';
   getBindingDefinition: (
     props: P,

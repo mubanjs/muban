@@ -64,34 +64,15 @@ export function inject(
 
 /**
  * Helper function around provide/inject to create a typed pair with a curried "key" and default values
- *
- * @param key
- * @param defaultValue
- * @param treatDefaultAsFactory
  */
-export function createContext<T>(key: InjectionKey<T> | string): T | undefined;
-export function createContext<T>(
-  key: InjectionKey<T> | string,
-  defaultValue: T,
-  treatDefaultAsFactory?: false,
-): [(value: T) => void, () => T];
-export function createContext<T>(
-  key: InjectionKey<T> | string,
-  defaultValue: T | (() => T),
-  treatDefaultAsFactory: true,
-): [(value: T) => void, () => T];
-export function createContext<T>(
-  key: InjectionKey<T> | string,
-  defaultValue?: unknown,
-  treatDefaultAsFactory = false,
-) {
-  const provideContext = (value: T): void => {
-    provide(key, value);
+export function createContext<T>(key: InjectionKey<T> | string, defaultValue?: T) {
+  const provideContext = (value?: T): void => {
+    provide(key, value || defaultValue);
   };
 
-  const useContext = () => {
-    return inject(key, defaultValue, treatDefaultAsFactory as any);
+  const useContext = (defaultValue?: T | (() => T), treatDefaultAsFactory?: boolean): T => {
+    return inject(key, defaultValue, treatDefaultAsFactory as any) as T;
   };
 
-  return [provideContext, useContext];
+  return [provideContext, useContext] as const;
 }

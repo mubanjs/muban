@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
-import { paragraph, ParagraphProps } from './Paragraph';
+import { Paragraph, paragraph, ParagraphProps } from './Paragraph';
 
 export default {
   title: 'Paragraph',
@@ -12,7 +12,7 @@ export default {
 export const Default: Story<ParagraphProps> = () =>
   ({
     template: paragraph,
-    // component: Paragraph,
+    component: Paragraph,
   } as any);
 Default.args = {
   title: {

@@ -1,6 +1,51 @@
 import { html } from 'lit-html';
+import { SplitText } from 'gsap/SplitText';
 
 import './paragraph.css';
+import { defineComponent, refComponent, refElement } from '../../../../src';
+import { onMount } from '../../../../src/lib/Component.Reactive';
+import {
+  provideTransitionContext,
+  TranistionContext,
+  useTransition,
+} from '../../../../src/lib/utils/animation/transitions';
+import { splitWordAnimation } from '../../splitTextAnimation';
+
+////////////////////////////////////////////////////////////////////////////////
+// Title
+
+export const Title = defineComponent({
+  name: 'm01-title',
+  refs: {
+    eyebrow: refElement('eyebrow', { isRequired: false }),
+    title: 'title',
+    mustache: refElement('mustache', { isRequired: false }),
+  },
+  setup({ refs, element }) {
+    useTransition(element, {
+      setupTransitionInTimeline(timeline: TimelineMax) {
+        if (refs.eyebrow.element) {
+          timeline.add(
+            splitWordAnimation(new SplitText(refs.eyebrow.element, { type: 'lines,words' })),
+          );
+        }
+        if (refs.title.element) {
+          timeline.add(
+            splitWordAnimation(new SplitText(refs.title.element, { type: 'lines,words' })),
+            refs.eyebrow.element ? 0.1 : 0,
+          );
+        }
+        if (refs.mustache.element) {
+          timeline.add(
+            splitWordAnimation(new SplitText(refs.mustache.element, { type: 'lines,words' })),
+          );
+        }
+      },
+    });
+
+    return [];
+  },
+});
 
 type TitleProps = {
   title: string;
@@ -25,12 +70,37 @@ export function titleTemplate({
       class=${[headingClass, `is-${alignment}`, className].join(' ')}
       data-alignment=${alignment}
     >
-      ${eyebrow && html`<small class="js-eyebrow body-m eyebrow">${eyebrow}</small>`}
-      <span class="js-title">${title}</span>
-      ${mustache && html`<small class="js-mustache mustache">${mustache}</small>`}
+      ${eyebrow && html`<small class="body-m eyebrow" data-ref="eyebrow">${eyebrow}</small>`}
+      <span data-ref="title">${title}</span>
+      ${mustache && html`<small class="mustache" data-ref="c">${mustache}</small>`}
     </h2>
   `;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// Paragraph
+
+export const Paragraph = defineComponent({
+  name: 'c02-paragraph',
+  refs: {
+    title: refComponent(Title),
+  },
+  setup({ refs, element }) {
+    const transitionContext = new TranistionContext();
+    provideTransitionContext(transitionContext);
+
+    const controller = useTransition(element, {
+      setupTransitionInTimeline(timeline: TimelineMax) {
+        timeline.add(transitionContext.getTimeline(refs.title.component!.element));
+      },
+    });
+
+    onMount(() => {
+      controller.transitionIn();
+    });
+    return [];
+  },
+});
 
 export type ParagraphProps = {
   title: TitleProps;

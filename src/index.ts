@@ -8,16 +8,12 @@ export {
   refComponents,
 } from './lib/utils/refs/refDefinitions';
 export { propType } from './lib/utils/props/propDefinitions';
+export { provide, inject, createContext } from './lib/utils/inject';
 
 // re-export types of those libs, so they don't have to be installed separately
 export * from '@vue/reactivity';
 export {
   watch,
-  watchEffect,
-  WatchCallback,
-  WatchEffect,
-  WatchOptions,
-  WatchSource,
-  WatchStopHandle,
+  watchEffect, // WatchCallback, // WatchEffect, // WatchOptions, // WatchSource, // WatchStopHandle,
 } from '@vue/runtime-core';
 export * from 'lit-html';
