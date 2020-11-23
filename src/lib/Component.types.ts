@@ -25,6 +25,9 @@ export type InternalComponentInstance = {
   refs: TypedRefs<Record<string, ComponentRefItem>>;
   provides: Record<string, unknown>;
   children: Array<ComponentApi<any>>;
+  isSetup: boolean;
+  isMounted: boolean;
+  isUnmounted: boolean;
   removeBindingsList?: Array<(() => void) | undefined>;
   options: DefineComponentOptions<any, any>;
   ee: EventEmitter;

@@ -19,7 +19,7 @@ import { defineComponent, bind, ref } from '@muban/muban';
 
 const MyComponent = defineComponent({
   name: 'my-component',
-  setup(props, refs) {
+  setup({ props, refs }) {
     return [
       bind(refs.self, { text: ref('Hello World')}),
     ] 

@@ -2,6 +2,7 @@
 import { watch, watchEffect } from '@vue/runtime-core';
 import { unref } from '@vue/reactivity';
 import { extractFromHTML } from 'html-extract-data';
+import type { InternalComponentInstance } from '../../Component.types';
 import typedObjectEntries from '../../type-utils/typedObjectEntries';
 import type { Binding } from './bindingDefinitions';
 import checkedBinding from './checkedBinding';
@@ -22,6 +23,7 @@ export const bindingsList = {
 
 export const applyBindings = (
   bindings: Array<Binding> | null | undefined,
+  instance: InternalComponentInstance,
 ): Array<(() => void) | undefined> | undefined => {
   if (bindings) {
     return bindings.flatMap((binding) => {
@@ -103,6 +105,13 @@ export const applyBindings = (
             ref.element.innerHTML = Array.isArray(templateResult)
               ? templateResult.join('')
               : templateResult;
+
+            // TODO: make nicer?
+            // it takes some time for the MutationObserver to detect the newly added DOM elements
+            // for the "ref" watcher to update and instantiate and add the new children
+            setTimeout(() => {
+              instance.children.forEach((component) => component.setup());
+            }, 1);
           }
         });
       }

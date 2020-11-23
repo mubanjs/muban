@@ -121,7 +121,7 @@ defineComponent({
     // select optional icon component
     icon: component.optional<Icon>('.icon', 'button'),
   },
-  setup(props, refs) {
+  setup({ refs }) {
     // do something with refs
     bind(refs.button, {
       click: () => icon.setProp('name', 'expanded'),
@@ -210,7 +210,7 @@ defineComponent({
     // maybe this should live in a `components` definition instead, since it's cleary a bit different
     applyButtonIcon: component.optional<Icon>('icon', '.apply-button'),
   },
-  setup(props, refs) {
+  setup({ refs }) {
   }
 });
 ```
@@ -258,7 +258,7 @@ defineComponent({
   refs: {
     button: refElement('button'),
   },
-  setup(props, refs) {
+  setup({ refs }) {
     console.log(refs.button); // HTMLButtonElement
   }
 })
@@ -297,7 +297,7 @@ defineComponent({
   refs: {
     button: refElement('button').optional,
   },
-  setup(props, refs) {
+  setup({ refs }) {
     const counter = ref(1);
     bind(refs.button, {
       text: () => `Count ${counter.value}`,
@@ -320,7 +320,7 @@ I think we have these options;
       refs: {
         button: refElement('button').optional,
       },
-      setup(props, refs) {
+      setup({ refs }) {
         // access the value from a ref ref
         console.log(refs.button.value); // HTMLButtonElement
    
@@ -341,7 +341,7 @@ I think we have these options;
       refs: {
         button: refElement('button').optional,
       },
-      setup(props, refs) {   
+      setup({ refs }) {   
         const counter = ref(1);
    
         // passing a `ref`, which is observable
@@ -360,7 +360,7 @@ I think we have these options;
       refs: {
         button: refElement('button').optional,
       },
-      setup(props, refs) {
+      setup({ refs }) {
         const counter = ref(1);
         // passing a function, so `refs.button` can be tracked when executed from a computed
         bind(() => refs.button, {
@@ -378,7 +378,7 @@ I think we have these options;
       refs: {
         button: refElement('button').optional,
       },
-      setup(props, refs) {
+      setup({ refs }) {
         const counter = ref(1);
         // passing the name of the ref, so `bind` can do the interactions
         bind('button', {

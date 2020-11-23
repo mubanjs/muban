@@ -29,9 +29,9 @@ module.exports = {
         'props',
         'refs',
         'bindings',
+        'hooks',
         'provide-inject',
         'mhtml',
-        // 'hooks',
       ],
 
       '/research/': [

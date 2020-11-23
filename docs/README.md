@@ -34,7 +34,7 @@ export default defineComponent({
     expandButton: refElement('expand-button'),
     expandContent: 'expand-content',
   },
-  setup(props, refs) {
+  setup({ props, refs }) {
     const [isExpanded, toggleExpanded] = useToggle(props.isExpanded ?? false);
     const expandButtonLabel = computed(() => getButtonLabel(isExpanded.value));
 

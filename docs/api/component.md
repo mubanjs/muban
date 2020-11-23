@@ -82,7 +82,7 @@ defineComponent({
   refs: {
     container: { type: 'element', ref: 'container', optional: true},
   },
-  setup(props, refs, { element }) {
+  setup({ props, refs, element }) {
     return [
       bind(refs.container, { text: props.activeIndex }),
     ];

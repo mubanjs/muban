@@ -274,7 +274,7 @@ defineComponent({
     singleComponent: refElement(Component, 'single-element'),
     componentCollection: refElement(Component, 'element-collection'),
   },
-  setup(props, refs) {
+  setup({ props, refs }) {
     refs.singleElement.element; // HTMLElement
     refs.elementCollection.elements; // Array<HTMLElement>
 

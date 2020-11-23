@@ -124,9 +124,14 @@ export function refComponent<T extends ComponentFactory<any>>(
           console.error('Component not found', query);
         }
 
-        return element === instanceRef.value?.element
-          ? instanceRef.value
-          : (element && (component(element, { parent: instance }) as ReturnType<T>)) ?? undefined;
+        if (element === instanceRef.value?.element) {
+          return instanceRef.value;
+        }
+        if (element) {
+          const refInstance = component(element, { parent: instance }) as ReturnType<T>;
+          instance.children.push(refInstance);
+          return refInstance;
+        }
       };
 
       instanceRef.value = getComponent(true);
@@ -167,7 +172,9 @@ export function refComponents<T extends ComponentFactory<any>>(
             .map((instance) => instance.element)
             .indexOf(element);
           if (existingInstance === -1) {
-            return (component as T)(element, { parent: instance }) as ReturnType<T>;
+            const refInstance = component(element, { parent: instance }) as ReturnType<T>;
+            instance.children.push(refInstance);
+            return refInstance;
           } else {
             return instancesRef.value[existingInstance];
           }

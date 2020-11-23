@@ -39,6 +39,9 @@ export function createComponentInstance(
     options,
     children: [],
     removeBindingsList: [],
+    isSetup: false,
+    isMounted: false,
+    isUnmounted: false,
     ee: new EventEmitter(),
     on(type: string, fn: () => void) {
       this.ee.on(type, fn);
@@ -46,6 +49,7 @@ export function createComponentInstance(
     mount() {
       console.log('[mount]', options.name);
       this.ee.emit('mount');
+      this.isMounted = true;
     },
     unmount() {
       console.group(`[Destroy ${options.name}]`);
@@ -53,7 +57,12 @@ export function createComponentInstance(
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       this.removeBindingsList?.forEach((binding) => binding?.());
       this.ee.emit('unmount');
+      this.parent?.children.splice(
+        this.parent?.children.findIndex((c) => c.element === this.element),
+        1,
+      );
       console.groupEnd();
+      this.isUnmounted = true;
     },
   };
 }
@@ -137,8 +146,8 @@ export const defineComponent = <
       if (!createOptions.parent) {
         setupComponent(instance);
       }
-
       console.groupEnd();
+
       return {
         get name() {
           return options.name;
@@ -171,17 +180,23 @@ export const defineComponent = <
 };
 
 function setupComponent(instance: InternalComponentInstance) {
+  // has been setup before
+  if (instance.isSetup) {
+    return;
+  }
+
   currentInstance = instance;
   const bindings = instance.options.setup({
     props: instance.reactiveProps,
     refs: instance.refs,
     element: instance.element,
   });
+  instance.isSetup = true;
   currentInstance = null;
 
   instance.children.forEach((component) => component.setup());
 
-  instance.removeBindingsList = applyBindings(bindings);
+  instance.removeBindingsList = applyBindings(bindings, instance);
 
   instance.mount();
 }

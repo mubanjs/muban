@@ -24,7 +24,8 @@ const MyComponent = defineComponent({
   },
 });
 
-mount(MyComponent, document.body);
+// mount(MyComponent, document.body);
+
 type MyComponentProps = {
   welcomeText: string;
 };

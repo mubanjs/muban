@@ -154,7 +154,7 @@ class Carousel extends AbstractComponent {
 // options component
 defineComponent({
   props: { ... },
-  setup(props) { // types are "fixed" by `defineComponent`
+  setup({ props }) { // types are "fixed" by `defineComponent`
   }
 })
 ```
