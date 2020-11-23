@@ -1,11 +1,10 @@
-import { TemplateResult, render as renderTemplate } from 'lit-html';
 import type { ComponentFactory } from '../Component.types';
 
 export function mount<P extends Record<string, unknown>>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component: ComponentFactory<any>,
   container: HTMLElement | null,
-  template?: (props: P) => TemplateResult | Array<TemplateResult>,
+  template?: (props: P) => string | Array<string>,
   data?: P,
 ): void {
   if (!container) {
@@ -15,7 +14,7 @@ export function mount<P extends Record<string, unknown>>(
 
   if (template) {
     const templateResult = template(data || ({} as P));
-    renderTemplate(templateResult, container);
+    container.innerHTML = Array.isArray(templateResult) ? templateResult.join('') : templateResult;
   }
 
   const rootElement =

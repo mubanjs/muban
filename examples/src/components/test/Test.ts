@@ -1,11 +1,11 @@
 import { computed, ref } from '@vue/reactivity';
-import { html } from 'lit-html';
+import { html } from '../../../../src/lib/utils/template/mhtml';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
 import { bind, bindTemplate } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { refComponent, refComponents } from '../../../../src/lib/utils/refs/refDefinitions';
 import { button } from '../button/Button';
 import ProductCard, { productCard } from '../filter-products/FilterProducts.card';
-import ToggleExpand, { toggleExpand } from '../toggle-expand/ToggleExpand';
+import { ToggleExpand, toggleExpand } from '../toggle-expand/ToggleExpand';
 
 export default defineComponent({
   name: 'test',

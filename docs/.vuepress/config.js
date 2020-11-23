@@ -30,6 +30,7 @@ module.exports = {
         'refs',
         'bindings',
         'provide-inject',
+        'mhtml',
         // 'hooks',
       ],
 

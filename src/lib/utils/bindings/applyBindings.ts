@@ -2,7 +2,6 @@
 import { watch, watchEffect } from '@vue/runtime-core';
 import { unref } from '@vue/reactivity';
 import { extractFromHTML } from 'html-extract-data';
-import { render } from 'lit-html';
 import typedObjectEntries from '../../type-utils/typedObjectEntries';
 import type { Binding } from './bindingDefinitions';
 import checkedBinding from './checkedBinding';
@@ -99,7 +98,11 @@ export const applyBindings = (
         }
         watchEffect(() => {
           if (ref?.element) {
-            render(template(data.value), ref.element);
+            // TODO: attach parent component for context
+            const templateResult = template(data.value);
+            ref.element.innerHTML = Array.isArray(templateResult)
+              ? templateResult.join('')
+              : templateResult;
           }
         });
       }

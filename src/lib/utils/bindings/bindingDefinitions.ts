@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention,@typescript-eslint/no-explicit-any */
 
 import type { Ref } from '@vue/reactivity';
-import type { TemplateResult } from 'lit-html';
 import type { ComponentFactory } from '../../Component.types';
 import type { CollectionRef, ComponentsRef } from '../refs/refDefinitions.types';
 import type { AnyRef, ComponentSetPropsParam, ElementRef } from '../refs/refDefinitions.types';
@@ -55,7 +54,7 @@ type TemplateProps<T extends HTMLElement> = {
     onData: (data: any) => void;
   };
   data: any;
-  template: (props: any) => TemplateResult | Array<TemplateResult>;
+  template: (props: any) => string | Array<string>;
 };
 export function BindTemplate<T extends HTMLElement>(
   props: TemplateProps<T>,
@@ -104,7 +103,7 @@ export function bindMap<
 export function bindTemplate<P extends Record<string, unknown>>(
   target: ElementRef<HTMLElement, BindProps>,
   data: Ref<P>,
-  template: (props: P) => TemplateResult | Array<TemplateResult>,
+  template: (props: P) => string | Array<string>,
   extract?: {
     config: any;
     onData: (data: any) => void;

@@ -12,8 +12,7 @@
 // init();
 
 import { ref } from '@vue/reactivity';
-import { html } from 'lit-html';
-import { defineComponent } from '../../src';
+import { defineComponent, html } from '../../src';
 import { bind } from '../../src/lib/utils/bindings/bindingDefinitions';
 import { mount } from '../../src/lib/utils/mount';
 

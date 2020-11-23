@@ -67,6 +67,10 @@ export const defineComponent = <
   // TODO: this function doesn't expose the component name, which is something we might want
   return Object.assign(
     ((element, createOptions = {}) => {
+      if (!element) {
+        throw new Error(`No element found for component "${options.name}"`);
+      }
+
       const instance = createComponentInstance(createOptions.parent, element, options);
 
       console.group(`[Create ${options.name}]`);

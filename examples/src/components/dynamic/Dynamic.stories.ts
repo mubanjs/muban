@@ -2,7 +2,7 @@
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 
 import ProductCard, { ProductCardProps } from '../filter-products/FilterProducts.card';
-import ToggleExpand, { ToggleExpandProps } from '../toggle-expand/ToggleExpand';
+import { ToggleExpand, ToggleExpandProps } from '../toggle-expand/ToggleExpand';
 import Dynamic, { DynamicProps, dynamicTemplate } from './Dynamic';
 
 export default {

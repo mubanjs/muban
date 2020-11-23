@@ -1,4 +1,5 @@
-import { kebabCase, camelCase } from 'lodash';
+import kebabCase from 'lodash/kebabCase';
+import camelCase from 'lodash/camelCase';
 import type { PropertySource } from '../getComponentProps';
 
 export function createClassListPropertySource(): PropertySource {

@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { computed, ref } from '@vue/reactivity';
 import { isBoolean, optional } from 'isntnt';
-import { html } from 'lit-html';
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
-import { bind } from '../../src';
+import { bind, html } from '../../src';
 import { defineComponent } from '../../src/lib/Component.Reactive';
 import { propType } from '../../src/lib/utils/props/propDefinitions';
 import { refElement } from '../../src/lib/utils/refs/refDefinitions';
@@ -43,7 +42,6 @@ type ToggleExpandProps = {
 
 // typed template
 function toggleExpand({ isExpanded = false }: ToggleExpandProps = {}) {
-  // using lit-html
   // setting the data-is-expanded state to be used as prop, and also the class itself
   return html`<div
     data-component="toggle-expand"

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/naming-convention */
 import { computed, reactive } from '@vue/reactivity';
-import { html } from 'lit-html';
-import { ifDefined } from 'lit-html/directives/if-defined';
+import { html } from '../../../../src/lib/utils/template/mhtml';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
 import type { ComponentApi } from '../../../../src/lib/Component.types';
 import { bind, bindMap, bindTemplate } from '../../../../src/lib/utils/bindings/bindingDefinitions';
@@ -139,7 +138,7 @@ export type FilterProductsProps = {
   filters: Array<FilterProductsChecklistProps>;
 };
 export const filterProducts = ({ products, filters }: FilterProductsProps, ref?: string) => html`
-  <div data-component=${FilterProducts.displayName} data-ref=${ifDefined(ref)}>
+  <div data-component=${FilterProducts.displayName} data-ref=${ref}>
     <div class="row">
       <form class="col-sm-4" action="#">
         ${filters.map((filter) => filterProductsChecklist(filter, 'checklist-filters'))}
@@ -148,9 +147,9 @@ export const filterProducts = ({ products, filters }: FilterProductsProps, ref?:
           <div class="form-group">
             <select class="custom-select">
               <option selected>All prices</option>
-              <option value="max100">< 100</option>
-              <option value="max500">< 500</option>
-              <option value="min500">> 500</option>
+              <option value="max100">&lt; 100</option>
+              <option value="max500">&lt; 500</option>
+              <option value="min500">&gt; 500</option>
             </select>
           </div>
         </fieldset>

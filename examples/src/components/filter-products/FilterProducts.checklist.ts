@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ref } from '@vue/reactivity';
 import { watch, watchEffect } from '@vue/runtime-core';
-import { html } from 'lit-html';
-import { ifDefined } from 'lit-html/directives/if-defined';
+import { html } from '../../../../src/lib/utils/template/mhtml';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
 import { propType } from '../../../../src/lib/utils/props/propDefinitions';
 import { refCollection } from '../../../../src/lib/utils/refs/refDefinitions';
@@ -54,7 +53,7 @@ export const filterProductsChecklist = (
 ) => html`
   <fieldset
     data-component=${FilterProductsChecklist.displayName}
-    data-ref=${ifDefined(ref)}
+    data-ref=${ref}
     class="form-fieldset"
     data-category-id=${id}
     data-selected=${selected.join(',')}

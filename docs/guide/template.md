@@ -1,9 +1,9 @@
 # Template
 
 ::: warning
-The current template implementation is subject to change. `lit-html` is very light-weight, and has
-some nice features, but also has stuff that's unused, and not quite flexible enough in all
- situations. 
+The current template implementation might still change. `lit-html` has been replaced by `htm` +
+`vhtml` combo to allow more flexibility and a simpler setup, but since it's more focussed on
+(p)react compatibility, it requires a bit more effort to use raw HTML rendering.
 :::
 
 Templates in Muban mostly serves a role during development, since the whole reason Muban exists is
@@ -54,15 +54,20 @@ function myTemplate({ products }: MyTemplateProps) {
 } 
 ```
 
-## lit-html
+## mhtml
 
-Currently, the chosen template language is [lit-html](https://lit-html.polymer-project.org/guide/getting-started).
-It makes use of tagged template strings, is very light-weight, and has some helpers for attribute
-slots that could be useful.
+Currently, muban exposes it's own template language (mhtml), comprised of [htm](https://github.com/developit/htm)
+and [vhtml](https://github.com/developit/vhtml) with some custom modifications and utils.
+It makes use of tagged template strings, is very light-weight, directly returns strings as
+template results.
 
-A typical template would looks like this:
+### Guide for composing 2 simple templates
+
+A typical template would look like this:
 
 ```ts
+import { html, classMap } from '@muban/muban';
+
 type AccordionSlideProps = {
   heading: string;
   content: string;
@@ -72,7 +77,7 @@ type AccordionSlideProps = {
 export function accordionSlide({ heading, content, expanded }: AccordionSlideProps, ref?: string) {
   return html`<div
     data-component=${AccordionSlide.displayName}
-    data-ref=${ifDefined(ref)}
+    data-ref=${ref}
     data-expanded=${expanded}
   >
     <div data-ref="slide-wrapper" class=${classMap({ expanded: !!expanded })}>
@@ -106,6 +111,8 @@ props, so we can start rendering it to see how it looks.
 
 
 ```ts
+import { html } from '@muban/muban';
+
 type AccordionSlideProps = {
   heading: string;
   content: string;
@@ -117,8 +124,7 @@ export function accordionSlide({ heading, content, expanded }: AccordionSlidePro
 }
 ```
 
-A template should return a lit-html `TemplatResult` (or a `string`). Using the `html` tagged
-template string will do exactly that. 
+A template should return a `string`. Using the `html` tagged template string will do exactly that. 
 
 ```ts {2}
 export function accordionSlide({ heading, content, expanded }: AccordionSlideProps) {
@@ -168,7 +174,9 @@ there, so we always know they are in sync.
 We still have to manage how our `expanded` property should behave. Let's add it as a css class on
 the container div, and as a `data-` attribute on the component.
 
-```ts {4,6}
+```ts {6,8}
+import { html, classMap } from '@muban/muban';
+
 export function accordionSlide({ heading, content, expanded }: AccordionSlideProps) {
   return html`<div
     data-component=${AccordionSlide.displayName}
@@ -185,8 +193,8 @@ export function accordionSlide({ heading, content, expanded }: AccordionSlidePro
 By setting the `data-expanded` attribute, our TS component can pull it in as property to set it's
 initial state correctly.
 
-For setting the `class` attribute, we can use the `classMap` utility from lit-html, and applies
-any classes which value is truthy.
+For setting the `class` attribute we can use the `classMap` utility; it applies any classes
+which value is truthy.
 
 ::: warning Component state
 If the component should update the visual representation after interaction, and from the server
@@ -242,7 +250,7 @@ must also accept a `ref` parameter in our template function, and render it in ou
 export function accordionSlide({ heading, content, expanded }: AccordionSlideProps, ref?: string) {
   return html`<div
     data-component=${AccordionSlide.displayName}
-    data-ref=${ifDefined(ref)}
+    data-ref=${ref}
     data-expanded=${expanded}
   >
     <div data-ref="slide-wrapper" class=${classMap({ expanded: !!expanded })}>
@@ -252,10 +260,6 @@ export function accordionSlide({ heading, content, expanded }: AccordionSlidePro
   </div>`;
 }
  ```
-
-The `ifDefined` helper from `lit-html` makes sure to only render the attribute when it has an
-actual value, which is useful for when you render this template without passing a ref.
-
 
 #### 7. Doing the same for our parent component
 
@@ -289,3 +293,51 @@ export function accordion({ slides, activeIndex }: AccordionProps) {
 We're just using the `${}` tokens to inline our child templates. We map over our slides Array,
 invoke our child template function, and pass our data for each slide as props. Additionally, we
 pass the `ref` we want as the 2nd argument.
+
+### Rendering raw HTML
+
+#### unsafeHTML
+
+To render raw HTML, we can use the `unsafeHTML` util. By default, all our variables will be
+considered unsafe and thus escaped. If your data contains HTML that needs to be rendered in your
+template, you can use this helper.
+
+```ts
+import { html, unsafeHTML } from '@muban/muban';
+
+const content = 'Hello <strong>World</strong>!';
+
+html`<div>${unsafeHTML(content)}</div`;
+``` 
+
+#### dangerouslySetInnerHTML
+
+Because `htm`/`vhtml` are built to support JSX use cases, another way to render "innerHTML" is using
+the `dangerouslySetInnerHTML` attribute on any HTML element. We use that internally in some other
+helpers as well, for example:
+
+```ts
+html`<script
+        type="application/json"
+        dangerouslySetInnerHTML=${{
+          __html: JSON.stringify(content),
+        }}
+      ></script>`;
+```
+
+#### Html entities
+
+::: warning html entities
+Because the way the `htm` parser works, any "text content" that contains HTML characters might
+confuse it. Always use `&lt;` and similar escaped entities if you need to render them.
+
+Unfortunately there aren't any errors shown, the rendered HTML will just be out of sync.
+:::
+
+```ts
+// don't - this will break in your browser
+html`<p>It's < 9000</p>`;
+
+// do this
+html`<p>It's &lt; 9000</p>`;
+```

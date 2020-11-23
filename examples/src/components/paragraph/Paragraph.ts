@@ -1,4 +1,4 @@
-import { html } from 'lit-html';
+import { html } from '../../../../src/lib/utils/template/mhtml';
 import { SplitText } from 'gsap/SplitText';
 
 import './paragraph.css';

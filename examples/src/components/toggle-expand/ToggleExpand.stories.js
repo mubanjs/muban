@@ -1,4 +1,4 @@
-import ToggleExpand, { toggleExpand } from './ToggleExpand';
+import { ToggleExpand, toggleExpand } from './ToggleExpand';
 
 export default {
   title: 'ToggleExpand',

@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { computed, ref } from '@vue/reactivity';
-import { html } from 'lit-html';
-import { classMap } from 'lit-html/directives/class-map';
-import { ifDefined } from 'lit-html/directives/if-defined';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
 import { bind, bindMap } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { propType } from '../../../../src/lib/utils/props/propDefinitions';
 import { refComponents } from '../../../../src/lib/utils/refs/refDefinitions';
 
 import './accordion.css';
+import { classMap } from '../../../../src/lib/utils/template/classMap';
+import { html } from '../../../../src/lib/utils/template/mhtml';
 
 const AccordionSlide = defineComponent({
   name: 'accordion-slide',
@@ -81,7 +80,7 @@ type AccordionSlideProps = {
 export function accordionSlide({ heading, content, expanded }: AccordionSlideProps, ref?: string) {
   return html`<div
     data-component=${AccordionSlide.displayName}
-    data-ref=${ifDefined(ref)}
+    data-ref=${ref}
     data-expanded=${expanded}
   >
     <div data-ref="slide-wrapper" class=${classMap({ expanded: !!expanded })}>
@@ -97,8 +96,8 @@ export type AccordionProps = {
   activeIndex?: number;
 };
 
-export function accordion({ slides, activeIndex }: AccordionProps) {
-  return html`<div data-component=${Accordion.displayName}>
+export function accordion({ slides, activeIndex }: AccordionProps, ref?: string) {
+  return html`<div data-component=${Accordion.displayName} data-ref=${ref}>
     ${slides.map((slide, index) =>
       accordionSlide({ ...slide, expanded: index === activeIndex }, 'accordion-slide'),
     )}

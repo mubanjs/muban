@@ -121,11 +121,13 @@ Research: [component-refs](docs/research/component-refs.md).
 + Add TS template props
 + Render child components (by calling their template functions as inline expressions, passing data)
 + Pass down ref ids to child components, so they can be referenced by the parent component
++ switch to htm+vhtml for templating, creating mhtml with utils
++ add unsafeHtml util
++ add classMap util
 
 **Todo**
 - Add runtime (during dev) and build-time template prop validation
-- switch to htm+vhtml for templating
-- create custom directives for lost lit-html functionality
+- expand classMap with array support
 
 
 ## Styles

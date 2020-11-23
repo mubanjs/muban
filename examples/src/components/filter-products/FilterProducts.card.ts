@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/naming-convention */
-import { html } from 'lit-html';
-import { ifDefined } from 'lit-html/directives/if-defined';
+import { html } from '../../../../src/lib/utils/template/mhtml';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
 import { bind } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { button } from '../button/Button';
@@ -31,7 +30,7 @@ export const productCard = (
 ) => html`
   <div
     data-component=${ProductCard.displayName}
-    data-ref=${ifDefined(ref)}
+    data-ref=${ref}
     data-category=${category}
     data-color=${color}
   >
