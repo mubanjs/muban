@@ -38,7 +38,10 @@ export type ComponentRefItemComponentCollection<T extends ComponentFactory<Recor
 
 // combination of all of the above
 export type ComponentRefItem =
+  // value shortcuts
   | string
+  | ComponentRefItemElement['queryRef']
+  // object definitions
   | ComponentRefItemElement
   | ComponentRefItemCollection
   | ComponentRefItemComponent<any>

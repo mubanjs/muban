@@ -27,7 +27,7 @@ export const ToggleExpand = defineComponent({
   },
   refs: {
     expandButton: refElement((parent) => parent.querySelector('[data-ref="expand-button"]')),
-    expandContent: 'expand-content',
+    expandContent: (parent) => parent.querySelector('[data-ref="expand-content"]'),
   },
   setup({ props, refs }) {
     const [isExpanded, toggleExpanded] = useToggle(props.isExpanded ?? false);

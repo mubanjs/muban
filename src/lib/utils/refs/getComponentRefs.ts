@@ -10,7 +10,7 @@ export function getComponentRefs<R extends Record<string, ComponentRefItem>>(
   return typedObjectEntries(({ ...refs, self: '_self_' } as unknown) as R).reduce(
     (accumulator, [propName, refDefinition]) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (accumulator as any)[propName] = (typeof refDefinition === 'string'
+      (accumulator as any)[propName] = (['string', 'function'].includes(typeof refDefinition)
         ? refElement(refDefinition)
         : refDefinition
       ).createRef(instance);
