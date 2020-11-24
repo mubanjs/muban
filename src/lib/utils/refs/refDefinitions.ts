@@ -24,26 +24,32 @@ import type {
 } from './refDefinitions.types';
 
 export function refElement(
-  refId: string,
+  refIdOrQuery: string | ComponentRefItemElement['queryRef'],
   { isRequired = true }: { isRequired?: boolean } = {},
 ): ComponentRefItemElement {
   return {
-    ref: refId,
+    ref: typeof refIdOrQuery === 'string' ? refIdOrQuery : '[custom]',
     type: 'element',
-    createRef: (instance) => {
+    queryRef(parent) {
+      if (typeof refIdOrQuery === 'function') {
+        return refIdOrQuery(parent);
+      }
+      return this.ref === '_self_'
+        ? parent
+        : parent.querySelector<HTMLElement>(`[data-ref="${this.ref}"]`) ?? null;
+    },
+    createRef(instance) {
       const elementRef = ref<HTMLElement>();
       const getElement = (initial: boolean = false) => {
         // when ref is not provided, pick the component element itself
-        const element =
-          refId === '_self_'
-            ? instance.element
-            : instance.element.querySelector<HTMLElement>(`[data-ref="${refId}"]`) ?? undefined;
+        const element = this.queryRef(instance.element);
+
         if (isRequired && !element && (initial || elementRef.value !== element)) {
-          console.error('Element not found', `[data-ref="${refId}"]`);
+          console.error('Element not found', this.ref);
         }
         return element;
       };
-      elementRef.value = getElement(true);
+      elementRef.value = getElement(true) ?? undefined;
 
       return {
         type: 'element',
@@ -55,7 +61,7 @@ export function refElement(
         refreshRefs() {
           const element = getElement();
           if (element !== elementRef.value) {
-            elementRef.value = element;
+            elementRef.value = element ?? undefined;
           }
         },
       };
@@ -64,17 +70,23 @@ export function refElement(
   };
 }
 
-export function refCollection(refId: string): ComponentRefItemCollection {
+export function refCollection(
+  refIdOrQuery: string | ComponentRefItemCollection['queryRef'],
+): ComponentRefItemCollection {
   return {
-    ref: refId,
+    ref: typeof refIdOrQuery === 'string' ? refIdOrQuery : '[custom]',
     type: 'collection',
-    createRef: (instance) => {
+    queryRef(parent) {
+      if (typeof refIdOrQuery === 'function') {
+        return refIdOrQuery(parent);
+      }
+      return Array.from(parent.querySelectorAll(`[data-ref="${refIdOrQuery}"]`));
+    },
+    createRef(instance) {
       const getElements = () => {
-        const elements = Array.from(
-          instance.element.querySelectorAll(`[data-ref="${refId}"]`),
-        ) as Array<HTMLElement>;
+        const elements = this.queryRef(instance.element);
         if (elements.length === 0) {
-          console.error('Elements not found', `[data-ref="${refId}"]`);
+          console.error('Elements not found', `[data-ref="${this.ref}"]`);
         }
         return elements;
       };
@@ -106,22 +118,34 @@ export function refCollection(refId: string): ComponentRefItemCollection {
 
 export function refComponent<T extends ComponentFactory<any>>(
   component: T,
-  { ref: refId, isRequired = true }: { ref?: string; isRequired?: boolean } = {},
+  {
+    ref: refIdOrQuery,
+    isRequired = true,
+  }: { ref?: string | ComponentRefItemComponent<T>['queryRef']; isRequired?: boolean } = {},
 ): ComponentRefItemComponent<T> {
+  const getQuery = () => {
+    return refIdOrQuery
+      ? `[data-ref="${refIdOrQuery}"]`
+      : `[data-component="${component.displayName}"]`;
+  };
+
   return {
-    ref: refId,
+    ref: typeof refIdOrQuery === 'string' ? refIdOrQuery : '[custom]',
     type: 'component',
-    createRef: (instance) => {
+    queryRef(parent) {
+      if (typeof refIdOrQuery === 'function') {
+        return refIdOrQuery(parent);
+      }
+      return parent.querySelector<HTMLElement>(getQuery()) ?? null;
+    },
+    createRef(instance) {
       const instanceRef = ref() as Ref<ReturnType<T> | undefined>;
 
       const getComponent = (initialRender: boolean = false) => {
-        const query = refId
-          ? `[data-ref="${refId}"]`
-          : `[data-component="${component.displayName}"]`;
-        const element = instance.element.querySelector<HTMLElement>(query) ?? undefined;
+        const element = this.queryRef(instance.element);
 
         if (initialRender && isRequired && !element) {
-          console.error('Component not found', query);
+          console.error('Component not found', getQuery());
         }
 
         if (element === instanceRef.value?.element) {
@@ -153,19 +177,25 @@ export function refComponent<T extends ComponentFactory<any>>(
 
 export function refComponents<T extends ComponentFactory<any>>(
   component: T,
-  { ref: refId }: { ref?: string } = {},
+  { ref: refIdOrQuery }: { ref?: string | ComponentRefItemComponentCollection<T>['queryRef'] } = {},
 ): ComponentRefItemComponentCollection<T> {
   return {
-    ref: refId,
+    ref: typeof refIdOrQuery === 'string' ? refIdOrQuery : '[custom]',
     type: 'componentCollection',
-    createRef: (instance) => {
+    queryRef(parent) {
+      if (typeof refIdOrQuery === 'function') {
+        return refIdOrQuery(parent);
+      }
+      const query = refIdOrQuery
+        ? `[data-ref="${refIdOrQuery}"]`
+        : `[data-component="${component.displayName}"]`;
+      return Array.from(parent.querySelectorAll(query));
+    },
+    createRef(instance) {
       const instancesRef = ref([]) as Ref<Array<ReturnType<T>>>;
 
       const getComponents = () => {
-        const query = refId
-          ? `[data-ref="${refId}"]`
-          : `[data-component="${component.displayName}"]`;
-        const elements: Array<HTMLElement> = Array.from(instance.element.querySelectorAll(query));
+        const elements = this.queryRef(instance.element);
 
         return elements.map((element) => {
           const existingInstance = instancesRef.value

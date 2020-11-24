@@ -1,6 +1,6 @@
 {
   "name": "@muban/muban",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "description": "Writing components for server-rendered HTML",
   "keywords": [
     "muban",
@@ -65,7 +65,6 @@
     "eventemitter3": "^4.0.4",
     "express": "~4.17.1",
     "express-handlebars": "^5.1.0",
-    "gsap": "./examples/src/vendor/gsap-bonus.tgz",
     "htm": "^3.0.4",
     "html-extract-data": "^1.0.1",
     "isntnt": "^1.4.1",
@@ -80,6 +79,7 @@
     "vhtml": "^2.2.0"
   },
   "devDependencies": {
+    "gsap": "./examples/src/vendor/gsap-bonus.tgz",
     "@babel/core": "^7.11.1",
     "@babel/preset-env": "^7.11.0",
     "@babel/preset-typescript": "^7.10.4",

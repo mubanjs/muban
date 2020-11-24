@@ -58,7 +58,7 @@ function renderCards({ renderCount }: { renderCount: 0 | 1 | 2 }) {
     <div class="row">
       ${Array.from(
         { length: renderCount },
-        (_, index) => html`
+        (item, index) => html`
           <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
             ${productCard({
               title: `Card ${index}`,

@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 import { isBoolean, optional } from 'isntnt';
 import { templateComponentFactory } from '../../../../src/lib/utils/template/templateComponentFactory';
-import { html, jsonScriptTemplate } from '../../../../src/lib/utils/template/mhtml';
+import { html } from '../../../../src/lib/utils/template/mhtml';
 import { bind } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { propType } from '../../../../src/lib/utils/props/propDefinitions';
 
@@ -26,7 +26,7 @@ export const ToggleExpand = defineComponent({
     isExpanded: propType.boolean.validate(optional(isBoolean)),
   },
   refs: {
-    expandButton: refElement('expand-button'),
+    expandButton: refElement((parent) => parent.querySelector('[data-ref="expand-button"]')),
     expandContent: 'expand-content',
   },
   setup({ props, refs }) {

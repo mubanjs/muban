@@ -5,10 +5,10 @@
 **Done**
 + Created a setup functions that expects an options-object and returns a factory function to
  initialize the component
-+ Add support for props, refs and a setup function
++ Add support for props, refs, and a setup function
 + Setup function receives the props, refs and the component element as arguments
 + Implement Provide/Inject/Context support to component tree
-- Add API to render your root component/template using lit-html rendering
++ Add API to render your root component/template using mhtml rendering
 
 **Todo**
 - Animation setup, with nested component animations
@@ -62,6 +62,8 @@ Research: [component-refs](docs/research/component-refs.md).
   to create the binding values based up on the ref props or array index
 + Add a `components` prop to component definitions to init any child components it finds without
  having to use explicit refs. Useful for dynamic component rendering.
++ update refDefinition with custom element selection function, allowing users to provide their
+ own implementation if they want to opt-out of the default "ref" selection.
 
 **Todo**
 - move the `createRef` out of the `refDefinition`, since it's implementation is too complex to ask

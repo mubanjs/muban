@@ -10,7 +10,7 @@ As a concept, a component follows this flow:
 
 2. In your **component definition**, specify these `data-ref` id's, combined with the ref type you
  want to use them at (element, collection, component, etc).
-3. Set up your initial **component state** using `ref` and `reactive.
+3. Set up your initial **component state** using `ref` and `reactive` data structures.
 4. Define your **bindings**, linking up the configured `refs` with your component state.
 5. Whenever any of the component state **updates**, our bindings automatically update the HTML
  accordingly - or visa versa, when user interacts with the HTML, the component state updates. 

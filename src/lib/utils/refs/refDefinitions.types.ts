@@ -10,6 +10,7 @@ import type { BindProps } from '../bindings/bindingDefinitions';
 export type ComponentRefItemElement = {
   type: 'element';
   ref: string;
+  queryRef: (parent: HTMLElement) => HTMLElement | null;
   createRef: (
     instance: InternalComponentInstance,
   ) => ElementRef<HTMLElement | undefined, BindProps>;
@@ -18,17 +19,20 @@ export type ComponentRefItemElement = {
 export type ComponentRefItemCollection = {
   type: 'collection';
   ref: string;
+  queryRef: (parent: HTMLElement) => Array<HTMLElement>;
   createRef: (instance: InternalComponentInstance) => CollectionRef<HTMLElement, BindProps>;
 };
 export type ComponentRefItemComponent<T extends ComponentFactory<Record<string, any>>> = {
   type: 'component';
   ref?: string;
+  queryRef: (parent: HTMLElement) => HTMLElement | null;
   createRef: (instance: InternalComponentInstance) => ComponentRef<T>;
   isRequired?: boolean;
 };
 export type ComponentRefItemComponentCollection<T extends ComponentFactory<Record<string, any>>> = {
   type: 'componentCollection';
   ref?: string;
+  queryRef: (parent: HTMLElement) => Array<HTMLElement>;
   createRef: (instance: InternalComponentInstance) => ComponentsRef<T>;
 };
 
