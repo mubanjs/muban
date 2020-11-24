@@ -2,6 +2,7 @@
 
 * [Component](component.html)
     * [defineComponent](component.html#defineComponent)
+    * [mount](component.html#mount)
     
 * [Props](props.html)
     * [propType](props.html#proptype)

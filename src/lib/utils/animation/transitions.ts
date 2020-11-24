@@ -6,7 +6,7 @@ type TransitionController = {
   transitionIn(): void;
 };
 
-export class TranistionContext {
+export class TransitionContext {
   private readonly store: Array<{ element: HTMLElement; controller: TransitionController }> = [];
   public register(element: HTMLElement, controller: TransitionController) {
     this.store.push({ element, controller });
@@ -19,7 +19,7 @@ export class TranistionContext {
   }
 }
 export const [provideTransitionContext, useTransitionContext] = createContext<
-  TranistionContext | undefined
+  TransitionContext | undefined
 >('transitionContext');
 
 export function useTransition(

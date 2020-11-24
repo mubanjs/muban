@@ -142,3 +142,26 @@ You can find more info at the [Props API](./refs.md)
 ### setup
 
 ### bindings
+
+## mount
+
+```ts
+declare function mount<P extends Record<string, unknown>>(
+  component: ComponentFactory<any>,
+  container: HTMLElement | null,
+  template?: (props: P) => string | Array<string>,
+  data?: P,
+): void;
+```
+
+```ts
+import { mount } from '@muban/muban';
+
+// mount against existing HTML
+mount(MyComponent, document.body)
+
+// mount and render client-side template
+mount(MyComponent, appRoot, myComponentTemplate, {
+  welcomeText: 'Hello',
+});
+```

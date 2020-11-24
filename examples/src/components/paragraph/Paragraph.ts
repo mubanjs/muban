@@ -6,7 +6,7 @@ import { defineComponent, refComponent, refElement } from '../../../../src';
 import { onMount } from '../../../../src/lib/Component.Reactive';
 import {
   provideTransitionContext,
-  TranistionContext,
+  TransitionContext,
   useTransition,
 } from '../../../../src/lib/utils/animation/transitions';
 import { splitWordAnimation } from '../../splitTextAnimation';
@@ -23,7 +23,7 @@ export const Title = defineComponent({
   },
   setup({ refs, element }) {
     useTransition(element, {
-      setupTransitionInTimeline(timeline: TimelineMax) {
+      setupTransitionInTimeline(timeline) {
         if (refs.eyebrow.element) {
           timeline.add(
             splitWordAnimation(new SplitText(refs.eyebrow.element, { type: 'lines,words' })),
@@ -86,11 +86,11 @@ export const Paragraph = defineComponent({
     title: refComponent(Title),
   },
   setup({ refs, element }) {
-    const transitionContext = new TranistionContext();
+    const transitionContext = new TransitionContext();
     provideTransitionContext(transitionContext);
 
     const controller = useTransition(element, {
-      setupTransitionInTimeline(timeline: TimelineMax) {
+      setupTransitionInTimeline(timeline) {
         timeline.add(transitionContext.getTimeline(refs.title.component!.element));
       },
     });

@@ -8,15 +8,16 @@
 + Add support for props, refs and a setup function
 + Setup function receives the props, refs and the component element as arguments
 + Implement Provide/Inject/Context support to component tree
+- Add API to render your root component/template using lit-html rendering
 
 **Todo**
-- Add API to render your root component/template using lit-html rendering
 - Animation setup, with nested component animations
 - Form tooling and validation
 - Do we need some kind of global component registry to auto-create components without specifying
   them in our own components?
 - focus on package size
 - re-export vue and lit-html types and used methods
+- async component loading / splitting, requires async component setup
 
 ## Props
 
