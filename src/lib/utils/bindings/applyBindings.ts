@@ -93,27 +93,31 @@ export const applyBindings = (
           });
         });
       } else if (binding.type === 'template') {
-        const { ref, extract, data, template } = binding.props;
+        const { ref, extract, data, template, renderImmediate } = binding.props;
         if (ref && ref.element && extract) {
           const extracted = extractFromHTML(ref.element, extract.config);
           extract.onData(extracted);
         }
-        watchEffect(() => {
-          if (ref?.element) {
-            // TODO: attach parent component for context
-            const templateResult = template(data.value);
-            ref.element.innerHTML = Array.isArray(templateResult)
-              ? templateResult.join('')
-              : templateResult;
+        watch(
+          () => data.value,
+          (templateData) => {
+            if (ref?.element) {
+              // TODO: attach parent component for context
+              const templateResult = template(templateData);
+              ref.element.innerHTML = Array.isArray(templateResult)
+                ? templateResult.join('')
+                : templateResult;
 
-            // TODO: make nicer?
-            // it takes some time for the MutationObserver to detect the newly added DOM elements
-            // for the "ref" watcher to update and instantiate and add the new children
-            setTimeout(() => {
-              instance.children.forEach((component) => component.setup());
-            }, 1);
-          }
-        });
+              // TODO: make nicer?
+              // it takes some time for the MutationObserver to detect the newly added DOM elements
+              // for the "ref" watcher to update and instantiate and add the new children
+              setTimeout(() => {
+                instance.children.forEach((component) => component.setup());
+              }, 1);
+            }
+          },
+          { immediate: !!renderImmediate },
+        );
       }
     });
   }

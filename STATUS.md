@@ -9,6 +9,7 @@
 + Setup function receives the props, refs and the component element as arguments
 + Implement Provide/Inject/Context support to component tree
 + Add API to render your root component/template using mhtml rendering
+- re-export vue and lit-html types and used methods
 
 **Todo**
 - Animation setup, with nested component animations
@@ -16,7 +17,6 @@
 - Do we need some kind of global component registry to auto-create components without specifying
   them in our own components?
 - focus on package size
-- re-export vue and lit-html types and used methods
 - async component loading / splitting, requires async component setup
 
 ## Props
@@ -69,9 +69,6 @@ Research: [component-refs](docs/research/component-refs.md).
 - move the `createRef` out of the `refDefinition`, since it's implementation is too complex to ask
   users to provide it themselves. Just need to figure out how to type these, probably using the same
   look up map as used during runtime based on the `type` field.
-- Fix ref type if passed as string shorthand
-- Add support for optional refs
-- Add support for optional ref typing
 - Add unit tests
 - Make sure to don't init global components that are also specified as ref, otherwise you'll get
   duplicate instances
@@ -114,7 +111,7 @@ Research: [component-refs](docs/research/component-refs.md).
 + Clear all (element) bindings when unmounting a component
 
 **Todo**
-- Figure out how (lifecycle) hooks can be shared between Muban and future Vue integration in
+- Figure out if/how (lifecycle) hooks can be shared between Muban and future Vue integration in
  projects 
 
 ## Templates
@@ -146,12 +143,13 @@ Research: [component-refs](docs/research/component-refs.md).
 **Done**
 + Basic support for rendering a component
 + Support for render props passed to the template
++ Add proper @muban/storybook framework as NPM module for this new version
++ Make TS component optional
++ Add data as optional story prop to modify incoming args
 
 **Todo**
-- Add proper @muban/storybook framework as NPM module for this new version
 - Add support for component sources (which is more difficult, since templates are now TS
  functions, potentially in the same file, and data is just defined in stories)
-- Make TS component optional
 
 ## Runtime dynamic templates
 
@@ -161,9 +159,9 @@ Research: [component-dynamic-templates](docs/research/component-dynamic-template
 + Add `Template` binding with support for extracting data from existing HTML, and re-rendering
   a given template with reactive data.
 + Add linked typings between `template` props and `data` computed for bindTemplate parameters
-
-**Todo**
-- Add a boolean to not re-render the template initially, and only when the passed data changes.
++ Add a boolean to not re-render the template initially, and only when the passed data changes.
   This could be useful for when you're never re-rendering based on client-side logic, but only
   rendering what comes back from the API after interacting with the page (e.g. load more,
   filtering). This would save an unneeded re-render during page load.
+
+**Todo**

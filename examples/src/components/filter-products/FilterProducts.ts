@@ -106,7 +106,10 @@ const FilterProducts = defineComponent({
         refs.productsContainer,
         computed(() => ({ products: filteredProducts.value })),
         productList,
-        { config: extractConfig, onData: (products) => productData.push(...products) },
+        {
+          extract: { config: extractConfig, onData: (products) => productData.push(...products) },
+          renderImmediate: true,
+        },
       ),
     ];
   },

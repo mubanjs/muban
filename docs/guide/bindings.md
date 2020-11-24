@@ -129,7 +129,7 @@ bindMap(refs.slides, (ref, index) => ({
 ### bindTemplate
 
 ```ts
-bindTemplate(refContainer, data, template, extractConfig?)
+bindTemplate(refContainer, data, template, { extractConfig?, renderImmediate? })
 ```
 
 The `bindTemplate` is slightly different from the ones above, and is specifically designed to
@@ -160,8 +160,13 @@ return [
     computed(() => ({ products: filteredProducts.value })),
     // render this template each time, passing the received data
     productList,
-    // optionally extract any exiting data from the HTML that was rendered on the server
-    { config: extractConfig, onData: (products) => productData.push(...products) },
+    {
+      // optionally extract any exiting data from the HTML that was rendered on the server
+      extract: { config: extractConfig, onData: (products) => productData.push(...products) },
+      // configure if you want to update the UI based on client side template immediately,
+      // or only when the data changes afterwards
+      renderImmediate: true, // default = false
+    },
   ),
 
 ]

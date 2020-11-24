@@ -53,6 +53,7 @@ type TemplateProps<T extends HTMLElement> = {
     config: any;
     onData: (data: any) => void;
   };
+  renderImmediate?: boolean;
   data: any;
   template: (props: any) => string | Array<string>;
 };
@@ -104,13 +105,19 @@ export function bindTemplate<P extends Record<string, unknown>>(
   target: ElementRef<HTMLElement, BindProps>,
   data: Ref<P>,
   template: (props: P) => string | Array<string>,
-  extract?: {
-    config: any;
-    onData: (data: any) => void;
-  },
+  {
+    extract,
+    renderImmediate = false,
+  }: {
+    extract?: {
+      config: any;
+      onData: (data: any) => void;
+    };
+    renderImmediate?: boolean;
+  } = {},
 ): {
   type: 'template';
   props: TemplateProps<HTMLElement>;
 } {
-  return BindTemplate({ ref: target, data, template, extract });
+  return BindTemplate({ ref: target, data, template, extract, renderImmediate });
 }
