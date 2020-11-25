@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { ComponentFactory } from '../../Component.types';
+import type { ComponentFactory, ComponentTemplate } from '../../Component.types';
 import { html, jsonScriptTemplate } from './mhtml';
 
 type TemplateComponentFactoryOptions<P extends Record<string, unknown>> = {
@@ -17,7 +17,7 @@ export function templateComponentFactory<P extends Record<string, unknown>>({
   tagAttributes,
   children,
   jsonProps,
-}: TemplateComponentFactoryOptions<any>): (props: P, ref?: string) => void {
+}: TemplateComponentFactoryOptions<any>): ComponentTemplate {
   return (props, ref) => {
     return renderComponentWrapper({
       tag,

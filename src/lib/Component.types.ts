@@ -7,15 +7,19 @@ import type { ComponentRefItem, TypedRefs } from './utils/refs/refDefinitions.ty
 type IfAny<T, Y, N> = 0 extends 1 & T ? Y : N;
 type IsAny<T> = IfAny<T, true, never>;
 
+export type ComponentMeta = {
+  component: ComponentFactory;
+  template: ComponentTemplate;
+};
+
 // export type ComponentApi<T extends ComponentFactory<any>> = ReturnType<T>;
-export type ComponentApi<T extends ComponentFactory<any>> = IsAny<T> extends true
-  ? ReturnType<ComponentFactory<any>>
+export type ComponentApi<T extends ComponentFactory = any> = IsAny<T> extends true
+  ? ReturnType<ComponentFactory>
   : ReturnType<T>;
 
-export type ComponentFactory<P extends Record<string, PropTypeDefinition>> = ComponentReturnValue<
-  TypedProps<P>
-> &
-  ComponentDisplayName;
+export type ComponentFactory<
+  P extends Record<string, PropTypeDefinition> = any
+> = ComponentReturnValue<TypedProps<P>> & ComponentDisplayName;
 
 export type InternalComponentInstance = {
   parent: InternalComponentInstance | null;
@@ -24,7 +28,7 @@ export type InternalComponentInstance = {
   reactiveProps: Record<string, unknown>;
   refs: TypedRefs<Record<string, ComponentRefItem>>;
   provides: Record<string, unknown>;
-  children: Array<ComponentApi<any>>;
+  children: Array<ComponentApi>;
   isSetup: boolean;
   isMounted: boolean;
   isUnmounted: boolean;
@@ -58,7 +62,7 @@ export type DefineComponentOptions<
   R extends Record<string, ComponentRefItem>
 > = {
   name: string;
-  components?: Array<ComponentFactory<any>>;
+  components?: Array<ComponentFactory | (() => Promise<ComponentFactory>)>;
   props?: P;
   refs?: R;
   setup: (context: {
@@ -67,3 +71,12 @@ export type DefineComponentOptions<
     element: HTMLElement;
   }) => undefined | null | Array<Binding>;
 };
+
+export type ComponentTemplate<P extends Record<string, unknown> = any> = (
+  props: P,
+  ref?: string,
+) => string | Array<string>;
+
+export type LazyComponent<P extends Record<string, PropTypeDefinition> = any> = () => Promise<
+  ComponentFactory<P>
+>;

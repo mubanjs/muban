@@ -37,12 +37,12 @@ const AccordionSlide = defineComponent({
     //   },
     // );
     return [
-      bind(refs.slideWrapper, { css: computed(() => ({ expanded: props.expanded })) }),
       bind(refs.slideHeading, {
         click: () => {
           props.onChange?.(!props.expanded);
         },
       }),
+      bind(refs.slideWrapper, { css: computed(() => ({ expanded: props.expanded })) }),
     ];
   },
 });

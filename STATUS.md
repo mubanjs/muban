@@ -9,7 +9,8 @@
 + Setup function receives the props, refs and the component element as arguments
 + Implement Provide/Inject/Context support to component tree
 + Add API to render your root component/template using mhtml rendering
-- re-export vue and lit-html types and used methods
++ re-export vue and lit-html types and used methods
++ async component lazy loading, only supported for the anonymous `components` array, not for refs
 
 **Todo**
 - Animation setup, with nested component animations
@@ -17,7 +18,6 @@
 - Do we need some kind of global component registry to auto-create components without specifying
   them in our own components?
 - focus on package size
-- async component loading / splitting, requires async component setup
 
 ## Props
 

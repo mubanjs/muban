@@ -107,10 +107,10 @@ export type ParagraphProps = {
   copy: string;
 };
 
-export function paragraph({ title, copy }: ParagraphProps) {
+export function paragraph({ title, copy }: ParagraphProps, ref?: string) {
   return html`
     <div class="responsivegrid aem-GridColumn aem-GridColumn--default--12">
-      <section data-component="c02-paragraph" ?data-scroll-component=${false}>
+      <section data-component="c02-paragraph" data-ref=${ref} data-scroll-component=${false}>
         <div class="content-wrapper">
           <div class="component-content">
             ${titleTemplate({ ...title, headingClass: 'custom-heading' })}

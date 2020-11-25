@@ -42,3 +42,8 @@ export const productCard = (
     </div>
   </div>
 `;
+
+export const meta = {
+  component: ProductCard,
+  template: productCard,
+};
