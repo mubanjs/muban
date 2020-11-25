@@ -4,7 +4,7 @@ import { defineComponent } from '../../../../src/lib/Component.Reactive';
 import { bind } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { button } from '../button/Button';
 
-const ProductCard = defineComponent({
+export const ProductCard = defineComponent({
   name: 'product-card',
   props: {},
   refs: {
@@ -14,7 +14,6 @@ const ProductCard = defineComponent({
     return [bind(refs.cta, { click: () => console.log('click cta') })];
   },
 });
-export default ProductCard;
 
 export type ProductCardProps = {
   title: string;

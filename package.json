@@ -47,7 +47,7 @@
     ]
   },
   "dependencies": {
-    "@muban/storybook": "7.0.0-alpha.3",
+    "@muban/storybook": "7.0.0-alpha.4",
     "@types/cors": "^2.8.7",
     "@types/express": "^4.17.7",
     "@types/express-handlebars": "^3.1.0",

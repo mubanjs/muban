@@ -7,7 +7,7 @@ import { refCollection } from '../../../../src/lib/utils/refs/refDefinitions';
 import { classMap } from '../../../../src/lib/utils/template/classMap';
 import { html, unsafeHTML } from '../../../../src/lib/utils/template/mhtml';
 
-const TabbedContent = defineComponent({
+export const TabbedContent = defineComponent({
   name: 'tabbed-content',
   props: {
     selectedIndex: propType.number.defaultValue(0),
@@ -30,8 +30,6 @@ const TabbedContent = defineComponent({
     ];
   },
 });
-
-export default TabbedContent;
 
 type TabButtonProps = {
   label: string;
@@ -63,8 +61,8 @@ export const tabContentItem = (
   </div>
 `;
 
-type TabbedContentProps = {
-  items: Array<TabButtonProps & TabContentItemProps>;
+export type TabbedContentProps = {
+  items: Array<Omit<TabButtonProps & TabContentItemProps, 'index'>>;
   selectedIndex?: number;
 };
 
@@ -83,3 +81,8 @@ export const tabbedContent = (
     ${items.map((item, index) => tabContentItem({ ...item, index }, 'tab-content'))}
   </div>
 `;
+
+export const meta = {
+  component: TabbedContent,
+  template: tabbedContent,
+};

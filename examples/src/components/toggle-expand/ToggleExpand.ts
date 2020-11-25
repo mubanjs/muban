@@ -68,3 +68,8 @@ export const toggleExpand = templateComponentFactory<ToggleExpandProps>({
     `;
   },
 });
+
+export const meta = {
+  component: ToggleExpand,
+  template: toggleExpand,
+};

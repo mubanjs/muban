@@ -47,7 +47,7 @@ const AccordionSlide = defineComponent({
   },
 });
 
-const Accordion = defineComponent({
+export const Accordion = defineComponent({
   name: 'accordion',
   refs: {
     slides: refComponents(AccordionSlide),
@@ -67,8 +67,6 @@ const Accordion = defineComponent({
     ];
   },
 });
-
-export default Accordion;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type AccordionSlideProps = {
@@ -103,3 +101,8 @@ export function accordion({ slides, activeIndex }: AccordionProps, ref?: string)
     )}
   </div>`;
 }
+
+export const meta = {
+  component: Accordion,
+  template: accordion,
+};

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import Test, { testTemplate } from './Test';
+import { Test, testTemplate } from './Test';
 
 export default {
   title: 'Test',

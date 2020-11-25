@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import FilterProducts, { filterProducts, FilterProductsProps } from './FilterProducts';
+import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import { meta, FilterProductsProps } from './FilterProducts';
 
 export default {
   title: 'FilterProducts',
   argTypes: {},
 };
 
-export const Default = () => ({
-  template: filterProducts,
-  component: FilterProducts,
-});
+export const Default: Story<FilterProductsProps> = () => meta;
 Default.args = {
   filters: [
     {
@@ -88,4 +86,4 @@ Default.args = {
       color: '2',
     },
   ],
-} as FilterProductsProps;
+};

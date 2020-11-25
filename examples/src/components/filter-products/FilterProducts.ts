@@ -6,8 +6,9 @@ import type { ComponentApi } from '../../../../src/lib/Component.types';
 import { bind, bindMap, bindTemplate } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { refComponents, refElement } from '../../../../src/lib/utils/refs/refDefinitions';
 import { useTransitionController } from '../../useTransitionController';
-import ProductCard, { productCard, ProductCardProps } from './FilterProducts.card';
-import FilterProductsChecklist, {
+import { ProductCard, productCard, ProductCardProps } from './FilterProducts.card';
+import {
+  FilterProductsChecklist,
   filterProductsChecklist,
   FilterProductsChecklistProps,
 } from './FilterProducts.checklist';
@@ -61,7 +62,7 @@ const useFilters = (
   };
 };
 
-const FilterProducts = defineComponent({
+export const FilterProducts = defineComponent({
   name: 'filter-products',
   props: {},
   refs: {
@@ -115,8 +116,6 @@ const FilterProducts = defineComponent({
   },
 });
 
-export default FilterProducts;
-
 function productList({ products }: { products: Array<ProductCardProps> }) {
   if (products.length === 0) {
     return html`<div class="card-body text-center">
@@ -168,3 +167,8 @@ export const filterProducts = ({ products, filters }: FilterProductsProps, ref?:
     </div>
   </div>
 `;
+
+export const meta = {
+  component: FilterProducts,
+  template: filterProducts,
+};

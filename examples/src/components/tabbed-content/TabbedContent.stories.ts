@@ -1,4 +1,5 @@
-import TabbedContent, { tabbedContent } from './TabbedContent';
+import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import { meta, TabbedContentProps } from './TabbedContent';
 
 export default {
   title: 'TabbedContent',
@@ -7,10 +8,7 @@ export default {
   },
 };
 
-export const Default = () => ({
-  template: tabbedContent,
-  component: TabbedContent,
-});
+export const Default: Story<TabbedContentProps> = () => meta;
 Default.args = {
   selectedIndex: 1,
   items: [
@@ -61,6 +59,6 @@ Default.args = {
           sequi, vero voluptatibus. Dolores dolorum exercitationem voluptate.
         </p>
       `,
-    }
-  ]
+    },
+  ],
 };

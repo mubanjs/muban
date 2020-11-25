@@ -1682,10 +1682,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@muban/storybook@7.0.0-alpha.3":
-  version "7.0.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/@muban/storybook/-/storybook-7.0.0-alpha.3.tgz#d0803e7a3da373f9c6565525462d3c5e906a7967"
-  integrity sha512-xZM9Jse3LdFLrJLc7De8JFzS2P9atvoGUjZ7G+s1a+1LgTLPHzgewCXm3/h8+2nFdsnl0X2QZ7D7PZlGsvlPJA==
+"@muban/storybook@7.0.0-alpha.4":
+  version "7.0.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/@muban/storybook/-/storybook-7.0.0-alpha.4.tgz#1e04eeb6b8d712f342667b1f262c32f4a991327d"
+  integrity sha512-BqCbBWhpyCd91AYM5WQo2f+nIqaR2Iu5dwY7nkU8s3h6j3BClBqCCwn+MwigzlU2NTaNz6zWPoHVdAFCI7pWjQ==
   dependencies:
     "@storybook/addons" "^6.0.20"
     "@storybook/core" "^6.0.20"

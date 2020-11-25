@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
-import { Paragraph, paragraph, ParagraphProps } from './Paragraph';
+import { meta, ParagraphProps } from './Paragraph';
 
 export default {
   title: 'Paragraph',
@@ -9,11 +9,7 @@ export default {
   },
 };
 
-export const Default: Story<ParagraphProps> = () =>
-  ({
-    template: paragraph,
-    component: Paragraph,
-  } as any);
+export const Default: Story<ParagraphProps> = () => meta;
 Default.args = {
   title: {
     eyebrow: `A model for`,

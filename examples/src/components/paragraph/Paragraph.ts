@@ -121,3 +121,8 @@ export function paragraph({ title, copy }: ParagraphProps, ref?: string) {
     </div>
   `;
 }
+
+export const meta = {
+  component: Paragraph,
+  template: paragraph,
+};

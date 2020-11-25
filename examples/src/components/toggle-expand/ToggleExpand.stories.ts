@@ -1,4 +1,5 @@
-import { ToggleExpand, toggleExpand } from './ToggleExpand';
+import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import { meta, ToggleExpandProps } from './ToggleExpand';
 
 export default {
   title: 'ToggleExpand',
@@ -7,10 +8,7 @@ export default {
   },
 };
 
-export const Default = () => ({
-  template: toggleExpand,
-  component: ToggleExpand,
-});
+export const Default: Story<ToggleExpandProps> = () => meta;
 Default.args = {
   isExpanded: false,
 };
