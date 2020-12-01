@@ -52,14 +52,9 @@ type TabContentItemProps = {
   content: string;
   index: number;
 };
-export const tabContentItem = (
-  { content, index }: TabContentItemProps,
-  ref?: string,
-): string => html`
-  <div class="tab-content" data-ref=${ref} data-index=${index}>
-    ${unsafeHTML(content)}
-  </div>
-`;
+
+export const tabContentItem = ({ content, index }: TabContentItemProps, ref?: string): string =>
+  html`<div class="tab-content" data-ref=${ref} data-index=${index}>${unsafeHTML(content)}</div>`;
 
 export type TabbedContentProps = {
   items: Array<Omit<TabButtonProps & TabContentItemProps, 'index'>>;

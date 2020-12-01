@@ -1,7 +1,12 @@
-import type { ComponentFactory, ComponentMeta } from '../Component.types';
+import type { ComponentFactory } from '../Component.types';
 
 export function lazy(
-  getComponent: () => Promise<{ meta: ComponentMeta }>,
+  displayName: string,
+  getComponent: () => Promise<{ lazy: { component: ComponentFactory } }>,
 ): () => Promise<ComponentFactory> {
-  return async () => (await getComponent()).meta.component;
+  return async () => (await getComponent()).lazy.component;
+}
+
+export function supportLazy(component: ComponentFactory) {
+  return { component };
 }

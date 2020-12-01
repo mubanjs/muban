@@ -4,6 +4,7 @@ import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 import { ProductCard, ProductCardProps } from '../filter-products/FilterProducts.card';
 import { ToggleExpand, ToggleExpandProps } from '../toggle-expand/ToggleExpand';
 import { meta, DynamicProps } from './Dynamic';
+import type { LazyTestTemplateProps } from './LazyTest';
 
 export default {
   title: 'Dynamic',
@@ -29,6 +30,12 @@ Default.args = {
         ctaLabel: 'read more...',
         image: `https://picsum.photos/seed/1/640/480`,
       } as ProductCardProps,
+    },
+    {
+      name: 'lazy-test',
+      props: {
+        label: 'Click',
+      } as LazyTestTemplateProps,
     },
   ],
 };

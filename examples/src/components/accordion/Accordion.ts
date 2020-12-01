@@ -75,7 +75,10 @@ type AccordionSlideProps = {
   expanded?: boolean;
 };
 
-export function accordionSlide({ heading, content, expanded }: AccordionSlideProps, ref?: string) {
+export function accordionSlide(
+  { heading, content, expanded }: AccordionSlideProps,
+  ref?: string,
+): string {
   return html`<div
     data-component=${AccordionSlide.displayName}
     data-ref=${ref}
@@ -94,7 +97,7 @@ export type AccordionProps = {
   activeIndex?: number;
 };
 
-export function accordion({ slides, activeIndex }: AccordionProps, ref?: string) {
+export function accordion({ slides, activeIndex }: AccordionProps, ref?: string): string {
   return html`<div data-component=${Accordion.displayName} data-ref=${ref}>
     ${slides.map((slide, index) =>
       accordionSlide({ ...slide, expanded: index === activeIndex }, 'accordion-slide'),

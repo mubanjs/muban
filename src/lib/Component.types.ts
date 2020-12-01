@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types,@typescript-eslint/no-use-before-define */
 import type EventEmitter from 'eventemitter3';
 import type { Binding } from './utils/bindings/bindingDefinitions';
 import type { PropTypeDefinition, TypedProps } from './utils/props/propDefinitions.types';
@@ -7,19 +7,14 @@ import type { ComponentRefItem, TypedRefs } from './utils/refs/refDefinitions.ty
 type IfAny<T, Y, N> = 0 extends 1 & T ? Y : N;
 type IsAny<T> = IfAny<T, true, never>;
 
-export type ComponentMeta = {
-  component: ComponentFactory;
-  template: ComponentTemplate;
-};
+export type ComponentFactory<
+  P extends Record<string, PropTypeDefinition> = any
+> = ComponentReturnValue<TypedProps<P>> & ComponentDisplayName;
 
 // export type ComponentApi<T extends ComponentFactory<any>> = ReturnType<T>;
 export type ComponentApi<T extends ComponentFactory = any> = IsAny<T> extends true
   ? ReturnType<ComponentFactory>
   : ReturnType<T>;
-
-export type ComponentFactory<
-  P extends Record<string, PropTypeDefinition> = any
-> = ComponentReturnValue<TypedProps<P>> & ComponentDisplayName;
 
 export type InternalComponentInstance = {
   parent: InternalComponentInstance | null;

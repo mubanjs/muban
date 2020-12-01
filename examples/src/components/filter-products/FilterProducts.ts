@@ -5,7 +5,6 @@ import { defineComponent } from '../../../../src/lib/Component.Reactive';
 import type { ComponentApi } from '../../../../src/lib/Component.types';
 import { bind, bindMap, bindTemplate } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { refComponents, refElement } from '../../../../src/lib/utils/refs/refDefinitions';
-import { useTransitionController } from '../../useTransitionController';
 import { ProductCard, productCard, ProductCardProps } from './FilterProducts.card';
 import {
   FilterProductsChecklist,
@@ -71,15 +70,15 @@ export const FilterProducts = defineComponent({
     cards: refComponents(ProductCard),
     resetButton: refElement('btn-reset', { isRequired: false }),
   },
-  setup({ refs, element }) {
-    useTransitionController(refs, {
-      setupTransitionInTimeline(timeline) {
-        timeline.fromTo(element, 2, { opacity: 0 }, { opacity: 1 });
-      },
-      setupTransitionOutTimeline(timeline) {
-        timeline.fromTo(element, 2, { opacity: 1 }, { opacity: 0 });
-      },
-    });
+  setup({ refs }) {
+    // useTransitionController(refs, {
+    //   setupTransitionInTimeline(timeline) {
+    //     timeline.fromTo(element, 2, { opacity: 0 }, { opacity: 1 });
+    //   },
+    //   setupTransitionOutTimeline(timeline) {
+    //     timeline.fromTo(element, 2, { opacity: 1 }, { opacity: 0 });
+    //   },
+    // });
 
     const productData = reactive<Array<ProductCardProps>>([]);
     const { activeFilters, filteredProducts, resetFilters } = useFilters(
@@ -120,17 +119,13 @@ function productList({ products }: { products: Array<ProductCardProps> }) {
   if (products.length === 0) {
     return html`<div class="card-body text-center">
       <h5 class="card-title">Oops</h5>
-      <p class="card-text">
-        There aren't any products with these filters!
-      </p>
+      <p class="card-text">There aren't any products with these filters!</p>
       <button class="btn btn-primary" data-ref="btn-reset">Reset filters</button>
     </div>`;
   }
   return products.map(
     (product) => html`
-      <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
-        ${productCard(product, 'card')}
-      </div>
+      <div class="col-sm-12 col-md-6 col-lg-4 mb-4">${productCard(product, 'card')}</div>
     `,
   );
 }
@@ -139,7 +134,10 @@ export type FilterProductsProps = {
   products: Array<ProductCardProps>;
   filters: Array<FilterProductsChecklistProps>;
 };
-export const filterProducts = ({ products, filters }: FilterProductsProps, ref?: string) => html`
+export const filterProducts = (
+  { products, filters }: FilterProductsProps,
+  ref?: string,
+): string => html`
   <div data-component=${FilterProducts.displayName} data-ref=${ref}>
     <div class="row">
       <form class="col-sm-4" action="#">
@@ -159,9 +157,7 @@ export const filterProducts = ({ products, filters }: FilterProductsProps, ref?:
 
       <div class="col-sm-8">
         <div class="container-fluid">
-          <div class="row" data-ref="products-container">
-            ${productList({ products })}
-          </div>
+          <div class="row" data-ref="products-container">${productList({ products })}</div>
         </div>
       </div>
     </div>

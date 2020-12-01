@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-unused-vars */
 type Warning<M, E, M2, A> = { message: M | M2; expected: E; actual: A };
 
 // returns:

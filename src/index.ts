@@ -1,5 +1,6 @@
 export { defineComponent } from './lib/Component.Reactive';
 export { mount } from './lib/utils/mount';
+export { lazy } from './lib/utils/lazy';
 export { bind, bindMap, bindTemplate } from './lib/utils/bindings/bindingDefinitions';
 export {
   refElement,

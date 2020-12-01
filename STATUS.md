@@ -18,6 +18,7 @@
 - Do we need some kind of global component registry to auto-create components without specifying
   them in our own components?
 - focus on package size
+- Make sure lazy components are only inited when the `data-component` value exists in the DOM.
 
 ## Props
 
@@ -128,6 +129,7 @@ Research: [component-refs](docs/research/component-refs.md).
 **Todo**
 - Add runtime (during dev) and build-time template prop validation
 - expand classMap with array support
+- replace classMap helper with classnames npm package
 
 
 ## Styles

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any,no-console */
 import RequireContext = __WebpackModuleApi.RequireContext;
 import type { ComponentFactory } from '../../src/lib/Component.types';
 
@@ -42,7 +42,7 @@ function cleanComponents(): void {
   activeComponentInstances = [];
 }
 
-export function initComponent(componentName: string, variation: string) {
+export function initComponent(componentName: string, variation: string): void {
   cleanComponents();
   const content = document.querySelector('.example-content');
   if (content) {
@@ -56,7 +56,7 @@ export function initComponent(componentName: string, variation: string) {
   }
 }
 
-export function init() {
+export function init(): void {
   const unmountButton = document.querySelector('.unmount-button');
   if (unmountButton) {
     unmountButton.addEventListener('click', () => {

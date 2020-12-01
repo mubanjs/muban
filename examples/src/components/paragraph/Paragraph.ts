@@ -63,7 +63,7 @@ export function titleTemplate({
   eyebrow,
   title,
   mustache,
-}: TitleProps) {
+}: TitleProps): string {
   return html`
     <h2
       data-component="m01-title"
@@ -91,6 +91,7 @@ export const Paragraph = defineComponent({
 
     const controller = useTransition(element, {
       setupTransitionInTimeline(timeline) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         timeline.add(transitionContext.getTimeline(refs.title.component!.element));
       },
     });
@@ -107,7 +108,7 @@ export type ParagraphProps = {
   copy: string;
 };
 
-export function paragraph({ title, copy }: ParagraphProps, ref?: string) {
+export function paragraph({ title, copy }: ParagraphProps, ref?: string): string {
   return html`
     <div class="responsivegrid aem-GridColumn aem-GridColumn--default--12">
       <section data-component="c02-paragraph" data-ref=${ref} data-scroll-component=${false}>

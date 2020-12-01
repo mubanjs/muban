@@ -50,7 +50,7 @@ function renderToggleExpand({ shouldRender }: { shouldRender: boolean }) {
     : html`<span class="badge badge-secondary">Unmounted</span>`;
 }
 
-function renderCards({ renderCount }: { renderCount: 0 | 1 | 2 }) {
+function renderCards({ renderCount }: { renderCount: 0 | 1 | 2 }): string {
   if (renderCount === 0) {
     return html`<span class="badge badge-secondary">no cards</span>`;
   }
@@ -75,7 +75,7 @@ function renderCards({ renderCount }: { renderCount: 0 | 1 | 2 }) {
   </div>`;
 }
 
-export const testTemplate = ({}) => html`
+export const testTemplate = (): string => html`
   <div data-component="test">
     <div>
       <h2>
@@ -83,9 +83,7 @@ export const testTemplate = ({}) => html`
         ${button({ label: 'remount' }, 'toggle-expand-remount')}
       </h2>
     </div>
-    <div data-ref="toggle-expand-container">
-      ${renderToggleExpand({ shouldRender: true })}
-    </div>
+    <div data-ref="toggle-expand-container">${renderToggleExpand({ shouldRender: true })}</div>
     <hr />
     <div>
       <h2>
@@ -93,9 +91,7 @@ export const testTemplate = ({}) => html`
         ${button({ label: 'Show 1' }, 'cards-one')} ${button({ label: 'Show None' }, 'cards-none')}
       </h2>
     </div>
-    <div data-ref="cards-container">
-      ${renderCards({ renderCount: 2 })}
-    </div>
+    <div data-ref="cards-container">${renderCards({ renderCount: 2 })}</div>
     <hr />
   </div>
 `;

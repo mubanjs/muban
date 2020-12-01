@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars,no-console */
 import { isString, isNumber, optional, isDate } from 'isntnt';
 import { propType } from '../../src/lib/utils/props/propDefinitions';
 import type {

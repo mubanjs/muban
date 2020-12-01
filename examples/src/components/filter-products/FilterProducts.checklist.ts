@@ -48,7 +48,7 @@ export type FilterProductsChecklistProps = {
 export const filterProductsChecklist = (
   { id, label, options, selected = [] }: FilterProductsChecklistProps,
   ref?: string,
-) => html`
+): string => html`
   <fieldset
     data-component=${FilterProductsChecklist.displayName}
     data-ref=${ref}

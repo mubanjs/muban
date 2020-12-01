@@ -5,10 +5,18 @@ import { html } from '../../../../src/lib/utils/template/mhtml';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
 import { ProductCard, productCard } from '../filter-products/FilterProducts.card';
 import { ToggleExpand, toggleExpand } from '../toggle-expand/ToggleExpand';
+import type { LazyTestTemplateProps } from './LazyTest';
 
 export const Dynamic = defineComponent({
   name: 'dynamic',
-  components: [ToggleExpand, lazy(() => import('../filter-products/FilterProducts.card'))],
+  components: [
+    ToggleExpand,
+    lazy(
+      'product-card',
+      () => import(/* webpackExports: "lazy" */ '../filter-products/FilterProducts.card'),
+    ),
+    lazy('lazy-test', () => import(/* webpackExports: "lazy" */ './LazyTest')),
+  ],
   setup() {
     return [];
   },
@@ -17,6 +25,9 @@ export const Dynamic = defineComponent({
 const componentMap: Record<string, ComponentTemplate> = {
   [ToggleExpand.displayName]: toggleExpand,
   [ProductCard.displayName]: productCard,
+  // can't import the template if we want to test this code splitting in dev
+  ['lazy-test']: ({ label }: LazyTestTemplateProps) =>
+    html`<button data-component="lazy-test" class="btn btn-primary">${label}</button>`,
 };
 
 export type DynamicProps = {

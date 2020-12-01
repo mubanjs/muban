@@ -4,7 +4,7 @@ export type ButtonProps = {
   label: string;
 };
 
-export const button = ({ label }: ButtonProps, ref?: string) => {
+export const button = ({ label }: ButtonProps, ref?: string): string => {
   return html`<button data-component="button" data-ref=${ref} class="btn btn-primary">
     ${label}
   </button>`;

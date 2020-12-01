@@ -52,32 +52,50 @@ var typeScriptSettings = {
 };
 
 const reactSettings = {
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
-  },
-  extends: ['prettier/react'],
-  rules: {
-    // 'react/jsx-key': 2,
-    'react/jsx-no-comment-textnodes': 2,
-    'react/jsx-no-duplicate-props': 2,
-    'react/jsx-no-target-blank': 2,
-    'react/jsx-no-undef': 2,
-    'react/jsx-uses-react': 2,
-    'react/jsx-uses-vars': 2,
-    'react/jsx-boolean-value': 'error',
-    'react/jsx-curly-brace-presence': ['error', { props: 'never', children: 'never' }],
-    'react/jsx-filename-extension': ['error', { extensions: ['.jsx', '.tsx'] }],
-  },
+  // parserOptions: {
+  //   ecmaFeatures: {
+  //     jsx: true,
+  //   },
+  // },
+  // extends: ['prettier/react'],
+  // rules: {
+  //   // 'react/jsx-key': 2,
+  //   'react/jsx-no-comment-textnodes': 2,
+  //   'react/jsx-no-duplicate-props': 2,
+  //   'react/jsx-no-target-blank': 2,
+  //   'react/jsx-no-undef': 2,
+  //   'react/jsx-uses-react': 2,
+  //   'react/jsx-uses-vars': 2,
+  //   'react/jsx-boolean-value': 'error',
+  //   'react/jsx-curly-brace-presence': ['error', { props: 'never', children: 'never' }],
+  //   'react/jsx-filename-extension': ['error', { extensions: ['.jsx', '.tsx'] }],
+  // },
 };
+
+const mhtmlSettings = {
+  extends: ['plugin:lit/recommended', 'plugin:lit-a11y/recommended'],
+  rules: {
+    "lit/no-legacy-template-syntax": 'off',
+    "lit/no-private-properties": 'off',
+    "lit/no-property-change-update": 'off',
+    "lit/no-template-map": 'off',
+    //
+    // "lit/attribute-value-entities": 'off',
+    // "lit/binding-positions": 'off',
+    // "lit/no-duplicate-template-bindings": 'off',
+    // "lit/no-invalid-escape-sequences": 'off',
+    // "lit/no-template-arrow": 'off',
+    // "lit/no-template-bind": 'off',
+    // "lit/no-value-attribute": 'off',
+  }
+}
 
 module.exports = {
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  plugins: ['import', 'unicorn', 'babel', 'react'],
+  plugins: ['import', 'unicorn', 'babel', 'react', 'lit', 'lit-a11y'],
   env: {
     browser: true,
     es6: true,
@@ -105,6 +123,12 @@ module.exports = {
     {
       files: ['*.ts'],
       ...typeScriptSettings,
+      ...mhtmlSettings,
+      extends: [...typeScriptSettings.extends, ...mhtmlSettings.extends],
+      rules: {
+        ...typeScriptSettings.rules,
+        ...mhtmlSettings.rules,
+      },
     },
     {
       files: ['*.tsx'],
@@ -113,7 +137,6 @@ module.exports = {
         ...typeScriptSettings.parserOptions,
         ...reactSettings.parserOptions,
       },
-      extends: [...typeScriptSettings.extends, ...reactSettings.extends],
       rules: {
         ...typeScriptSettings.rules,
         ...reactSettings.rules,
