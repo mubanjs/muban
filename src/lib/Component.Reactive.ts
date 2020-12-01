@@ -28,7 +28,7 @@ export function getCurrentComponentInstance(): InternalComponentInstance | null 
 export function createComponentInstance(
   parent: InternalComponentInstance | undefined,
   element: HTMLElement,
-  options: DefineComponentOptions<any, any>,
+  options: DefineComponentOptions<any, any, string>,
 ): InternalComponentInstance {
   return {
     parent: parent ?? null,
@@ -70,10 +70,11 @@ export function createComponentInstance(
 
 export const defineComponent = <
   P extends Record<string, PropTypeDefinition>,
-  R extends Record<string, ComponentRefItem>
+  R extends Record<string, ComponentRefItem>,
+  N extends string
 >(
-  options: DefineComponentOptions<P, R>,
-): ComponentFactory<P> => {
+  options: DefineComponentOptions<P, R, N>,
+): ComponentFactory<P, N> => {
   // TODO: this function doesn't expose the component name, which is something we might want
   return Object.assign(
     ((element, createOptions = {}) => {
@@ -178,7 +179,7 @@ export const defineComponent = <
 
       return {
         get name() {
-          return options.name;
+          return options.name as any;
         },
         setProps(props) {
           // console.log('new props', props);

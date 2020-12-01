@@ -8,8 +8,9 @@ type IfAny<T, Y, N> = 0 extends 1 & T ? Y : N;
 type IsAny<T> = IfAny<T, true, never>;
 
 export type ComponentFactory<
-  P extends Record<string, PropTypeDefinition> = any
-> = ComponentReturnValue<TypedProps<P>> & ComponentDisplayName;
+  P extends Record<string, PropTypeDefinition> = any,
+  N extends string = any
+> = ComponentReturnValue<TypedProps<P>> & ComponentDisplayName<N>;
 
 // export type ComponentApi<T extends ComponentFactory<any>> = ReturnType<T>;
 export type ComponentApi<T extends ComponentFactory = any> = IsAny<T> extends true
@@ -28,7 +29,7 @@ export type InternalComponentInstance = {
   isMounted: boolean;
   isUnmounted: boolean;
   removeBindingsList?: Array<(() => void) | undefined>;
-  options: DefineComponentOptions<any, any>;
+  options: DefineComponentOptions<any, any, string>;
   ee: EventEmitter;
   on: (type: string, fn: () => void) => void;
   mount: () => void;
@@ -39,7 +40,7 @@ type ComponentCreateOptions = Partial<{
   parent?: InternalComponentInstance;
 }>;
 
-export type ComponentDisplayName = { displayName: string };
+export type ComponentDisplayName<T extends string> = { displayName: T };
 export type ComponentReturnValue<P extends Record<string, any> = Record<string, any>> = (
   element: HTMLElement,
   options?: ComponentCreateOptions,
@@ -54,9 +55,10 @@ export type ComponentReturnValue<P extends Record<string, any> = Record<string, 
 
 export type DefineComponentOptions<
   P extends Record<string, PropTypeDefinition>,
-  R extends Record<string, ComponentRefItem>
+  R extends Record<string, ComponentRefItem>,
+  N extends string
 > = {
-  name: string;
+  name: N;
   components?: Array<ComponentFactory | (() => Promise<ComponentFactory>)>;
   props?: P;
   refs?: R;
