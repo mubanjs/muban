@@ -1,0 +1,17 @@
+[data-component="cf-a1-heading"] {
+  display: inline-flex;
+  flex-direction: column;
+
+  // Alignment
+  &[data-alignment="left"] {
+    align-items: flex-start;
+  }
+
+  &[data-alignment="center"] {
+    align-items: center;
+  }
+
+  &[data-alignment="right"] {
+    align-items: flex-end;
+  }
+}
