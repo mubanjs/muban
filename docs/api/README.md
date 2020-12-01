@@ -3,6 +3,7 @@
 * [Component](component.html)
     * [defineComponent](component.html#defineComponent)
     * [mount](component.html#mount)
+    * [lazy](component.html#lazy)
     
 * [Props](props.html)
     * [propType](props.html#proptype)

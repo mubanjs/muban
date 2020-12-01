@@ -1,20 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/naming-convention */
+import { supportLazy } from '../../../../src/lib/utils/lazy';
 import { html } from '../../../../src/lib/utils/template/mhtml';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
 import { bind } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { button } from '../button/Button';
 
-const ProductCard = defineComponent({
+export const ProductCard = defineComponent({
   name: 'product-card',
   props: {},
   refs: {
     cta: 'button-cta',
   },
   setup({ refs }) {
+    // eslint-disable-next-line no-console
     return [bind(refs.cta, { click: () => console.log('click cta') })];
   },
 });
-export default ProductCard;
 
 export type ProductCardProps = {
   title: string;
@@ -27,7 +28,7 @@ export type ProductCardProps = {
 export const productCard = (
   { title, description, image, ctaLabel, category, color }: ProductCardProps,
   ref?: string,
-) => html`
+): string => html`
   <div
     data-component=${ProductCard.displayName}
     data-ref=${ref}
@@ -42,3 +43,10 @@ export const productCard = (
     </div>
   </div>
 `;
+
+export const meta = {
+  component: ProductCard,
+  template: productCard,
+};
+
+export const lazy = supportLazy(ProductCard);

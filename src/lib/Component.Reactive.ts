@@ -12,6 +12,7 @@ import type {
   ComponentReturnValue,
   DefineComponentOptions,
   InternalComponentInstance,
+  LazyComponent,
 } from './Component.types';
 import { reactive, toRaw } from '@vue/runtime-core';
 import EventEmitter from 'eventemitter3';
@@ -107,8 +108,35 @@ export const defineComponent = <
         }),
       );
 
+      const lazyComponents =
+        (options.components?.filter((component) => !isComponentFactory(component)) as Array<
+          LazyComponent
+        >) || [];
+
+      Promise.all(lazyComponents.map((getComponent) => getComponent())).then((components) => {
+        components.forEach((component) => {
+          Array.from(
+            element.querySelectorAll<HTMLElement>(`[data-component="${component.displayName}"]`),
+          )
+            .filter(
+              () => true,
+              // TODO: only instantiate direct child components, never children of children
+              // TODO: don't init components that have a matching ref above - fix type, add collection
+              //typedObjectValues(resolvedRefs).every((ref) => ref.component.element !== componentElement),
+            )
+            .forEach((componentElement) =>
+              component(componentElement, { parent: instance }).setup(),
+            );
+        });
+      });
+
+      const syncComponents =
+        (options.components?.filter((component) => isComponentFactory(component)) as Array<
+          ComponentFactory
+        >) ?? [];
+
       instance.children.push(
-        ...(options.components?.flatMap((component) =>
+        ...(syncComponents.flatMap((component) =>
           Array.from(
             element.querySelectorAll<HTMLElement>(`[data-component="${component.displayName}"]`),
           )
@@ -132,7 +160,7 @@ export const defineComponent = <
           );
         });
         observer.observe(element, { attributes: false, childList: true, subtree: true });
-        // TODO: detect for own element DOM removal to auto-unmount?
+        // TODO: should also work for the components Array
       }
 
       const observer = new MutationObserver((mutations) => {
@@ -220,4 +248,8 @@ export function onUnmount(fn: () => void) {
   componentInstance.on('unmount', () => {
     fn();
   });
+}
+
+function isComponentFactory(component: any): component is ComponentFactory {
+  return 'displayName' in component;
 }

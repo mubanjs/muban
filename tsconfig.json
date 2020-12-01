@@ -1,11 +1,4 @@
 {
-  "ts-node": {
-    // these options are overrides used only by ts-node
-    // same as our --compilerOptions flag and our TS_NODE_COMPILER_OPTIONS environment variable
-    "compilerOptions": {
-      "module": "commonjs"
-    }
-  },
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
@@ -53,7 +46,7 @@
     // "paths": {},                           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
 //    "typeRoots": [],                       /* List of folders to include type definitions from. */
-//    "types": ["jest"],                           /* Type declaration files to be included in compilation. */
+    "types": ["jest"],                           /* Type declaration files to be included in compilation. */
     "allowSyntheticDefaultImports": true,  /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
     "esModuleInterop": true,                  /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
     // "preserveSymlinks": true,              /* Do not resolve the real path of symlinks. */
@@ -72,15 +65,18 @@
     /* Advanced Options */
     "skipLibCheck": true,                     /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true,  /* Disallow inconsistently-cased references to the same file. */
-    "importsNotUsedAsValues": "error"         /* Specify emit/checking behavior for imports that are only used for types. */
+    "importsNotUsedAsValues": "error",         /* Specify emit/checking behavior for imports that are only used for types. */
 
 //    "outDir": "./examples/dist/",
-//    "jsx": "react",
-//    "jsxFactory": "createElement",
+    "jsx": "react",
+    "jsxFactory": "h"
 //    "jsxFragmentFactory": "Fragment"
   },
   "include": [
     "./src/**/*.ts",
-    "./examples/src/**/*.ts"
+    "./src/**/*.tsx",
+    "./examples/src/types.d.ts",
+    "./examples/src/**/*.ts",
+    "./examples/src/**/*.tsx"
   ]
 }

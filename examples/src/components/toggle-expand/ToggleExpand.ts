@@ -6,13 +6,15 @@ import { bind } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { propType } from '../../../../src/lib/utils/props/propDefinitions';
 
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
-import { computed, ref } from '@vue/reactivity';
+import { computed, Ref, ref } from '@vue/reactivity';
 import { refElement } from '../../../../src/lib/utils/refs/refDefinitions';
 import { button } from '../button/Button';
 
 import './toggle-expand.css';
 
-export const useToggle = (initialValue: boolean) => {
+export const useToggle = (
+  initialValue: boolean,
+): readonly [Ref<boolean>, (force?: boolean) => void] => {
   const state = ref(initialValue);
   const toggle = (force?: boolean) => (state.value = force === undefined ? !state.value : force);
   return [state, toggle] as const;
@@ -68,3 +70,8 @@ export const toggleExpand = templateComponentFactory<ToggleExpandProps>({
     `;
   },
 });
+
+export const meta = {
+  component: ToggleExpand,
+  template: toggleExpand,
+};

@@ -165,3 +165,59 @@ mount(MyComponent, appRoot, myComponentTemplate, {
   welcomeText: 'Hello',
 });
 ```
+
+## lazy
+
+Allows async loading of components when they are actually used, to be used in the
+`components` option of `defineComponent`.
+
+```ts
+declare function lazy(
+  displayName: string,
+  getComponent: () => Promise<{ lazy: { component: ComponentFactory } }>,
+): () => Promise<ComponentFactory>;
+```
+
+See below for how to use it, and what makes it tick.
+
+```ts
+// in the component that you want to lazy load
+import { supportLazy } from '@muban/muban';
+
+export const lazy = supportLazy(MyLazyComponent);
+```
+```ts
+// in your "parent" component
+import { defineComponent, lazy } from '@muban/muban';
+
+defineComponent({
+  name: 'main',
+  components: [
+    // sync
+    SomeSyncComponent,
+    // lazy async
+    lazy('my-lazy-component', () => import(/* webpackExports: "lazy" */ './MyLazyComponent'))
+  ],
+  setup() {
+    return [];
+  }
+});
+```
+
+::: tip lazy export
+To make importing lazy components consistent, we require a `lazy` export with a set structure.
+Using the `supportLay` helper makes sure it can be properly imported. 
+:::
+
+::: tip `'my-lazy-component'`
+To know if the component should be loaded, the first `'my-lazy-component'` is needed to detect
+any `data-component` usages in the HTML. Only then the component is actually loaded.
+:::
+
+::: tip webpackExports
+The `/* webpackExports: "lazy" */` comment is needed to _only_ leave the lazy component
+in the code-splitted bundle. Any other exports like templates will be stripped out that way.
+
+**Note** This is a webpack 5 feature. If you can't use webpack 5 yet and care about bundle size,
+consider splitting up your templates and component code into separate files.
+:::

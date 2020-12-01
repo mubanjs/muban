@@ -37,17 +37,17 @@ const AccordionSlide = defineComponent({
     //   },
     // );
     return [
-      bind(refs.slideWrapper, { css: computed(() => ({ expanded: props.expanded })) }),
       bind(refs.slideHeading, {
         click: () => {
           props.onChange?.(!props.expanded);
         },
       }),
+      bind(refs.slideWrapper, { css: computed(() => ({ expanded: props.expanded })) }),
     ];
   },
 });
 
-const Accordion = defineComponent({
+export const Accordion = defineComponent({
   name: 'accordion',
   refs: {
     slides: refComponents(AccordionSlide),
@@ -68,8 +68,6 @@ const Accordion = defineComponent({
   },
 });
 
-export default Accordion;
-
 // eslint-disable-next-line @typescript-eslint/ban-types
 type AccordionSlideProps = {
   heading: string;
@@ -77,7 +75,10 @@ type AccordionSlideProps = {
   expanded?: boolean;
 };
 
-export function accordionSlide({ heading, content, expanded }: AccordionSlideProps, ref?: string) {
+export function accordionSlide(
+  { heading, content, expanded }: AccordionSlideProps,
+  ref?: string,
+): string {
   return html`<div
     data-component=${AccordionSlide.displayName}
     data-ref=${ref}
@@ -96,10 +97,15 @@ export type AccordionProps = {
   activeIndex?: number;
 };
 
-export function accordion({ slides, activeIndex }: AccordionProps, ref?: string) {
+export function accordion({ slides, activeIndex }: AccordionProps, ref?: string): string {
   return html`<div data-component=${Accordion.displayName} data-ref=${ref}>
     ${slides.map((slide, index) =>
       accordionSlide({ ...slide, expanded: index === activeIndex }, 'accordion-slide'),
     )}
   </div>`;
 }
+
+export const meta = {
+  component: Accordion,
+  template: accordion,
+};

@@ -7,7 +7,7 @@ import { propType } from '../../../../src/lib/utils/props/propDefinitions';
 import { refCollection } from '../../../../src/lib/utils/refs/refDefinitions';
 import { bind } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 
-const FilterProductsChecklist = defineComponent({
+export const FilterProductsChecklist = defineComponent({
   name: 'filter-products-checklist',
   props: {
     // TODO: add Array proptype, although that needs a nested type (conversion)
@@ -36,8 +36,6 @@ const FilterProductsChecklist = defineComponent({
   },
 });
 
-export default FilterProductsChecklist;
-
 export type FilterProductsChecklistProps = {
   id: string;
   label: string;
@@ -50,7 +48,7 @@ export type FilterProductsChecklistProps = {
 export const filterProductsChecklist = (
   { id, label, options, selected = [] }: FilterProductsChecklistProps,
   ref?: string,
-) => html`
+): string => html`
   <fieldset
     data-component=${FilterProductsChecklist.displayName}
     data-ref=${ref}
@@ -79,3 +77,8 @@ export const filterProductsChecklist = (
     </div>
   </fieldset>
 `;
+
+export const meta = {
+  component: FilterProductsChecklist,
+  template: filterProductsChecklist,
+};

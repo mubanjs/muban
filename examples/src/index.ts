@@ -12,13 +12,17 @@
 // init();
 
 import { ref } from '@vue/reactivity';
-import { defineComponent, html } from '../../src';
+import { defineComponent, html, lazy } from '../../src';
 import { bind } from '../../src/lib/utils/bindings/bindingDefinitions';
 import { mount } from '../../src/lib/utils/mount';
 
 const MyComponent = defineComponent({
   name: 'my-component',
+  components: [
+    lazy('lazy-test', () => import(/* webpackExports: "lazy" */ './components/dynamic/LazyTest')),
+  ],
   setup({ refs }) {
+    // eslint-disable-next-line no-console
     console.log('refs', refs);
     return [bind(refs.self, { text: ref('Hello World') })];
   },
