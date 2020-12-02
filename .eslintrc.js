@@ -35,6 +35,10 @@ var typeScriptSettings = {
         selector: 'enumMember',
         format: ['PascalCase'],
       },
+      {
+        selector: 'parameter',
+        format: ['camelCase', 'PascalCase'],
+      },
     ],
     '@typescript-eslint/no-empty-function': 'error',
     '@typescript-eslint/no-explicit-any': 'error',
@@ -79,9 +83,10 @@ const mhtmlSettings = {
     "lit/no-private-properties": 'off',
     "lit/no-property-change-update": 'off',
     "lit/no-template-map": 'off',
-    //
+    "lit/binding-positions": 'off',
+    "lit/no-invalid-html": 'off',
+
     // "lit/attribute-value-entities": 'off',
-    // "lit/binding-positions": 'off',
     // "lit/no-duplicate-template-bindings": 'off',
     // "lit/no-invalid-escape-sequences": 'off',
     // "lit/no-template-arrow": 'off',
