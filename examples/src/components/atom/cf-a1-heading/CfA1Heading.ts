@@ -25,12 +25,17 @@ export const cfA1Heading = (
 
   return html`<${type}
     data-component="cf-a1-heading"
-    data-alignment=${alignment}
     data-ref=${ref}
-    class=${[headingClass, ...(Array.isArray(className) ? className : [className])].join(' ')}
+    class=${[
+      headingClass,
+      `is-aligned-${alignment}`,
+      ...(Array.isArray(className) ? className : [className]),
+    ].join(' ')}
   >
-    ${eyebrow && html`<small data-ref="eyebrow">${unsafeHTML(eyebrow)}</small>`}
-    <${linkTag} ...${link ?? {}} data-ref="title">${unsafeHTML(title)}<//>
-    ${mustache && html`<small data-ref="mustache">${unsafeHTML(mustache)}</small>`}
+    ${eyebrow &&
+    html`<small data-ref="eyebrow" class="heading-eyebrow">${unsafeHTML(eyebrow)}</small>`}
+    <${linkTag} ...${link ?? {}} data-ref="title" class="heading-title">${unsafeHTML(title)}<//>
+    ${mustache &&
+    html`<small data-ref="mustache" class="heading-mustache">${unsafeHTML(mustache)}</small>`}
   <//>`;
 };
