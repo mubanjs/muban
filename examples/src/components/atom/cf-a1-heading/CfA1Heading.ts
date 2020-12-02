@@ -15,22 +15,22 @@ export const cfA1Heading = (
     mustache,
     link,
     headingClass = defaultHeadingClass,
-    type: HeadingTag = defaultHeadingType,
+    type = defaultHeadingType,
     alignment = defaultHeadingAlignment,
     className = '',
   }: CFa1HeadingProps,
   ref?: string,
 ) => {
-  const LinkTag = link ? 'a' : 'span';
+  const linkTag = link ? 'a' : 'span';
 
-  return html`<${HeadingTag}
+  return html`<${type}
     data-component="cf-a1-heading"
     data-alignment=${alignment}
     data-ref=${ref}
     class=${[headingClass, ...(Array.isArray(className) ? className : [className])].join(' ')}
   >
     ${eyebrow && html`<small data-ref="eyebrow">${unsafeHTML(eyebrow)}</small>`}
-    <${LinkTag} ...${link ?? {}} data-ref="title">${unsafeHTML(title)}<//>
+    <${linkTag} ...${link ?? {}} data-ref="title">${unsafeHTML(title)}<//>
     ${mustache && html`<small data-ref="mustache">${unsafeHTML(mustache)}</small>`}
   <//>`;
 };
