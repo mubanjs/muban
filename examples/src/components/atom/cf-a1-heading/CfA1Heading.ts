@@ -7,6 +7,7 @@ import {
   defaultHeadingClass,
   defaultHeadingType,
 } from './CfA1Heading.config';
+import classNames from 'classnames';
 
 export const cfA1Heading = (
   {
@@ -26,11 +27,7 @@ export const cfA1Heading = (
   return html`<${type}
     data-component="cf-a1-heading"
     data-ref=${ref}
-    class=${[
-      headingClass,
-      `is-aligned-${alignment}`,
-      ...(Array.isArray(className) ? className : [className]),
-    ].join(' ')}
+    class=${classNames(headingClass, `is-aligned-${alignment}`, className)}
   >
     ${eyebrow &&
     html`<small data-ref="eyebrow" class="heading-eyebrow">${unsafeHTML(eyebrow)}</small>`}
