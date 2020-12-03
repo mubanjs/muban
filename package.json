@@ -1,6 +1,6 @@
 {
   "name": "@muban/muban",
-  "version": "1.0.0-alpha.8",
+  "version": "1.0.0-alpha.9",
   "description": "Writing components for server-rendered HTML",
   "keywords": [
     "muban",
@@ -64,7 +64,7 @@
     "eventemitter3": "^4.0.4",
     "htm": "^3.0.4",
     "html-extract-data": "^1.0.1",
-    "isntnt": "^1.4.1",
+    "isntnt": "^1.4.3",
     "json-parse-better-errors": "^1.0.2",
     "lodash.camelcase": "^4.3.0",
     "lodash.kebabcase": "^4.1.1",
