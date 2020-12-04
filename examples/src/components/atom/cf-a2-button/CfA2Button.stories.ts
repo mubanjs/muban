@@ -2,7 +2,13 @@ import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 
 import type { CfA2ButtonTypes } from './CfA2Button.types';
 import { CfA2Button, cfA2Button } from './CfA2Button';
-import { defaultDisabled, defaultTarget } from './CfA2Button.config';
+import {
+  defaultDisabled,
+  defaultIconAlignment,
+  defaultTarget,
+  iconAlignments,
+} from './CfA2Button.config';
+import { icons } from '../cf-a3-icon/CfA3Icon.config';
 
 export default {
   title: 'Atom/cf-a2-button',
@@ -29,7 +35,7 @@ export default {
         required: false,
       },
       table: {
-        category: 'Structural',
+        category: 'Data',
         defaultValue: {
           summary: defaultDisabled,
         },
@@ -45,7 +51,7 @@ export default {
         required: false,
       },
       table: {
-        category: 'Data',
+        category: 'Accessibility',
         type: {
           summary: 'string',
         },
@@ -58,7 +64,40 @@ export default {
         required: false,
       },
       table: {
-        category: 'Data',
+        category: 'Accessibility',
+        type: {
+          summary: 'string',
+        },
+      },
+    },
+    icon: {
+      description: 'An optional icon that can be rendered in the button',
+      control: {
+        type: 'select',
+        options: [undefined, ...icons],
+      },
+      type: {
+        required: false,
+      },
+      table: {
+        category: 'Icon',
+        type: {
+          summary: 'string',
+        },
+      },
+    },
+    iconAlignment: {
+      description: 'The position where you want to have the icon rendered',
+      defaultValue: defaultIconAlignment,
+      control: {
+        type: 'select',
+        options: iconAlignments,
+      },
+      type: {
+        required: false,
+      },
+      table: {
+        category: 'Icon',
         type: {
           summary: 'string',
         },
@@ -83,7 +122,7 @@ export default {
         required: false,
       },
       table: {
-        category: 'Structural',
+        category: 'Data',
         type: {
           summary: 'string',
         },
@@ -120,4 +159,13 @@ export const Anchor: Story<CfA2ButtonTypes> = () => ({
 
 Anchor.args = {
   href: 'https://github.com/mubanjs',
+};
+
+export const WithIcon: Story<CfA2ButtonTypes> = () => ({
+  template: cfA2Button,
+  component: CfA2Button,
+});
+
+WithIcon.args = {
+  icon: 'arrow-right',
 };

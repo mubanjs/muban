@@ -21,6 +21,20 @@
     opacity: 0.5;
   }
 
+  &.icon-alignment-left {
+    flex-direction: row-reverse;
+
+    .button-label + .button-icon {
+      margin-right: 0.5rem;
+    }
+  }
+
+  &.icon-alignment-right {
+    .button-label + .button-icon {
+      margin-left: 0.5rem;
+    }
+  }
+
   &:hover {
     background: darken($colorPrimaryTheme, 10%);
   }

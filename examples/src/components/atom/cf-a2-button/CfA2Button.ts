@@ -2,12 +2,14 @@ import { bind, defineComponent, html, propType } from '../../../../../src';
 import classNames from 'classnames';
 
 import './cf-a2-button.scss';
-import { defaultDisabled, defaultTarget } from './CfA2Button.config';
+import { defaultDisabled, defaultIconAlignment, defaultTarget } from './CfA2Button.config';
 import type { CfA2ButtonTypes } from './CfA2Button.types';
 import { noop } from 'lodash';
+import { CfA3Icon, cfA3Icon } from '../cf-a3-icon/CfA3Icon';
 
 export const CfA2Button = defineComponent({
   name: 'cf-a2-button',
+  components: [CfA3Icon],
   props: {
     onClick: propType.func.shape<(event: MouseEvent) => void>().optional,
   },
@@ -29,6 +31,8 @@ export const cfA2Button = (
     ariaLabel,
     ariaControls,
     target = defaultTarget,
+    icon,
+    iconAlignment = defaultIconAlignment,
     className,
   }: CfA2ButtonTypes,
   ref?: string,
@@ -44,11 +48,12 @@ export const cfA2Button = (
       title: title ?? label,
       target: href ? target : null,
       rel: href ? 'noopener' : null,
-      class: className ? classNames(className) : null,
+      class: classNames({ [`icon-alignment-${iconAlignment}`]: icon !== '' }, className),
       'aria-label': ariaLabel,
       'aria-controls': ariaControls,
     }}
   >
     ${label && html`<span class="button-label">${label}</span>`}
+    ${icon && cfA3Icon({ name: icon, className: 'button-icon' }, 'icon')}
   <//>`;
 };
