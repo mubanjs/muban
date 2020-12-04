@@ -1,0 +1,27 @@
+[data-component="cf-a2-button"] {
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  padding: 1rem;
+  background: $colorPrimaryTheme;
+  color: #fff;
+  font-size: 1.4rem;
+
+  &[hidden] {
+    display: none;
+  }
+
+  &[disabled] {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  &:hover {
+    background: darken($colorPrimaryTheme, 10%);
+  }
+}
