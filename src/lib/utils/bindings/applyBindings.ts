@@ -10,6 +10,7 @@ import clickBinding from './clickBinding';
 import cssBinding from './cssBinding';
 import styleBinding from './styleBinding';
 import textBinding from './textBinding';
+import htmlBinding from './htmlBinding';
 
 // TODO: these are just prototype bindings
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -19,6 +20,7 @@ export const bindingsList = {
   text: textBinding,
   style: styleBinding,
   css: cssBinding,
+  html: htmlBinding,
 };
 
 export const applyBindings = (
