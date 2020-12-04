@@ -4,4 +4,3 @@ export const iconAlignments = ['left', 'right'] as const;
 export const defaultTarget: string = '_self';
 export const defaultDisabled: boolean = false;
 export const defaultIconAlignment = 'right';
-
