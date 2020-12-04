@@ -108,13 +108,14 @@ export default {
   },
 };
 
-export const Default: Story<CfA2ButtonTypes> = () => ({
+export const Button: Story<CfA2ButtonTypes> = () => ({
   template: cfA2Button,
   component: CfA2Button,
 });
 
 export const Anchor: Story<CfA2ButtonTypes> = () => ({
   template: cfA2Button,
+  component: CfA2Button,
 });
 
 Anchor.args = {
