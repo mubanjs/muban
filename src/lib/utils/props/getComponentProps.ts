@@ -48,6 +48,15 @@ export function getComponentProps(
         }
 
         // TODO: validation
+        const value = usedSource.getProp(propName, propType);
+
+        if (propType.validator) {
+          if (!propType.validator(value)) {
+            throw new Error(
+              `Validation Error: This prop value ("${value}") is not valid for: ${propName}`,
+            );
+          }
+        }
         accumulator[propName] = usedSource.getProp(propName, propType);
       }
 
