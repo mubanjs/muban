@@ -2,6 +2,10 @@
   display: flex;
   flex-direction: column;
 
+  small {
+    font-size: 50%;
+  }
+
   // Alignment
   &.is-aligned-left {
     align-items: flex-start;
