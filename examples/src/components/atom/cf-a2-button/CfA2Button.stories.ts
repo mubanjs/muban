@@ -27,6 +27,20 @@ export default {
         },
       },
     },
+    title: {
+      defaultValue: '',
+      description: 'The title attribute that will be added to the button',
+      control: 'text',
+      type: {
+        required: false,
+      },
+      table: {
+        category: 'Accessibility',
+        type: {
+          summary: 'string',
+        },
+      },
+    },
     disabled: {
       control: 'boolean',
       description: 'Whether or not you want to disable the button.',
@@ -168,4 +182,15 @@ export const WithIcon: Story<CfA2ButtonTypes> = () => ({
 
 WithIcon.args = {
   icon: 'arrow-right',
+};
+
+export const IconOnly: Story<CfA2ButtonTypes> = () => ({
+  template: cfA2Button,
+  component: CfA2Button,
+});
+
+IconOnly.args = {
+  icon: 'arrow-right',
+  label: '',
+  title: 'Click me!',
 };
