@@ -102,7 +102,7 @@ export function bindMap<
 }
 
 export function bindTemplate<P extends Record<string, unknown>>(
-  target: ElementRef<HTMLElement, BindProps>,
+  target: ElementRef<HTMLElement | undefined, BindProps>,
   data: Ref<P>,
   template: (props: P) => string | Array<string>,
   {
