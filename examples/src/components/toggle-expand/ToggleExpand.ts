@@ -11,14 +11,7 @@ import { refElement } from '../../../../src/lib/utils/refs/refDefinitions';
 import { button } from '../button/Button';
 
 import './toggle-expand.css';
-
-export const useToggle = (
-  initialValue: boolean,
-): readonly [Ref<boolean>, (force?: boolean) => void] => {
-  const state = ref(initialValue);
-  const toggle = (force?: boolean) => (state.value = force === undefined ? !state.value : force);
-  return [state, toggle] as const;
-};
+import { useToggle } from '../../hooks/useToggle';
 
 const getButtonLabel = (isExpanded: boolean) => (isExpanded ? 'read less...' : 'read more...');
 
