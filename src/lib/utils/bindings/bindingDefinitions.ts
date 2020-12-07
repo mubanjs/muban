@@ -48,7 +48,7 @@ export function BindComponents<T extends Pick<ReturnType<ComponentFactory<any>>,
 }
 
 type TemplateProps<T extends HTMLElement> = {
-  ref: ElementRef<T, BindProps> | undefined;
+  ref: ElementRef<T | undefined, BindProps> | undefined;
   extract?: {
     config: any;
     onData: (data: any) => void;
