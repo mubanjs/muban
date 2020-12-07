@@ -247,9 +247,9 @@ Ref<Record<string, Ref<any>>
 ```ts
 const isActive = ref(true);
 
-// sets the `inert` style on either `true` or `false`
+// sets the `disabled` style on either `true` or `false`
 bind(refs.item, { attribute: {
-  inert: computed(() => isActive.value)
+  disabled: computed(() => isActive.value),
 } });
 ```
 
