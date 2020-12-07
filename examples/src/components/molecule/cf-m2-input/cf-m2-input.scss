@@ -1,0 +1,48 @@
+[data-component="cf-m2-input"] {
+  label {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .input-label {
+    @include copy-02;
+    margin-bottom: 0.5rem;
+  }
+
+  .input-field {
+    position: relative;
+
+    input {
+      @include copy-02;
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      color: #495057;
+      background-color: #fff;
+      background-clip: padding-box;
+      border: 1px solid #ced4da;
+      border-radius: .25rem;
+      transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
+      &[type="password"] {
+        padding-right: 3.2rem
+      }
+
+      &[disabled="true"] {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  .view-password-button {
+    position: absolute;
+    top: 50%;
+    right: 0.4rem;
+    transform: translateY(-50%);
+  }
+
+  .input-note {
+    @include copy-03;
+    margin-top: 1rem;
+  }
+}
