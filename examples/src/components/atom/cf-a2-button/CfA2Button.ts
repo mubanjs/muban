@@ -1,4 +1,4 @@
-import { bind, defineComponent, html, propType } from '../../../../../src';
+import { bind, computed, defineComponent, html, propType, refComponent } from '../../../../../src';
 import classNames from 'classnames';
 
 import {
@@ -9,21 +9,34 @@ import {
   defaultTarget,
 } from './CfA2Button.config';
 import type { CfA2ButtonTypes } from './CfA2Button.types';
-import { noop } from 'lodash';
 import { CfA3Icon, cfA3Icon } from '../cf-a3-icon/CfA3Icon';
 
 import './cf-a2-button.scss';
+import { isIcon } from '../cf-a3-icon/CfA3Icon.config';
 
 export const CfA2Button = defineComponent({
   name: 'cf-a2-button',
-  components: [CfA3Icon],
   props: {
     onClick: propType.func.shape<(event: MouseEvent) => void>().optional,
+    icon: propType.string.optional.validate(isIcon),
   },
-  setup({ props: { onClick = noop }, refs }) {
+  refs: {
+    buttonIcon: refComponent(CfA3Icon, {
+      ref: 'button-icon',
+      isRequired: false,
+    }),
+    loadingIcon: refComponent(CfA3Icon, {
+      ref: 'loading-icon',
+      isRequired: false,
+    }),
+  },
+  setup({ props, refs }) {
     return [
       bind(refs.self, {
-        click: onClick,
+        click: (event) => props.onClick?.(event),
+      }),
+      bind(refs.buttonIcon, {
+        name: computed(() => props.icon || refs.buttonIcon.component?.props.name || ''),
       }),
     ];
   },
@@ -67,10 +80,10 @@ export const cfA2Button = (
     }}
   >
     ${loading
-      ? cfA3Icon({ name: 'loader', className: 'button-icon' }, 'icon')
+      ? cfA3Icon({ name: 'loader', className: 'button-icon' }, 'loading-icon')
       : html`
           ${label && html`<span class="button-label">${label}</span>`}
-          ${icon && cfA3Icon({ name: icon, className: 'button-icon' }, 'icon')}
+          ${icon && cfA3Icon({ name: icon, className: 'button-icon' }, 'button-icon')}
         `}
   <//>`;
 };
