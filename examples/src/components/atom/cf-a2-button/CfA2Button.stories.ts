@@ -5,6 +5,7 @@ import { CfA2Button, cfA2Button } from './CfA2Button';
 import {
   defaultDisabled,
   defaultIconAlignment,
+  defaultLoading,
   defaultTarget,
   iconAlignments,
 } from './CfA2Button.config';
@@ -52,6 +53,23 @@ export default {
         category: 'Data',
         defaultValue: {
           summary: defaultDisabled,
+        },
+        type: {
+          summary: 'boolean',
+        },
+      },
+    },
+    loading: {
+      control: 'boolean',
+      description: 'Whether or not you want to mark the button as loading and show a spinner.',
+      defaultValue: defaultLoading,
+      type: {
+        required: false,
+      },
+      table: {
+        category: 'Data',
+        defaultValue: {
+          summary: defaultLoading,
         },
         type: {
           summary: 'boolean',
@@ -193,4 +211,13 @@ IconOnly.args = {
   icon: 'arrow-right',
   label: '',
   title: 'Click me!',
+};
+
+export const Loading: Story<CfA2ButtonTypes> = () => ({
+  template: cfA2Button,
+  component: CfA2Button,
+});
+
+Loading.args = {
+  loading: true,
 };

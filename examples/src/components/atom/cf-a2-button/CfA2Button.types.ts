@@ -13,5 +13,6 @@ export type CfA2ButtonTypes = {
   ariaControls?: string;
   icon?: string;
   iconAlignment?: IconAlignment;
+  loading?: boolean;
   onClick?: (event: MouseEvent) => void;
 };
