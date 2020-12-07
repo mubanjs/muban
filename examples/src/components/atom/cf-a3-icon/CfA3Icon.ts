@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import './cf-a3-icon.scss';
 import type { CfA3IconTypes } from './CfA3Icon.types';
 import { isIcon, svgContext } from './CfA3Icon.config';
+import { computed } from '@vue/reactivity';
 
 export const CfA3Icon = defineComponent({
   name: 'cf-a3-icon',
@@ -13,7 +14,7 @@ export const CfA3Icon = defineComponent({
   setup({ props, refs }) {
     return [
       bind(refs.self, {
-        html: svgContext(`./${props.name}.svg`),
+        html: computed(() => (props.name ? svgContext(`./${props.name}.svg`) : '')),
       }),
     ];
   },
