@@ -1,10 +1,10 @@
-import type { iconAlignments } from './CfA2Button.config';
-import type { buttonSizes } from './CfA2Button.config';
+import type { iconAlignments } from './CfM1Button.config';
+import type { buttonSizes } from './CfM1Button.config';
 
 export type IconAlignment = typeof iconAlignments[number];
 export type ButtonSize = typeof buttonSizes[number];
 
-export type CfA2ButtonTypes = {
+export type CfM1ButtonTypes = {
   label?: string;
   size?: ButtonSize;
   title?: HTMLElement['title'];

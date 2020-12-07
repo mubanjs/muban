@@ -7,25 +7,25 @@ import {
   defaultIconAlignment,
   defaultLoading,
   defaultTarget,
-} from './CfA2Button.config';
-import type { CfA2ButtonTypes } from './CfA2Button.types';
-import { CfA3Icon, cfA3Icon } from '../cf-a3-icon/CfA3Icon';
+} from './CfM1Button.config';
+import type { CfM1ButtonTypes } from './CfM1Button.types';
 
-import './cf-a2-button.scss';
-import { isIcon } from '../cf-a3-icon/CfA3Icon.config';
+import './cf-m1-button.scss';
+import { isIcon } from '../../atom/cf-a2-icon/CfA2Icon.config';
+import { CfA2Icon, cfA2Icon } from '../../atom/cf-a2-icon/CfA2Icon';
 
-export const CfA2Button = defineComponent({
-  name: 'cf-a2-button',
+export const CfM1Button = defineComponent({
+  name: 'cf-m1-button',
   props: {
     onClick: propType.func.shape<(event: MouseEvent) => void>().optional,
     icon: propType.string.optional.validate(isIcon),
   },
   refs: {
-    buttonIcon: refComponent(CfA3Icon, {
+    buttonIcon: refComponent(CfA2Icon, {
       ref: 'button-icon',
       isRequired: false,
     }),
-    loadingIcon: refComponent(CfA3Icon, {
+    loadingIcon: refComponent(CfA2Icon, {
       ref: 'loading-icon',
       isRequired: false,
     }),
@@ -42,7 +42,7 @@ export const CfA2Button = defineComponent({
   },
 });
 
-export const cfA2Button = (
+export const cfM1Button = (
   {
     label,
     size = defaultButtonSize,
@@ -56,13 +56,13 @@ export const cfA2Button = (
     iconAlignment = defaultIconAlignment,
     className,
     loading = defaultLoading,
-  }: CfA2ButtonTypes,
+  }: CfM1ButtonTypes,
   ref?: string,
 ) => {
   const tag = href ? 'a' : 'button';
 
   return html`<${tag}
-    data-component=${CfA2Button.displayName}
+    data-component=${CfM1Button.displayName}
     data-ref=${ref}
     ...${{
       disabled: disabled || loading,
@@ -80,10 +80,10 @@ export const cfA2Button = (
     }}
   >
     ${loading
-      ? cfA3Icon({ name: 'loader', className: 'button-icon' }, 'loading-icon')
+      ? cfA2Icon({ name: 'loader', className: 'button-icon' }, 'loading-icon')
       : html`
           ${label && html`<span class="button-label">${label}</span>`}
-          ${icon && cfA3Icon({ name: icon, className: 'button-icon' }, 'button-icon')}
+          ${icon && cfA2Icon({ name: icon, className: 'button-icon' }, 'button-icon')}
         `}
   <//>`;
 };

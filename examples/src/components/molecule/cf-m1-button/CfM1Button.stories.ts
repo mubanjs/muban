@@ -1,7 +1,7 @@
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 
-import type { CfA2ButtonTypes } from './CfA2Button.types';
-import { CfA2Button, cfA2Button } from './CfA2Button';
+import type { CfM1ButtonTypes } from './CfM1Button.types';
+import { CfM1Button, cfM1Button } from './CfM1Button';
 import {
   buttonSizes,
   defaultButtonSize,
@@ -10,11 +10,11 @@ import {
   defaultLoading,
   defaultTarget,
   iconAlignments,
-} from './CfA2Button.config';
-import { icons } from '../cf-a3-icon/CfA3Icon.config';
+} from './CfM1Button.config';
+import { icons } from '../../atom/cf-a2-icon/CfA2Icon.config';
 
 export default {
-  title: 'Atom/cf-a2-button',
+  title: 'Molecule/cf-m1-button',
   argTypes: {
     label: {
       defaultValue: 'Click me!',
@@ -204,32 +204,32 @@ export default {
   },
 };
 
-export const Button: Story<CfA2ButtonTypes> = () => ({
-  template: cfA2Button,
-  component: CfA2Button,
+export const Button: Story<CfM1ButtonTypes> = () => ({
+  template: cfM1Button,
+  component: CfM1Button,
 });
 
-export const Anchor: Story<CfA2ButtonTypes> = () => ({
-  template: cfA2Button,
-  component: CfA2Button,
+export const Anchor: Story<CfM1ButtonTypes> = () => ({
+  template: cfM1Button,
+  component: CfM1Button,
 });
 
 Anchor.args = {
   href: 'https://github.com/mubanjs',
 };
 
-export const WithIcon: Story<CfA2ButtonTypes> = () => ({
-  template: cfA2Button,
-  component: CfA2Button,
+export const WithIcon: Story<CfM1ButtonTypes> = () => ({
+  template: cfM1Button,
+  component: CfM1Button,
 });
 
 WithIcon.args = {
   icon: 'arrow-right',
 };
 
-export const IconOnly: Story<CfA2ButtonTypes> = () => ({
-  template: cfA2Button,
-  component: CfA2Button,
+export const IconOnly: Story<CfM1ButtonTypes> = () => ({
+  template: cfM1Button,
+  component: CfM1Button,
 });
 
 IconOnly.args = {
@@ -238,18 +238,18 @@ IconOnly.args = {
   title: 'Click me!',
 };
 
-export const Loading: Story<CfA2ButtonTypes> = () => ({
-  template: cfA2Button,
-  component: CfA2Button,
+export const Loading: Story<CfM1ButtonTypes> = () => ({
+  template: cfM1Button,
+  component: CfM1Button,
 });
 
 Loading.args = {
   loading: true,
 };
 
-export const Small: Story<CfA2ButtonTypes> = () => ({
-  template: cfA2Button,
-  component: CfA2Button,
+export const Small: Story<CfM1ButtonTypes> = () => ({
+  template: cfM1Button,
+  component: CfM1Button,
 });
 
 Small.args = {

@@ -1,13 +1,13 @@
 import { bind, defineComponent, html, propType } from '../../../../../src';
 import classNames from 'classnames';
 
-import './cf-a3-icon.scss';
-import type { CfA3IconTypes } from './CfA3Icon.types';
-import { isIcon, svgContext } from './CfA3Icon.config';
+import './cf-a2-icon.scss';
+import type { CfA2IconTypes } from './CfA2Icon.types';
+import { isIcon, svgContext } from './CfA2Icon.config';
 import { computed } from '@vue/reactivity';
 
-export const CfA3Icon = defineComponent({
-  name: 'cf-a3-icon',
+export const CfA2Icon = defineComponent({
+  name: 'cf-a2-icon',
   props: {
     name: propType.string.validate(isIcon),
   },
@@ -20,8 +20,8 @@ export const CfA3Icon = defineComponent({
   },
 });
 
-export const cfA3Icon = ({ name, className }: CfA3IconTypes, ref?: string) => html`<span
-  data-component=${CfA3Icon.displayName}
+export const cfA2Icon = ({ name, className }: CfA2IconTypes, ref?: string) => html`<span
+  data-component=${CfA2Icon.displayName}
   data-name=${name}
   data-ref=${ref}
   ...${{ class: className ? classNames(className) : null }}

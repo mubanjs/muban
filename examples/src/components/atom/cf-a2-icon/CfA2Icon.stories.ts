@@ -1,11 +1,11 @@
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 
-import type { CfA3IconTypes } from './CfA3Icon.types';
-import { CfA3Icon, cfA3Icon } from './CfA3Icon';
-import { icons } from './CfA3Icon.config';
+import type { CfA2IconTypes } from './CfA2Icon.types';
+import { CfA2Icon, cfA2Icon } from './CfA2Icon';
+import { icons } from './CfA2Icon.config';
 
 export default {
-  title: 'Atom/cf-a3-icon',
+  title: 'Atom/cf-a2-icon',
   argTypes: {
     name: {
       defaultValue: 'arrow-right',
@@ -40,7 +40,7 @@ export default {
   },
 };
 
-export const Default: Story<CfA3IconTypes> = () => ({
-  template: cfA3Icon,
-  component: CfA3Icon,
+export const Default: Story<CfA2IconTypes> = () => ({
+  template: cfA2Icon,
+  component: CfA2Icon,
 });
