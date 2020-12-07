@@ -1,6 +1,6 @@
 [data-component="cf-a2-button"] {
-  height: 5rem;
-  min-width: 5rem;
+  height: 3.5rem;
+  min-width: 3.5rem;
   cursor: pointer;
   text-decoration: none;
   border: none;
@@ -9,7 +9,6 @@
   align-items: center;
   justify-content: center;
   text-align: left;
-  padding: 1rem;
   background: $colorPrimaryTheme;
   color: #fff;
   font-size: 1.4rem;
@@ -23,11 +22,30 @@
     opacity: 0.8;
   }
 
-  .loading-icon {
-    width: 2.4rem;
-    height: 2.4rem;
+  // Sizes
+  &.size-small {
+    height: 2.8rem;
+    min-width: 2.8rem;
+    padding: 0.5rem;
+
+    .button-icon {
+      width: 1.6rem;
+      height: 1.6rem;
+    }
   }
 
+  &.size-medium {
+    height: 5rem;
+    min-width: 5rem;
+    padding: 1rem;
+
+    .button-icon {
+      width: 2.4rem;
+      height: 2.4rem;
+    }
+  }
+
+  // Icon alignments
   &.icon-alignment-left {
     flex-direction: row-reverse;
 

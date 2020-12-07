@@ -3,6 +3,8 @@ import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 import type { CfA2ButtonTypes } from './CfA2Button.types';
 import { CfA2Button, cfA2Button } from './CfA2Button';
 import {
+  buttonSizes,
+  defaultButtonSize,
   defaultDisabled,
   defaultIconAlignment,
   defaultLoading,
@@ -130,6 +132,9 @@ export default {
       },
       table: {
         category: 'Icon',
+        defaultValue: {
+          summary: defaultIconAlignment,
+        },
         type: {
           summary: 'string',
         },
@@ -145,6 +150,26 @@ export default {
         category: 'Visual',
         type: {
           summary: ['string', 'Array<string>'].join(' | '),
+        },
+      },
+    },
+    size: {
+      defaultValue: defaultButtonSize,
+      control: {
+        type: 'select',
+        options: buttonSizes,
+      },
+      description: 'The size of the button',
+      type: {
+        required: false,
+      },
+      table: {
+        category: 'Visual',
+        defaultValue: {
+          summary: defaultButtonSize,
+        },
+        type: {
+          summary: buttonSizes.join('|'),
         },
       },
     },
@@ -220,4 +245,14 @@ export const Loading: Story<CfA2ButtonTypes> = () => ({
 
 Loading.args = {
   loading: true,
+};
+
+export const Small: Story<CfA2ButtonTypes> = () => ({
+  template: cfA2Button,
+  component: CfA2Button,
+});
+
+Small.args = {
+  size: 'small',
+  icon: 'arrow-right',
 };

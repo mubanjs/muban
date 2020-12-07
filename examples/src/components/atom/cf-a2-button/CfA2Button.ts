@@ -2,6 +2,7 @@ import { bind, defineComponent, html, propType } from '../../../../../src';
 import classNames from 'classnames';
 
 import {
+  defaultButtonSize,
   defaultDisabled,
   defaultIconAlignment,
   defaultLoading,
@@ -31,6 +32,7 @@ export const CfA2Button = defineComponent({
 export const cfA2Button = (
   {
     label,
+    size = defaultButtonSize,
     title,
     href,
     disabled = defaultDisabled,
@@ -55,13 +57,17 @@ export const cfA2Button = (
       title: title ?? label,
       target: href ? target : null,
       rel: href ? 'noopener' : null,
-      class: classNames({ [`icon-alignment-${iconAlignment}`]: icon !== '' }, className),
+      class: classNames(
+        { [`icon-alignment-${iconAlignment}`]: icon !== '' },
+        `size-${size}`,
+        className,
+      ),
       'aria-label': ariaLabel,
       'aria-controls': ariaControls,
     }}
   >
     ${loading
-      ? cfA3Icon({ name: 'loader', className: 'loader-icon' }, 'icon')
+      ? cfA3Icon({ name: 'loader', className: 'button-icon' }, 'icon')
       : html`
           ${label && html`<span class="button-label">${label}</span>`}
           ${icon && cfA3Icon({ name: icon, className: 'button-icon' }, 'icon')}
