@@ -181,7 +181,7 @@ export const defineComponent = <
           return options.name;
         },
         setProps(props) {
-          console.log('new props', props);
+          // console.log('new props', props);
           Object.entries(props).forEach(([name, value]) => {
             // todo check existence and validation
             instance.reactiveProps[name] = value;
