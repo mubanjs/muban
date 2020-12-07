@@ -11,6 +11,7 @@ import cssBinding from './cssBinding';
 import styleBinding from './styleBinding';
 import textBinding from './textBinding';
 import htmlBinding from './htmlBinding';
+import attributeBinding from './attributeBinding';
 
 // TODO: these are just prototype bindings
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -21,6 +22,7 @@ export const bindingsList = {
   style: styleBinding,
   css: cssBinding,
   html: htmlBinding,
+  attr: attributeBinding,
 };
 
 export const applyBindings = (
