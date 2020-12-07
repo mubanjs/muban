@@ -97,21 +97,21 @@ export const defineComponent = <
       instance.refs = getComponentRefs(options?.refs, instance);
 
       instance.children.push(
-        ...Object.values(instance.refs).flatMap((refItem) => {
+        ...(Object.values(instance.refs).flatMap((refItem) => {
           if (refItem.type === 'component') {
-            return refItem.component;
+            return refItem.component || [];
           }
           if (refItem.type === 'componentCollection') {
-            return refItem.components;
+            return refItem.components || [];
           }
           return [];
-        }),
+        }) || []),
       );
 
       const lazyComponents =
-        (options.components?.filter((component) => !isComponentFactory(component)) as Array<
-          LazyComponent
-        >) || [];
+        (options.components?.filter(
+          (component) => !isComponentFactory(component),
+        ) as Array<LazyComponent>) || [];
 
       Promise.all(lazyComponents.map((getComponent) => getComponent())).then((components) => {
         components.forEach((component) => {
@@ -131,9 +131,9 @@ export const defineComponent = <
       });
 
       const syncComponents =
-        (options.components?.filter((component) => isComponentFactory(component)) as Array<
-          ComponentFactory
-        >) ?? [];
+        (options.components?.filter((component) =>
+          isComponentFactory(component),
+        ) as Array<ComponentFactory>) ?? [];
 
       instance.children.push(
         ...(syncComponents.flatMap((component) =>
@@ -181,7 +181,7 @@ export const defineComponent = <
           return options.name;
         },
         setProps(props) {
-          // console.log('new props', props);
+          console.log('new props', props);
           Object.entries(props).forEach(([name, value]) => {
             // todo check existence and validation
             instance.reactiveProps[name] = value;
