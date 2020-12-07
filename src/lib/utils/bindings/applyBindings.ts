@@ -22,7 +22,7 @@ export const bindingsList = {
   style: styleBinding,
   css: cssBinding,
   html: htmlBinding,
-  attr: attributeBinding,
+  attribute: attributeBinding,
 };
 
 export const applyBindings = (
