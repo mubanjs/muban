@@ -234,15 +234,24 @@ bind(refs.item, { style: {
 } });
 ```
 
-### attr
+### attribute
+
+The attribute binding sets the attributes of the associated DOM element.
 
 ```ts
-Ref<Record<string, any>> | Record<string, Ref<any>>
+Ref<Record<string, Ref<any>>
 ```
 
-::: warning TODO
-Not implemented yet
-:::
+**Examples**
+
+```ts
+const isActive = ref(true);
+
+// sets the `inert` style on either `true` or `false`
+bind(refs.item, { attribute: {
+  inert: computed(() => isActive.value)
+} });
+```
 
 ### click
 
