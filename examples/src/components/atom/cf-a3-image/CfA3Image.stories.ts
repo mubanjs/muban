@@ -1,7 +1,7 @@
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 
 import type { CfA3ImageTypes } from './CfA3Image.types';
-import { CfA3Image, cfA3Image } from './CfA3Image';
+import { cfA3Image } from './CfA3Image';
 import {
   defaultEnableLazyLoading,
   defaultEnableTransitionIn,
@@ -129,7 +129,6 @@ const viewPortWidthWrapper = (children: () => void) =>
 
 export const Default: Story<CfA3ImageTypes> = () => ({
   template: addTemplateWrapper(viewPortWidthWrapper, cfA3Image),
-  component: CfA3Image,
 });
 
 Default.args = {

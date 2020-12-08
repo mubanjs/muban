@@ -8,13 +8,6 @@ import './cf-a3-image.scss';
 import type { CfA3ImageTypes } from './CfA3Image.types';
 import { defaultEnableLazyLoading, defaultEnableTransitionIn } from './CfA3Image.config';
 
-export const CfA3Image = defineComponent({
-  name: 'cf-a3-image',
-  setup({ props, refs }) {
-    return [];
-  },
-});
-
 /**
  * This component is dependant on the following libraries:
  * - https://www.npmjs.com/package/lazysizes
@@ -31,7 +24,7 @@ export const cfA3Image = (
   }: CfA3ImageTypes,
   ref?: string,
 ) => html`<picture
-  data-component=${CfA3Image.displayName}
+  data-component="cf-a3-image"
   data-ref=${ref}
   class=${classNames(
     { [`fit-${objectFit}`]: objectFit, 'enable-transition-in': enableTransitionIn },
