@@ -1,4 +1,4 @@
-import { defineComponent, html } from '../../../../../src';
+import { html } from '../../../../../src';
 import classNames from 'classnames';
 
 import 'lazysizes';
