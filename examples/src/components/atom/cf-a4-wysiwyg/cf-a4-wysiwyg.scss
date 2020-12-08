@@ -1,0 +1,101 @@
+[data-component="cf-a4-wysiwyg"] {
+  $indentation: 2rem;
+
+  &.left-alignment {
+    text-align: left;
+  }
+
+  &.center-alignment {
+    text-align: center;
+  }
+
+  &.right-alignment{
+    text-align: right;
+  }
+
+  // Generic spacings for all direct children
+  > * {
+    margin-top: 0;
+
+    &:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+  }
+
+  // List styles
+  ul {
+    list-style: circle;
+  }
+
+  ol {
+    list-style: decimal;
+  }
+
+  ul,
+  ol {
+    display: inline-block;
+    padding-left: $indentation;
+    text-align: left;
+  }
+
+  // Typography
+ p, ol, ul {
+    @include copy-01;
+  }
+
+  h1 {
+    @include heading-01;
+  }
+
+  h2 {
+    @include heading-02;
+  }
+
+  h3 {
+    @include heading-03;
+  }
+
+  h4 {
+    @include heading-04;
+  }
+
+  h5 {
+    @include heading-05;
+  }
+
+  h6 {
+    @include heading-06;
+  }
+
+  // Quote styling
+  blockquote {
+    @include heading-02;
+    display: flex;
+    flex-direction: column;
+    padding: 0 $indentation;
+    position: relative;
+
+    small {
+      font-size: 50%;
+      margin-top: 0.5rem;
+    }
+
+    &::before {
+      position: absolute;
+      content: '';
+      top: 0;
+      left: 0;
+      width: 0.4rem;
+      height: 100%;
+      background: $colorPrimaryTheme;
+    }
+  }
+
+  a {
+    color: $colorPrimaryTheme;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
