@@ -1,0 +1,49 @@
+[data-component="cf-a3-image"] {
+  width: 100%;
+  display: block;
+
+  img {
+    width: 100%;
+  }
+
+  &.enable-transition-in img {
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+
+    &.lazyloaded {
+      opacity: 1;
+    }
+  }
+
+  &[class^="fit-"] {
+    height: 100%;
+    position: relative;
+
+    img {
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+
+  &.fit-cover img {
+    object-fit: cover;
+    font-family: "object-fit: cover";
+  }
+
+  &.fit-contain img {
+    object-fit: contain;
+    font-family: "object-fit: contain";
+  }
+
+  &.fit-none img {
+    object-fit: none;
+    font-family: "object-fit: none";
+  }
+
+  &.fit-scale-down img {
+    object-fit: scale-down;
+    font-family: "object-fit: scale-down";
+  }
+}
