@@ -101,7 +101,7 @@ export default {
       table: {
         category: 'Native',
         type: {
-          summary: 'string',
+          summary: 'boolean',
         },
       },
     },
