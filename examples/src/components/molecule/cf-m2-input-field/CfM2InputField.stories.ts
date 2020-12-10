@@ -1,10 +1,11 @@
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 
-import type { CfM2InputTypes } from './CfM2Input.types';
-import { cfM2Input, CfM2Input } from './CfM2Input';
+import type { CfM2InputFieldTypes } from './CfM2InputField.types';
+import { cfM2InputField, CfM2InputField } from './CfM2InputField';
+import { defaultInputTypeOption, inputTypeOptions } from './CfM2InputField.config';
 
 export default {
-  title: 'Molecule/cf-m2-input',
+  title: 'Molecule/cf-m2-input-field',
   argTypes: {
     label: {
       defaultValue: 'The quick brown fox jumps over the lazy dog.',
@@ -48,11 +49,11 @@ export default {
       },
     },
     type: {
-      defaultValue: 'text',
+      defaultValue: defaultInputTypeOption,
       description: 'Type of form control.',
       control: {
         type: 'select',
-        options: ['text', 'password', 'email'],
+        options: inputTypeOptions,
       },
       type: {
         required: false,
@@ -60,7 +61,7 @@ export default {
       table: {
         category: 'Native',
         type: {
-          summary: 'string',
+          summary: inputTypeOptions.join('|'),
         },
       },
     },
@@ -108,14 +109,14 @@ export default {
   },
 };
 
-export const Default: Story<CfM2InputTypes> = () => ({
-  template: cfM2Input,
-  component: CfM2Input,
+export const Default: Story<CfM2InputFieldTypes> = () => ({
+  template: cfM2InputField,
+  component: CfM2InputField,
 });
 
-export const Password: Story<CfM2InputTypes> = () => ({
-  template: cfM2Input,
-  component: CfM2Input,
+export const Password: Story<CfM2InputFieldTypes> = () => ({
+  template: cfM2InputField,
+  component: CfM2InputField,
 });
 
 Password.args = {

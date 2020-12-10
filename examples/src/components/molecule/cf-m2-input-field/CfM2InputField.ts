@@ -8,14 +8,15 @@ import {
 } from '../../../../../src';
 import classNames from 'classnames';
 
-import './cf-m2-input.scss';
-import type { CfM2InputTypes } from './CfM2Input.types';
+import './cf-m2-input-field.scss';
+import type { CfM2InputFieldTypes } from './CfM2InputField.types';
 import { useToggle } from '../../../hooks/useToggle';
 import { computed } from '@vue/reactivity';
 import { CfM1Button, cfM1Button } from '../cf-m1-button/CfM1Button';
+import { defaultInputTypeOption } from './CfM2InputField.config';
 
-export const CfM2Input = defineComponent({
-  name: 'cf-m2-input',
+export const CfM2InputField = defineComponent({
+  name: 'cf-m2-input-field',
   props: {
     isVisible: propType.boolean.optional.defaultValue(false),
     inputType: propType.string,
@@ -46,14 +47,14 @@ export const CfM2Input = defineComponent({
   },
 });
 
-export const cfM2Input = (
-  { className, label, note, type, ...props }: CfM2InputTypes,
+export const cfM2InputField = (
+  { className, label, note, type = defaultInputTypeOption, ...props }: CfM2InputFieldTypes,
   ref?: string,
 ) => {
   const notes = Array.isArray(note) ? note : [note];
 
   return html`<div
-    data-component=${CfM2Input.displayName}
+    data-component=${CfM2InputField.displayName}
     data-ref=${ref}
     data-input-type=${type}
     ...${{ class: className ? classNames(className) : null }}
