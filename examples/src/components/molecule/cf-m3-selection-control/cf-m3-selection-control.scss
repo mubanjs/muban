@@ -1,0 +1,135 @@
+[data-component="cf-m3-selection-control"] {
+  $size: 2rem;
+  $labelMargin: 1rem;
+  $noteMargin: 0.5rem;
+  $borderSize: 0.2rem;
+
+  position: relative;
+
+  .input-wrapper {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .input-label {
+    @include copy-02;
+    margin-left: $labelMargin;
+    user-select: none;
+    line-height: 1rem;
+
+    a {
+      color: $colorPrimaryTheme;
+      text-decoration: underline;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .input-note {
+    @include copy-03;
+    width: 100%;
+    margin-top: $noteMargin;
+    display: block;
+    text-align: left;
+  }
+
+  .input-element {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    opacity: 0;
+
+    &:focus ~ .custom-input-element {
+      outline: 0.2rem solid $colorPrimaryTheme;
+    }
+
+    &:disabled ~ .custom-input-element {
+      opacity: 0.5;
+    }
+  }
+
+  .custom-input-element {
+    border: $borderSize solid $colorGrey02;
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 0.2em;
+    position: relative;
+  }
+
+  // The toggle input type is a variation of the regular checkbox
+  &[data-input-type="toggle"] {
+    $width: $size * 2;
+    $offset: $borderSize * 3;
+
+    .custom-input-element {
+      width: $width;
+      height: $size;
+      border-radius: $size;
+
+      &::after {
+        width: $size - $offset;
+        height: $size - $offset;
+        background: currentColor;
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(calc(-100% - #{$offset / 2}), -50%);
+        border-radius: 50%;
+        transition: transform $easeFast $easeInOutCustom;
+      }
+    }
+
+    .input-element:checked ~ .custom-input-element::after {
+      transform: translate($offset / 2, -50%);
+    }
+
+    .input-note {
+      padding-left: $width + $labelMargin;
+    }
+  }
+
+  &[data-input-type="checkbox"],
+  &[data-input-type="radio"] {
+    .custom-input-element {
+      width: $size;
+      height: $size;
+    }
+
+    .custom-input-icon {
+      width: 100%;
+      height: 100%;
+      left: 50%;
+      top: 50%;
+      position: absolute;
+      transform: translate(-50%, -50%) scale(0);
+      z-index: 1;
+      transition: transform $easeFast $easeInOutCustom;
+    }
+
+    .input-note {
+      padding-left: 3rem;
+    }
+
+    .input-element {
+      &:checked ~ .custom-input-element {
+        .custom-input-icon {
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+      &:disabled ~ .custom-input-element {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+    }
+  }
+
+  &[data-input-type="radio"] {
+    .custom-input-element {
+      border-radius: 50%;
+    }
+  }
+}

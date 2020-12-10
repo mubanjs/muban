@@ -62,7 +62,7 @@ export const cfM2InputField = (
     <label>
       <span class="input-label">${label}</span>
       <div class="input-field">
-        <input class="input-field" data-ref="input-field" type="${type}...${props}" />
+        <input class="input-field" data-ref="input-field" type=${type} ...${props} />
         ${type === 'password' &&
         cfM1Button(
           {

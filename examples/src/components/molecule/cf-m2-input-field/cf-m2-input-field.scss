@@ -20,7 +20,7 @@
       color: $colorGrey01;
       background-color: $colorWhite;
       background-clip: padding-box;
-      border: 1px solid #ced4da;
+      border: 0.2rem solid $colorGrey02;
       border-radius: .25rem;
       transition: border-color $easeFast ease-in-out, box-shadow $easeFast ease-in-out;
 
