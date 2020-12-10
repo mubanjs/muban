@@ -46,7 +46,7 @@ export const applyBindings = (
             );
             onInvalidate(() => {
               console.log('onInvalidate element');
-              bindings.forEach((binding) => binding?.());
+              bindings.forEach((binding) => binding && binding());
             });
           },
           { immediate: true },
@@ -68,7 +68,7 @@ export const applyBindings = (
             );
             onInvalidate(() => {
               console.log('onInvalidate collection');
-              bindings.forEach((binding) => binding?.());
+              bindings.forEach((binding) => binding && binding());
             });
           },
           { immediate: true },
