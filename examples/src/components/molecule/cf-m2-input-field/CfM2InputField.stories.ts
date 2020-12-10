@@ -114,6 +114,16 @@ export const Default: Story<CfM2InputFieldTypes> = () => ({
   component: CfM2InputField,
 });
 
+export const Textarea: Story<CfM2InputFieldTypes> = () => ({
+  template: cfM2InputField,
+  component: CfM2InputField,
+});
+
+Textarea.args = {
+  type: 'textarea',
+};
+
+
 export const Password: Story<CfM2InputFieldTypes> = () => ({
   template: cfM2InputField,
   component: CfM2InputField,

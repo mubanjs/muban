@@ -9,10 +9,11 @@
     margin-bottom: 0.5rem;
   }
 
-  .input-field {
+  .input-field-wrapper{
     position: relative;
 
-    input {
+    input,
+    textarea {
       @include copy-02;
       display: block;
       width: 100%;
@@ -31,6 +32,15 @@
       &[disabled="true"] {
         opacity: 0.8;
       }
+    }
+
+    input {
+      height: 5rem;
+    }
+
+    textarea {
+      resize: none;
+      height: 15rem;
     }
   }
 
@@ -51,5 +61,4 @@
     outline: 0;
     border-color: $colorPrimaryTheme;
   }
-
 }

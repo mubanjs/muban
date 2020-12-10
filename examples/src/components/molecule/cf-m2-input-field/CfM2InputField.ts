@@ -48,7 +48,7 @@ export const CfM2InputField = defineComponent({
 });
 
 export const cfM2InputField = (
-  { className, label, note, type = defaultInputTypeOption, ...props }: CfM2InputFieldTypes,
+  { className, label, note, value, type = defaultInputTypeOption, ...props }: CfM2InputFieldTypes,
   ref?: string,
 ) => {
   const notes = Array.isArray(note) ? note : [note];
@@ -61,8 +61,16 @@ export const cfM2InputField = (
   >
     <label>
       <span class="input-label">${label}</span>
-      <div class="input-field">
-        <input class="input-field" data-ref="input-field" type=${type} ...${props} />
+      <div class="input-field-wrapper">
+        ${type === 'textarea'
+          ? html`<textarea class="input-field" data-ref="input-field" ...${props}>${value}</textarea>`
+          : html`<input
+              class="input-field"
+              data-ref="input-field"
+              value=${value}
+              type=${type}
+              ...${props}
+            />`}
         ${type === 'password' &&
         cfM1Button(
           {

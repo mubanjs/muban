@@ -1,5 +1,6 @@
 export const inputTypeOptions = [
   'text',
+  'textarea',
   'email',
   'number',
   'color',
