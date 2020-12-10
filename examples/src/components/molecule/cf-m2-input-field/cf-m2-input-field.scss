@@ -45,4 +45,11 @@
     @include copy-03;
     margin-top: 1rem;
   }
+
+
+  .input-field:focus {
+    outline: 0;
+    border-color: $colorPrimaryTheme;
+  }
+
 }
