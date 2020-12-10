@@ -9,3 +9,13 @@ $zLayout: default;
 
 // Colors
 $colorPrimaryTheme: #41a6ff;
+$colorWhite: #fff;
+$colorGrey01: #495057;
+
+// Eases
+$easeInOutCustom: cubic-bezier(0.2, 0, 0, 1);
+
+// Try to always use one of these ease duration
+$easeFast: 0.2s;
+$easeModerate: 0.6s;
+$easeSlow: 0.8s;
