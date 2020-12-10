@@ -12,10 +12,12 @@ import {
   iconAlignments,
 } from './CfM1Button.config';
 import { icons } from '../../atom/cf-a2-icon/CfA2Icon.config';
+import { className, icon } from '../../../storybook/argTypes';
 
 export default {
   title: 'Molecule/cf-m1-button',
   argTypes: {
+    className,
     label: {
       defaultValue: 'Click me!',
       description: 'The label displayed within the button',
@@ -104,22 +106,7 @@ export default {
         },
       },
     },
-    icon: {
-      description: 'An optional icon that can be rendered in the button',
-      control: {
-        type: 'select',
-        options: [undefined, ...icons],
-      },
-      type: {
-        required: false,
-      },
-      table: {
-        category: 'Icon',
-        type: {
-          summary: 'string',
-        },
-      },
-    },
+    icon,
     iconAlignment: {
       description: 'The position where you want to have the icon rendered',
       defaultValue: defaultIconAlignment,
@@ -137,19 +124,6 @@ export default {
         },
         type: {
           summary: 'string',
-        },
-      },
-    },
-    className: {
-      control: 'array',
-      description: 'Any custom css classes that you might want to add to the component.',
-      type: {
-        required: false,
-      },
-      table: {
-        category: 'Visual',
-        type: {
-          summary: ['string', 'Array<string>'].join(' | '),
         },
       },
     },

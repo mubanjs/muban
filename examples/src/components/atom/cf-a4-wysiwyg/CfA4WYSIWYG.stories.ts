@@ -3,23 +3,12 @@ import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 import type { CfA4WYSIWYGTypes } from './CfA4WYSIWYG.types';
 import { cfA4WYSIWYG } from './CfA4WYSIWYG';
 import { contentAlignments, defaultContentAlignment } from './CfA4WYSIWYG.config';
+import { className } from '../../../storybook/argTypes';
 
 export default {
   title: 'Atom/cf-a4-wysiwyg',
   argTypes: {
-    className: {
-      control: 'array',
-      description: 'Any custom css classes that you might want to add to the component.',
-      type: {
-        required: false,
-      },
-      table: {
-        category: 'Visual',
-        type: {
-          summary: ['string', 'Array<string>'].join(' | '),
-        },
-      },
-    },
+    className,
     alignment: {
       defaultValue: defaultContentAlignment,
       control: {

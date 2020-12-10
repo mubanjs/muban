@@ -9,23 +9,12 @@ import {
 } from './CfA3Image.config';
 import { html } from '../../../../../src';
 import { addTemplateWrapper } from '../../../storybook/addTemplateWrapper';
+import { className } from '../../../storybook/argTypes';
 
 export default {
   title: 'Atom/cf-a3-image',
   argTypes: {
-    className: {
-      control: 'array',
-      description: 'Any custom css classes that you might want to add to the component.',
-      type: {
-        required: false,
-      },
-      table: {
-        category: 'Visual',
-        type: {
-          summary: ['string', 'Array<string>'].join(' | '),
-        },
-      },
-    },
+    className,
     src: {
       description: 'The source of default image that needs to be displayed.',
       control: 'text',

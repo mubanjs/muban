@@ -7,4 +7,6 @@ export type CfM2InputFieldTypes = {
   note?: Array<string> | string;
   className?: Array<string> | string;
   type: TextInputType;
-} & Omit<HTMLInputElement, 'type'>;
+  name: string;
+  value: string;
+};

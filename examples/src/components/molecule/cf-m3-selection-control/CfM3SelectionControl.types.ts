@@ -7,4 +7,6 @@ export type CfM3SelectionControlTypes = {
   note?: Array<string> | string;
   className?: Array<string> | string;
   type: SelectionControlType;
-} & Omit<HTMLInputElement, 'type'>;
+  name: string;
+  value: string;
+};

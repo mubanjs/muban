@@ -9,6 +9,7 @@ import {
 } from './CfA1Heading.config';
 import type { CFa1HeadingProps } from './CfA1Heading.types';
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import { className } from '../../../storybook/argTypes';
 
 export default {
   title: 'Atom/cf-a1-heading',
@@ -93,21 +94,7 @@ export default {
         },
       },
     },
-    className: {
-      description: 'Any custom css classes that you might want to add to the component.',
-      type: {
-        required: false,
-      },
-      control: {
-        type: 'array',
-      },
-      table: {
-        category: 'Visual',
-        type: {
-          summary: ['string', 'Array<string>'].join(' | '),
-        },
-      },
-    },
+    className,
     type: {
       description: 'The tag that is used to render out the component',
       type: {

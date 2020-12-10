@@ -2,39 +2,16 @@ import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 
 import type { CfA2IconTypes } from './CfA2Icon.types';
 import { CfA2Icon, cfA2Icon } from './CfA2Icon';
-import { icons } from './CfA2Icon.config';
+import { className, icon } from '../../../storybook/argTypes';
 
 export default {
   title: 'Atom/cf-a2-icon',
   argTypes: {
+    className,
     name: {
-      defaultValue: 'arrow-right',
-      description: 'The name of the icon that needs to be rendered',
-      control: {
-        type: 'select',
-        options: icons,
-      },
+      ...icon,
       type: {
         required: true,
-      },
-      table: {
-        category: 'Data',
-        type: {
-          summary: 'string',
-        },
-      },
-    },
-    className: {
-      control: 'array',
-      description: 'Any custom css classes that you might want to add to the component.',
-      type: {
-        required: false,
-      },
-      table: {
-        category: 'Visual',
-        type: {
-          summary: ['string', 'Array<string>'].join(' | '),
-        },
       },
     },
   },
