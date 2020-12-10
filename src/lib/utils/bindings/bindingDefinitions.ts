@@ -2,8 +2,13 @@
 
 import type { Ref } from '@vue/reactivity';
 import type { ComponentFactory } from '../../Component.types';
-import type { CollectionRef, ComponentsRef } from '../refs/refDefinitions.types';
-import type { AnyRef, ComponentSetPropsParam, ElementRef } from '../refs/refDefinitions.types';
+import type {
+  CollectionRef,
+  ComponentParams,
+  ComponentsRef,
+  AnyRef,
+  ElementRef,
+} from '../refs/refDefinitions.types';
 import type { bindingsList } from './applyBindings';
 
 export function BindElement<T extends HTMLElement>(ref: Ref<T | undefined>, props: BindProps) {
@@ -24,10 +29,9 @@ export function BindCollection<T extends HTMLElement>(ref: Ref<Array<T>>, props:
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function BindComponent<T extends Pick<ReturnType<ComponentFactory<any>>, 'setProps'>>(
-  ref: Ref<T | undefined>,
-  props: ComponentSetPropsParam<T>,
-) {
+export function BindComponent<
+  T extends Pick<ReturnType<ComponentFactory<any>>, 'setProps' | 'element'>
+>(ref: Ref<T | undefined>, props: ComponentParams<T>) {
   return {
     ref,
     type: 'component' as const,
@@ -36,10 +40,9 @@ export function BindComponent<T extends Pick<ReturnType<ComponentFactory<any>>, 
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function BindComponents<T extends Pick<ReturnType<ComponentFactory<any>>, 'setProps'>>(
-  ref: Ref<Array<T>>,
-  props: ComponentSetPropsParam<T>,
-) {
+export function BindComponents<
+  T extends Pick<ReturnType<ComponentFactory<any>>, 'setProps' | 'element'>
+>(ref: Ref<Array<T>>, props: ComponentParams<T>) {
   return {
     ref,
     type: 'componentCollection' as const,

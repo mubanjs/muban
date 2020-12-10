@@ -35,7 +35,7 @@ export const CfM2InputField = defineComponent({
 
     return [
       bind(refs.inputField, {
-        attribute: {
+        attr: {
           type: computed(() => (isVisible.value ? 'text' : props.inputType)),
         },
       }),
@@ -63,7 +63,9 @@ export const cfM2InputField = (
       <span class="input-label">${label}</span>
       <div class="input-field-wrapper">
         ${type === 'textarea'
-          ? html`<textarea class="input-field" data-ref="input-field" ...${props}>${value}</textarea>`
+          ? html` <textarea class="input-field" data-ref="input-field" ...${props}>
+${value}</textarea
+            >`
           : html`<input
               class="input-field"
               data-ref="input-field"

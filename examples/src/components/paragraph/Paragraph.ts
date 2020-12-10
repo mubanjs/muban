@@ -1,8 +1,9 @@
+import { ref } from '@vue/reactivity';
 import { html } from '../../../../src/lib/utils/template/mhtml';
 import { SplitText } from 'gsap/SplitText';
 
 import './paragraph.css';
-import { defineComponent, refComponent, refElement } from '../../../../src';
+import { bind, defineComponent, refComponent, refElement } from '../../../../src';
 import { onMount } from '../../../../src/lib/Component.Reactive';
 import {
   provideTransitionContext,
@@ -99,7 +100,15 @@ export const Paragraph = defineComponent({
     onMount(() => {
       controller.transitionIn();
     });
-    return [];
+
+    return [
+      // allow css bindings on Components for custom styling
+      bind(refs.title, {
+        css: { foo: ref(true) },
+        style: { fontSize: ref('32px') },
+        attr: { 'data-test': ref('foobar') },
+      }),
+    ];
   },
 });
 

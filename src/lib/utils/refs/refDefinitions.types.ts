@@ -84,11 +84,11 @@ export type CollectionRef<T extends HTMLElement, P extends BindProps> = {
 export type ComponentRef<T extends ComponentFactory<any>> = {
   type: 'component';
   getBindingDefinition: (
-    props: ComponentSetPropsParam<ReturnType<T>>,
+    props: ComponentParams<ReturnType<T>>,
   ) => {
     ref: Ref<ReturnType<T> | undefined>;
     type: 'component';
-    props: ComponentSetPropsParam<ReturnType<T>>;
+    props: ComponentParams<ReturnType<T>>;
   };
   component: ReturnType<T> | undefined;
   refreshRefs: () => void;
@@ -97,11 +97,11 @@ export type ComponentRef<T extends ComponentFactory<any>> = {
 export type ComponentsRef<T extends ComponentFactory<any>> = {
   type: 'componentCollection';
   getBindingDefinition: (
-    props: ComponentSetPropsParam<ReturnType<T>>,
+    props: ComponentParams<ReturnType<T>>,
   ) => {
     ref: Ref<Array<ReturnType<T>>>;
     type: 'componentCollection';
-    props: ComponentSetPropsParam<ReturnType<T>>;
+    props: ComponentParams<ReturnType<T>>;
   };
   components: Array<ReturnType<T>>;
   // nested refs for each single individual component
@@ -116,9 +116,13 @@ export type AnyRef =
   | ComponentsRef<ComponentFactory<any>>;
 
 // Turn the keys of an object into the types, or a Ref around that type
-type RefOrValue<T> = {
+type RefOrValue<T extends Record<string, any>> = {
   [P in keyof T]: T[P] | Ref<T[P]>;
 };
+
+export type ComponentParams<T> =
+  | ComponentSetPropsParam<T>
+  | Pick<BindProps, 'css' | 'style' | 'attr'>;
 
 /**
  * Extracts the props from a component if it is one
@@ -129,7 +133,7 @@ type RefOrValue<T> = {
  */
 export type ComponentSetPropsParam<T> = T extends { setProps(props: infer R): void }
   ? Partial<RefOrValue<R>>
-  : RefOrValue<T>;
+  : Partial<RefOrValue<Record<string, any>>>;
 
 /**
  *  Extract the type of ref it is based on the return type of the selector function from the definition

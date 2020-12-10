@@ -22,7 +22,7 @@ export const bindingsList = {
   style: styleBinding,
   css: cssBinding,
   html: htmlBinding,
-  attribute: attributeBinding,
+  attr: attributeBinding,
 };
 
 export const applyBindings = (
@@ -76,10 +76,17 @@ export const applyBindings = (
       } else if (binding.type === 'component') {
         typedObjectEntries(binding.props).map(([propName, bindingValue]) => {
           watchEffect(() => {
-            // TODO prop validation
-            unref(binding.ref)?.setProps({
-              [propName]: unref(bindingValue),
-            });
+            if (['css', 'style', 'attr'].includes(propName)) {
+              const element = unref(binding.ref)?.element;
+              if (element) {
+                bindingsList[propName as 'css' | 'style' | 'attr']?.(element, bindingValue as any);
+              }
+            } else {
+              // TODO prop validation
+              unref(binding.ref)?.setProps({
+                [propName]: unref(bindingValue),
+              });
+            }
           });
         });
       } else if (binding.type === 'componentCollection') {
@@ -88,10 +95,17 @@ export const applyBindings = (
             const reff = unref(binding.ref);
             reff?.forEach((ref) => {
               watchEffect(() => {
-                // TODO prop validation
-                ref?.setProps({
-                  [propName]: unref(bindingValue),
-                });
+                if (['css', 'style', 'attr'].includes(propName)) {
+                  bindingsList[propName as 'css' | 'style' | 'attr']?.(
+                    unref(ref).element,
+                    bindingValue as any,
+                  );
+                } else {
+                  // TODO prop validation
+                  ref?.setProps({
+                    [propName]: unref(bindingValue),
+                  });
+                }
               });
             });
           });

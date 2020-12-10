@@ -248,7 +248,7 @@ Ref<Record<string, Ref<any>>
 const isActive = ref(true);
 
 // sets the `disabled` style on either `true` or `false`
-bind(refs.item, { attribute: {
+bind(refs.item, { attr: {
   disabled: computed(() => isActive.value),
 } });
 ```
