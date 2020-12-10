@@ -99,7 +99,6 @@ Radio.args = {
   label: 'The quick brown fox jumps over the lazy dog.',
 };
 
-
 export const Toggle: Story<CfM3SelectionControlTypes> = () => ({
   template: cfM3SelectionControl,
   component: CfM3SelectionControl,
