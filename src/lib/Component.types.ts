@@ -62,7 +62,7 @@ export type DefineComponentOptions<
   components?: Array<ComponentFactory | (() => Promise<ComponentFactory>)>;
   props?: P;
   refs?: R;
-  setup: (context: {
+  setup?: (context: {
     props: TypedProps<P>;
     refs: TypedRefs<R>;
     element: HTMLElement;

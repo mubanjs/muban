@@ -215,7 +215,7 @@ function setupComponent(instance: InternalComponentInstance) {
   }
 
   currentInstance = instance;
-  const bindings = instance.options.setup({
+  const bindings = instance.options.setup?.({
     props: instance.reactiveProps,
     refs: instance.refs,
     element: instance.element,
