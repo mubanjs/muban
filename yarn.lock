@@ -2255,7 +2255,14 @@
     "@types/node" "*"
     "@types/webpack" "*"
 
-"@types/lodash@^4.14.91":
+"@types/lodash-es@^4.17.3":
+  version "4.17.3"
+  resolved "https://registry.yarnpkg.com/@types/lodash-es/-/lodash-es-4.17.3.tgz#87eb0b3673b076b8ee655f1890260a136af09a2d"
+  integrity sha512-iHI0i7ZAL1qepz1Y7f3EKg/zUMDwDfTzitx+AlHhJJvXwenP682ZyGbgPSc5Ej3eEAKVbNWKFuwOadCj5vBbYQ==
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*", "@types/lodash@^4.14.91":
   version "4.14.165"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.165.tgz#74d55d947452e2de0742bad65270433b63a8c30f"
   integrity sha512-tjSSOTHhI5mCHTy/OOXYIhi2Wt1qcbHmuXD1Ha7q70CgI/I71afO4XtLb/cVexki1oVYchpul/TOuu3Arcdxrg==
@@ -8788,10 +8795,10 @@ isexe@^2.0.0:
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=
 
-isntnt@^1.4.1:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/isntnt/-/isntnt-1.4.2.tgz#c2be98b7151dc08911f252db1e0279d5025dd09f"
-  integrity sha512-GKbCxzxV40saaJqqy0WYGEV9mQeyzF74KFg12RVMVDiZkc/mVj/PdSpfLxYvh9wKlUuIYYTSBK9CdkXn0IZcCA==
+isntnt@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/isntnt/-/isntnt-1.4.4.tgz#b1c9b217478b1a9964bf312ed7fe7dfca0501566"
+  integrity sha512-2zjHFz6i04BFBOPltVKhLS+XoOLcPpWPvYHdEc4OCZxqMY1J8He7IbwflYAAYaHfjjPLIZ6pOnxsfufxGIqWIA==
 
 isobject@^2.0.0:
   version "2.1.0"

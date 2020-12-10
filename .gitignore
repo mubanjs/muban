@@ -34,6 +34,7 @@ yarn-error.log*
 
 # npm publish artifects
 /lib
+/dist
 index.js
 index.d.ts
 /tmp
