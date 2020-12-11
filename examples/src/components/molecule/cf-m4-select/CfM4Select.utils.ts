@@ -18,7 +18,7 @@ export const moveFocus = (
   direction: FocusDirection,
   boundaryElement: HTMLElement = document.body,
 ): void => {
-  const activeElement = document.activeElement as HTMLButtonElement;
+  const activeElement = document.activeElement as HTMLElement;
   const elements = Array.from<HTMLElement>(
     boundaryElement.querySelectorAll(focussableElements.join(', ')),
   );
