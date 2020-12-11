@@ -6,35 +6,23 @@ import type { BindProps } from '../../../../../src/lib/utils/bindings/bindingDef
 import focusLock from 'dom-focus-lock';
 import { useEscapeKeyEvent, useKeyboardEvent } from '../../../hooks/useKeyboardEvent';
 import { Key } from 'ts-key-enum';
-import { moveFocus } from './CfM4Select.utils';
-
-const handleArrowKeyEvent = (
-  event: KeyboardEvent,
-  direction: 'up' | 'down',
-  container?: HTMLElement,
-) => {
-  event.preventDefault();
-  moveFocus(direction, container);
-};
+import { FocusDirection, moveFocus } from './CfM4Select.utils';
 
 export const useSelectExpanding = (
   optionsWrapper: ElementRef<HTMLElement | undefined, BindProps>,
 ): readonly [Ref<boolean>, (force?: boolean) => void] => {
   const [isExpanded, toggleIsExpanded] = useToggle(false);
 
+  const onArrowKeyEvent = (event: KeyboardEvent, direction: FocusDirection): void => {
+    if (isExpanded) {
+      event.preventDefault();
+      moveFocus(direction, optionsWrapper.element);
+    }
+  };
+
   useEscapeKeyEvent(() => toggleIsExpanded(false));
-
-  useKeyboardEvent(Key.ArrowUp, (event) => {
-    if (isExpanded) {
-      handleArrowKeyEvent(event, 'up', optionsWrapper.element);
-    }
-  });
-
-  useKeyboardEvent(Key.ArrowDown, (event) => {
-    if (isExpanded) {
-      handleArrowKeyEvent(event, 'down', optionsWrapper.element);
-    }
-  });
+  useKeyboardEvent(Key.ArrowUp, (event) => onArrowKeyEvent(event, 'up'));
+  useKeyboardEvent(Key.ArrowDown, (event) => onArrowKeyEvent(event, 'down'));
 
   watch(
     () => isExpanded.value,
@@ -45,11 +33,9 @@ export const useSelectExpanding = (
 
       if (isExpanded) {
         openSelectOptions(optionsWrapper.element);
-
         focusLock.on(optionsWrapper.element);
       } else {
         closeSelectOptions(optionsWrapper.element);
-
         focusLock.off(optionsWrapper.element);
       }
     },

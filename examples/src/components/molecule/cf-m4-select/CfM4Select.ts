@@ -39,7 +39,6 @@ export const CfM4Select = defineComponent({
   refs: {
     selectElement: refElement<HTMLSelectElement>('select-element'),
     selectElementOptions: refCollection<HTMLOptionElement>('select-element-option'),
-
     customSelectButton: refComponent(CfM1Button, { ref: 'custom-select-button' }),
     customSelectOptions: refCollection<HTMLButtonElement>('custom-select-option'),
     customSelectOptionsWrapper: refElement('custom-select-options-wrapper'),

@@ -1,5 +1,4 @@
-export const getSelectedValues = (options: Array<HTMLOptionElement>): Array<string> =>
-  options.filter((option) => option.selected).map((option) => option.value);
+export type FocusDirection = 'up' | 'down';
 
 const focussableElements = [
   'a[href]',
@@ -12,8 +11,12 @@ const focussableElements = [
   'textarea',
 ];
 
+export const getSelectedValues = (options: Array<HTMLOptionElement>): Array<string> =>
+  options.filter((option) => option.selected).map((option) => option.value);
+
+
 export const moveFocus = (
-  direction: 'up' | 'down',
+  direction: FocusDirection,
   boundaryElement: HTMLElement = document.body,
 ): void => {
   const activeElement = document.activeElement as HTMLButtonElement;
