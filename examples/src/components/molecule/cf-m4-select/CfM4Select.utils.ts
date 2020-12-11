@@ -14,7 +14,6 @@ const focussableElements = [
 export const getSelectedValues = (options: Array<HTMLOptionElement>): Array<string> =>
   options.filter((option) => option.selected).map((option) => option.value);
 
-
 export const moveFocus = (
   direction: FocusDirection,
   boundaryElement: HTMLElement = document.body,
