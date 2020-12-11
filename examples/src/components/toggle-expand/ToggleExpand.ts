@@ -26,7 +26,10 @@ export const ToggleExpand = defineComponent({
     const expandButtonLabel = computed(() => getButtonLabel(isExpanded.value));
 
     return [
-      bind(refs.expandButton, { text: expandButtonLabel, click: () => toggleExpanded() }),
+      bind(refs.expandButton, {
+        text: expandButtonLabel,
+        event: { click: () => toggleExpanded() },
+      }),
       bind(refs.self, {
         css: { isExpanded },
       }),
