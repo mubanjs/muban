@@ -23,10 +23,10 @@ import type {
   ComponentsRef,
 } from './refDefinitions.types';
 
-export function refElement(
-  refIdOrQuery: string | ComponentRefItemElement['queryRef'],
+export function refElement<T extends HTMLElement = HTMLElement>(
+  refIdOrQuery: string | ComponentRefItemElement<T>['queryRef'],
   { isRequired = true }: { isRequired?: boolean } = {},
-): ComponentRefItemElement {
+): ComponentRefItemElement<T> {
   return {
     ref: typeof refIdOrQuery === 'string' ? refIdOrQuery : '[custom]',
     type: 'element',
@@ -34,12 +34,12 @@ export function refElement(
       if (typeof refIdOrQuery === 'function') {
         return refIdOrQuery(parent);
       }
-      return this.ref === '_self_'
+      return (this.ref === '_self_'
         ? parent
-        : parent.querySelector<HTMLElement>(`[data-ref="${this.ref}"]`) ?? null;
+        : parent.querySelector<T>(`[data-ref="${this.ref}"]`) ?? null) as T | null;
     },
     createRef(instance) {
-      const elementRef = ref<HTMLElement>();
+      const elementRef = ref<T>();
       const getElement = (initial: boolean = false) => {
         // when ref is not provided, pick the component element itself
         const element = this.queryRef(instance.element);
@@ -70,9 +70,9 @@ export function refElement(
   };
 }
 
-export function refCollection(
-  refIdOrQuery: string | ComponentRefItemCollection['queryRef'],
-): ComponentRefItemCollection {
+export function refCollection<T extends HTMLElement = HTMLElement>(
+  refIdOrQuery: string | ComponentRefItemCollection<T>['queryRef'],
+): ComponentRefItemCollection<T> {
   return {
     ref: typeof refIdOrQuery === 'string' ? refIdOrQuery : '[custom]',
     type: 'collection',
@@ -80,7 +80,7 @@ export function refCollection(
       if (typeof refIdOrQuery === 'function') {
         return refIdOrQuery(parent);
       }
-      return Array.from(parent.querySelectorAll(`[data-ref="${refIdOrQuery}"]`));
+      return Array.from(parent.querySelectorAll<T>(`[data-ref="${refIdOrQuery}"]`));
     },
     createRef(instance) {
       const getElements = () => {
@@ -90,7 +90,7 @@ export function refCollection(
         }
         return elements;
       };
-      const elementsRef = ref(getElements());
+      const elementsRef = ref(getElements()) as Ref<Array<T>>;
 
       return {
         type: 'collection',
@@ -102,7 +102,7 @@ export function refCollection(
           return {
             type: 'element',
             getBindingDefinition(props) {
-              return BindElement(ref(element), props);
+              return BindElement(ref(element) as Ref<T>, props);
             },
             // TODO: this is currently not reactive, so is only correct in the setup function, not in async code or callbacks
             element: element,
