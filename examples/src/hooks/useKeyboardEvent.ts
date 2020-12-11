@@ -6,15 +6,15 @@ export const useKeyboardEvent = (
   keys: Key | Array<Key>,
   callback: KeyPressCallback,
 ): (() => void) => {
-  const eventListenerCallback = (event: KeyboardEvent) => {
+  const onKeydown = (event: KeyboardEvent) => {
     if (Array.isArray(keys) ? keys.includes(event.key as Key) : event.key === keys) {
       callback(event);
     }
   };
 
-  document.addEventListener('keydown', eventListenerCallback);
+  document.addEventListener('keydown', onKeydown);
 
-  return () => document.removeEventListener('keydown', eventListenerCallback);
+  return () => document.removeEventListener('keydown', onKeydown);
 };
 
 export const useEscapeKeyEvent = (callback: KeyPressCallback) =>
