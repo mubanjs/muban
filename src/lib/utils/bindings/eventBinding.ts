@@ -2,7 +2,7 @@
 import typedObjectEntries from '../../type-utils/typedObjectEntries';
 
 export type HTMLElementEventCallbackMap = {
-  [P in keyof HTMLElementEventMap]: (event: HTMLElementEventMap[P]) => void;
+  [P in keyof HTMLElementEventMap]?: (event: HTMLElementEventMap[P]) => void;
 };
 
 export default function (target: HTMLElement, events: HTMLElementEventCallbackMap) {
