@@ -14489,6 +14489,11 @@ ts-jest@^26.2.0:
     semver "7.x"
     yargs-parser "20.x"
 
+ts-key-enum@2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/ts-key-enum/-/ts-key-enum-2.0.4.tgz#31f213dd81047960ccf79ff0d9c7302dd727daeb"
+  integrity sha512-i+B4k8uhZIdM1M1rboqx5S5GavP2T5Cye6/vLkHJp6mH6tgKXkjOw1/CYHLBO04jdeCXu04Y1vWEHaCe19dgGw==
+
 ts-loader@^8.0.11:
   version "8.0.11"
   resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-8.0.11.tgz#35d58a65932caacb120426eea59eca841786c899"
