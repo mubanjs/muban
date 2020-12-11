@@ -1,8 +1,9 @@
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 
-import { cfM4Select, CfM4Select } from './CfM4Select';
+import { CfM4Select } from './CfM4Select';
 import type { CfM4SelectTypes } from './CfM4Select.types';
 import { className, disabled, placeholder } from '../../../storybook/argTypes';
+import { cfM4Select } from './CfM4Select.template';
 
 export default {
   title: 'Molecule/cf-m4-select',

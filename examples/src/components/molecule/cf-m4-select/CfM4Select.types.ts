@@ -9,4 +9,5 @@ export type CfM4SelectTypes = {
   placeholder?: string;
   name: string;
   options: Array<SelectOption>;
+  multiple?: boolean;
 };
