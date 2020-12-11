@@ -1,9 +1,9 @@
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 
-import { CfM4Select } from './CfM4Select';
 import type { CfM4SelectTypes } from './CfM4Select.types';
 import { className, disabled, placeholder } from '../../../storybook/argTypes';
 import { cfM4Select } from './CfM4Select.template';
+import { CfM4Select } from './CfM4Select';
 
 export default {
   title: 'Molecule/cf-m4-select',
@@ -11,8 +11,20 @@ export default {
     className,
     placeholder,
     disabled,
+    multiple: {
+      description: 'Whether the user can select multiple values',
+      control: 'boolean',
+      type: {
+        required: false,
+      },
+      table: {
+        category: 'Native',
+        type: {
+          summary: 'boolean',
+        },
+      },
+    },
     options: {
-      control: 'object',
       defaultValue: [
         {
           label: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
@@ -69,7 +81,16 @@ export default {
   },
 };
 
-export const Default: Story<CfM4SelectTypes> = () => ({
+export const Single: Story<CfM4SelectTypes> = () => ({
   template: cfM4Select,
   component: CfM4Select,
 });
+
+export const Multiple: Story<CfM4SelectTypes> = () => ({
+  template: cfM4Select,
+  component: CfM4Select,
+});
+
+Multiple.args = {
+  multiple: true,
+};

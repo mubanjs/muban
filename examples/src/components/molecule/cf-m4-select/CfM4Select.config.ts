@@ -16,11 +16,6 @@ export const selectOptionExtractConfig = {
       query: 'button',
       attr: 'value',
     },
-    selected: {
-      query: 'button',
-      attr: 'aria-selected',
-      convert: 'boolean',
-    },
     label: {
       query: '.button-label',
       html: true,

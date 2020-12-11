@@ -19,6 +19,7 @@ import { ref } from '@vue/reactivity';
 import { useSelectExpanding } from './CfM4Select.hooks';
 import { extractFromHTML } from 'html-extract-data';
 import { selectOptionExtractConfig } from './CfM4Select.config';
+import { getSelectedValues } from './CfM4Select.utils';
 
 /**
  * This component is dependant on the following 3rd party libraries:
@@ -45,26 +46,40 @@ export const CfM4Select = defineComponent({
   setup({ props, refs, element }) {
     const [isExpanded, toggleIsExpanded] = useSelectExpanding(refs.customSelectOptionsWrapper);
 
-    const selectedOptions = ref<Array<SelectOption>>(
+    const selectOptionsData = ref<Array<Omit<SelectOption, 'selected'>>>(
       extractFromHTML(element, selectOptionExtractConfig),
     );
 
-    const selectedValue = ref<string | undefined>(props.selectedValue);
-    const selectedOption = computed(() =>
-      selectedOptions.value.find((option) => option.value === selectedValue.value),
+    const selectedOptionsValue = ref<Array<string>>(
+      getSelectedValues(refs.selectElementOptions.elements),
+    );
+
+    const selectedOptions = computed(() =>
+      selectOptionsData.value.filter((option) => selectedOptionsValue.value.includes(option.value)),
     );
 
     return [
-      // bind(refs.selectElement, {
-      //   event: {
-      //     change: (event) => {
-      //       console.log('changeEvent', event);
-      //     },
-      //   },
-      // }),
+      bind(refs.selectElement, {
+        event: {
+          change: () => {
+            selectedOptionsValue.value = getSelectedValues(refs.selectElementOptions.elements);
+          },
+        },
+      }),
       bind(refs.customSelectButton, {
         onClick: () => toggleIsExpanded(),
-        label: computed(() => selectedOption?.value?.label ?? props.placeholder),
+        label: computed(() => {
+          if (props.multiple) {
+            const selectedOptionsCount = selectedOptions.value.length;
+
+            return `${props.placeholder} ${
+              selectedOptionsCount > 0 ? `(${selectedOptionsCount})` : ''
+            }`;
+          }
+
+          // By default only one value can be selected so use that one as the label
+          return selectedOptions.value[0]?.label ?? props.placeholder;
+        }),
         css: computed(() => ({
           'is-expanded': isExpanded.value,
         })),
@@ -79,12 +94,15 @@ export const CfM4Select = defineComponent({
             } else {
               option.selected = option.value === ref.element?.value;
             }
-            // Make sure we dispatch a change event on the select element so we can still add native event listeners.
-            refs.selectElement.element?.dispatchEvent(new Event('change'));
           });
+
+          // Make sure we dispatch a change event on the select element so we can still add native event listeners.
+          refs.selectElement.element?.dispatchEvent(new Event('change'));
         },
         attr: {
-          'aria-selected': computed(() => selectedValue.value === ref.element?.value),
+          'aria-selected': computed(() =>
+            selectedOptionsValue.value.includes(ref.element?.value ?? ''),
+          ),
         },
       })),
     ];

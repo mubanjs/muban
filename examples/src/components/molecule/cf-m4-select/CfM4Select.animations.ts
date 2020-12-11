@@ -10,8 +10,8 @@ export const openSelectOptions = (optionsWrapper: HTMLElement): Promise<void> =>
 
       // Then animate from 0
       gsap.from(optionsWrapper, {
-        height: 0,
         duration: selectExpandDuration,
+        height: 0,
         ease: selectExpandEase,
         onComplete: resolve,
       });
@@ -22,7 +22,7 @@ export const closeSelectOptions = (optionsWrapper: HTMLElement): Promise<void> =
   new Promise((resolve) => {
     gsap.to(optionsWrapper, {
       height: 0,
-      duration: selectExpandDuration,
+      duration: optionsWrapper.hasAttribute('style') ? selectExpandDuration : 0,
       ease: selectExpandEase,
       onComplete: resolve,
     });
