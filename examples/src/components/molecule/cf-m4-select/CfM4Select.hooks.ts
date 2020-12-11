@@ -3,6 +3,7 @@ import { Ref, watch } from '@vue/runtime-core';
 import { closeSelectOptions, openSelectOptions } from './CfM4Select.animations';
 import type { ElementRef } from '../../../../../src/lib/utils/refs/refDefinitions.types';
 import type { BindProps } from '../../../../../src/lib/utils/bindings/bindingDefinitions';
+import focusLock from 'dom-focus-lock';
 
 export const useSelectExpanding = (
   optionsWrapper: ElementRef<HTMLElement | undefined, BindProps>,
@@ -18,8 +19,10 @@ export const useSelectExpanding = (
 
       if (isExpanded) {
         openSelectOptions(optionsWrapper.element);
+        focusLock.on(optionsWrapper.element);
       } else {
         closeSelectOptions(optionsWrapper.element);
+        focusLock.off(optionsWrapper.element);
       }
     },
     { immediate: true },

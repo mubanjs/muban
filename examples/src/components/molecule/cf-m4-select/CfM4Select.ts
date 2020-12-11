@@ -27,7 +27,7 @@ import { useClickedOutside } from '../../../hooks/useClickedOutside';
  * This component is dependant on the following 3rd party libraries:
  * - gsap
  * - ts-key-enum
- * -
+ * - dom-focus-lock
  */
 export const CfM4Select = defineComponent({
   name: 'cf-m4-select',

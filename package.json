@@ -87,6 +87,7 @@
     "css-loader": "^5.0.1",
     "cssnano": "^4.1.10",
     "cypress": "^4.11.0",
+    "dom-focus-lock": "^1.0.4",
     "eslint": "^7.5.0",
     "eslint-config-airbnb": ">= 18",
     "eslint-config-airbnb-base": ">= 13",
