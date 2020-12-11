@@ -6,8 +6,8 @@ import type { InternalComponentInstance } from '../../Component.types';
 import typedObjectEntries from '../../type-utils/typedObjectEntries';
 import type { Binding } from './bindingDefinitions';
 import checkedBinding from './checkedBinding';
-import clickBinding from './clickBinding';
 import cssBinding from './cssBinding';
+import eventBinding, { createEventBinding } from './eventBinding';
 import styleBinding from './styleBinding';
 import textBinding from './textBinding';
 import htmlBinding from './htmlBinding';
@@ -16,7 +16,8 @@ import attributeBinding from './attributeBinding';
 // TODO: these are just prototype bindings
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const bindingsList = {
-  click: clickBinding,
+  event: eventBinding,
+  click: createEventBinding('click'),
   checked: checkedBinding,
   text: textBinding,
   style: styleBinding,
