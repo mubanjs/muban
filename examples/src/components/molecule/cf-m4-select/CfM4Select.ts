@@ -30,8 +30,7 @@ export const CfM4Select = defineComponent({
   components: [CfA2Icon],
   refs: {
     selectButton: refComponent(CfM1Button, { ref: 'select-button' }),
-    selectButtonElement: refElement('select-button'),
-    optionsWrapper: refElement('options-wrapper'),
+    optionsWrapper: refElement<HTMLDivElement>('options-wrapper'),
   },
   setup({ refs }) {
     const [isExpanded, toggleIsExpanded] = useToggle(false);
@@ -68,13 +67,11 @@ export const CfM4Select = defineComponent({
     );
 
     return [
-      bind(refs.selectButtonElement, {
+      bind(refs.selectButton, {
+        onClick: () => toggleIsExpanded(),
         css: computed(() => ({
           'is-expanded': isExpanded.value,
         })),
-      }),
-      bind(refs.selectButton, {
-        onClick: () => toggleIsExpanded(),
       }),
     ];
   },

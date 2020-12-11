@@ -7,20 +7,18 @@ import type { BindProps } from '../bindings/bindingDefinitions';
  * This is the raw "definition" for refs, represented as a simple object.
  * Any helper functions must return this object
  */
-export type ComponentRefItemElement = {
+export type ComponentRefItemElement<T extends HTMLElement> = {
   type: 'element';
   ref: string;
-  queryRef: (parent: HTMLElement) => HTMLElement | null;
-  createRef: (
-    instance: InternalComponentInstance,
-  ) => ElementRef<HTMLElement | undefined, BindProps>;
+  queryRef: (parent: HTMLElement) => T | null;
+  createRef: (instance: InternalComponentInstance) => ElementRef<T | undefined, BindProps>;
   isRequired?: boolean;
 };
-export type ComponentRefItemCollection = {
+export type ComponentRefItemCollection<T extends HTMLElement> = {
   type: 'collection';
   ref: string;
-  queryRef: (parent: HTMLElement) => Array<HTMLElement>;
-  createRef: (instance: InternalComponentInstance) => CollectionRef<HTMLElement, BindProps>;
+  queryRef: (parent: HTMLElement) => Array<T>;
+  createRef: (instance: InternalComponentInstance) => CollectionRef<T, BindProps>;
 };
 export type ComponentRefItemComponent<T extends ComponentFactory<Record<string, any>>> = {
   type: 'component';
@@ -40,10 +38,10 @@ export type ComponentRefItemComponentCollection<T extends ComponentFactory<Recor
 export type ComponentRefItem =
   // value shortcuts
   | string
-  | ComponentRefItemElement['queryRef']
+  | ComponentRefItemElement<HTMLElement>['queryRef']
   // object definitions
-  | ComponentRefItemElement
-  | ComponentRefItemCollection
+  | ComponentRefItemElement<HTMLElement>
+  | ComponentRefItemCollection<HTMLElement>
   | ComponentRefItemComponent<any>
   | ComponentRefItemComponentCollection<any>;
 
