@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import typedObjectEntries from '../../type-utils/typedObjectEntries';
 
-export default function (target: HTMLElement, events: HTMLElementEventMap) {
+export type HTMLElementEventCallbackMap = {
+  [P in keyof HTMLElementEventMap]: (event: HTMLElementEventMap[P]) => void;
+};
+
+export default function (target: HTMLElement, events: HTMLElementEventCallbackMap) {
   typedObjectEntries(events).forEach(([eventName, fn]) => {
     createEventBinding(eventName)(target, fn as any);
   });
