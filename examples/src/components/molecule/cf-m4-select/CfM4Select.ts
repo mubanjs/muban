@@ -20,6 +20,7 @@ import { useSelectExpanding } from './CfM4Select.hooks';
 import { extractFromHTML } from 'html-extract-data';
 import { selectOptionExtractConfig } from './CfM4Select.config';
 import { getSelectedValues } from './CfM4Select.utils';
+import { useEscapeKeyEvent } from '../../../hooks/useKeyboardEvent';
 
 /**
  * This component is dependant on the following 3rd party libraries:
@@ -45,6 +46,8 @@ export const CfM4Select = defineComponent({
   },
   setup({ props, refs, element }) {
     const [isExpanded, toggleIsExpanded] = useSelectExpanding(refs.customSelectOptionsWrapper);
+
+    useEscapeKeyEvent(() => toggleIsExpanded(false));
 
     const selectOptionsData = ref<Array<Omit<SelectOption, 'selected'>>>(
       extractFromHTML(element, selectOptionExtractConfig),
