@@ -42,7 +42,7 @@
     border-top-left-radius: 0.2rem;
     border-top-right-radius: 0.2rem;;
     position: absolute;
-
+    background: #f1f1f1;
     z-index: 1;
 
     &.inverted {
@@ -55,15 +55,10 @@
     }
   }
 
-  .select-options {
-    background: #f1f1f1;
-  }
-
   .scroll-container {
     height: auto;
     max-height: 33.6rem;
-    padding-bottom: 2rem;
-    padding-top: 2rem;
+    overflow-y: scroll;
     position: relative;
   }
 
@@ -92,6 +87,10 @@
 
     &[aria-selected="true"] .option-checkmark {
       display: inline-block;
+    }
+
+    &:hover {
+      background: $colorGrey02;
     }
 
     &.focus-visible:focus {

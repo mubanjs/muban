@@ -1,4 +1,12 @@
-import { bind, computed, defineComponent, html, propType, refComponent } from '../../../../../src';
+import {
+  bind,
+  computed,
+  defineComponent,
+  html,
+  propType,
+  refComponent,
+  refElement,
+} from '../../../../../src';
 import classNames from 'classnames';
 
 import {
@@ -19,12 +27,14 @@ export const CfM1Button = defineComponent({
   props: {
     onClick: propType.func.shape<(event: MouseEvent) => void>().optional,
     icon: propType.string.optional.validate(isIcon),
+    label: propType.string.optional,
   },
   refs: {
     buttonIcon: refComponent(CfA2Icon, {
       ref: 'button-icon',
       isRequired: false,
     }),
+    buttonLabel: refElement('button-label', { isRequired: false }),
     loadingIcon: refComponent(CfA2Icon, {
       ref: 'loading-icon',
       isRequired: false,
@@ -37,6 +47,9 @@ export const CfM1Button = defineComponent({
       }),
       bind(refs.buttonIcon, {
         name: computed(() => props.icon || refs.buttonIcon.component?.props.name || ''),
+      }),
+      bind(refs.buttonLabel, {
+        text: computed(() => props.label || ''),
       }),
     ];
   },
@@ -64,6 +77,7 @@ export const cfM1Button = (
   return html`<${tag}
     data-component=${CfM1Button.displayName}
     data-ref=${ref}
+    data-label=${label}
     ...${{
       disabled: disabled || loading,
       href,
@@ -82,7 +96,7 @@ export const cfM1Button = (
     ${loading
       ? cfA2Icon({ name: 'loader', className: 'button-icon' }, 'loading-icon')
       : html`
-          ${label && html`<span class="button-label">${label}</span>`}
+          ${label && html`<span data-ref="button-label" class="button-label">${label}</span>`}
           ${icon && cfA2Icon({ name: icon, className: 'button-icon' }, 'button-icon')}
         `}
   <//>`;
