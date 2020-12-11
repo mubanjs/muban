@@ -4,7 +4,8 @@ import { lazy } from '../../../../src/lib/utils/lazy';
 import { html } from '../../../../src/lib/utils/template/mhtml';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
 import { ProductCard, productCard } from '../filter-products/FilterProducts.card';
-import { ToggleExpand, toggleExpand } from '../toggle-expand/ToggleExpand';
+import { ToggleExpand } from '../toggle-expand/ToggleExpand';
+import { toggleExpandTemplate } from '../toggle-expand/ToggleExpand.template';
 import type { LazyTestTemplateProps } from './LazyTest';
 
 export const Dynamic = defineComponent({
@@ -23,7 +24,7 @@ export const Dynamic = defineComponent({
 });
 
 const componentMap: Record<string, ComponentTemplate> = {
-  [ToggleExpand.displayName]: toggleExpand,
+  [ToggleExpand.displayName]: toggleExpandTemplate,
   [ProductCard.displayName]: productCard,
   // can't import the template if we want to test this code splitting in dev
   ['lazy-test']: ({ label }: LazyTestTemplateProps) =>

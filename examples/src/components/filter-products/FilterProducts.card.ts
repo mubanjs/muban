@@ -3,7 +3,7 @@ import { supportLazy } from '../../../../src/lib/utils/lazy';
 import { html } from '../../../../src/lib/utils/template/mhtml';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
 import { bind } from '../../../../src/lib/utils/bindings/bindingDefinitions';
-import { button } from '../button/Button';
+import { buttonTemplate } from '../button/Button.template';
 
 export const ProductCard = defineComponent({
   name: 'product-card',
@@ -39,7 +39,7 @@ export const productCard = (
     <div class="card-body">
       <h5 class="card-title">${title}</h5>
       <p class="card-text">${description}</p>
-      ${button({ label: ctaLabel }, 'button-cta')}
+      ${buttonTemplate({ label: ctaLabel }, 'button-cta')}
     </div>
   </div>
 `;

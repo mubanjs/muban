@@ -3,9 +3,10 @@ import { html } from '../../../../src/lib/utils/template/mhtml';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
 import { bind, bindTemplate } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { refComponent, refComponents } from '../../../../src/lib/utils/refs/refDefinitions';
-import { button } from '../button/Button';
+import { buttonTemplate } from '../button/Button.template';
 import { ProductCard, productCard } from '../filter-products/FilterProducts.card';
-import { ToggleExpand, toggleExpand } from '../toggle-expand/ToggleExpand';
+import { ToggleExpand } from '../toggle-expand/ToggleExpand';
+import { toggleExpandTemplate } from '../toggle-expand/ToggleExpand.template';
 
 export const Test = defineComponent({
   name: 'test',
@@ -46,7 +47,7 @@ export const Test = defineComponent({
 
 function renderToggleExpand({ shouldRender }: { shouldRender: boolean }) {
   return shouldRender
-    ? toggleExpand({ isExpanded: false })
+    ? toggleExpandTemplate({ isExpanded: false })
     : html`<span class="badge badge-secondary">Unmounted</span>`;
 }
 
@@ -79,16 +80,17 @@ export const testTemplate = (): string => html`
   <div data-component="test">
     <div>
       <h2>
-        Toggle Expand ${button({ label: 'unmount' }, 'toggle-expand-unmount')}
-        ${button({ label: 'remount' }, 'toggle-expand-remount')}
+        Toggle Expand ${buttonTemplate({ label: 'unmount' }, 'toggle-expand-unmount')}
+        ${buttonTemplate({ label: 'remount' }, 'toggle-expand-remount')}
       </h2>
     </div>
     <div data-ref="toggle-expand-container">${renderToggleExpand({ shouldRender: true })}</div>
     <hr />
     <div>
       <h2>
-        Cards ${button({ label: 'Show All' }, 'cards-all')}
-        ${button({ label: 'Show 1' }, 'cards-one')} ${button({ label: 'Show None' }, 'cards-none')}
+        Cards ${buttonTemplate({ label: 'Show All' }, 'cards-all')}
+        ${buttonTemplate({ label: 'Show 1' }, 'cards-one')}
+        ${buttonTemplate({ label: 'Show None' }, 'cards-none')}
       </h2>
     </div>
     <div data-ref="cards-container">${renderCards({ renderCount: 2 })}</div>

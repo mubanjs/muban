@@ -2,7 +2,8 @@
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 
 import { ProductCard, ProductCardProps } from '../filter-products/FilterProducts.card';
-import { ToggleExpand, ToggleExpandProps } from '../toggle-expand/ToggleExpand';
+import { ToggleExpand } from '../toggle-expand/ToggleExpand';
+import type { ToggleExpandTemplateProps } from '../toggle-expand/ToggleExpand.template';
 import { meta, DynamicProps } from './Dynamic';
 import type { LazyTestTemplateProps } from './LazyTest';
 
@@ -18,7 +19,7 @@ Default.args = {
   blocks: [
     {
       name: ToggleExpand.displayName,
-      props: { isExpanded: true } as ToggleExpandProps,
+      props: { isExpanded: true } as ToggleExpandTemplateProps,
     },
     {
       name: ProductCard.displayName,

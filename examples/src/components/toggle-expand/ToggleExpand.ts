@@ -1,16 +1,13 @@
 /* eslint-disable react/jsx-key */
 import { isBoolean, optional } from 'isntnt';
-import { templateComponentFactory } from '../../../../src/lib/utils/template/templateComponentFactory';
-import { html } from '../../../../src/lib/utils/template/mhtml';
 import { bind } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { propType } from '../../../../src/lib/utils/props/propDefinitions';
 
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
-import { computed, Ref, ref } from '@vue/reactivity';
+import { computed } from '@vue/reactivity';
 import { refElement } from '../../../../src/lib/utils/refs/refDefinitions';
-import { button } from '../button/Button';
 
-import './toggle-expand.css';
+import './toggle-expand.scss';
 import { useToggle } from '../../hooks/useToggle';
 
 const getButtonLabel = (isExpanded: boolean) => (isExpanded ? 'read less...' : 'read more...');
@@ -36,35 +33,3 @@ export const ToggleExpand = defineComponent({
     ];
   },
 });
-
-export type ToggleExpandProps = {
-  isExpanded?: boolean;
-};
-
-export const toggleExpand = templateComponentFactory<ToggleExpandProps>({
-  component: ToggleExpand,
-  jsonProps(props) {
-    return props;
-  },
-  children({ isExpanded = false }) {
-    return html`
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque consequatur cum laboriosam
-        voluptate voluptatibus. Alias aut autem eligendi perspiciatis provident quae quisquam
-        sapiente sequi, vero voluptatibus. Dolores dolorum exercitationem voluptate.
-      </p>
-      <p>${button({ label: getButtonLabel(isExpanded) }, 'expand-button')}</p>
-      <p data-ref="expand-content">
-        Lorem ipsum <strong>dolor</strong> sit <em>amet</em>, consectetur adipisicing elit.
-        Distinctio error incidunt necessitatibus repellendus sint. A, deleniti ducimus ex facere
-        ipsam libero quae quas temporibus voluptas voluptates. Blanditiis consequatur deserunt
-        facere!
-      </p>
-    `;
-  },
-});
-
-export const meta = {
-  component: ToggleExpand,
-  template: toggleExpand,
-};
