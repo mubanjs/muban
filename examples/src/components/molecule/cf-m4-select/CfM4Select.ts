@@ -98,6 +98,8 @@ export const CfM4Select = defineComponent({
                 (option.value === ref.element?.value && !option.selected);
             } else {
               option.selected = option.value === ref.element?.value;
+              // Just like a native select we close it once a user clicks on a value.
+              toggleIsExpanded(false);
             }
           });
 
