@@ -25,10 +25,6 @@ export default {
       },
     },
     options: {
-      defaultValue: Array.from({ length: 10 }).map((_, index) => ({
-        label: `Label for option ${index + 1}`,
-        value: `option-${index}`,
-      })),
       description: 'The options that can be selected in the select component',
       type: {
         required: true,
@@ -48,6 +44,13 @@ export const Single: Story<CfM4SelectTypes> = () => ({
   component: CfM4Select,
 });
 
+Single.args = {
+  options: Array.from({ length: 3 }).map((_, index) => ({
+    label: `Label for option ${index + 1}`,
+    value: `option-${index}`,
+  })),
+};
+
 export const Multiple: Story<CfM4SelectTypes> = () => ({
   template: cfM4Select,
   component: CfM4Select,
@@ -55,4 +58,35 @@ export const Multiple: Story<CfM4SelectTypes> = () => ({
 
 Multiple.args = {
   multiple: true,
+  options: Array.from({ length: 10 }).map((_, index) => ({
+    label: `Label for option ${index + 1}`,
+    value: `option-${index}`,
+  })),
+};
+
+export const SelectedValue: Story<CfM4SelectTypes> = () => ({
+  template: cfM4Select,
+  component: CfM4Select,
+});
+
+SelectedValue.args = {
+  options: Array.from({ length: 10 }).map((_, index) => ({
+    label: `Label for option ${index + 1}`,
+    value: `option-${index}`,
+    selected: index === 3,
+  })),
+};
+
+export const SelectedValues: Story<CfM4SelectTypes> = () => ({
+  template: cfM4Select,
+  component: CfM4Select,
+});
+
+SelectedValues.args = {
+  multiple: true,
+  options: Array.from({ length: 10 }).map((_, index) => ({
+    label: `Label for option ${index + 1}`,
+    value: `option-${index}`,
+    selected: index < 4,
+  })),
 };
