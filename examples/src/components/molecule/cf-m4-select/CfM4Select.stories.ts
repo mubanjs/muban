@@ -25,48 +25,10 @@ export default {
       },
     },
     options: {
-      defaultValue: [
-        {
-          label: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-          value: 'option-01',
-        },
-        {
-          label: 'Duis non sapien mollis, posuere enim quis, finibus lacus.',
-          value: 'option-02',
-        },
-        {
-          label: 'Curabitur fermentum turpis a purus rutrum tempus.',
-          value: 'option-03',
-        },
-        {
-          label: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-          value: 'option-04',
-        },
-        {
-          label: 'Duis non sapien mollis, posuere enim quis, finibus lacus.',
-          value: 'option-05',
-        },
-        {
-          label: 'Curabitur fermentum turpis a purus rutrum tempus.',
-          value: 'option-06',
-        },
-        {
-          label: 'Curabitur fermentum turpis a purus rutrum tempus.',
-          value: 'option-07',
-        },
-        {
-          label: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-          value: 'option-08',
-        },
-        {
-          label: 'Duis non sapien mollis, posuere enim quis, finibus lacus.',
-          value: 'option-09',
-        },
-        {
-          label: 'Curabitur fermentum turpis a purus rutrum tempus.',
-          value: 'option-10',
-        },
-      ],
+      defaultValue: Array.from({ length: 10 }).map((_, index) => ({
+        label: `Label for option ${index + 1}`,
+        value: `option-${index}`,
+      })),
       description: 'The options that can be selected in the select component',
       type: {
         required: true,
