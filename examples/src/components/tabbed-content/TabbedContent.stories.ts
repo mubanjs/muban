@@ -1,5 +1,7 @@
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
-import { meta, TabbedContentProps } from './TabbedContent';
+import { TabbedContent } from './TabbedContent';
+import { tabbedContentTemplate } from './TabbedContent.template';
+import type { TabbedContentTemplateProps } from './TabbedContent.template';
 
 export default {
   title: 'TabbedContent',
@@ -8,7 +10,11 @@ export default {
   },
 };
 
-export const Default: Story<TabbedContentProps> = () => meta;
+export const Default: Story<TabbedContentTemplateProps> = () => ({
+  component: TabbedContent,
+  template: tabbedContentTemplate,
+});
+
 Default.args = {
   selectedIndex: 1,
   items: [

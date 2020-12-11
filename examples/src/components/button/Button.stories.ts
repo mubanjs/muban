@@ -1,5 +1,5 @@
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
-import { meta, ButtonProps } from './Button';
+import { buttonTemplate, ButtonTemplateProps } from './Button.template';
 
 export default {
   title: 'Button',
@@ -8,7 +8,7 @@ export default {
   },
 };
 
-export const Default: Story<ButtonProps> = () => meta;
+export const Default: Story<ButtonTemplateProps> = () => ({ template: buttonTemplate });
 Default.args = {
   label: 'Click me',
 };

@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Accordion, accordion, AccordionProps } from './Accordion';
+import { Accordion } from './Accordion';
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import { accordionTemplate } from './Accordion.template';
+import type { AccordionTemplateProps } from './Accordion.template';
 
 export default {
   title: 'Accordion',
@@ -10,8 +12,8 @@ export default {
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const Default: Story<AccordionProps> = () => ({
-  template: accordion,
+export const Default: Story<AccordionTemplateProps> = () => ({
+  template: accordionTemplate,
   component: Accordion,
 });
 Default.args = {

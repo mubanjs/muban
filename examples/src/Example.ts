@@ -6,7 +6,7 @@ import { bind, html } from '../../src';
 import { defineComponent } from '../../src/lib/Component.Reactive';
 import { propType } from '../../src/lib/utils/props/propDefinitions';
 import { refElement } from '../../src/lib/utils/refs/refDefinitions';
-import { button } from './components/button/Button';
+import { buttonTemplate } from './components/button/Button.template';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                    Create a story
@@ -53,7 +53,7 @@ function toggleExpand({ isExpanded = false }: ToggleExpandProps = {}) {
     </p>
     <p>
       <!-- include child template, passing any data, and a ref so we can access it -->
-      ${button({ label: isExpanded ? 'read less...' : 'read more...' }, 'expand-button')}
+      ${buttonTemplate({ label: isExpanded ? 'read less...' : 'read more...' }, 'expand-button')}
     </p>
     <!-- specify a ref so we can target this in our component -->
     <p data-ref="expand-content">

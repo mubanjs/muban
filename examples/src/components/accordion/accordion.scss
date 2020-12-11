@@ -1,8 +1,8 @@
 [data-component="accordion-slide"] {
-  & [data-ref="slide-content"] {
+  [data-ref="slide-content"] {
     display: none;
   }
-  & .expanded {
+  .expanded {
     & [data-ref="slide-content"] {
       display: block;
     }
