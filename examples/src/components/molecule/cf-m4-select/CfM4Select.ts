@@ -7,6 +7,7 @@ import {
   refCollection,
   refComponent,
   refElement,
+  watch,
 } from '../../../../../src';
 
 import './cf-m4-select.scss';
@@ -44,7 +45,10 @@ export const CfM4Select = defineComponent({
     customSelectOptionsWrapper: refElement('custom-select-options-wrapper'),
   },
   setup({ props, refs, element }) {
-    const [isExpanded, toggleIsExpanded] = useSelectExpanding(refs.customSelectOptionsWrapper);
+    const [isExpanded, toggleIsExpanded] = useSelectExpanding(
+      refs.customSelectOptionsWrapper,
+      refs.customSelectButton,
+    );
 
     useClickedOutside(element, () => toggleIsExpanded(false));
 
