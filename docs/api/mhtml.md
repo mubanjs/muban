@@ -119,29 +119,6 @@ html`<div>
 </div>`
 ```
 
-## classMap
-
-The `classMap` util can be useful to render a set of css classes conditionally based on template
-properties.
-
-```ts
-declare function classMap(classes: Record<string, boolean>): string;
-```
-
-The `classes` parameter is an Object, where the keys are the classnames, and the values are booleans
-that dictate if the class should be added or not.
-
-```ts
-import { html, classMap } from '@muban/muban';
-
-html`<div class=${classMap({ 'is-expanded': true, 'is-active': false })}>
-  content
-</div>`;
-```
-```html
-<div class="is-expanded">content</div>
-```
-
 ## jsonScriptTemplate 
 
 In muban, it's supported to read component property from a JSON script tag, mostly used when the

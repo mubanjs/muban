@@ -11,12 +11,12 @@ import type { LazyTestTemplateProps } from './LazyTest';
 export const Dynamic = defineComponent({
   name: 'dynamic',
   components: [
-    ToggleExpand,
-    lazy(
-      'product-card',
-      () => import(/* webpackExports: "lazy" */ '../filter-products/FilterProducts.card'),
-    ),
-    lazy('lazy-test', () => import(/* webpackExports: "lazy" */ './LazyTest')),
+    // ToggleExpand,
+    // lazy(
+    //   'product-card',
+    //   () => import(/* webpackExports: "lazy" */ '../filter-products/FilterProducts.card'),
+    // ),
+    // lazy('lazy-test', () => import(/* webpackExports: "lazy" */ './LazyTest')),
   ],
   setup() {
     return [];

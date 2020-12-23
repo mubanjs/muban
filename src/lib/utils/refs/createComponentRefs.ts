@@ -3,7 +3,7 @@ import typedObjectEntries from '../../type-utils/typedObjectEntries';
 import { refElement } from './refDefinitions';
 import type { ComponentRefItem, TypedRefs } from './refDefinitions.types';
 
-export function getComponentRefs<R extends Record<string, ComponentRefItem>>(
+export function createComponentRefs<R extends Record<string, ComponentRefItem>>(
   refs: R | undefined,
   instance: InternalComponentInstance,
 ): TypedRefs<R> {

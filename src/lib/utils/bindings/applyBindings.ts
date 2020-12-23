@@ -4,27 +4,8 @@ import { unref } from '@vue/reactivity';
 import { extractFromHTML } from 'html-extract-data';
 import type { InternalComponentInstance } from '../../Component.types';
 import typedObjectEntries from '../../type-utils/typedObjectEntries';
-import type { Binding } from './bindingDefinitions';
-import checkedBinding from './checkedBinding';
-import cssBinding from './cssBinding';
-import eventBinding, { createEventBinding } from './eventBinding';
-import styleBinding from './styleBinding';
-import textBinding from './textBinding';
-import htmlBinding from './htmlBinding';
-import attributeBinding from './attributeBinding';
-
-// TODO: these are just prototype bindings
-// eslint-disable-next-line @typescript-eslint/ban-types
-export const bindingsList = {
-  event: eventBinding,
-  click: createEventBinding('click'),
-  checked: checkedBinding,
-  text: textBinding,
-  style: styleBinding,
-  css: cssBinding,
-  html: htmlBinding,
-  attr: attributeBinding,
-};
+import { bindingsList } from './bindings';
+import type { Binding } from './bindings.types';
 
 export const applyBindings = (
   bindings: Array<Binding> | null | undefined,
@@ -39,7 +20,7 @@ export const applyBindings = (
             const bindings = typedObjectEntries(binding.props).flatMap(
               ([bindingName, bindingValue]) => {
                 if (bindingName in bindingsList && element) {
-                  return bindingsList[bindingName]?.(element, bindingValue as any);
+                  return (bindingsList as any)[bindingName]?.(element, bindingValue as any);
                 } else {
                   console.warn(`No binding for "${bindingName}`);
                 }
@@ -60,7 +41,7 @@ export const applyBindings = (
               ([bindingName, bindingValue]) => {
                 if (bindingName in bindingsList && elements) {
                   return elements.flatMap((element) => {
-                    return bindingsList[bindingName]?.(element, bindingValue as any);
+                    return (bindingsList as any)[bindingName]?.(element, bindingValue as any);
                   });
                 } else {
                   console.warn(`No binding for "${bindingName}`);

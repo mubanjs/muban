@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { classMap } from '../../../../src/lib/utils/template/classMap';
+import classnames from 'classnames';
 import { html, unsafeHTML } from '../../../../src/lib/utils/template/mhtml';
 import { TabbedContent } from './TabbedContent';
 
@@ -15,7 +15,7 @@ export const tabButtonTemplate = (
 ): string => html`
   <li class="nav-item">
     <button
-      class="nav-link ${classMap({ active: !!isActive })}"
+      class="nav-link ${classnames({ active: !!isActive })}"
       data-ref=${ref}
       data-index=${index}
     >

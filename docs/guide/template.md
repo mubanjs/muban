@@ -66,7 +66,8 @@ template results.
 A typical template would look like this:
 
 ```ts
-import { html, classMap } from '@muban/muban';
+import { html } from '@muban/muban';
+import classnames from 'classnames';
 
 type AccordionSlideProps = {
   heading: string;
@@ -80,7 +81,7 @@ export function accordionSlide({ heading, content, expanded }: AccordionSlidePro
     data-ref=${ref}
     data-expanded=${expanded}
   >
-    <div data-ref="slide-wrapper" class=${classMap({ expanded: !!expanded })}>
+    <div data-ref="slide-wrapper" class=${classnames({ expanded: !!expanded })}>
       <h4 data-ref="slide-heading">${heading}</h4>
       <p data-ref="slide-content">${content}</p>
     </div>
@@ -175,14 +176,15 @@ We still have to manage how our `expanded` property should behave. Let's add it 
 the container div, and as a `data-` attribute on the component.
 
 ```ts {6,8}
-import { html, classMap } from '@muban/muban';
+import { html } from '@muban/muban';
+import classnames from 'classnames';
 
 export function accordionSlide({ heading, content, expanded }: AccordionSlideProps) {
   return html`<div
     data-component=${AccordionSlide.displayName}
     data-expanded=${expanded}
   >
-    <div class=${classMap({ expanded: !!expanded })}>
+    <div class=${classnames({ expanded: !!expanded })}>
       <h4>${heading}</h4>
       <p>${content}</p>
     </div>
@@ -193,7 +195,7 @@ export function accordionSlide({ heading, content, expanded }: AccordionSlidePro
 By setting the `data-expanded` attribute, our TS component can pull it in as property to set it's
 initial state correctly.
 
-For setting the `class` attribute we can use the `classMap` utility; it applies any classes
+For setting the `class` attribute we can use the `classnames` module; it applies any classes
 which value is truthy.
 
 ::: warning Component state
@@ -217,7 +219,7 @@ export function accordionSlide({ heading, content, expanded }: AccordionSlidePro
     data-component=${AccordionSlide.displayName}
     data-expanded=${expanded}
   >
-    <div data-ref="slide-wrapper" class=${classMap({ expanded: !!expanded })}>
+    <div data-ref="slide-wrapper" class=${classnames({ expanded: !!expanded })}>
       <h4 data-ref="slide-heading">${heading}</h4>
       <p data-ref="slide-content">${content}</p>
     </div>
@@ -253,7 +255,7 @@ export function accordionSlide({ heading, content, expanded }: AccordionSlidePro
     data-ref=${ref}
     data-expanded=${expanded}
   >
-    <div data-ref="slide-wrapper" class=${classMap({ expanded: !!expanded })}>
+    <div data-ref="slide-wrapper" class=${classnames({ expanded: !!expanded })}>
       <h4 data-ref="slide-heading">${heading}</h4>
       <p data-ref="slide-content">${content}</p>
     </div>

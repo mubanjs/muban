@@ -1,5 +1,5 @@
 import { unref, watchEffect } from '@vue/runtime-core';
-import type { BindingMap } from './bindingDefinitions';
+import type { BindingMap } from '../bindings.types';
 
 export default function (target: HTMLElement, value: BindingMap<string>) {
   return watchEffect(() => {

@@ -305,6 +305,61 @@ bind(refs.checkboxes, { checked: selectedItems });
 
 ```
 
+## registerDomBinding
+
+`registerDomBinding` and the `DomBindings` allow you to add your own DOM bindings to Muban without
+having to dig into the Muban code itself.
+
+```ts
+declare function registerDomBinding(
+  name: string,
+  fn: (target: HTMLElement, value: any) => void | (() => void),
+): void
+```
+
+If you have created your binding function - which always receives a `target` (the DOM element 
+your binding is added to) and a `value` (that you pass in your component) - you just simple 
+register it through `registerDomBinding` with the proper binding name, and update the `DomBindings`
+interface to add it to the types.
+
+After that, you can use this new binding in any component you write in your project.
+
+```ts
+// your binding function
+const debugBinding = (target: HTMLElement, value: any | Ref<any>) => {
+  // return the dispose function returned by watchEffect so your binding gets cleaned up properly
+  return watchEffect(() => {
+    console.log('[debug]', unref(value));
+  });
+};
+
+// register it so you can use it in your `bind` functions
+registerDomBinding('debug', debugBinding);
+
+// update the DomBindings interface so it's available in your `bind` functions
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface DomBindings {
+    debug: typeof debugBinding;
+  }
+}
+```
+
+```ts
+defineComponent({
+  setup({ refs }) {
+    const isActive = ref(false);
+    return [
+      bind(refs.button, {
+        click: () => isActive.value = !isActive.value,
+        // this will log the value each time it changes
+        debug: isActive,
+      })
+    ]
+  }
+})
+```
+
 ## Component bindings
 
 Component bindings will set the props of the targeted component(s) whenever the related state

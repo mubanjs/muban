@@ -2,6 +2,7 @@
 import { isFunction } from 'isntnt';
 import { getCurrentComponentInstance } from '../Component.Reactive';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type InjectionKey<T> = symbol;
 
 export function provide<T>(key: InjectionKey<T> | string, value: T) {

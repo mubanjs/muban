@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { unref, watchEffect } from '@vue/runtime-core';
-import type { BindingMap, BindingValue } from './bindingDefinitions';
+import type { BindingMap, BindingValue } from '../bindings.types';
 
 const previousCssBindingKey = '__muban__cssValue';
 

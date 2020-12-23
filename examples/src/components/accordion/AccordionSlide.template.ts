@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import './accordion.scss';
-import { classMap } from '../../../../src/lib/utils/template/classMap';
+import classnames from 'classnames';
 import { html } from '../../../../src/lib/utils/template/mhtml';
 import { AccordionSlide } from './AccordionSlide';
 
@@ -21,7 +21,7 @@ export function accordionSlideTemplate(
     data-ref=${ref}
     data-expanded=${expanded}
   >
-    <div data-ref="slide-wrapper" class=${classMap({ expanded: !!expanded })}>
+    <div data-ref="slide-wrapper" class=${classnames({ expanded: !!expanded })}>
       <h4 data-ref="slide-heading">${heading}</h4>
       <p data-ref="slide-content">${content}</p>
     </div>

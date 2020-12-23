@@ -11,7 +11,6 @@ export {
 export { propType } from './lib/utils/props/propDefinitions';
 export { provide, inject, createContext } from './lib/utils/inject';
 export { html, unsafeHTML, jsonScriptTemplate } from './lib/utils/template/mhtml';
-export { classMap } from './lib/utils/template/classMap';
 
 // re-export types of those libs, so they don't have to be installed separately
 export * from '@vue/reactivity';

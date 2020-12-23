@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Ref } from '@vue/reactivity';
 import type { ComponentFactory, InternalComponentInstance } from '../../Component.types';
-import type { BindProps } from '../bindings/bindingDefinitions';
+import type { BindProps } from '../bindings/bindings.types';
 
 /*
  * This is the raw "definition" for refs, represented as a simple object.

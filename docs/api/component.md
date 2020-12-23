@@ -221,3 +221,38 @@ in the code-splitted bundle. Any other exports like templates will be stripped o
 **Note** This is a webpack 5 feature. If you can't use webpack 5 yet and care about bundle size,
 consider splitting up your templates and component code into separate files.
 :::
+
+## registerGlobalComponent
+
+Registering components globally will make sure that those components will be initialized if they
+exist in the DOM, and are not explicitly configured in any other "parent" component.
+
+```ts
+declare function registerGlobalComponent(
+  ...components: Array<ComponentFactory | LazyComponent>
+): void;
+```
+
+Global components follow the same "creation order" as normal components, and will inherit the 
+context if they are nested (in the DOM) in any parent component that provides the context.
+
+
+```ts
+// single
+registerGlobalComponent(ToggleExpand);
+
+// single lazy
+registerGlobalComponent(
+  lazy('lazy-test', () => import(/* webpackExports: "lazy" */ './LazyTest'))
+);
+
+// or all at once
+registerGlobalComponent(
+  ToggleExpand,
+  lazy(
+    'product-card',
+    () => import(/* webpackExports: "lazy" */ '../filter-products/FilterProducts.card'),
+  ),
+  lazy('lazy-test', () => import(/* webpackExports: "lazy" */ './LazyTest')),
+);
+```

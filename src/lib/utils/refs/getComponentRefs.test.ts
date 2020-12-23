@@ -1,6 +1,6 @@
 import dedent from 'ts-dedent';
 import { createComponentInstance, defineComponent } from '../../Component.Reactive';
-import { getComponentRefs } from './getComponentRefs';
+import { createComponentRefs } from './createComponentRefs';
 import { refCollection, refComponent, refElement } from './refDefinitions';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -44,7 +44,7 @@ describe('getComponentRefs', () => {
 
     const instance = createComponentInstance(undefined, element, { name: 'foo', setup: () => [] });
 
-    const value = getComponentRefs(refDefinition, instance);
+    const value = createComponentRefs(refDefinition, instance);
     expect(value.elementString.element!.textContent).toEqual('element-string');
     expect(value.elementRef.element!.textContent).toEqual('element-string');
     expect(value.collectionRef.elements.length).toEqual(3);

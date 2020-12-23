@@ -11,14 +11,19 @@
 + Add API to render your root component/template using mhtml rendering
 + re-export vue and lit-html types and used methods
 + async component lazy loading, only supported for the anonymous `components` array, not for refs
++ Make sure lazy components are only inited when the `data-component` value exists in the DOM.
++ Add registerGlobalComponent to allow components to be auto-created whenever they exist in the DOM
 
 **Todo**
+- [build] focus on package size
+
+**External**
 - Animation setup, with nested component animations
+  - move towards a separate animation library that can make use of the context
 - Form tooling and validation
-- Do we need some kind of global component registry to auto-create components without specifying
-  them in our own components?
-- focus on package size
-- Make sure lazy components are only inited when the `data-component` value exists in the DOM.
+  - should be an external library that makes uses of muban features and bindings
+- Add Devtools (component tree, props, bindings, internal reactive state, context)
+  - and better logging/debugging tools in general
 
 ## Props
 
@@ -40,7 +45,7 @@ Research: [component-props](docs/research/component-props.md).
 **Todo**
 - Add (better) parsing and typing of non-primitive props (Arrays of strings, Objects) (Potentially
   using third party libs like io.ts or Joy)
-- Finish unit tests for all cases
+- [tests] Finish unit tests for all cases
 
 ## Refs
 
@@ -62,21 +67,25 @@ Research: [component-refs](docs/research/component-refs.md).
 + Add `bindMap` util to better map over a collection of elements/components where logic is needed
   to create the binding values based up on the ref props or array index
 + Add a `components` prop to component definitions to init any child components it finds without
- having to use explicit refs. Useful for dynamic component rendering.
+  having to use explicit refs. Useful for dynamic component rendering.
 + update refDefinition with custom element selection function, allowing users to provide their
- own implementation if they want to opt-out of the default "ref" selection.
+  own implementation if they want to opt-out of the default "ref" selection.
++ Make sure to don't init global components that are also specified as ref, otherwise you'll get
+  duplicate instances
++ Limit the depth of initialize child component to only direct children.
 
 **Todo**
-- move the `createRef` out of the `refDefinition`, since it's implementation is too complex to ask
-  users to provide it themselves. Just need to figure out how to type these, probably using the same
-  look up map as used during runtime based on the `type` field.
-- Add unit tests
-- Make sure to don't init global components that are also specified as ref, otherwise you'll get
-  duplicate instances
-- Figure out if we have to limit the depth to which we automatically initialize child components 
+- [tests] Add unit tests
 
 **Parked**
-- rename refs to something else, to not conflict with the reactive `ref/unref` functions?
+- [api] rename refs to something else, to not conflict with the reactive `ref/unref` functions?
+    - github Catalyst uses `target`
+- [internal] move the `createRef` out of the `refDefinition`, since it's implementation is too 
+  complex to ask
+  users to provide it themselves. Just need to figure out how to type these, probably using the same
+  look up map as used during runtime based on the `type` field.
+    - This became a bit easier now we introduced `queryRef`, and if we choose to only limit ref 
+      creation for those 4 types (element/component/single/collection)
 
 
 ## Child components
@@ -98,11 +107,12 @@ Research: [component-refs](docs/research/component-refs.md).
 + Rebind when refs change
 + Remove JSX support - too much setup, code complexity and typing issues
 + Improve bindings by allowing refs in binding object values vs the complete object
++ Allow basic event/css/style/attr bindings on component refs
++ add registerDomBinding to allow user-land bindings, including types by extending an Interface
 
 **Todo**
 - Implement robust bindings for everything
-- Add unit tests
-- Figure out how 3rd party DOM bindings can be easily added, including types (extending Interface?)
+- [tests] Add unit tests
 
 ## Lifecycle
 
@@ -112,6 +122,8 @@ Research: [component-refs](docs/research/component-refs.md).
 + Clear all (element) bindings when unmounting a component
 
 **Todo**
+
+**Parked**
 - Figure out if/how (lifecycle) hooks can be shared between Muban and future Vue integration in
  projects 
 
@@ -124,12 +136,11 @@ Research: [component-refs](docs/research/component-refs.md).
 + Pass down ref ids to child components, so they can be referenced by the parent component
 + switch to htm+vhtml for templating, creating mhtml with utils
 + add unsafeHtml util
-+ add classMap util
++ add classMap util (has been removed, use existing `classnames` module)
++ replace classMap helper with classnames npm package
 
 **Todo**
 - Add runtime (during dev) and build-time template prop validation
-- expand classMap with array support
-- replace classMap helper with classnames npm package
 
 
 ## Styles
@@ -138,7 +149,10 @@ Research: [component-refs](docs/research/component-refs.md).
 + Support for normal CSS when imported in the template file
 
 **Todo**
+
+**Parked**
 - Figure out if we can do some kind of CSS-in-JS, but that is hard when templates move to CMS
+    - basically impossible - or loses most benefits
 
 ## Storybook
 
@@ -152,6 +166,7 @@ Research: [component-refs](docs/research/component-refs.md).
 **Todo**
 - Add support for component sources (which is more difficult, since templates are now TS
  functions, potentially in the same file, and data is just defined in stories)
+- Add support for component event props, logging them as actions
 
 ## Runtime dynamic templates
 

@@ -1,11 +1,12 @@
-type TypedObjectEntries = <T extends { [key: string]: any }>(
-  obj: T,
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type TypedObjectEntries = <T extends object>(
+  o: T,
 ) => Array<
   Extract<
     {
-      [K in keyof T]: K extends string ? [K, T[K]] : never;
+      [K in keyof T]: K extends string | number | symbol ? [K, T[K]] : never;
     }[keyof T],
-    [string, any]
+    [string | number | symbol, unknown]
   >
 >;
 

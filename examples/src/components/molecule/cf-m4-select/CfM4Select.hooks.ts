@@ -5,7 +5,7 @@ import type {
   ComponentRef,
   ElementRef,
 } from '../../../../../src/lib/utils/refs/refDefinitions.types';
-import type { BindProps } from '../../../../../src/lib/utils/bindings/bindingDefinitions';
+import type { BindProps } from '../../../../../src/lib/utils/bindings/bindings.types';
 import focusLock from 'dom-focus-lock';
 import { useEscapeKeyEvent, useKeyboardEvent } from '../../../hooks/useKeyboardEvent';
 import { Key } from 'ts-key-enum';

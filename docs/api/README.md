@@ -4,6 +4,7 @@
     * [defineComponent](component.html#defineComponent)
     * [mount](component.html#mount)
     * [lazy](component.html#lazy)
+    * [registerGlobalComponent](component.html#registerglobalcomponent)
     
 * [Props](props.html)
     * [propType](props.html#proptype)
@@ -38,6 +39,8 @@
         * [checked](bindings.html#checked)
         * options
         * selectedOptions
+    * [registerDomBinding](bindings.html#registerdombinding)
+    * [Component bindings](bindings.html#component-bindings)
 
 * [Hooks](hooks.html)
     * [onMount](hooks.html#onmount)
@@ -50,6 +53,5 @@
     
 * [Template](mhtml.html)
     * [html](mhtml.html#html)
-    * [classMap](mhtml.html#classmap)
     * [unsafeHTML](mhtml.html#unsafehtml)
     * [jsonScriptTemplate](mhtml.html#jsonScripttemplate)

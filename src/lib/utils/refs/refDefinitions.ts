@@ -152,6 +152,7 @@ export function refComponent<T extends ComponentFactory<any>>(
           return instanceRef.value;
         }
         if (element) {
+          // create new component instance
           const refInstance = component(element, { parent: instance }) as ReturnType<T>;
           instance.children.push(refInstance);
           return refInstance;
@@ -202,6 +203,7 @@ export function refComponents<T extends ComponentFactory<any>>(
             .map((instance) => instance.element)
             .indexOf(element);
           if (existingInstance === -1) {
+            // create new component instance
             const refInstance = component(element, { parent: instance }) as ReturnType<T>;
             instance.children.push(refInstance);
             return refInstance;

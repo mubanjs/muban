@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import { lazy } from '../../../../src';
+import { registerGlobalComponent } from '../../../../src/lib/utils/global';
 
 import { ProductCard, ProductCardProps } from '../filter-products/FilterProducts.card';
 import { ToggleExpand } from '../toggle-expand/ToggleExpand';
@@ -13,6 +15,15 @@ export default {
     isExpanded: { control: 'boolean' },
   },
 };
+
+registerGlobalComponent(
+  ToggleExpand,
+  lazy(
+    'product-card',
+    () => import(/* webpackExports: "lazy" */ '../filter-products/FilterProducts.card'),
+  ),
+  lazy('lazy-test', () => import(/* webpackExports: "lazy" */ './LazyTest')),
+);
 
 export const Default: Story<DynamicProps> = () => meta;
 Default.args = {

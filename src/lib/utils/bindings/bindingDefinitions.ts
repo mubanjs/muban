@@ -9,7 +9,11 @@ import type {
   AnyRef,
   ElementRef,
 } from '../refs/refDefinitions.types';
-import type { bindingsList } from './applyBindings';
+import type { Binding, BindProps, TemplateProps } from './bindings.types';
+
+/////
+// Definitions
+////
 
 export function BindElement<T extends HTMLElement>(ref: Ref<T | undefined>, props: BindProps) {
   return {
@@ -50,16 +54,6 @@ export function BindComponents<
   };
 }
 
-type TemplateProps<T extends HTMLElement> = {
-  ref: ElementRef<T | undefined, BindProps> | undefined;
-  extract?: {
-    config: any;
-    onData: (data: any) => void;
-  };
-  renderImmediate?: boolean;
-  data: any;
-  template: (props: any) => string | Array<string>;
-};
 export function BindTemplate<T extends HTMLElement>(
   props: TemplateProps<T>,
 ): { type: 'template'; props: TemplateProps<T> } {
@@ -69,19 +63,9 @@ export function BindTemplate<T extends HTMLElement>(
   };
 }
 
-export type Binding =
-  | ReturnType<typeof BindElement>
-  | ReturnType<typeof BindCollection>
-  | ReturnType<typeof BindComponent>
-  | ReturnType<typeof BindComponents>
-  | ReturnType<typeof BindTemplate>;
-
-export type BindingValue<T> = Ref<T>;
-export type BindingMap<T> = Ref<Record<string, T>> | Record<string, Ref<T>>;
-
-export type BindProps = {
-  [P in keyof typeof bindingsList]?: Parameters<typeof bindingsList[P]>[1];
-};
+/////
+// Component functions
+////
 
 export function bind<T extends Pick<AnyRef, 'getBindingDefinition'>>(
   target: T,

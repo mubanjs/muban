@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { computed, ref } from '@vue/reactivity';
+import classNames from 'classnames';
 import { defineComponent } from '../../../../src/lib/Component.Reactive';
 import { bindMap } from '../../../../src/lib/utils/bindings/bindingDefinitions';
 import { propType } from '../../../../src/lib/utils/props/propDefinitions';
 import { refCollection } from '../../../../src/lib/utils/refs/refDefinitions';
-import { classMap } from '../../../../src/lib/utils/template/classMap';
 import { html, unsafeHTML } from '../../../../src/lib/utils/template/mhtml';
 
 export const TabbedContent = defineComponent({
@@ -39,7 +39,7 @@ type TabButtonProps = {
 export const tabButton = ({ label, index, isActive }: TabButtonProps, ref?: string): string => html`
   <li class="nav-item">
     <button
-      class="nav-link ${classMap({ active: !!isActive })}"
+      class="nav-link ${classNames({ active: !!isActive })}"
       data-ref=${ref}
       data-index=${index}
     >

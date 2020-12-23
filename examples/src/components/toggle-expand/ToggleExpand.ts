@@ -32,6 +32,7 @@ export const ToggleExpand = defineComponent({
       }),
       bind(refs.self, {
         css: { isExpanded },
+        debug: isExpanded,
       }),
     ];
   },

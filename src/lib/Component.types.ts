@@ -51,6 +51,8 @@ export type ComponentReturnValue<P extends Record<string, any> = Record<string, 
   readonly element: HTMLElement;
   setup: () => void;
   dispose: () => void;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  __instance: InternalComponentInstance;
 };
 
 export type DefineComponentOptions<
@@ -59,7 +61,7 @@ export type DefineComponentOptions<
   N extends string
 > = {
   name: N;
-  components?: Array<ComponentFactory | (() => Promise<ComponentFactory>)>;
+  components?: Array<ComponentFactory | LazyComponent>;
   props?: P;
   refs?: R;
   setup?: (context: {
@@ -74,6 +76,7 @@ export type ComponentTemplate<P extends Record<string, unknown> = any> = (
   ref?: string,
 ) => string | Array<string>;
 
-export type LazyComponent<P extends Record<string, PropTypeDefinition> = any> = () => Promise<
-  ComponentFactory<P>
->;
+export type LazyComponent<
+  N extends string = any,
+  P extends Record<string, PropTypeDefinition> = any
+> = (() => Promise<ComponentFactory<P>>) & ComponentDisplayName<N> & { isLazy: true };

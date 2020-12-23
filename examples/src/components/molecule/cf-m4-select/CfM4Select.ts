@@ -7,7 +7,6 @@ import {
   refCollection,
   refComponent,
   refElement,
-  watch,
 } from '../../../../../src';
 
 import './cf-m4-select.scss';

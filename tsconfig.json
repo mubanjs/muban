@@ -76,9 +76,8 @@
   },
   "include": [
     "./src/**/*.ts",
-    "./src/**/*.tsx",
     "./examples/src/types.d.ts",
     "./examples/src/**/*.ts",
-    "./examples/src/**/*.tsx"
+    "./tests/**/*.ts",
   ]
 }
