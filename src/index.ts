@@ -11,7 +11,7 @@ export type {
 } from './lib/Component.types';
 
 // usage within components
-export { lazy } from './lib/api/apiLazy';
+export { lazy, supportLazy } from './lib/api/apiLazy';
 export { propType } from './lib/props/propDefinitions';
 export { refElement, refCollection, refComponent, refComponents } from './lib/refs/refDefinitions';
 export { provide, inject, createContext } from './lib/api/apiInject';

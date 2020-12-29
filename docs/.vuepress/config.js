@@ -17,6 +17,7 @@ module.exports = {
 
       '/guide/': [
         '', // getting started
+        'app',
         'component',
         'reactivity',
         'bindings',
@@ -25,6 +26,7 @@ module.exports = {
 
       '/api/': [
         '',
+        'app',
         'component',
         'props',
         'refs',

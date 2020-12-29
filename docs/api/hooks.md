@@ -6,7 +6,7 @@ any other hook that is called from there. These hooks will "bind" to the compone
 current sync "execution stack".
 :::
 
-## onMount
+## onMounted
 
 ```ts
 declare function onMounted(fn: () => void): void;
@@ -22,7 +22,7 @@ defineComponent({
 })
 ````
 
-## onUnmount
+## onUnmounted
 
 ```ts
 declare function onUnmounted(fn: () => void): void;

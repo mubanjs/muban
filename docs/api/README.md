@@ -53,8 +53,8 @@
     * [Component bindings](bindings.html#component-bindings)
 
 * [Hooks](hooks.html)
-    * [onMount](hooks.html#onmount)
-    * [onUnmount](hooks.html#onunmount)
+    * [onMounted](hooks.html#onmounted)
+    * [onUnmounted](hooks.html#onunmounted)
     
 * [Context](provide-inject.html)
     * [provide](provide-inject.html#provide)

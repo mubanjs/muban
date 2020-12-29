@@ -1,7 +1,7 @@
 ---
 home: true
 #heroImage: /hero.png
-heroText: Muban Component
+heroText: Muban
 tagline: Writing components for server-rendered HTML
 actionText: Get Started →
 actionLink: /guide/

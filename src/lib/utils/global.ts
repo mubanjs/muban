@@ -33,7 +33,9 @@ declare global {
   }
 }
 
-const globalInstance = (window.__muban__ = window.__muban__ ?? new MubanGlobal());
+const global = ((globalThis || window || {}) as unknown) as Window;
+
+const globalInstance = (global.__muban__ = global.__muban__ ?? new MubanGlobal());
 export function getGlobalMubanInstance(): MubanGlobal {
   return globalInstance;
 }
