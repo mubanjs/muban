@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ComponentTemplate } from '../../../../src/lib/Component.types';
-import { lazy } from '../../../../src/lib/utils/lazy';
-import { html } from '../../../../src/lib/utils/template/mhtml';
-import { defineComponent } from '../../../../src/lib/Component.Reactive';
+import { lazy } from '../../../../src/lib/api/apiLazy';
+import { html } from '../../../../src/lib/template/mhtml';
+import { defineComponent } from '../../../../src/lib/Component';
 import { ProductCard, productCard } from '../filter-products/FilterProducts.card';
 import { ToggleExpand } from '../toggle-expand/ToggleExpand';
 import { toggleExpandTemplate } from '../toggle-expand/ToggleExpand.template';

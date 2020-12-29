@@ -438,22 +438,22 @@ those functions directly.
 
 ```jsx
 // using JSX
-return <ref.fooElement text={label} click={onClick} />
+return <ref.fooElement text={label} click={onClick}/>
 
 // using the JS version of the JSX
-return createElement(ref.fooElement, {text: label, click: onClick})
+return createElement(ref.fooElement, { text: label, click: onClick })
 
 // using the function directly
-return ref.fooElement({text: label, click: onClick});
+return ref.fooElement({ text: label, click: onClick });
 
 
 // or calling the binding directly
-return BindElement({ref: ref.fooElement.value, text: label, click: onClick});
+return bindElement({ ref: ref.fooElement.value, text: label, click: onClick });
 
 // or defining the node directly
 return {
   type: 'element',
-  props: {ref: ref.fooElement.value, text: label, click: onClick},
+  props: { ref: ref.fooElement.value, text: label, click: onClick },
 }
 ```
 

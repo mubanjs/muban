@@ -1,16 +1,16 @@
 import { ref } from '@vue/reactivity';
-import { html } from '../../../../src/lib/utils/template/mhtml';
+import { html } from '../../../../src/lib/template/mhtml';
 import { SplitText } from 'gsap/SplitText';
 
 import './paragraph.css';
 import { bind, defineComponent, refComponent, refElement } from '../../../../src';
-import { onMount } from '../../../../src/lib/Component.Reactive';
 import {
   provideTransitionContext,
   TransitionContext,
   useTransition,
 } from '../../../../src/lib/utils/animation/transitions';
 import { splitWordAnimation } from '../../splitTextAnimation';
+import { onMounted } from '../../../../src/lib/api/apiLifecycle';
 
 ////////////////////////////////////////////////////////////////////////////////
 // Title
@@ -97,7 +97,7 @@ export const Paragraph = defineComponent({
       },
     });
 
-    onMount(() => {
+    onMounted(() => {
       controller.transitionIn();
     });
 

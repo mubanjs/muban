@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-properties,@typescript-eslint/no-explicit-any */
-import './index.css';
+import './index.scss';
 import RequireContext = __WebpackModuleApi.RequireContext;
 
 export function importStyles(r: RequireContext): void {

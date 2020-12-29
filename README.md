@@ -40,9 +40,9 @@ Make sure to have the following HTML on the page:
 
 Then init your component:
 ```ts
-import { mount } from '@muban/muban';
+import { createApp } from '@muban/muban';
 
-mount(MyComponent, document.body);
+createApp(MyComponent).mount(document.body);
 ```
 
 Your page should now display `Hello World` if your component is correctly running.
@@ -76,10 +76,11 @@ Make sure to have the following HTML on the page:
 
 Render your template:
 ```ts
-import { mount } from '@muban/muban';
+import { createApp } from '@muban/muban';
 
 const appRoot = document.getElementById('app');
-mount(MyComponent, appRoot, myComponentTemplate, { welcomeText: 'Hello' })
+const app = createApp(MyComponent);
+app.mount(appRoot, myComponentTemplate, { welcomeText: 'Hello' });
 ```
 
 ### Using Storybook

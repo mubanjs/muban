@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types,@typescript-eslint/no-use-before-define */
-import type EventEmitter from 'eventemitter3';
-import type { Binding } from './utils/bindings/bindingDefinitions';
-import type { PropTypeDefinition, TypedProps } from './utils/props/propDefinitions.types';
-import type { ComponentRefItem, TypedRefs } from './utils/refs/refDefinitions.types';
+import type { App, AppContext } from './api/apiCreateApp';
+import type { Binding } from './bindings/bindings.types';
+import { LifecycleHooks } from './api/apiLifecycle';
+import type { PropTypeDefinition, TypedProps } from './props/propDefinitions.types';
+import type { ComponentRefItem, TypedRefs } from './refs/refDefinitions.types';
 
 type IfAny<T, Y, N> = 0 extends 1 & T ? Y : N;
 type IsAny<T> = IfAny<T, true, never>;
@@ -17,27 +18,50 @@ export type ComponentApi<T extends ComponentFactory = any> = IsAny<T> extends tr
   ? ReturnType<ComponentFactory>
   : ReturnType<T>;
 
-export type InternalComponentInstance = {
+export type InternalNodeInstance = {
+  uid: number;
+  type: 'component' | 'ref';
+  name: string;
   parent: InternalComponentInstance | null;
+  appContext: AppContext;
   element: HTMLElement;
+  binding?: Binding;
+};
+
+type LifecycleHook = Array<Function> | null;
+
+export type InternalComponentInstance = InternalNodeInstance & {
+  api: ComponentApi | null;
+  subTree: Array<InternalNodeInstance>;
   props: Record<string, unknown>;
   reactiveProps: Record<string, unknown>;
   refs: TypedRefs<Record<string, ComponentRefItem>>;
   provides: Record<string, unknown>;
   children: Array<ComponentApi>;
+  bindings: Array<Binding>;
+  refChildren: Array<InternalNodeInstance>;
+  removeBindingsList?: Array<(() => void) | undefined>;
+  options: DefineComponentOptions<
+    Record<string, PropTypeDefinition>,
+    Record<string, ComponentRefItem>,
+    string
+  >;
+
+  // lifecycle
   isSetup: boolean;
   isMounted: boolean;
   isUnmounted: boolean;
-  removeBindingsList?: Array<(() => void) | undefined>;
-  options: DefineComponentOptions<any, any, string>;
-  ee: EventEmitter;
-  on: (type: string, fn: () => void) => void;
+
+  [LifecycleHooks.Mounted]: LifecycleHook;
+  [LifecycleHooks.Unmounted]: LifecycleHook;
+
   mount: () => void;
   unmount: () => void;
 };
 
-type ComponentCreateOptions = Partial<{
-  parent?: InternalComponentInstance;
+export type ComponentCreateOptions = Partial<{
+  parent: InternalComponentInstance;
+  app: App;
 }>;
 
 export type ComponentDisplayName<T extends string> = { displayName: T };

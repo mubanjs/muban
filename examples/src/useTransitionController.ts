@@ -2,7 +2,7 @@
 // import type { TimelineMax } from 'gsap';
 // // import AbstractTransitionController from 'transition-controller';
 // // import type { IAbstractTransitionControllerOptions } from 'transition-controller/lib/interface/IAbstractTranstitionControllerOptions';
-// import { onMount, onUnmount } from '../../src/lib/Component.Reactive';
+// import { onMounted, onUnmounted } from '../../src/lib/utils/lifecycle';
 //
 // type TransitionHooks = {
 //   setupTransitionInTimeline?: (timeline: TimelineMax, parent: any, id: string) => void;
@@ -35,11 +35,11 @@
 //     }
 //   })(refs, options);
 //
-//   onMount(() => {
+//   onMounted(() => {
 //     transitionController.transitionIn();
 //   });
 //
-//   onUnmount(() => {
+//   onUnmounted(() => {
 //     transitionController.transitionOut();
 //   });
 // };

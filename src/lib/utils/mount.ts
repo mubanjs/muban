@@ -1,12 +1,15 @@
-import type { ComponentFactory } from '../Component.types';
+import type { ComponentApi, ComponentFactory } from '../Component.types';
+import type { App } from '../api/apiCreateApp';
 
+// TODO move inside the "createApi" ?
 export function mount<P extends Record<string, unknown>>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  component: ComponentFactory<any>,
+  app: App,
+  component: ComponentFactory,
   container: HTMLElement | null,
   template?: (props: P) => string | Array<string>,
   data?: P,
-): void {
+): ComponentApi | undefined {
   if (!container) {
     console.error(`The received container is null, so nothing can be rendered`);
     return;
@@ -29,5 +32,5 @@ export function mount<P extends Record<string, unknown>>(
     return;
   }
 
-  component(rootElement);
+  return component(rootElement, { app });
 }

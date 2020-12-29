@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/naming-convention */
-import { supportLazy } from '../../../../src/lib/utils/lazy';
-import { html } from '../../../../src/lib/utils/template/mhtml';
-import { defineComponent } from '../../../../src/lib/Component.Reactive';
-import { bind } from '../../../../src/lib/utils/bindings/bindingDefinitions';
+import { supportLazy } from '../../../../src/lib/api/apiLazy';
+import { html } from '../../../../src/lib/template/mhtml';
+import { defineComponent } from '../../../../src/lib/Component';
+import { bind } from '../../../../src/lib/bindings/bindingDefinitions';
 import { buttonTemplate } from '../button/Button.template';
 
 export const ProductCard = defineComponent({

@@ -1,5 +1,5 @@
 import gsap from 'gsap';
-import { createContext } from '../inject';
+import { createContext } from '../../api/apiInject';
 
 type TransitionController = {
   getTimeline(): gsap.core.Timeline;

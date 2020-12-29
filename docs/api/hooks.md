@@ -9,13 +9,13 @@ current sync "execution stack".
 ## onMount
 
 ```ts
-declare function onMount(fn: () => void): void;
+declare function onMounted(fn: () => void): void;
 ```
 ```ts
 defineComponent({
   name: 'my-component',
   setup() {
-    onMount(() => {
+    onMounted(() => {
       // do stuff when the component is mounted
     })
   }
@@ -25,13 +25,13 @@ defineComponent({
 ## onUnmount
 
 ```ts
-declare function onUnmount(fn: () => void): void;
+declare function onUnmounted(fn: () => void): void;
 ```
 ```ts
 defineComponent({
   name: 'my-component',
   setup() {
-    onUnmount(() => {
+    onUnmounted(() => {
       // do cleanup stuff right before the component is unmounted
     })
   }

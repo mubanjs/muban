@@ -1,10 +1,20 @@
 # Api
 
+* [App](app.html)
+    * [createApp](app.html#createapp)
+    * [mount](app.html#mount)
+    * [unmount](app.html#unmount)
+    * [components](app.html#components)
+    * [provide](app.html#provide)
+  
 * [Component](component.html)
-    * [defineComponent](component.html#defineComponent)
-    * [mount](component.html#mount)
+    * [defineComponent](component.html#definecomponent)
+        * [props](component.html#props)
+        * [refs](component.html#refs)
+        * [setup](component.html#setup)
+        * [lifecycle](component.html#lifecycle)
+        * [bindings](component.html#bindings)
     * [lazy](component.html#lazy)
-    * [registerGlobalComponent](component.html#registerglobalcomponent)
     
 * [Props](props.html)
     * [propType](props.html#proptype)

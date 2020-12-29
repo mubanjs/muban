@@ -1,6 +1,5 @@
-import { defineComponent, lazy, mount, provide, inject } from '../../src';
-import type { ComponentFactory } from '../../src/lib/Component.types';
-import { registerGlobalComponent } from '../../src/lib/utils/global';
+import { defineComponent, lazy, provide, inject, createApp } from '../../src';
+import type { ComponentFactory } from '../../src';
 
 const App = defineComponent({
   name: 'app',
@@ -11,12 +10,6 @@ const App = defineComponent({
     return [];
   },
 });
-
-registerGlobalComponent(createComponent('app-1'));
-registerGlobalComponent(createComponent('app-1-1'));
-registerGlobalComponent(createComponent('app-2'));
-registerGlobalComponent(createComponent('app-3'));
-registerGlobalComponent(lazy('lazy', () => import(/* webpackExports: "lazy" */ './Lazy')));
 
 export function createComponent(name: string): ComponentFactory {
   return defineComponent({
@@ -29,5 +22,16 @@ export function createComponent(name: string): ComponentFactory {
   });
 }
 
+const app = createApp(App);
+app.component(
+  createComponent('app-1'),
+  createComponent('app-1-1'),
+  createComponent('app-2'),
+  createComponent('app-3'),
+  lazy('lazy', () => import(/* webpackExports: "lazy" */ './Lazy')),
+);
+
 const appRoot = document.getElementById('app');
-mount(App, appRoot);
+if (appRoot) {
+  app.mount(appRoot);
+}

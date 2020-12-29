@@ -1,16 +1,25 @@
-export { defineComponent } from './lib/Component.Reactive';
-export { mount } from './lib/utils/mount';
-export { lazy } from './lib/utils/lazy';
-export { bind, bindMap, bindTemplate } from './lib/utils/bindings/bindingDefinitions';
-export {
-  refElement,
-  refCollection,
-  refComponent,
-  refComponents,
-} from './lib/utils/refs/refDefinitions';
-export { propType } from './lib/utils/props/propDefinitions';
-export { provide, inject, createContext } from './lib/utils/inject';
-export { html, unsafeHTML, jsonScriptTemplate } from './lib/utils/template/mhtml';
+import { initDev } from './lib/utils/devtools';
+
+// top level APIs
+export { createApp } from './lib/api/apiCreateApp';
+export { defineComponent } from './lib/Component';
+export type {
+  ComponentFactory,
+  ComponentApi,
+  ComponentTemplate,
+  LazyComponent,
+} from './lib/Component.types';
+
+// usage within components
+export { lazy } from './lib/api/apiLazy';
+export { propType } from './lib/props/propDefinitions';
+export { refElement, refCollection, refComponent, refComponents } from './lib/refs/refDefinitions';
+export { provide, inject, createContext } from './lib/api/apiInject';
+export { onMounted, onUnmounted } from './lib/api/apiLifecycle';
+export { bind, bindMap, bindTemplate } from './lib/bindings/bindingDefinitions';
+
+// Dev only, for template stuff
+export { html, unsafeHTML, jsonScriptTemplate } from './lib/template/mhtml';
 
 // re-export types of those libs, so they don't have to be installed separately
 export * from '@vue/reactivity';
@@ -18,3 +27,6 @@ export {
   watch,
   watchEffect, // WatchCallback, // WatchEffect, // WatchOptions, // WatchSource, // WatchStopHandle,
 } from '@vue/runtime-core';
+
+// TODO: devtools
+initDev();

@@ -18,7 +18,7 @@ features:
     When the HTML is rendered on the server, Muban will attach components to the DOM and manage interaction between them.
 - title: Modern setup
   details:
-    Muban used Typescript to write your components and templates, uses the Vue reactivity API to
+    Muban uses Typescript to write your components and templates, uses the Vue reactivity API to
     manage component states, and has an easy way to setup bindings to your components to make them
     interactive, following a data-first approach.
 footer: MIT Licensed | Copyright © 2020-present MediaMonks

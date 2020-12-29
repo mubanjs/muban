@@ -1,5 +1,5 @@
 import { defineComponent, inject } from '../../src';
-import { supportLazy } from '../../src/lib/utils/lazy';
+import { supportLazy } from '../../src/lib/api/apiLazy';
 import { createComponent } from './index';
 
 const LazyChild = createComponent('lazy-child');

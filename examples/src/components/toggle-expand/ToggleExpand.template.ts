@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
-import { templateComponentFactory } from '../../../../src/lib/utils/template/templateComponentFactory';
-import { html } from '../../../../src/lib/utils/template/mhtml';
+import { templateComponentFactory } from '../../../../src/lib/template/templateComponentFactory';
+import { html } from '../../../../src/lib/template/mhtml';
 import { buttonTemplate } from '../button/Button.template';
 
 import { ToggleExpand } from './ToggleExpand';

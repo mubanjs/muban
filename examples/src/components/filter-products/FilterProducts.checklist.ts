@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ref } from '@vue/reactivity';
 import { watch, watchEffect } from '@vue/runtime-core';
-import { html } from '../../../../src/lib/utils/template/mhtml';
-import { defineComponent } from '../../../../src/lib/Component.Reactive';
-import { propType } from '../../../../src/lib/utils/props/propDefinitions';
-import { refCollection } from '../../../../src/lib/utils/refs/refDefinitions';
-import { bind } from '../../../../src/lib/utils/bindings/bindingDefinitions';
+import { html } from '../../../../src/lib/template/mhtml';
+import { defineComponent } from '../../../../src/lib/Component';
+import { propType } from '../../../../src/lib/props/propDefinitions';
+import { refCollection } from '../../../../src/lib/refs/refDefinitions';
+import { bind } from '../../../../src/lib/bindings/bindingDefinitions';
 
 export const FilterProductsChecklist = defineComponent({
   name: 'filter-products-checklist',

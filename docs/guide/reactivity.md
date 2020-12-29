@@ -16,15 +16,15 @@ and Muban, since other parts of the component setup are a bit different.
 
 * Both Vue and Muban use a `setup` function to manage component state.
 
-* Component state is managed through `ref`, `reactive` and `computed`
+* Component state is managed through `ref`, `reactive` and `computed`.
 
-* with the help of `watch` and `watch` effect (from the `@vue/runtime-core` package) you can react
-  to changes in the state, and trigger side-effects
+* with the help of `watch` and `watchEffect` (from the `@vue/runtime-core` package) you can react
+  to changes in the state, and trigger side-effects.
   
 * Both have lifecycle "hooks" (e.g. `onMount`) that can be used in the `setup` function.
 
 * "hooks" or "compositions" are separate functions with reusable code that can be invoked in the
-`setup` function or other "hooks", and can make use both the reactive state and lifecycle hooks.
+`setup` function or other "hooks", and can make use of both the reactive state and lifecycle hooks.
 
 * Incoming props are "reactive", so they can be used in bindings or be watched, resulting in
  targeted DOM updates only to those affected elements.

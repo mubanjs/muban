@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { computed } from '@vue/reactivity';
-import { defineComponent } from '../../../../src/lib/Component.Reactive';
-import { bind } from '../../../../src/lib/utils/bindings/bindingDefinitions';
-import { propType } from '../../../../src/lib/utils/props/propDefinitions';
+import { defineComponent } from '../../../../src/lib/Component';
+import { bind } from '../../../../src/lib/bindings/bindingDefinitions';
+import { propType } from '../../../../src/lib/props/propDefinitions';
 
 export const AccordionSlide = defineComponent({
   name: 'accordion-slide',

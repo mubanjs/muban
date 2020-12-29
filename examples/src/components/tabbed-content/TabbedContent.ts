@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { computed, ref } from '@vue/reactivity';
 import classNames from 'classnames';
-import { defineComponent } from '../../../../src/lib/Component.Reactive';
-import { bindMap } from '../../../../src/lib/utils/bindings/bindingDefinitions';
-import { propType } from '../../../../src/lib/utils/props/propDefinitions';
-import { refCollection } from '../../../../src/lib/utils/refs/refDefinitions';
-import { html, unsafeHTML } from '../../../../src/lib/utils/template/mhtml';
+import { defineComponent } from '../../../../src/lib/Component';
+import { bindMap } from '../../../../src/lib/bindings/bindingDefinitions';
+import { propType } from '../../../../src/lib/props/propDefinitions';
+import { refCollection } from '../../../../src/lib/refs/refDefinitions';
+import { html, unsafeHTML } from '../../../../src/lib/template/mhtml';
 
 export const TabbedContent = defineComponent({
   name: 'tabbed-content',

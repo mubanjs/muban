@@ -4,7 +4,7 @@
  * @param target - The target there the user clicked.
  * @param container - The container where to check against.
  */
-import { onMount, onUnmount } from '../../../src/lib/Component.Reactive';
+import { onMounted, onUnmounted } from '../../../src/lib/api/apiLifecycle';
 
 export const isClickedInside = (target: EventTarget, container: HTMLElement) =>
   container ? container.contains(target as HTMLElement) : false;
@@ -30,10 +30,10 @@ export const useClickedOutside = (
     }
   };
 
-  onMount(() => {
+  onMounted(() => {
     document.addEventListener('click', onDocumentClick);
   });
-  onUnmount(() => {
+  onUnmounted(() => {
     document.removeEventListener('click', onDocumentClick);
   });
 };

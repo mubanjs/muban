@@ -141,30 +141,11 @@ You can find more info at the [Props API](./refs.md)
 
 ### setup
 
+### lifecycle
+
+[See hooks](./hooks.md)
+
 ### bindings
-
-## mount
-
-```ts
-declare function mount<P extends Record<string, unknown>>(
-  component: ComponentFactory<any>,
-  container: HTMLElement | null,
-  template?: (props: P) => string | Array<string>,
-  data?: P,
-): void;
-```
-
-```ts
-import { mount } from '@muban/muban';
-
-// mount against existing HTML
-mount(MyComponent, document.body)
-
-// mount and render client-side template
-mount(MyComponent, appRoot, myComponentTemplate, {
-  welcomeText: 'Hello',
-});
-```
 
 ## lazy
 
@@ -222,37 +203,3 @@ in the code-splitted bundle. Any other exports like templates will be stripped o
 consider splitting up your templates and component code into separate files.
 :::
 
-## registerGlobalComponent
-
-Registering components globally will make sure that those components will be initialized if they
-exist in the DOM, and are not explicitly configured in any other "parent" component.
-
-```ts
-declare function registerGlobalComponent(
-  ...components: Array<ComponentFactory | LazyComponent>
-): void;
-```
-
-Global components follow the same "creation order" as normal components, and will inherit the 
-context if they are nested (in the DOM) in any parent component that provides the context.
-
-
-```ts
-// single
-registerGlobalComponent(ToggleExpand);
-
-// single lazy
-registerGlobalComponent(
-  lazy('lazy-test', () => import(/* webpackExports: "lazy" */ './LazyTest'))
-);
-
-// or all at once
-registerGlobalComponent(
-  ToggleExpand,
-  lazy(
-    'product-card',
-    () => import(/* webpackExports: "lazy" */ '../filter-products/FilterProducts.card'),
-  ),
-  lazy('lazy-test', () => import(/* webpackExports: "lazy" */ './LazyTest')),
-);
-```

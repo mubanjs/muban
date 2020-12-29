@@ -1,4 +1,4 @@
-import { html } from '../../../../src/lib/utils/template/mhtml';
+import { html } from '../../../../src/lib/template/mhtml';
 
 export type ButtonTemplateProps = {
   label: string;

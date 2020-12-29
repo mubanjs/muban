@@ -1,11 +1,12 @@
 /* eslint-disable react/jsx-key */
+import { watchEffect } from '@vue/runtime-core';
 import { isBoolean, optional } from 'isntnt';
-import { bind } from '../../../../src/lib/utils/bindings/bindingDefinitions';
-import { propType } from '../../../../src/lib/utils/props/propDefinitions';
+import { bind } from '../../../../src/lib/bindings/bindingDefinitions';
+import { propType } from '../../../../src/lib/props/propDefinitions';
 
-import { defineComponent } from '../../../../src/lib/Component.Reactive';
+import { defineComponent } from '../../../../src/lib/Component';
 import { computed } from '@vue/reactivity';
-import { refElement } from '../../../../src/lib/utils/refs/refDefinitions';
+import { refElement } from '../../../../src/lib/refs/refDefinitions';
 
 import './toggle-expand.scss';
 import { useToggle } from '../../hooks/useToggle';
@@ -22,7 +23,7 @@ export const ToggleExpand = defineComponent({
     expandContent: (parent) => parent.querySelector('[data-ref="expand-content"]'),
   },
   setup({ props, refs }) {
-    const [isExpanded, toggleExpanded] = useToggle(props.isExpanded ?? false);
+    const [isExpanded, toggleExpanded] = useToggle(computed(() => props.isExpanded || false));
     const expandButtonLabel = computed(() => getButtonLabel(isExpanded.value));
 
     return [

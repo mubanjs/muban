@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { computed, ref } from '@vue/reactivity';
-import { defineComponent } from '../../../../src/lib/Component.Reactive';
-import { bindMap } from '../../../../src/lib/utils/bindings/bindingDefinitions';
-import { refComponents } from '../../../../src/lib/utils/refs/refDefinitions';
+import { defineComponent } from '../../../../src/lib/Component';
+import { bindMap } from '../../../../src/lib/bindings/bindingDefinitions';
+import { refComponents } from '../../../../src/lib/refs/refDefinitions';
 
 import './accordion.scss';
 import { AccordionSlide } from './AccordionSlide';

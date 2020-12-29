@@ -1,12 +1,18 @@
-import type { ComponentApi, ComponentFactory, LazyComponent } from '../Component.types';
-import { getDirectChildComponents } from './getDirectChildComponents';
-import { isLazyComponent } from './lazy';
-import type { PropertySource } from './props/getComponentProps';
-import { createClassListPropertySource } from './props/property-sources/createClassListPropertySource';
-import { createDataAttributePropertySource } from './props/property-sources/createDataAttributePropertySource';
-import { createJsonScriptPropertySource } from './props/property-sources/createJsonScriptPropertySource';
-import { createReactivePropertySource } from './props/property-sources/createReactivePropertySource';
+import type {
+  ComponentApi,
+  ComponentFactory,
+  InternalComponentInstance,
+  LazyComponent,
+} from '../Component.types';
+import { findParentComponent, getDirectChildComponents } from './domUtils';
+import { isLazyComponent } from '../api/apiLazy';
+import type { PropertySource } from '../props/getComponentProps';
+import { createClassListPropertySource } from '../props/property-sources/createClassListPropertySource';
+import { createDataAttributePropertySource } from '../props/property-sources/createDataAttributePropertySource';
+import { createJsonScriptPropertySource } from '../props/property-sources/createJsonScriptPropertySource';
+import { createReactivePropertySource } from '../props/property-sources/createReactivePropertySource';
 
+// TODO: Move to "App"?
 class MubanGlobal {
   public readonly components = new Map<string, ComponentFactory | LazyComponent>();
   public readonly instances = new Map<HTMLElement, ComponentApi>();
@@ -139,16 +145,14 @@ export function registerComponentForElement(element: HTMLElement, instance: Comp
   globalInstance.instances.set(element, instance);
 }
 
-function findParentComponent(element: HTMLElement): ComponentApi | undefined {
-  let instance: ComponentApi | undefined;
-  let parent: HTMLElement | undefined = element;
-  do {
-    parent = parent.parentElement?.closest<HTMLElement>(`[data-component]`) || undefined;
-    instance = parent && getComponentForElement(parent);
-    // console.log('while', instance, parent);
-  } while (!instance && parent);
-
-  return instance;
+export function getParents(component: ComponentApi): Array<ComponentApi> {
+  const parents: Array<InternalComponentInstance> = [];
+  let ref = component.__instance;
+  while (ref.parent) {
+    ref = ref.parent;
+    parents.push(ref);
+  }
+  return parents.map((instance) => instance.api!);
 }
 
 export function setComponentElementLoadingState(element: HTMLElement, isLoading: boolean): void {

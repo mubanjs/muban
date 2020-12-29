@@ -13,17 +13,18 @@
 + async component lazy loading, only supported for the anonymous `components` array, not for refs
 + Make sure lazy components are only inited when the `data-component` value exists in the DOM.
 + Add registerGlobalComponent to allow components to be auto-created whenever they exist in the DOM
++ Add Devtools integration
 
 **Todo**
 - [build] focus on package size
+- Improve logging
+- [build] Introduce dev MODE and Devtools FLAG
 
 **External**
 - Animation setup, with nested component animations
   - move towards a separate animation library that can make use of the context
 - Form tooling and validation
   - should be an external library that makes uses of muban features and bindings
-- Add Devtools (component tree, props, bindings, internal reactive state, context)
-  - and better logging/debugging tools in general
 
 ## Props
 
@@ -113,6 +114,8 @@ Research: [component-refs](docs/research/component-refs.md).
 **Todo**
 - Implement robust bindings for everything
 - [tests] Add unit tests
+- [examples] Add storybook examples for all bindings
+- move `registerDomBinding` to the `createApp` interface
 
 ## Lifecycle
 

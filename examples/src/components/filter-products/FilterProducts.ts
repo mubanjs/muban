@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/naming-convention */
 import { computed, reactive } from '@vue/reactivity';
-import { html } from '../../../../src/lib/utils/template/mhtml';
-import { defineComponent } from '../../../../src/lib/Component.Reactive';
+import { html } from '../../../../src/lib/template/mhtml';
+import { defineComponent } from '../../../../src/lib/Component';
 import type { ComponentApi } from '../../../../src/lib/Component.types';
-import { bind, bindMap, bindTemplate } from '../../../../src/lib/utils/bindings/bindingDefinitions';
-import { refComponents, refElement } from '../../../../src/lib/utils/refs/refDefinitions';
+import { bind, bindMap, bindTemplate } from '../../../../src/lib/bindings/bindingDefinitions';
+import { refComponents, refElement } from '../../../../src/lib/refs/refDefinitions';
 import { ProductCard, productCard, ProductCardProps } from './FilterProducts.card';
 import {
   FilterProductsChecklist,
@@ -12,7 +12,7 @@ import {
   FilterProductsChecklistProps,
 } from './FilterProducts.checklist';
 
-import './filter-products.css';
+import './filter-products.scss';
 
 const extractConfig = {
   query: '[data-ref=card]',
