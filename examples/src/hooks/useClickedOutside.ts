@@ -1,10 +1,11 @@
+import { onMounted, onUnmounted } from '../../../src';
+
 /**
  * A small wrapper method to easily check if a user clicked inside of a HTMLElement.
  *
  * @param target - The target there the user clicked.
  * @param container - The container where to check against.
  */
-import { onMounted, onUnmounted } from '../../../src/lib/api/apiLifecycle';
 
 export const isClickedInside = (target: EventTarget, container: HTMLElement) =>
   container ? container.contains(target as HTMLElement) : false;
