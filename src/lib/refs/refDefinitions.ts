@@ -34,9 +34,12 @@ export function refElement<T extends HTMLElement = HTMLElement>(
       if (typeof refIdOrQuery === 'function') {
         return refIdOrQuery(parent);
       }
-      return (this.ref === '_self_'
-        ? parent
-        : parent.querySelector<T>(`[data-ref="${this.ref}"]`) ?? null) as T | null;
+      // also check for data-ref on the root element to not have to refactor
+      // when moving the div (e.g. when adding wrapping containers)
+      if (this.ref === '_self_' || parent.dataset.ref === this.ref) {
+        return parent as T | null;
+      }
+      return (parent.querySelector<T>(`[data-ref="${this.ref}"]`) ?? null) as T | null;
     },
     createRef(instance) {
       const elementRef = ref<T>();
