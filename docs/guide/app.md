@@ -59,15 +59,15 @@ them as part of any other components, you can register them on the `App`.
 const app = createApp(MyComponent);
 
 // register a single component
-app.omponents(ToggleExpand);
+app.component(ToggleExpand);
 
 // register a lazy component
-app.omponents(
+app.component(
   lazy('lazy-test', () => import(/* webpackExports: "lazy" */ './LazyTest'))
 );
 
 // or register multiple at the same time
-app.omponents(
+app.component(
   ToggleExpand,
   lazy(
     'product-card',
