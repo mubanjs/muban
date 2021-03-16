@@ -1,6 +1,6 @@
 {
   "name": "@muban/muban",
-  "version": "1.0.0-alpha.12",
+  "version": "1.0.0-alpha.14",
   "description": "Writing components for server-rendered HTML",
   "keywords": [
     "muban",
@@ -34,6 +34,7 @@
     "tests": "webpack serve -c ./tests/webpack.config.js",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx examples/src",
     "lint:single": "eslint /Volumes/Projects/mm/muban/muban-component/examples/src/components/toggle-expand/ToggleExpand.ts",
+    "lint:language": "alex",
     "test": "jest ./src/",
     "cypress": "cypress open",
     "check-types": "tsc --project tsconfig.json --noEmit --noUnusedLocals",
@@ -87,6 +88,7 @@
     "@types/jest": "^26.0.15",
     "@typescript-eslint/eslint-plugin": "^4.9.0",
     "@typescript-eslint/parser": "^4.9.0",
+    "alex": "^9.1.0",
     "autoprefixer": "^9.8.5",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.6.3",

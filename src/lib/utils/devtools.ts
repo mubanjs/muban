@@ -9,7 +9,7 @@ interface AppRecord {
   types: Record<string, string | symbol>;
 }
 
-const enum DevtoolsHooks {
+enum DevtoolsHooks {
   APP_INIT = 'app:init',
   APP_UNMOUNT = 'app:unmount',
   COMPONENT_UPDATED = 'component:updated',
@@ -79,7 +79,7 @@ export function devtoolsComponentEmit(
 
 export function initDev() {
   // TODO window interface
-  const target = window as any;
+  const target = (globalThis || window || {}) as any;
 
   target.__MUBAN__ = true;
   setDevtoolsHook(target.__MUBAN_DEVTOOLS_GLOBAL_HOOK__);

@@ -24,6 +24,7 @@ export function hasFocusBinding(target: HTMLElement, valueAccessor: BindingValue
 
   return () => {
     unwatch();
-    document.removeEventListener('focus', onFocusChange, true);
+    target.removeEventListener('focus', onFocusChange);
+    target.removeEventListener('blur', onFocusChange);
   };
 }

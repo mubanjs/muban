@@ -10,6 +10,6 @@ import type { BindingValue } from '../bindings.types';
  * @param target
  * @param value
  */
-export function htmlBinding(target: HTMLElement, value: BindingValue<string>) {
-  return watchEffect(() => (target.innerHTML = unref(value)));
+export function htmlBinding(target: HTMLElement, valueAccessor: BindingValue<string>) {
+  return watchEffect(() => (target.innerHTML = unref(valueAccessor)));
 }

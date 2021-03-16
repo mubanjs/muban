@@ -17,6 +17,9 @@ export const ToggleExpand = defineComponent({
   name: 'toggle-expand',
   props: {
     isExpanded: propType.boolean.validate(optional(isBoolean)),
+    isExpanded2: {
+      type: Object,
+    },
   },
   refs: {
     expandButton: refElement((parent) => parent.querySelector('[data-ref="expand-button"]')),

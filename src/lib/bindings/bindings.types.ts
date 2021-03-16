@@ -43,3 +43,11 @@ type BindingsList = typeof bindingsList & DomBindings;
 export type BindProps = {
   [P in keyof BindingsList]?: Parameters<BindingsList[P]>[1];
 };
+
+export type BindingsHelpers = {
+  hasBinding: <T extends keyof BindProps>(bindingName: T) => boolean;
+  getBinding: <T extends keyof BindProps>(bindingName: T) => BindProps[T];
+  setBinding: <T extends keyof BindProps>(bindingName: T, bindingValue: BindProps[T]) => void;
+};
+
+export type DataBinding<T> = (element: HTMLSelectElement, value: T | Ref<T>) => void;

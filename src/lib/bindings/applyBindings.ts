@@ -1,13 +1,31 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { watch, watchEffect } from '@vue/runtime-core';
-import { unref } from '@vue/reactivity';
+import { ref, unref } from '@vue/reactivity';
 import { extractFromHTML } from 'html-extract-data';
 import type { InternalComponentInstance } from '../Component.types';
 import typedObjectEntries from '../type-utils/typedObjectEntries';
+import typedObjectKeys from '../type-utils/typedObjectKeys';
 import { devtoolsComponentUpdated } from '../utils/devtools';
 import { recursiveUnref } from '../utils/utils';
+import type { CollectionBinding, ElementBinding } from './bindingDefinitions';
 import { bindingsList } from './bindings';
-import type { Binding } from './bindings.types';
+import type { Binding, BindingsHelpers, BindProps } from './bindings.types';
+
+function createBindingsHelpers(
+  binding: ElementBinding<HTMLElement, BindProps> | CollectionBinding<HTMLElement, BindProps>,
+): BindingsHelpers {
+  // used to trigger the "has" and "get" bindings when a new binding is added
+  const bindingProps = ref(typedObjectKeys(binding.props));
+
+  return {
+    hasBinding: (bindingName) => bindingProps.value.includes(bindingName),
+    getBinding: (bindingName) => bindingProps.value && binding.props[bindingName],
+    setBinding: (bindingName, bindingValue) => {
+      binding.props[bindingName] = bindingValue;
+      bindingProps.value = typedObjectKeys(binding.props);
+    },
+  };
+}
 
 export const applyBindings = (
   bindings: Array<Binding> | null | undefined,
@@ -28,10 +46,15 @@ export const applyBindings = (
         return watch(
           () => unref(binding.ref),
           (element, oldValue, onInvalidate) => {
+            const bindingHelpers = createBindingsHelpers(binding);
             const bindings = typedObjectEntries(binding.props).flatMap(
               ([bindingName, bindingValue]) => {
                 if (bindingName in bindingsList && element) {
-                  return (bindingsList as any)[bindingName]?.(element, bindingValue as any);
+                  return (bindingsList as any)[bindingName]?.(
+                    element,
+                    bindingValue as any,
+                    bindingHelpers,
+                  );
                 } else {
                   console.warn(`No binding for "${bindingName}`);
                 }
@@ -48,11 +71,16 @@ export const applyBindings = (
         return watch(
           () => unref(binding.ref),
           (elements, oldValue, onInvalidate) => {
+            const bindingHelpers = createBindingsHelpers(binding);
             const bindings = typedObjectEntries(binding.props).flatMap(
               ([bindingName, bindingValue]) => {
                 if (bindingName in bindingsList && elements) {
                   return elements.flatMap((element) => {
-                    return (bindingsList as any)[bindingName]?.(element, bindingValue as any);
+                    return (bindingsList as any)[bindingName]?.(
+                      element,
+                      bindingValue as any,
+                      bindingHelpers,
+                    );
                   });
                 } else {
                   console.warn(`No binding for "${bindingName}`);

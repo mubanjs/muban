@@ -4,7 +4,7 @@ import { pauseTracking, resetTracking } from '@vue/reactivity';
 import { getCurrentComponentInstance, setCurrentComponentInstance } from '../Component';
 import type { InternalComponentInstance } from '../Component.types';
 
-export const enum LifecycleHooks {
+export enum LifecycleHooks {
   Mounted = 'm',
   Unmounted = 'um',
 }

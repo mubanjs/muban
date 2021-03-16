@@ -44,8 +44,10 @@ Research: [component-props](docs/research/component-props.md).
   (possible being undefined)
 
 **Todo**
+- Add "any" prop until we have support for complex objects
 - Add (better) parsing and typing of non-primitive props (Arrays of strings, Objects) (Potentially
   using third party libs like io.ts or Joy)
+  - get rid of the chaining API to be consistent with `refs`
 - [tests] Finish unit tests for all cases
 
 ## Refs
@@ -77,6 +79,7 @@ Research: [component-refs](docs/research/component-refs.md).
 
 **Todo**
 - [tests] Add unit tests
+- rename to element/elements/component/components
 
 **Parked**
 - [api] rename refs to something else, to not conflict with the reactive `ref/unref` functions?
@@ -96,6 +99,9 @@ Research: [component-refs](docs/research/component-refs.md).
 + Can react to parent prop updates
 + Can communicate back to parent props (e.g. call function)
 
+**Todo**
+- test use case with template binding and child components where bindings are not passed as props
+
 ## Bindings
 
 **Done**
@@ -111,11 +117,14 @@ Research: [component-refs](docs/research/component-refs.md).
 + Allow basic event/css/style/attr bindings on component refs
 + add registerDomBinding to allow user-land bindings, including types by extending an Interface
 
-**Todo**
+**Progress**
 - Implement robust bindings for everything
-- [tests] Add unit tests
 - [examples] Add storybook examples for all bindings
+
+**Todo**
+- [tests] Add unit tests
 - move `registerDomBinding` to the `createApp` interface
+- [css] make "removing classes" work where object keys are combined classname strings
 
 ## Lifecycle
 
@@ -125,6 +134,7 @@ Research: [component-refs](docs/research/component-refs.md).
 + Clear all (element) bindings when unmounting a component
 
 **Todo**
+- [app.mount] same as `bindTemplate`, combine template + data into a render function
 
 **Parked**
 - Figure out if/how (lifecycle) hooks can be shared between Muban and future Vue integration in
@@ -185,3 +195,6 @@ Research: [component-dynamic-templates](docs/research/component-dynamic-template
   filtering). This would save an unneeded re-render during page load.
 
 **Todo**
+- [bindTemplate] See if we can combine template + data into a render function that is watched
+- [bindTemplate] be smarter about immediateRender usage (based on existing DOM), and do a
+  forceRender as override
