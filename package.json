@@ -52,7 +52,7 @@
     ]
   },
   "dependencies": {
-    "@muban/storybook": "^7.0.0-alpha.6",
+    "@muban/storybook": "^7.0.0-alpha.7",
     "@types/classnames": "^2.2.11",
     "@types/json-parse-better-errors": "^1.0.0",
     "@types/lodash-es": "^4.17.3",
