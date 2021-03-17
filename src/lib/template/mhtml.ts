@@ -32,6 +32,18 @@ export function unsafeHTML(data: string): string {
 }
 
 /**
+ * Helper function to correctly parse the response of template functions and
+ * pass them through unsafeHTML to be rendered inside other templates
+ * @param templateResult
+ * @returns string
+ * @example
+ * return html`<div>${renderChildTemplate(buttonTemplate({ label: 'foo' }))}</div>`;
+ */
+export function renderChildTemplate(templateResult: string | Array<string>): string {
+  return unsafeHTML(Array.isArray(templateResult) ? templateResult.join('') : templateResult);
+}
+
+/**
  * Helper function to render JSON script tags with a JS data structure
  * Useful to render properties for components that contain a bit more data
  * than is practical for using data-attributes
