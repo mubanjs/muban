@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ComponentApi, ComponentFactory } from '../Component.types';
 import type { App } from '../api/apiCreateApp';
 
@@ -17,7 +18,7 @@ export function mount<P extends Record<string, unknown>>(
 
   if (template) {
     const templateResult = template(data || ({} as P));
-    container.innerHTML = Array.isArray(templateResult) ? templateResult.join('') : templateResult;
+    container.innerHTML = [].concat(templateResult as any).join('');
   }
 
   const rootElement =

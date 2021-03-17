@@ -3,6 +3,7 @@ import htm from 'htm';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import vhtml from 'vhtml';
+import type { ComponentTemplateResult } from '../Component.types';
 
 /**
  * Proxy function between html and vhtml to modify the DOM structure
@@ -21,7 +22,7 @@ export const html = htm.bind(h);
  * Helper function to render unsafe HTML in the DOM
  * @param data
  */
-export function unsafeHTML(data: string): string {
+export function unsafeHTML(data: string): ComponentTemplateResult {
   // fake calling the tagged template string function as if it was coming from
   // an actual usage of a template string to allow parsing HTML tags into
   // a "parsed" array of children without losing HTML formatting
@@ -29,18 +30,6 @@ export function unsafeHTML(data: string): string {
   item['raw'] = [data];
 
   return html(item as TemplateStringsArray);
-}
-
-/**
- * Helper function to correctly parse the response of template functions and
- * pass them through unsafeHTML to be rendered inside other templates
- * @param templateResult
- * @returns string
- * @example
- * return html`<div>${renderChildTemplate(buttonTemplate({ label: 'foo' }))}</div>`;
- */
-export function renderChildTemplate(templateResult: string | Array<string>): string {
-  return unsafeHTML(Array.isArray(templateResult) ? templateResult.join('') : templateResult);
 }
 
 /**
