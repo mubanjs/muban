@@ -1,6 +1,6 @@
 {
   "name": "@muban/muban",
-  "version": "1.0.0-alpha.14",
+  "version": "1.0.0-alpha.15",
   "description": "Writing components for server-rendered HTML",
   "keywords": [
     "muban",
