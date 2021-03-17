@@ -100,17 +100,22 @@ export function refCollection<T extends HTMLElement = HTMLElement>(
         getBindingDefinition(props) {
           return bindCollection(elementsRef, props);
         },
-        elements: elementsRef.value,
-        refs: elementsRef.value.map((element) => {
-          return {
-            type: 'element',
-            getBindingDefinition(props) {
-              return bindElement(ref(element) as Ref<T>, props);
-            },
-            // TODO: this is currently not reactive, so is only correct in the setup function, not in async code or callbacks
-            element: element,
-          };
-        }),
+        getElements() {
+          return elementsRef.value;
+        },
+        // elements: elementsRef.value,
+        getRefs() {
+          return elementsRef.value.map((element) => {
+            return {
+              type: 'element',
+              getBindingDefinition(props) {
+                return bindElement(ref(element) as Ref<T>, props);
+              },
+              // TODO: this is currently not reactive, so is only correct in the setup function, not in async code or callbacks
+              element: element,
+            };
+          });
+        },
         refreshRefs() {
           elementsRef.value = getElements();
         },
@@ -225,16 +230,20 @@ export function refComponents<T extends ComponentFactory<any>>(
         getBindingDefinition(props) {
           return bindComponentCollection(instancesRef, props);
         },
-        components: instancesRef.value,
-        refs: instancesRef.value.map((instance) => {
-          return {
-            type: 'component',
-            getBindingDefinition(props) {
-              return BindComponent(ref(instance), props);
-            },
-            component: instance,
-          };
-        }) as ComponentsRef<T>['refs'],
+        getComponents() {
+          return instancesRef.value;
+        },
+        getRefs() {
+          return instancesRef.value.map((instance) => {
+            return {
+              type: 'component',
+              getBindingDefinition(props) {
+                return BindComponent(ref(instance), props);
+              },
+              component: instance,
+            };
+          }) as ReturnType<ComponentsRef<T>['getRefs']>;
+        },
         refreshRefs() {
           instancesRef.value = getComponents();
         },

@@ -95,10 +95,12 @@ export type DefineComponentOptions<
   }) => undefined | null | Array<Binding>;
 };
 
+export type ComponentTemplateResult = string | Array<string>;
+
 export type ComponentTemplate<P extends Record<string, unknown> = any> = (
   props: P,
   ref?: string,
-) => string | Array<string>;
+) => ComponentTemplateResult;
 
 export type LazyComponent<
   N extends string = any,

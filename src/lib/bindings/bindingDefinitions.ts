@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention,@typescript-eslint/no-explicit-any */
 
 import type { Ref } from '@vue/reactivity';
-import type { ComponentFactory } from '../Component.types';
+import { watchEffect } from '@vue/runtime-core';
+import { getCurrentComponentInstance } from '../Component';
+import type { ComponentFactory, ComponentTemplateResult } from '../Component.types';
 import type {
   CollectionRef,
   ComponentParams,
@@ -9,6 +11,7 @@ import type {
   AnyRef,
   ElementRef,
 } from '../refs/refDefinitions.types';
+import { applyBindings } from './applyBindings';
 import type { Binding, BindProps, TemplateProps } from './bindings.types';
 
 /////
@@ -29,21 +32,39 @@ export function bind<T extends Pick<AnyRef, 'getBindingDefinition'>>(
 export function bindMap<
   T extends Pick<
     CollectionRef<HTMLElement, BindProps> | ComponentsRef<ComponentFactory<any>>,
-    'refs' | 'getBindingDefinition'
+    'getRefs' | 'getBindingDefinition'
   >
 >(
   target: T,
-  getProps: (ref: T['refs'][number], index: number) => Parameters<T['getBindingDefinition']>[0],
+  getProps: (
+    ref: ReturnType<T['getRefs']>[number],
+    index: number,
+  ) => Parameters<T['getBindingDefinition']>[0],
 ): Array<Binding> {
-  return (target.refs as Array<T['refs'][number]>).map((ref, index) =>
-    bind(ref, getProps(ref, index)),
-  );
+  const instance = getCurrentComponentInstance();
+  if (instance) {
+    // target.getRefs() is reactive and triggers this watchEffect to update
+    // as soon as the underlying ref array updates when the items in the DOM
+    // are updated
+    watchEffect(() => {
+      // TODO: should we check if this item already has bindings attached to it?
+      const bindings = (target.getRefs() as Array<
+        ReturnType<T['getRefs']>[number]
+      >).map((ref, index) => bind(ref, getProps(ref, index)));
+
+      // TODO: should we register this as part of the component instance
+      //  so they get cleaned up on unmount?
+      applyBindings(bindings, instance);
+    });
+  }
+
+  return [];
 }
 
-export function bindTemplate<P extends Record<string, unknown>>(
+export function bindTemplate<P extends any>(
   target: ElementRef<HTMLElement, BindProps>,
   data: Ref<P>,
-  template: (props: P) => string | Array<string>,
+  template: (data: P) => ComponentTemplateResult,
   {
     extract,
     renderImmediate = false,

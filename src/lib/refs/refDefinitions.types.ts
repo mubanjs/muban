@@ -72,9 +72,9 @@ export type ElementRef<T extends HTMLElement, P extends BindProps> = {
 export type CollectionRef<T extends HTMLElement, P extends BindProps> = {
   type: 'collection';
   getBindingDefinition: (props: BindProps) => CollectionBinding<T, P>;
-  elements: Array<T>;
+  getElements: () => Array<T>;
   // nested refs for each single individual element
-  refs: Array<Omit<ElementRef<T, P>, 'refreshRefs'>>;
+  getRefs: () => Array<Omit<ElementRef<T, P>, 'refreshRefs'>>;
   refreshRefs: () => void;
 };
 
@@ -90,9 +90,9 @@ export type ComponentsRef<T extends ComponentFactory<any>> = {
   getBindingDefinition: (
     props: ComponentParams<ReturnType<T>>,
   ) => ComponentCollectionBinding<ReturnType<T>>;
-  components: Array<ReturnType<T>>;
+  getComponents: () => Array<ReturnType<T>>;
   // nested refs for each single individual component
-  refs: Array<Omit<ComponentRef<T>, 'refreshRefs'>>;
+  getRefs: () => Array<Omit<ComponentRef<T>, 'refreshRefs'>>;
   refreshRefs: () => void;
 };
 

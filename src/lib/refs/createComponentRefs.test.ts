@@ -55,7 +55,7 @@ describe('getComponentRefs', () => {
     expect(value.elementString.element!.textContent).toEqual('element-string');
     expect(value.elementQuery.element!.textContent).toEqual('element-query');
     expect(value.elementRef.element!.textContent).toEqual('element-ref');
-    expect(value.collectionRef.elements.length).toEqual(3);
+    expect(value.collectionRef.getElements.length).toEqual(3);
     expect(value.componentRef.component!.name).toEqual('dummy-1');
     expect(value.componentRefSpecific.component!.name).toEqual('dummy-2');
     expect(value.componentCollectionRef.components.length).toEqual(3);
