@@ -3,6 +3,7 @@ import { watch, watchEffect } from '@vue/runtime-core';
 import { ref, unref } from '@vue/reactivity';
 import { extractFromHTML } from 'html-extract-data';
 import type { InternalComponentInstance } from '../Component.types';
+import { renderChildTemplate } from '../template/mhtml';
 import typedObjectEntries from '../type-utils/typedObjectEntries';
 import typedObjectKeys from '../type-utils/typedObjectKeys';
 import { devtoolsComponentUpdated } from '../utils/devtools';
@@ -142,10 +143,7 @@ export const applyBindings = (
           (templateData) => {
             if (ref?.element) {
               // TODO: attach parent component for context
-              const templateResult = template(templateData);
-              ref.element.innerHTML = Array.isArray(templateResult)
-                ? templateResult.join('')
-                : templateResult;
+              ref.element.innerHTML = renderChildTemplate(template(templateData));
 
               // TODO: make nicer?
               // it takes some time for the MutationObserver to detect the newly added DOM elements
