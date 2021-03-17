@@ -1,4 +1,14 @@
+var path = require('path');
+
 module.exports = ({ config }) => {
+  config.resolve = {
+    ...config.resolve,
+    alias: {
+      ...config.resolve.alias,
+      '@muban/muban': path.resolve(__filename, './../../src')
+    }
+  }
+
   // remove this rule that deals with svgs
   config.module.rules = config.module.rules.filter(rule => !String(rule.test).includes('svg'));
   // add the rule back without the svg in it, jep, a bit hacky
