@@ -11,7 +11,6 @@ import type { ComponentTemplateResult } from '../Component.types';
 function h(type: any, props: Record<string, any>, ...children: Array<any>) {
   // TODO: add logic for props to mutate them based on possible functions
 
-  // console.log(`[${type}]`, props, children);
   return vhtml(type, props, children);
 }
 

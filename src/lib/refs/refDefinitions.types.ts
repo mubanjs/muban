@@ -109,7 +109,7 @@ type RefOrValue<T extends Record<string, any>> = {
 
 export type ComponentParams<T> =
   | ComponentSetPropsParam<T>
-  | Pick<BindProps, 'css' | 'style' | 'attr'>;
+  | Pick<BindProps, 'css' | 'style' | 'attr' | 'event'>;
 
 /**
  * Extracts the props from a component if it is one

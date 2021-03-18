@@ -97,10 +97,13 @@ export const applyBindings = (
       } else if (binding.type === 'component') {
         typedObjectEntries(binding.props).map(([propName, bindingValue]) => {
           watchEffect(() => {
-            if (['css', 'style', 'attr'].includes(propName)) {
+            if (['css', 'style', 'attr', 'event'].includes(propName)) {
               const element = unref(binding.ref)?.element;
               if (element) {
-                bindingsList[propName as 'css' | 'style' | 'attr']?.(element, bindingValue as any);
+                bindingsList[propName as 'css' | 'style' | 'attr' | 'event']?.(
+                  element,
+                  bindingValue as any,
+                );
               }
             } else {
               // TODO prop validation

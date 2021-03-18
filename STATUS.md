@@ -19,6 +19,8 @@
 - [build] focus on package size
 - Improve logging
 - [build] Introduce dev MODE and Devtools FLAG
+- Find a way to have template-less components that can act as logic (e.g. context) wrappers
+  without having to render "data-component divs" for them.
 
 **External**
 - Animation setup, with nested component animations
