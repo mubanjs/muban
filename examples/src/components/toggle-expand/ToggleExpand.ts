@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-key */
-import { watchEffect } from '@vue/runtime-core';
 import { isBoolean, optional } from 'isntnt';
 import { bind } from '../../../../src/lib/bindings/bindingDefinitions';
 import { propType } from '../../../../src/lib/props/propDefinitions';
@@ -17,9 +16,6 @@ export const ToggleExpand = defineComponent({
   name: 'toggle-expand',
   props: {
     isExpanded: propType.boolean.validate(optional(isBoolean)),
-    isExpanded2: {
-      type: Object,
-    },
   },
   refs: {
     expandButton: refElement((parent) => parent.querySelector('[data-ref="expand-button"]')),

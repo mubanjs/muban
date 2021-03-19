@@ -47,6 +47,8 @@ Research: [component-props](docs/research/component-props.md).
 
 **Todo**
 - Add "any" prop until we have support for complex objects
+- Allow props to be retrieved from other attributes besides `data-foo`
+  - figure out how to "specify" the element+property source as part of the propTypes
 - Add (better) parsing and typing of non-primitive props (Arrays of strings, Objects) (Potentially
   using third party libs like io.ts or Joy)
   - get rid of the chaining API to be consistent with `refs`

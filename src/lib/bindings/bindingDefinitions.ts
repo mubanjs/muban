@@ -10,6 +10,7 @@ import type {
   ComponentsRef,
   AnyRef,
   ElementRef,
+  ComponentRef,
 } from '../refs/refDefinitions.types';
 import { applyBindings } from './applyBindings';
 import type { Binding, BindProps, TemplateProps } from './bindings.types';
@@ -29,6 +30,17 @@ export function bind<T extends Pick<AnyRef, 'getBindingDefinition'>>(
   return target.getBindingDefinition(props);
 }
 
+/**
+ *
+ * @param target Either a ref collection (either element or component),
+ * or an Array of refs. When an Array is passed, it just loops over the refs
+ * inside the Array and executes getProps to get the props for each ref.
+ * When a refCollection is called, it will keep watching for changes in the
+ * collection and call the getProps each time the collection is updated.
+ * @param getProps A function that will be called for each ref in the Array or
+ * Collection, receiving the ref and the index, and expects the binding object
+ * returned to apply this to each ref.
+ */
 export function bindMap<
   T extends Pick<
     CollectionRef<HTMLElement, BindProps> | ComponentsRef<ComponentFactory<any>>,
@@ -40,16 +52,35 @@ export function bindMap<
     ref: ReturnType<T['getRefs']>[number],
     index: number,
   ) => Parameters<T['getBindingDefinition']>[0],
+): Array<Binding>;
+export function bindMap<
+  T extends Pick<
+    ElementRef<HTMLElement, BindProps> | ComponentRef<ComponentFactory<any>>,
+    'getBindingDefinition'
+  >
+>(
+  target: Array<T>,
+  getProps: (ref: T, index: number) => Parameters<T['getBindingDefinition']>[0],
+): Array<Binding>;
+export function bindMap(
+  target: any,
+  getProps: (
+    ref: ElementRef<HTMLElement, BindProps> | ComponentRef<ComponentFactory<any>>,
+    index: number,
+  ) => any,
 ): Array<Binding> {
   const instance = getCurrentComponentInstance();
   if (instance) {
+    if (Array.isArray(target)) {
+      return target.map((ref, index) => bind(ref, getProps(ref, index)));
+    }
     // target.getRefs() is reactive and triggers this watchEffect to update
     // as soon as the underlying ref array updates when the items in the DOM
     // are updated
     watchEffect(() => {
       // TODO: should we check if this item already has bindings attached to it?
-      const bindings = (target.getRefs() as Array<
-        ReturnType<T['getRefs']>[number]
+      const bindings = ((target as any).getRefs() as Array<
+        ElementRef<HTMLElement, BindProps> | ComponentRef<ComponentFactory<any>>
       >).map((ref, index) => bind(ref, getProps(ref, index)));
 
       // TODO: should we register this as part of the component instance
