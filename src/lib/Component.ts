@@ -55,6 +55,7 @@ export function createComponentInstance(
 ): InternalComponentInstance {
   const parent = createOptions.parent;
   const appContext = createOptions.app?._context ?? parent?.appContext ?? emptyAppContext;
+
   const instance: InternalComponentInstance = {
     uid: componentId++,
     type: 'component',
@@ -67,7 +68,9 @@ export function createComponentInstance(
     props: {},
     reactiveProps: reactive({}),
     refs: {} as any,
-    provides: parent?.provides ?? Object.create(appContext.provides),
+    // Always create an inherited clone to allow setting context values
+    // It differs from Vue because of the component and setup creation order
+    provides: Object.create(parent?.provides ?? Object.create(appContext.provides)),
     options,
     bindings: [],
     children: [],
