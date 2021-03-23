@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { ComponentTemplate } from '../../../../src/lib/Component.types';
-import { lazy } from '../../../../src/lib/api/apiLazy';
+import type { ComponentTemplate } from '../../../../src';
 import { html } from '../../../../src/lib/template/mhtml';
 import { defineComponent } from '../../../../src/lib/Component';
 import { ProductCard, productCard } from '../filter-products/FilterProducts.card';

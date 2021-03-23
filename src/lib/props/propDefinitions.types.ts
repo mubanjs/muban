@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Predicate, Primitive, Static } from 'isntnt';
+import type { IfAny } from '../Component.types';
 
 export type PropTypeDefinition<T = any> = {
   type:
@@ -56,6 +57,11 @@ type ExtractOptionalType<
 
 export type TypedProp<T extends PropTypeDefinition> = ExtractOptionalType<T, ExtractType<T>>;
 
-export type TypedProps<T extends Record<string, PropTypeDefinition>> = {
-  [P in keyof T]: TypedProp<T[P]>;
-};
+// the IsAny check makes sure that "any" component props result in "any" instead of {}
+export type TypedProps<T extends Record<string, PropTypeDefinition>> = IfAny<
+  T,
+  any,
+  {
+    [P in keyof T]: TypedProp<T[P]>;
+  }
+>;

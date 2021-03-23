@@ -14,7 +14,7 @@ export const Accordion = defineComponent({
   },
   setup({ refs }) {
     const activeIndex = ref<null | number>(
-      refs.slides.components.findIndex((instance) => !!instance.props.expanded),
+      refs.slides.getComponents().findIndex((instance) => !!instance.props.expanded),
     );
 
     return [

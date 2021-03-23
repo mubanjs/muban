@@ -11,7 +11,7 @@ export type ToggleExpandTemplateProps = {
   isExpanded?: boolean;
 };
 
-export const toggleExpandTemplate = templateComponentFactory<ToggleExpandTemplateProps>({
+export const toggleExpandTemplate = templateComponentFactory({
   component: ToggleExpand,
   jsonProps(props) {
     return props;

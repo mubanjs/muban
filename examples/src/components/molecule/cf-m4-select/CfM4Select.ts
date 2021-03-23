@@ -56,7 +56,7 @@ export const CfM4Select = defineComponent({
     );
 
     const selectedOptionsValue = ref<Array<string>>(
-      getSelectedValues(refs.selectElementOptions.elements),
+      getSelectedValues(refs.selectElementOptions.getElements()),
     );
 
     const selectedOptions = computed(() =>
@@ -67,7 +67,7 @@ export const CfM4Select = defineComponent({
       bind(refs.selectElement, {
         event: {
           change: () => {
-            selectedOptionsValue.value = getSelectedValues(refs.selectElementOptions.elements);
+            selectedOptionsValue.value = getSelectedValues(refs.selectElementOptions.getElements());
           },
         },
       }),
@@ -91,7 +91,7 @@ export const CfM4Select = defineComponent({
       }),
       ...bindMap(refs.customSelectOptions, (ref) => ({
         click: () => {
-          refs.selectElementOptions.elements.forEach((option) => {
+          refs.selectElementOptions.getElements().forEach((option) => {
             if (props.multiple) {
               option.selected =
                 (option.selected && option.value !== ref.element?.value) ||

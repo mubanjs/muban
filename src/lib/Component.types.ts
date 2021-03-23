@@ -5,8 +5,9 @@ import { LifecycleHooks } from './api/apiLifecycle';
 import type { PropTypeDefinition, TypedProps } from './props/propDefinitions.types';
 import type { ComponentRefItem, TypedRefs } from './refs/refDefinitions.types';
 
-type IfAny<T, Y, N> = 0 extends 1 & T ? Y : N;
-type IsAny<T> = IfAny<T, true, never>;
+type CheckAny<T, Y, N> = 0 extends 1 & T ? Y : N;
+export type IsAny<T> = CheckAny<T, true, never>;
+export type IfAny<T, I, E> = IsAny<T> extends never ? E : I;
 
 export type ComponentFactory<
   P extends Record<string, PropTypeDefinition> = any,
@@ -94,13 +95,6 @@ export type DefineComponentOptions<
     element: HTMLElement;
   }) => undefined | null | Array<Binding>;
 };
-
-export type ComponentTemplateResult = string | Array<string>;
-
-export type ComponentTemplate<P extends Record<string, unknown> = any> = (
-  props: P,
-  ref?: string,
-) => ComponentTemplateResult;
 
 export type LazyComponent<
   N extends string = any,

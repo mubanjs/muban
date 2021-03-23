@@ -3,7 +3,7 @@ import htm from 'htm';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import vhtml from 'vhtml';
-import type { ComponentTemplateResult } from '../Component.types';
+import type { ComponentTemplateResult } from './template.types';
 
 /**
  * Proxy function between html and vhtml to modify the DOM structure

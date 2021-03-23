@@ -1,4 +1,4 @@
-import type { ComponentTemplate } from '../../../src/lib/Component.types';
+import type { ComponentTemplate } from '../../../src';
 
 /**
  * Helper util to wrap you Storybook templates with some custom HTML.

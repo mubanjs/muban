@@ -158,6 +158,8 @@ Research: [component-refs](docs/research/component-refs.md).
 
 **Todo**
 - Add runtime (during dev) and build-time template prop validation
+- split off in own package (@muban/mtl`) to further separate the code (no need for code 
+  splitting)
 
 
 ## Styles

@@ -82,7 +82,7 @@ export const FilterProducts = defineComponent({
 
     const productData = reactive<Array<ProductCardProps>>([]);
     const { activeFilters, filteredProducts, resetFilters } = useFilters(
-      refs.filters.components,
+      refs.filters.getComponents(),
       productData,
     );
 

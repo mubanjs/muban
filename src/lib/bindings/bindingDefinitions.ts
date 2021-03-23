@@ -3,7 +3,7 @@
 import type { Ref } from '@vue/reactivity';
 import { watchEffect } from '@vue/runtime-core';
 import { getCurrentComponentInstance } from '../Component';
-import type { ComponentFactory, ComponentTemplateResult } from '../Component.types';
+import type { ComponentFactory } from '../Component.types';
 import type {
   CollectionRef,
   ComponentParams,
@@ -12,6 +12,7 @@ import type {
   ElementRef,
   ComponentRef,
 } from '../refs/refDefinitions.types';
+import type { ComponentTemplateResult } from '../template/template.types';
 import { applyBindings } from './applyBindings';
 import type { Binding, BindProps, TemplateProps } from './bindings.types';
 

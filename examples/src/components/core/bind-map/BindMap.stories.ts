@@ -7,7 +7,6 @@ import {
   defineComponent,
   html,
   inject,
-  propType,
   refCollection,
   refComponent,
   refComponents,
@@ -49,7 +48,7 @@ export const BindMapElements: Story = () => ({
     )}
   </div>`,
 });
-BindMapElements.storyName = 'Elements';
+BindMapElements.storyName = 'refCollection';
 
 export const BindMapComponents: Story = () => {
   return {
@@ -73,7 +72,7 @@ export const BindMapComponents: Story = () => {
     </div>`,
   };
 };
-BindMapComponents.storyName = 'Components';
+BindMapComponents.storyName = 'refComponents';
 
 export const BindMapElementArray: Story = () => ({
   component: defineComponent({
@@ -101,9 +100,9 @@ export const BindMapElementArray: Story = () => ({
     )}
   </div>`,
 });
-BindMapElementArray.storyName = 'Element Array';
+BindMapElementArray.storyName = 'refElement Array';
 
-export const ComponentsArray: Story = () => {
+export const BindMapComponentsArray: Story = () => {
   return {
     component: defineComponent({
       name: 'bindMap',
@@ -130,6 +129,7 @@ export const ComponentsArray: Story = () => {
     </div>`,
   };
 };
+BindMapComponentsArray.storyName = 'refComponent Array';
 
 export const BindMapLiveList: Story = () => ({
   component: defineComponent({
@@ -167,4 +167,4 @@ export const BindMapLiveList: Story = () => ({
     <div data-ref="container"></div>
   </div>`,
 });
-BindMapLiveList.storyName = 'Live List';
+BindMapLiveList.storyName = 'Reactive updates to refs';

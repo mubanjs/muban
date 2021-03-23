@@ -11,7 +11,6 @@ import {
   defaultTarget,
   iconAlignments,
 } from './CfM1Button.config';
-import { icons } from '../../atom/cf-a2-icon/CfA2Icon.config';
 import { className, icon } from '../../../storybook/argTypes';
 
 export default {
