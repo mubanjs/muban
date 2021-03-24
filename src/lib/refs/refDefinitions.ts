@@ -15,6 +15,7 @@ import {
   bindComponentCollection,
   bindElement,
 } from '../bindings/bindingDefinitions';
+import { getParentComponentElement } from '../utils/domUtils';
 import type {
   ComponentRefItemCollection,
   ComponentRefItemComponent,
@@ -22,6 +23,35 @@ import type {
   ComponentRefItemElement,
   ComponentsRef,
 } from './refDefinitions.types';
+
+/**
+ * Ensures that the passed element is a direct child of the parent, so that the
+ * parent is the "owner" of that child. If correct, return the element, otherwise
+ * return null.
+ * @param parent
+ * @param element
+ */
+function ensureElementIsComponentChild<T extends HTMLElement>(
+  parent: HTMLElement,
+  element: T | null,
+): T | null {
+  if (!element) {
+    return null;
+  }
+
+  if (parent === element) {
+    // valid if self
+    return element;
+  }
+
+  const parentComponentElement = getParentComponentElement(element);
+  if (parent === parentComponentElement) {
+    // valid if direct parent
+    return element;
+  }
+
+  return null;
+}
 
 export function refElement<T extends HTMLElement = HTMLElement>(
   refIdOrQuery: string | ComponentRefItemElement<T>['queryRef'],
@@ -31,15 +61,19 @@ export function refElement<T extends HTMLElement = HTMLElement>(
     ref: typeof refIdOrQuery === 'string' ? refIdOrQuery : '[custom]',
     type: 'element',
     queryRef(parent) {
-      if (typeof refIdOrQuery === 'function') {
-        return refIdOrQuery(parent);
-      }
       // also check for data-ref on the root element to not have to refactor
       // when moving the div (e.g. when adding wrapping containers)
       if (this.ref === '_self_' || parent.dataset.ref === this.ref) {
         return parent as T | null;
       }
-      return (parent.querySelector<T>(`[data-ref="${this.ref}"]`) ?? null) as T | null;
+
+      let element: T | null;
+      if (typeof refIdOrQuery === 'function') {
+        element = refIdOrQuery(parent);
+      } else {
+        element = (parent.querySelector<T>(`[data-ref="${this.ref}"]`) ?? null) as T | null;
+      }
+      return ensureElementIsComponentChild(parent, element) as T | null;
     },
     createRef(instance) {
       const elementRef = ref<T>();
@@ -80,10 +114,13 @@ export function refCollection<T extends HTMLElement = HTMLElement>(
     ref: typeof refIdOrQuery === 'string' ? refIdOrQuery : '[custom]',
     type: 'collection',
     queryRef(parent) {
+      let elements: Array<T>;
       if (typeof refIdOrQuery === 'function') {
-        return refIdOrQuery(parent);
+        elements = refIdOrQuery(parent);
+      } else {
+        elements = Array.from(parent.querySelectorAll<T>(`[data-ref="${refIdOrQuery}"]`));
       }
-      return Array.from(parent.querySelectorAll<T>(`[data-ref="${refIdOrQuery}"]`));
+      return elements.filter((element) => Boolean(ensureElementIsComponentChild(parent, element)));
     },
     createRef(instance) {
       const getElements = () => {
@@ -142,10 +179,13 @@ export function refComponent<T extends ComponentFactory<any>>(
     componentRef: component.displayName,
     type: 'component',
     queryRef(parent) {
+      let element: HTMLElement | null;
       if (typeof refIdOrQuery === 'function') {
-        return refIdOrQuery(parent);
+        element = refIdOrQuery(parent);
+      } else {
+        element = parent.querySelector<HTMLElement>(getQuery()) ?? null;
       }
-      return parent.querySelector<HTMLElement>(getQuery()) ?? null;
+      return ensureElementIsComponentChild(parent, element);
     },
     createRef(instance) {
       const instanceRef = ref() as Ref<ReturnType<T> | undefined>;
@@ -194,13 +234,17 @@ export function refComponents<T extends ComponentFactory<any>>(
     componentRef: component.displayName,
     type: 'componentCollection',
     queryRef(parent) {
+      let elements: Array<HTMLElement>;
       if (typeof refIdOrQuery === 'function') {
-        return refIdOrQuery(parent);
+        elements = refIdOrQuery(parent);
+      } else {
+        const query = refIdOrQuery
+          ? `[data-ref="${refIdOrQuery}"]`
+          : `[data-component="${component.displayName}"]`;
+        elements = Array.from(parent.querySelectorAll(query));
       }
-      const query = refIdOrQuery
-        ? `[data-ref="${refIdOrQuery}"]`
-        : `[data-component="${component.displayName}"]`;
-      return Array.from(parent.querySelectorAll(query));
+
+      return elements.filter((element) => Boolean(ensureElementIsComponentChild(parent, element)));
     },
     createRef(instance) {
       const instancesRef = ref([]) as Ref<Array<ReturnType<T>>>;

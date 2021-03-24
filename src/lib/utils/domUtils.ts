@@ -8,11 +8,23 @@ export function getDirectChildComponents(container: HTMLElement): Array<HTMLElem
   );
 }
 
+/**
+ * Finds the parent data-component element that is not the element itself.
+ * @param element
+ */
+export function getParentComponentElement(element: HTMLElement): HTMLElement | null {
+  return element.parentElement?.closest<HTMLElement>(`[data-component]`) ?? null;
+}
+
+/**
+ * Finds the parent component instance that "owns" this element
+ * @param element
+ */
 export function findParentComponent(element: HTMLElement): ComponentApi | undefined {
   let instance: ComponentApi | undefined;
   let parent: HTMLElement | undefined = element;
   do {
-    parent = parent.parentElement?.closest<HTMLElement>(`[data-component]`) || undefined;
+    parent = getParentComponentElement(parent) || undefined;
     instance = parent && getComponentForElement(parent);
     // console.log('while', instance, parent);
   } while (!instance && parent);
