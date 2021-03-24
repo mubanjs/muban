@@ -60,4 +60,5 @@ export const propType = {
   boolean: generateType(Boolean, {}),
   date: generateType(Date, {}),
   func: addShape(addOptional({ type: Function })),
+  object: addPredicate(addOptional({ type: Object })),
 };
