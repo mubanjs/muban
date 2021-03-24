@@ -1,16 +1,8 @@
 import { ref } from '@vue/reactivity';
 import { html } from '../../../../src/lib/template/mhtml';
-import { SplitText } from 'gsap/SplitText';
 
 import './paragraph.css';
 import { bind, defineComponent, refComponent, refElement } from '../../../../src';
-import {
-  provideTransitionContext,
-  TransitionContext,
-  useTransition,
-} from '../../../../src/lib/utils/animation/transitions';
-import { splitWordAnimation } from '../../splitTextAnimation';
-import { onMounted } from '../../../../src/lib/api/apiLifecycle';
 
 ////////////////////////////////////////////////////////////////////////////////
 // Title
@@ -22,28 +14,7 @@ export const Title = defineComponent({
     title: 'title',
     mustache: refElement('mustache', { isRequired: false }),
   },
-  setup({ refs, element }) {
-    useTransition(element, {
-      setupTransitionInTimeline(timeline) {
-        if (refs.eyebrow.element) {
-          timeline.add(
-            splitWordAnimation(new SplitText(refs.eyebrow.element, { type: 'lines,words' })),
-          );
-        }
-        if (refs.title.element) {
-          timeline.add(
-            splitWordAnimation(new SplitText(refs.title.element, { type: 'lines,words' })),
-            refs.eyebrow.element ? 0.1 : 0,
-          );
-        }
-        if (refs.mustache.element) {
-          timeline.add(
-            splitWordAnimation(new SplitText(refs.mustache.element, { type: 'lines,words' })),
-          );
-        }
-      },
-    });
-
+  setup() {
     return [];
   },
 });
@@ -86,21 +57,7 @@ export const Paragraph = defineComponent({
   refs: {
     title: refComponent(Title),
   },
-  setup({ refs, element }) {
-    const transitionContext = new TransitionContext();
-    provideTransitionContext(transitionContext);
-
-    const controller = useTransition(element, {
-      setupTransitionInTimeline(timeline) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        timeline.add(transitionContext.getTimeline(refs.title.component!.element));
-      },
-    });
-
-    onMounted(() => {
-      controller.transitionIn();
-    });
-
+  setup({ refs }) {
     return [
       // allow css bindings on Components for custom styling
       bind(refs.title, {

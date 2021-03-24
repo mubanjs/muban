@@ -71,15 +71,6 @@ export const FilterProducts = defineComponent({
     resetButton: refElement('btn-reset', { isRequired: false }),
   },
   setup({ refs }) {
-    // useTransitionController(refs, {
-    //   setupTransitionInTimeline(timeline) {
-    //     timeline.fromTo(element, 2, { opacity: 0 }, { opacity: 1 });
-    //   },
-    //   setupTransitionOutTimeline(timeline) {
-    //     timeline.fromTo(element, 2, { opacity: 1 }, { opacity: 0 });
-    //   },
-    // });
-
     const productData = reactive<Array<ProductCardProps>>([]);
     const { activeFilters, filteredProducts, resetFilters } = useFilters(
       refs.filters.getComponents(),
