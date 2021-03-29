@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { ComponentTemplate } from '../../../../src';
-import { html } from '../../../../src/lib/template/mhtml';
+import { ComponentTemplate, html } from '@muban/template';
 import { defineComponent } from '../../../../src/lib/Component';
 import { ProductCard, productCard } from '../filter-products/FilterProducts.card';
 import { ToggleExpand } from '../toggle-expand/ToggleExpand';

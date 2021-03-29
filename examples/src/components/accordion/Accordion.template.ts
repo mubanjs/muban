@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { html } from '../../../../src/lib/template/mhtml';
+import { html } from '@muban/template';
 import { Accordion } from './Accordion';
 import { accordionSlideTemplate } from './AccordionSlide.template';
 import type { AccordionSlideTemplateProps } from './AccordionSlide.template';

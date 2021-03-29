@@ -5,7 +5,7 @@ import { defineComponent } from '../../../../src/lib/Component';
 import { bindMap } from '../../../../src/lib/bindings/bindingDefinitions';
 import { propType } from '../../../../src/lib/props/propDefinitions';
 import { refCollection } from '../../../../src/lib/refs/refDefinitions';
-import { html, unsafeHTML } from '../../../../src/lib/template/mhtml';
+import { html, unsafeHTML } from '@muban/template';
 
 export const TabbedContent = defineComponent({
   name: 'tabbed-content',

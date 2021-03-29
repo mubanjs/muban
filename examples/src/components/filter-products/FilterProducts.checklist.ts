@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ref } from '@vue/reactivity';
 import { watch, watchEffect } from '@vue/runtime-core';
-import { html } from '../../../../src/lib/template/mhtml';
+import { html } from '@muban/template';
 import { defineComponent } from '../../../../src/lib/Component';
 import { propType } from '../../../../src/lib/props/propDefinitions';
 import { refCollection } from '../../../../src/lib/refs/refDefinitions';

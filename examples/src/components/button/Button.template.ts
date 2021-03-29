@@ -1,4 +1,4 @@
-import { html } from '../../../../src/lib/template/mhtml';
+import { html } from '@muban/template';
 
 export type ButtonTemplateProps = {
   label: string;

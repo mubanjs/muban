@@ -13,10 +13,6 @@ export { provide, inject, createContext } from './lib/api/apiInject';
 export { onMounted, onUnmounted } from './lib/api/apiLifecycle';
 export { bind, bindMap, bindTemplate } from './lib/bindings/bindingDefinitions';
 
-// Dev only, for template stuff
-export { html, unsafeHTML, jsonScriptTemplate } from './lib/template/mhtml';
-export * from './lib/template/template.types';
-
 // re-export types of those libs, so they don't have to be installed separately
 export * from '@vue/reactivity';
 export {

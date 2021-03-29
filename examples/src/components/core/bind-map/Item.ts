@@ -1,5 +1,6 @@
+import { html } from '@muban/template';
 import { computed } from '@vue/reactivity';
-import { bind, defineComponent, html, propType } from '../../../../../src';
+import { bind, defineComponent, propType } from '../../../../../src';
 
 export const BindMapItem = defineComponent({
   name: 'item',

@@ -2,7 +2,7 @@
 
 import './accordion.scss';
 import classnames from 'classnames';
-import { html } from '../../../../src/lib/template/mhtml';
+import { html } from '@muban/template';
 import { AccordionSlide } from './AccordionSlide';
 
 // eslint-disable-next-line @typescript-eslint/ban-types

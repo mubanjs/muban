@@ -1,4 +1,5 @@
-import { bind, defineComponent, html, propType } from '../../../../../src';
+import { html } from '@muban/template';
+import { bind, defineComponent, propType } from '../../../../../src';
 import classNames from 'classnames';
 
 import './cf-a2-icon.scss';

@@ -53,6 +53,7 @@ Research: [component-props](docs/research/component-props.md).
   using third party libs like io.ts or Joy)
   - get rid of the chaining API to be consistent with `refs`
 - [tests] Finish unit tests for all cases
+- figure out how props from HTML and parent are behaving
 
 ## Refs
 

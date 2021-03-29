@@ -1,5 +1,5 @@
 import { computed, ref } from '@vue/reactivity';
-import { html } from '../../../../src/lib/template/mhtml';
+import { html } from '@muban/template';
 import { defineComponent } from '../../../../src/lib/Component';
 import { bind, bindTemplate } from '../../../../src/lib/bindings/bindingDefinitions';
 import { refComponent, refComponents } from '../../../../src/lib/refs/refDefinitions';

@@ -1,4 +1,4 @@
-import { html, unsafeHTML } from '../../../../../src';
+import { html, unsafeHTML } from '@muban/template';
 
 import './cf-a1-heading.scss';
 import type { CFa1HeadingProps } from './CfA1Heading.types';

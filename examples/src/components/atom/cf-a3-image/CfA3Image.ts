@@ -1,4 +1,4 @@
-import { html } from '../../../../../src';
+import { html } from '@muban/template';
 import classNames from 'classnames';
 
 import 'lazysizes';

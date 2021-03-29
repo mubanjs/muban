@@ -1,6 +1,6 @@
 import { defaultSelectMultiple } from './CfM4Select.config';
 import type { CfM4SelectTypes } from './CfM4Select.types';
-import { html } from '../../../../../src';
+import { html } from '@muban/template';
 import classNames from 'classnames';
 import { cfM1Button } from '../cf-m1-button/CfM1Button';
 import { cfA2Icon } from '../../atom/cf-a2-icon/CfA2Icon';

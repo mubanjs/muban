@@ -51,7 +51,7 @@ Your page should now display `Hello World` if your component is correctly runnin
 
 Create our template:
 ```ts
-import { html } from "@muban/muban";
+import { html } from '@muban/template';
 
 type MyComponentProps = {
   welcomeText: string;

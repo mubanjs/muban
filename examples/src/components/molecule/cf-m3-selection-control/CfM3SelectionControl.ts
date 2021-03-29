@@ -1,4 +1,5 @@
-import { defineComponent, html } from '../../../../../src';
+import { html } from '@muban/template';
+import { defineComponent } from '../../../../../src';
 import classNames from 'classnames';
 
 import './cf-m3-selection-control.scss';

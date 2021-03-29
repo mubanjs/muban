@@ -1,7 +1,8 @@
+import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 import { computed, ref } from '@vue/reactivity';
 import { watchEffect } from '@vue/runtime-core';
-import { bind, defineComponent, html } from '../../../../../src';
+import { bind, defineComponent } from '../../../../../src';
 
 export default {
   title: 'bindings/focus',

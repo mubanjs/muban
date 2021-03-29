@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/naming-convention */
 import { computed, reactive } from '@vue/reactivity';
-import { html } from '../../../../src/lib/template/mhtml';
+import { html } from '@muban/template';
 import { defineComponent } from '../../../../src/lib/Component';
 import type { ComponentApi } from '../../../../src/lib/Component.types';
 import { bind, bindMap, bindTemplate } from '../../../../src/lib/bindings/bindingDefinitions';

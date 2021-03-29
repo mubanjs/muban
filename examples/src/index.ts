@@ -1,5 +1,6 @@
 import { ref } from '@vue/reactivity';
-import { defineComponent, html, lazy, refComponent, provide, createApp } from '../../src';
+import { html } from '@muban/template';
+import { defineComponent, lazy, refComponent, provide, createApp } from '../../src';
 import { FilterProducts, filterProducts } from './components/filter-products/FilterProducts';
 import { CfM4Select } from './components/molecule/cf-m4-select/CfM4Select';
 import { cfM4Select } from './components/molecule/cf-m4-select/CfM4Select.template';

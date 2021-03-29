@@ -1,8 +1,8 @@
+import { html } from '@muban/template';
 import {
   bind,
   computed,
   defineComponent,
-  html,
   propType,
   refComponent,
   refElement,

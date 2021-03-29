@@ -2,7 +2,8 @@
 import { computed, ref } from '@vue/reactivity';
 import { isBoolean, optional } from 'isntnt';
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
-import { bind, html } from '../../src';
+import { html } from '@muban/template';
+import { bind } from '../../src';
 import { defineComponent } from '../../src/lib/Component';
 import { propType } from '../../src/lib/props/propDefinitions';
 import { refElement } from '../../src/lib/refs/refDefinitions';

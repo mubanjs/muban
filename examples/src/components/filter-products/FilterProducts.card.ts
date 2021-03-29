@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/naming-convention */
 import { supportLazy } from '../../../../src/lib/api/apiLazy';
-import { html } from '../../../../src/lib/template/mhtml';
+import { html } from '@muban/template';
 import { defineComponent } from '../../../../src/lib/Component';
 import { bind } from '../../../../src/lib/bindings/bindingDefinitions';
 import { buttonTemplate } from '../button/Button.template';

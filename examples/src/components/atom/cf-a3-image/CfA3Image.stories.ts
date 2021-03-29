@@ -1,3 +1,4 @@
+import { createDecoratorComponent } from '@muban/storybook';
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 
 import type { CfA3ImageTypes } from './CfA3Image.types';
@@ -7,8 +8,7 @@ import {
   defaultEnableTransitionIn,
   imageObjectFitOptions,
 } from './CfA3Image.config';
-import { html } from '../../../../../src';
-import { addTemplateWrapper } from '../../../storybook/addTemplateWrapper';
+import { html } from '@muban/template';
 import { className } from '../../../storybook/argTypes';
 
 export default {
@@ -109,16 +109,15 @@ export default {
   },
 };
 
-/**
- * We want to wrap the template with fixed size container to ensure we can have the "cover" visible
- * @param children
- */
-const viewPortWidthWrapper = (children: () => void) =>
-  html`<div style="width: calc(100vw - 2rem); height: calc(100vh - 2rem)">${children()}</div>`;
-
 export const Default: Story<CfA3ImageTypes> = () => ({
-  template: addTemplateWrapper(viewPortWidthWrapper, cfA3Image),
+  template: cfA3Image,
 });
+Default.decorators = [
+  createDecoratorComponent(({ template }) => ({
+    template: () =>
+      html`<div style="width: calc(100vw - 2rem); height: calc(100vh - 2rem)">${template}</div>`,
+  })),
+];
 
 Default.args = {
   src: 'https://via.placeholder.com/640x480?text=Default+image',

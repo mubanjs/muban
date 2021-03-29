@@ -1,5 +1,6 @@
+import { html } from '@muban/template';
 import { computed, ref } from '@vue/reactivity';
-import { bind, defineComponent, html } from '../../../../src';
+import { bind, defineComponent } from '../../../../src';
 import { supportLazy } from '../../../../src/lib/api/apiLazy';
 
 export const displayName = 'lazy-test';

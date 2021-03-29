@@ -1,5 +1,5 @@
+import { html } from '@muban/template';
 import { ref } from '@vue/reactivity';
-import { html } from '../../../../src/lib/template/mhtml';
 
 import './paragraph.css';
 import { bind, defineComponent, refComponent, refElement } from '../../../../src';

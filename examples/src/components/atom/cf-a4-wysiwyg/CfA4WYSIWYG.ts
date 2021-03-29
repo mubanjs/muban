@@ -1,4 +1,4 @@
-import { html, unsafeHTML } from '../../../../../src';
+import { html, unsafeHTML } from '@muban/template';
 import classNames from 'classnames';
 
 import './cf-a4-wysiwyg.scss';

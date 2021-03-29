@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import classnames from 'classnames';
-import { html, unsafeHTML } from '../../../../src/lib/template/mhtml';
+import { html, unsafeHTML } from '@muban/template';
 import { TabbedContent } from './TabbedContent';
 
 export type TabButtonTemplateProps = {
