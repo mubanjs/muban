@@ -1,24 +1,19 @@
 import type { Predicate, Primitive } from 'isntnt';
 import type { ConstructorType, PropTypeDefinition, SourceOptions } from './propDefinitions.types';
 
-const addSource = <T extends PropTypeDefinition>(obj: T) => ({
-  ...obj,
-  source: (options: SourceOptions) => ({
-    ...obj,
-    sourceOptions: options,
-  }),
-});
-
 const addOptional = <T extends PropTypeDefinition>(obj: T) => ({
   ...obj,
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
   optional: addDefaultValue(
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    addPredicate({
-      ...obj,
-      isOptional: true,
-      missingValue: true,
-    }),
+    addPredicate(
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      addSource({
+        ...obj,
+        isOptional: true,
+        missingValue: true,
+      }),
+    ),
   ),
 });
 const addDefaultValue = <T extends PropTypeDefinition>(obj: T) => ({
@@ -27,17 +22,30 @@ const addDefaultValue = <T extends PropTypeDefinition>(obj: T) => ({
     value: U extends Primitive ? U : () => U,
   ) =>
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    addPredicate({
-      ...obj,
-      isOptional: true,
-      default: value,
-    }),
+    addPredicate(
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      addSource({
+        ...obj,
+        isOptional: true,
+        default: value,
+      }),
+    ),
 });
 const addPredicate = <T extends PropTypeDefinition>(obj: T) => ({
   ...obj,
-  validate: <U extends ConstructorType<T['type']> | undefined>(predicate: Predicate<U>) => ({
+  validate: <U extends ConstructorType<T['type']> | undefined>(predicate: Predicate<U>) =>
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    addSource({
+      ...obj,
+      validator: predicate,
+    }),
+});
+
+const addSource = <T extends PropTypeDefinition>(obj: T) => ({
+  ...obj,
+  source: (options: SourceOptions) => ({
     ...obj,
-    validator: predicate,
+    sourceOptions: options,
   }),
 });
 
@@ -54,10 +62,10 @@ const addShape = <T extends PropTypeDefinition>(obj: T) => ({
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const generateType = <T extends PropTypeDefinition['type'], U extends {}>(type: T, obj: U) =>
-  addPredicate(
-    addOptional(
-      addDefaultValue(
-        addSource({
+  addSource(
+    addPredicate(
+      addOptional(
+        addDefaultValue({
           ...obj,
           type: type,
         }),

@@ -36,6 +36,7 @@ export const DataString: Story = () => ({
   component: createPropsComponent(
     {
       statusValue: propType.string.source({ type: 'data', target: 'props', name: 'status' }),
+      missingValue: propType.string.optional.source({ type: 'data', target: 'props' }),
     },
     {
       props: 'props',
