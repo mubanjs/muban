@@ -1,3 +1,4 @@
+import type { PropTypeInfo } from '../propDefinitions.types';
 import { createDataAttributePropertySource } from './createDataAttributePropertySource';
 
 const mockConsoleWarn = () => {
@@ -31,89 +32,111 @@ describe('createDataAttributePropertySource', () => {
   describe('hasProp', () => {
     it('should return false if property does not exist', () => {
       const element = document.createElement('div');
-      const propDefinition = {
+      const propInfo: PropTypeInfo = {
+        name: 'foo',
         type: String,
+        source: {
+          name: 'str',
+          target: element,
+        },
       };
-      expect(createDataAttributePropertySource()(element).hasProp('str', propDefinition)).toBe(
-        false,
-      );
+      expect(createDataAttributePropertySource()(element).hasProp(propInfo)).toBe(false);
     });
     it('should return true if property does exist', () => {
       const element = document.createElement('div');
       element.dataset.str = 'foobar';
-      const propDefinition = {
+      const propInfo: PropTypeInfo = {
+        name: 'foo',
         type: String,
+        source: {
+          name: 'str',
+          target: element,
+        },
       };
-      expect(createDataAttributePropertySource()(element).hasProp('str', propDefinition)).toBe(
-        true,
-      );
+      expect(createDataAttributePropertySource()(element).hasProp(propInfo)).toBe(true);
     });
     it('should return false if property is type Function', () => {
       const element = document.createElement('div');
       element.dataset.str = 'foobar';
-      const propDefinition = {
+      const propInfo: PropTypeInfo = {
+        name: 'foo',
         type: Function,
+        source: {
+          name: 'str',
+          target: element,
+        },
       };
-      expect(createDataAttributePropertySource()(element).hasProp('str', propDefinition)).toBe(
-        false,
-      );
+      expect(createDataAttributePropertySource()(element).hasProp(propInfo)).toBe(false);
     });
   });
   describe('getProp', () => {
     it('should return undefined if the propery does not exist', () => {
       const element = document.createElement('div');
-      const propDefinition = {
+      const propInfo: PropTypeInfo = {
+        name: 'foo',
         type: String,
+        source: {
+          name: 'str',
+          target: element,
+        },
       };
-      expect(createDataAttributePropertySource()(element).getProp('str', propDefinition)).toBe(
-        undefined,
-      );
+      expect(createDataAttributePropertySource()(element).getProp(propInfo)).toBe(undefined);
     });
     it('should return a string if property does exist', () => {
       const element = document.createElement('div');
       element.dataset.str = 'foobar';
-      const propDefinition = {
+      const propInfo: PropTypeInfo = {
+        name: 'foo',
         type: String,
+        source: {
+          name: 'str',
+          target: element,
+        },
       };
-      expect(createDataAttributePropertySource()(element).getProp('str', propDefinition)).toBe(
-        'foobar',
-      );
+      expect(createDataAttributePropertySource()(element).getProp(propInfo)).toBe('foobar');
     });
     it('should return undefined if property is type Function', () => {
       const element = document.createElement('div');
       element.dataset.str = 'foobar';
-      const propDefinition = {
+      const propInfo: PropTypeInfo = {
+        name: 'foo',
         type: Function,
+        source: {
+          name: 'str',
+          target: element,
+        },
       };
-      expect(createDataAttributePropertySource()(element).getProp('str', propDefinition)).toBe(
-        undefined,
-      );
+      expect(createDataAttributePropertySource()(element).getProp(propInfo)).toBe(undefined);
     });
     describe('conversion', () => {
       describe('Number', () => {
         it('should return a Number', () => {
           const element = document.createElement('div');
           element.dataset.value = '123.45';
-          const propDefinition = {
+          const propInfo: PropTypeInfo = {
+            name: 'foo',
             type: Number,
+            source: {
+              name: 'value',
+              target: element,
+            },
           };
-          const value = createDataAttributePropertySource()(element).getProp(
-            'value',
-            propDefinition,
-          );
-          expect(typeof value).toBe('number');
+          const value = createDataAttributePropertySource()(element).getProp(propInfo);
           expect(value).toEqual(123.45);
+          expect(typeof value).toBe('number');
         });
         it('should return undefined for invalid number', () => {
           const element = document.createElement('div');
           element.dataset.value = 'sdf';
-          const propDefinition = {
+          const propInfo: PropTypeInfo = {
+            name: 'foo',
             type: Number,
+            source: {
+              name: 'value',
+              target: element,
+            },
           };
-          const value = createDataAttributePropertySource()(element).getProp(
-            'value',
-            propDefinition,
-          );
+          const value = createDataAttributePropertySource()(element).getProp(propInfo);
           expect(typeof value).toBe('undefined');
           expect(value).toEqual(undefined);
         });
@@ -123,39 +146,45 @@ describe('createDataAttributePropertySource', () => {
         it('should return a true Boolean', () => {
           const element = document.createElement('div');
           element.dataset.value = 'true';
-          const propDefinition = {
+          const propInfo: PropTypeInfo = {
+            name: 'foo',
             type: Boolean,
+            source: {
+              name: 'value',
+              target: element,
+            },
           };
-          const value = createDataAttributePropertySource()(element).getProp(
-            'value',
-            propDefinition,
-          );
+          const value = createDataAttributePropertySource()(element).getProp(propInfo);
           expect(typeof value).toBe('boolean');
           expect(value).toEqual(true);
         });
         it('should return a false Boolean', () => {
           const element = document.createElement('div');
           element.dataset.value = 'false';
-          const propDefinition = {
+          const propInfo: PropTypeInfo = {
+            name: 'foo',
             type: Boolean,
+            source: {
+              name: 'value',
+              target: element,
+            },
           };
-          const value = createDataAttributePropertySource()(element).getProp(
-            'value',
-            propDefinition,
-          );
+          const value = createDataAttributePropertySource()(element).getProp(propInfo);
           expect(typeof value).toBe('boolean');
           expect(value).toEqual(false);
         });
         it('should return a false Boolean when empty value', () => {
           const element = document.createElement('div');
           element.dataset.value = '';
-          const propDefinition = {
+          const propInfo: PropTypeInfo = {
+            name: 'foo',
             type: Boolean,
+            source: {
+              name: 'value',
+              target: element,
+            },
           };
-          const value = createDataAttributePropertySource()(element).getProp(
-            'value',
-            propDefinition,
-          );
+          const value = createDataAttributePropertySource()(element).getProp(propInfo);
           expect(typeof value).toBe('boolean');
           expect(value).toEqual(false);
         });
@@ -165,26 +194,30 @@ describe('createDataAttributePropertySource', () => {
         it('should return a Date', () => {
           const element = document.createElement('div');
           element.dataset.value = '1983-09-23T08:35:02.000Z';
-          const propDefinition = {
+          const propInfo: PropTypeInfo = {
+            name: 'foo',
             type: Date,
+            source: {
+              name: 'value',
+              target: element,
+            },
           };
-          const value = createDataAttributePropertySource()(element).getProp(
-            'value',
-            propDefinition,
-          );
+          const value = createDataAttributePropertySource()(element).getProp(propInfo);
           expect(value).toBeInstanceOf(Date);
           expect((value as Date)?.toISOString()).toEqual('1983-09-23T08:35:02.000Z');
         });
         it('should return undefined for an invalid Date', () => {
           const element = document.createElement('div');
           element.dataset.value = 'sdf';
-          const propDefinition = {
+          const propInfo: PropTypeInfo = {
+            name: 'foo',
             type: Date,
+            source: {
+              name: 'value',
+              target: element,
+            },
           };
-          const value = createDataAttributePropertySource()(element).getProp(
-            'value',
-            propDefinition,
-          );
+          const value = createDataAttributePropertySource()(element).getProp(propInfo);
           expect(typeof value).toBe('undefined');
           expect(value).toEqual(undefined);
         });
@@ -194,26 +227,30 @@ describe('createDataAttributePropertySource', () => {
         it('should return an Array', () => {
           const element = document.createElement('div');
           element.dataset.value = '[1, true, "foobar"]';
-          const propDefinition = {
+          const propInfo: PropTypeInfo = {
+            name: 'foo',
             type: Array,
+            source: {
+              name: 'value',
+              target: element,
+            },
           };
-          const value = createDataAttributePropertySource()(element).getProp(
-            'value',
-            propDefinition,
-          );
+          const value = createDataAttributePropertySource()(element).getProp(propInfo);
           expect(value).toBeInstanceOf(Array);
           expect(value).toEqual([1, true, 'foobar']);
         });
         it('should return undefined for an invalid Array', () => {
           const element = document.createElement('div');
           element.dataset.value = 'sdf';
-          const propDefinition = {
+          const propInfo: PropTypeInfo = {
+            name: 'foo',
             type: Array,
+            source: {
+              name: 'value',
+              target: element,
+            },
           };
-          const value = createDataAttributePropertySource()(element).getProp(
-            'value',
-            propDefinition,
-          );
+          const value = createDataAttributePropertySource()(element).getProp(propInfo);
           expect(typeof value).toBe('undefined');
           expect(value).toEqual(undefined);
         });

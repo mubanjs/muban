@@ -1,5 +1,13 @@
 import type { Predicate, Primitive } from 'isntnt';
-import type { ConstructorType, PropTypeDefinition } from './propDefinitions.types';
+import type { ConstructorType, PropTypeDefinition, SourceOptions } from './propDefinitions.types';
+
+const addSource = <T extends PropTypeDefinition>(obj: T) => ({
+  ...obj,
+  source: (options: SourceOptions) => ({
+    ...obj,
+    sourceOptions: options,
+  }),
+});
 
 const addOptional = <T extends PropTypeDefinition>(obj: T) => ({
   ...obj,
@@ -32,6 +40,7 @@ const addPredicate = <T extends PropTypeDefinition>(obj: T) => ({
     validator: predicate,
   }),
 });
+
 const addShape = <T extends PropTypeDefinition>(obj: T) => ({
   ...obj,
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -47,10 +56,12 @@ const addShape = <T extends PropTypeDefinition>(obj: T) => ({
 const generateType = <T extends PropTypeDefinition['type'], U extends {}>(type: T, obj: U) =>
   addPredicate(
     addOptional(
-      addDefaultValue({
-        ...obj,
-        type: type,
-      }),
+      addDefaultValue(
+        addSource({
+          ...obj,
+          type: type,
+        }),
+      ),
     ),
   );
 
@@ -60,5 +71,6 @@ export const propType = {
   boolean: generateType(Boolean, {}),
   date: generateType(Date, {}),
   func: addShape(addOptional({ type: Function })),
-  object: addPredicate(addOptional({ type: Object })),
+  object: generateType(Object, {}),
+  array: generateType(Array, {}),
 };

@@ -1,15 +1,19 @@
+import { memoize } from 'lodash-es';
 import type { PropertySource } from '../getComponentProps';
 import parseJson from 'json-parse-better-errors';
 
-export function createJsonScriptPropertySource(): PropertySource {
-  return (element) => {
+const getJsonContent = memoize(
+  (element: HTMLElement): Record<string, unknown> => {
     // get props json script tag
     // TODO: use ":scope >" to only select direct descendant
+    const scriptElement = element.querySelector<HTMLScriptElement>(
+      'script[type="application/json"]',
+    );
+    // only resolve if direct descendant
     const propContent =
-      (element.querySelector('script[type="application/json"]') as HTMLElement | null)
-        ?.textContent || '';
+      (scriptElement?.parentElement === element && scriptElement?.textContent) || '';
 
-    const allJsonProps =
+    return (
       (propContent &&
         (() => {
           try {
@@ -20,14 +24,22 @@ export function createJsonScriptPropertySource(): PropertySource {
             return {};
           }
         })()) ||
-      {};
+      {}
+    );
+  },
+);
 
+export function createJsonScriptPropertySource(): PropertySource {
+  return () => {
     return {
-      sourceName: 'json-script',
-      hasProp: (propName) => propName in allJsonProps,
-      getProp: (propName) => {
+      sourceName: 'json',
+      hasProp: (propInfo) =>
+        Boolean(
+          propInfo.source.target && propInfo.source.name in getJsonContent(propInfo.source.target),
+        ),
+      getProp: (propInfo) => {
         // TODO: convert to Date - all other data types should be fine in JSON already
-        return allJsonProps[propName];
+        return getJsonContent(propInfo.source.target!)[propInfo.source.name];
       },
     };
   };

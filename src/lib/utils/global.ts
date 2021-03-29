@@ -4,6 +4,9 @@ import type {
   InternalComponentInstance,
   LazyComponent,
 } from '../Component.types';
+import { createAttributePropertySource } from '../props/property-sources/createAttributePropertySource';
+import { createHtmlPropertySource } from '../props/property-sources/createHtmlPropertySource';
+import { createTextPropertySource } from '../props/property-sources/createTextPropertySource';
 import { findParentComponent, getDirectChildComponents } from './domUtils';
 import { isLazyComponent } from '../api/apiLazy';
 import type { PropertySource } from '../props/getComponentProps';
@@ -22,6 +25,9 @@ class MubanGlobal {
     createDataAttributePropertySource(),
     createJsonScriptPropertySource(),
     createReactivePropertySource(),
+    createAttributePropertySource(),
+    createTextPropertySource(),
+    createHtmlPropertySource(),
   ];
 }
 

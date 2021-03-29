@@ -1,23 +1,23 @@
 import type { PropertySource } from '../getComponentProps';
 import { convertSourceValue } from './convertSourceValue';
 
-export function createDataAttributePropertySource(): PropertySource {
+export function createAttributePropertySource(): PropertySource {
   return () => ({
-    sourceName: 'data',
+    sourceName: 'attr',
     hasProp: (propInfo) =>
       Boolean(
         propInfo.source.target &&
           propInfo.type !== Function &&
-          propInfo.source.name in propInfo.source.target.dataset,
+          propInfo.source.target.hasAttribute(propInfo.source.name),
       ),
     getProp: (propInfo) => {
-      let value =
+      const value =
         propInfo.type !== Function
-          ? propInfo.source.target!.dataset[propInfo.source.name] ?? undefined
+          ? propInfo.source.target!.getAttribute(propInfo.source.name) ?? undefined
           : undefined;
 
       if (value !== undefined) {
-        value = convertSourceValue(propInfo, value);
+        convertSourceValue(propInfo, value);
       } else {
         if (propInfo.type === Boolean) {
           console.warn();

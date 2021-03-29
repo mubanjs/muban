@@ -17,9 +17,9 @@ const Dummy4 = createComponent('dummy-4');
 
 describe('getComponentRefs', () => {
   it('should return app props', () => {
-    const element = document.createElement('div');
-    element.innerHTML = dedent`
-      <div>
+    const root = document.createElement('div');
+    root.innerHTML = dedent`
+      <div data-component="my-component">
         <p data-ref="element-string">element-string</p>
         <p data-ref="element-query">element-query</p>
         <p data-ref="element-ref">element-ref</p>
@@ -37,6 +37,7 @@ describe('getComponentRefs', () => {
         <div data-component="dummy-4" data-ref="component-collection-ref">dummy list 2</div>
       </div>
     `;
+    const parent = root.querySelector<HTMLElement>('[data-component="my-component"]')!;
     const refDefinition = {
       elementString: 'element-string',
       elementQuery: (parent: HTMLElement) =>
@@ -49,13 +50,13 @@ describe('getComponentRefs', () => {
       componentCollectionRefSpecific: refComponents(Dummy4, { ref: 'component-collection-ref' }),
     };
 
-    const instance = createComponentInstance({}, element, { name: 'foo', setup: () => [] });
+    const instance = createComponentInstance({}, parent, { name: 'foo', setup: () => [] });
 
     const value = createComponentRefs(refDefinition, instance);
     expect(value.elementString.element!.textContent).toEqual('element-string');
     expect(value.elementQuery.element!.textContent).toEqual('element-query');
     expect(value.elementRef.element!.textContent).toEqual('element-ref');
-    expect(value.collectionRef.getElements.length).toEqual(3);
+    expect(value.collectionRef.getElements().length).toEqual(3);
     expect(value.componentRef.component!.name).toEqual('dummy-1');
     expect(value.componentRefSpecific.component!.name).toEqual('dummy-2');
     expect(value.componentCollectionRef.getComponents().length).toEqual(3);

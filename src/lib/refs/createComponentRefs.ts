@@ -24,7 +24,7 @@ export function isRefItemShortcut(
  * Convert "string" and "queryFn" shortcut refs to refElements
  * @param refs
  */
-function normalizeRefs<R extends Record<string, ComponentRefItem>>(
+export function normalizeRefs<R extends Record<string, ComponentRefItem>>(
   refs: R,
 ): {
   [P in keyof R]: ResolvedComponentRefItem;

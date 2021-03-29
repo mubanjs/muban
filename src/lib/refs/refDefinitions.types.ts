@@ -46,8 +46,8 @@ export type ComponentRefItemShortcuts = string | ComponentRefItemElement<HTMLEle
 export type ResolvedComponentRefItem =
   | ComponentRefItemElement<HTMLElement>
   | ComponentRefItemCollection<HTMLElement>
-  | ComponentRefItemComponent<any>
-  | ComponentRefItemComponentCollection<any>;
+  | ComponentRefItemComponent<ComponentFactory<any>>
+  | ComponentRefItemComponentCollection<ComponentFactory<any>>;
 
 // combination of all of the above
 export type ComponentRefItem =

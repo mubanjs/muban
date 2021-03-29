@@ -6,8 +6,8 @@ export function createReactivePropertySource(): PropertySource {
     const props = reactive<Record<string, unknown>>({});
     return {
       sourceName: 'reactive',
-      hasProp: (propName) => propName in props,
-      getProp: (propName) => props[propName],
+      hasProp: (propInfo) => propInfo.source.name in props,
+      getProp: (propInfo) => props[propInfo.source.name],
     };
   };
 }

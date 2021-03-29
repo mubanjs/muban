@@ -151,13 +151,13 @@ export const defineComponent = <
 
       // console.log(`[Create ${options.name}]`);
 
-      // process props
-      const sources = getGlobalMubanInstance().propertySources;
-      instance.props = getComponentProps(options.props, element, sources);
-      instance.reactiveProps = reactive(instance.props);
-
       // retrieve and create refs, will instantiate child components
       instance.refs = createComponentRefs(options?.refs, instance);
+
+      // process props
+      const sources = getGlobalMubanInstance().propertySources;
+      instance.props = getComponentProps(options.props, element, sources, instance.refs);
+      instance.reactiveProps = reactive(instance.props);
 
       // this will instantiate all registered "components" that are non-refs
       processNonRefChildComponents(instance);

@@ -2,6 +2,15 @@
 import type { Predicate, Primitive, Static } from 'isntnt';
 import type { IfAny } from '../Component.types';
 
+export type SourceOptions = {
+  target?: string;
+  type?: 'data' | 'json' | 'attr' | 'css' | 'text' | 'html';
+  name?: string;
+  options?: {
+    cssPredicate?: Predicate<string>;
+  };
+};
+
 export type PropTypeDefinition<T = any> = {
   type:
     | typeof Number
@@ -17,6 +26,18 @@ export type PropTypeDefinition<T = any> = {
   missingValue?: boolean;
   // eslint-disable-next-line @typescript-eslint/ban-types
   shapeType?: Function;
+  sourceOptions?: SourceOptions;
+};
+
+export type PropTypeInfo<T = any> = Pick<
+  PropTypeDefinition<T>,
+  'type' | 'default' | 'validator' | 'isOptional'
+> & {
+  name: string;
+  source: Required<Pick<SourceOptions, 'name'>> &
+    Pick<SourceOptions, 'type' | 'options'> & {
+      target: HTMLElement | undefined;
+    };
 };
 
 // type OptionalPropertyKeys<T> = {

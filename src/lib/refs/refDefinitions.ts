@@ -31,7 +31,7 @@ import type {
  * @param parent
  * @param element
  */
-function ensureElementIsComponentChild<T extends HTMLElement>(
+export function ensureElementIsComponentChild<T extends HTMLElement>(
   parent: HTMLElement,
   element: T | null,
 ): T | null {
