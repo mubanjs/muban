@@ -349,7 +349,7 @@ defineComponent({
 </div>
 ```
 
-#### Fallback to `ccs` for `boolean` props
+#### Fallback to `css` for `boolean` props
 
 ```ts
 defineComponent({
@@ -366,7 +366,7 @@ defineComponent({
 <div data-component="my-component" class="isActive">Content</div>
 ```
 
-#### Use `ccs` on a different element
+#### Use `css` on a different element
 
 ```ts
 defineComponent({
@@ -395,7 +395,7 @@ defineComponent({
 ```
 
 
-#### Use the `string`, `Array` and `Object` types for `ccs`
+#### Use the `string`, `Array` and `Object` types for `css`
 
 ```ts
 defineComponent({

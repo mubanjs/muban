@@ -40,6 +40,7 @@
     "check-types": "tsc --project tsconfig.json --noEmit --noUnusedLocals",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
+    "docs:deploy": "./deploy-docs.sh",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook -o ./dist/storybook"
   },
