@@ -19,6 +19,7 @@ module.exports = {
         '', // getting started
         'app',
         'component',
+        'props',
         'reactivity',
         'bindings',
         'template',

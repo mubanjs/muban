@@ -12,7 +12,7 @@ same.
 ### Basic variables
 
 ```ts
-import { html } from "@muban/muban";
+import { html } from '@muban/template';
 
 const tag = 'p';
 const className = 'is-active';

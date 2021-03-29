@@ -66,7 +66,7 @@ template results.
 A typical template would look like this:
 
 ```ts
-import { html } from '@muban/muban';
+import { html } from '@muban/template';
 import classnames from 'classnames';
 
 type AccordionSlideProps = {
@@ -112,7 +112,7 @@ props, so we can start rendering it to see how it looks.
 
 
 ```ts
-import { html } from '@muban/muban';
+import { html } from '@muban/template';
 
 type AccordionSlideProps = {
   heading: string;
@@ -176,7 +176,7 @@ We still have to manage how our `expanded` property should behave. Let's add it 
 the container div, and as a `data-` attribute on the component.
 
 ```ts {6,8}
-import { html } from '@muban/muban';
+import { html } from '@muban/template';
 import classnames from 'classnames';
 
 export function accordionSlide({ heading, content, expanded }: AccordionSlideProps) {

@@ -23,6 +23,7 @@
         * [defaultValue](props.html#defaultvalue)
         * [validate](props.html#validate)
         * [shape](props.html#shape)
+        * [shape](props.html#source)
         
 * [Refs](refs.html)
     * [refElement](refs.html#refelement)
