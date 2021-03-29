@@ -168,7 +168,7 @@ const MyComponent = defineComponent({
     // "propType.boolean" will make sure to return a boolean when the css class exist
     // the `source` function allows us to specifically configure where and how to extract
     // - type:'css' will use the "css" source to check the "class" attribute
-    // - terget:'content' will use the refs.content element to get the information from
+    // - target:'content' will use the refs.content element to get the information from
     isExpanded: propType.boolean.source({ type: 'css', target: 'content'}),
   },
   setup({ props }) {
