@@ -84,9 +84,11 @@ export function getComponentProps(
         const source = sources.find((s) => propInfo.source.type === s.sourceName);
 
         if (!source?.hasProp(propInfo)) {
-          console.error(
-            `Property "${propInfo.name}" is not available in source "${propInfo.source.type}".`,
-          );
+          if (!propType.isOptional) {
+            console.error(
+              `Property "${propInfo.name}" is not available in source "${propInfo.source.type}".`,
+            );
+          }
           return accumulator;
         }
         accumulator[propName] = source?.getProp(propInfo);
