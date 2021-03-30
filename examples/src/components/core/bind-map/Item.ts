@@ -9,7 +9,7 @@ export const BindMapItem = defineComponent({
   },
   props: {
     value: propType.string,
-    onActivate: propType.func.shape<() => void>().optional,
+    onActivate: propType.func.optional.shape<() => void>(),
     isActive: propType.boolean.optional,
   },
   setup({ refs, props }) {

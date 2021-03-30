@@ -32,7 +32,7 @@ export const CfM4Select = defineComponent({
   name: 'cf-m4-select',
   components: [CfA2Icon],
   props: {
-    selectedValue: propType.string.optional.defaultValue(undefined),
+    selectedValue: propType.string.defaultValue(undefined),
     placeholder: propType.string.optional,
     multiple: propType.boolean.optional,
   },

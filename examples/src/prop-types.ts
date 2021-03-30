@@ -227,7 +227,7 @@ type P21 = Expect<Equal<string, TypedProp<typeof p21>>>;
 const p22 = propType.string.optional;
 type P22 = Expect<Equal<string | undefined, TypedProp<typeof p22>>>;
 
-const p23 = propType.string.optional.defaultValue('foo');
+const p23 = propType.string.defaultValue('foo');
 type P23 = Expect<Equal<string, TypedProp<typeof p23>>>;
 
 const p24 = propType.string.validate(isString);
@@ -239,6 +239,12 @@ type P24a = Expect<Equal<string | undefined, TypedProp<typeof p24a>>>;
 const p25 = propType.string.optional.validate(isString);
 type P25 = Expect<Equal<string | undefined, TypedProp<typeof p25>>>;
 
+const p25a = propType.string.defaultValue('1');
+type P25a = Expect<Equal<string | undefined, TypedProp<typeof p25>>>;
+
+const p25b = propType.string.defaultValue('1').validate(isString);
+type P25b = Expect<Equal<string | undefined, TypedProp<typeof p25>>>;
+
 // Number helper functions
 const n21 = propType.number;
 type N21 = Expect<Equal<number, TypedProp<typeof n21>>>;
@@ -246,7 +252,7 @@ type N21 = Expect<Equal<number, TypedProp<typeof n21>>>;
 const n22 = propType.number.optional;
 type N22 = Expect<Equal<number | undefined, TypedProp<typeof n22>>>;
 
-const n23 = propType.number.optional.defaultValue(3);
+const n23 = propType.number.defaultValue(3);
 type N23 = Expect<Equal<number, TypedProp<typeof n23>>>;
 
 const n24 = propType.number.validate(isNumber);
@@ -265,7 +271,7 @@ type D21 = Expect<Equal<Date, TypedProp<typeof d21>>>;
 const d22 = propType.date.optional;
 type D22 = Expect<Equal<Date | undefined, TypedProp<typeof d22>>>;
 
-const d23 = propType.date.optional.defaultValue(() => new Date());
+const d23 = propType.date.defaultValue(() => new Date());
 type D23 = Expect<Equal<Date, TypedProp<typeof d23>>>;
 
 const d24 = propType.date.validate(isDate);
@@ -307,10 +313,10 @@ type F26b = Expect<Equal<(value: string) => number, TypedProp<typeof f26b>>>;
 // const f27a = propType.func.optional.shape();
 // type F27a = Expect<Equal<Function | undefined, TypedProp<typeof f27a>>>;
 
-const f27a1 = propType.func.shape().optional;
+const f27a1 = propType.func.optional.shape();
 type F27a1 = Expect<Equal<Function | undefined, TypedProp<typeof f27a1>>>;
 
-const f27b = propType.func.shape<(value: string) => number>().optional;
+const f27b = propType.func.optional.shape<(value: string) => number>();
 type F27b = Expect<Equal<undefined | ((value: string) => number), TypedProp<typeof f27b>>>;
 
 // meh, issues :(

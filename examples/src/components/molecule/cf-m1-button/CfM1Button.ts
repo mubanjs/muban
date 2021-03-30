@@ -25,7 +25,7 @@ import { CfA2Icon, cfA2Icon } from '../../atom/cf-a2-icon/CfA2Icon';
 export const CfM1Button = defineComponent({
   name: 'cf-m1-button',
   props: {
-    onClick: propType.func.shape<(event: MouseEvent) => void>().optional,
+    onClick: propType.func.optional.shape<(event: MouseEvent) => void>(),
     icon: propType.string.optional.validate(isIcon),
     label: propType.string.optional,
   },

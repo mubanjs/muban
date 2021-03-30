@@ -12,7 +12,7 @@ export const FilterProductsChecklist = defineComponent({
   props: {
     // TODO: add Array proptype, although that needs a nested type (conversion)
     categoryId: propType.string,
-    onChange: propType.func.shape<(category: string, value: Array<string>) => void>().optional,
+    onChange: propType.func.optional.shape<(category: string, value: Array<string>) => void>(),
     selected: propType.string.optional,
   },
   refs: {

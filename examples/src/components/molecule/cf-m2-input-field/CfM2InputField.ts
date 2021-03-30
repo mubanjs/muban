@@ -12,7 +12,7 @@ import { defaultInputTypeOption } from './CfM2InputField.config';
 export const CfM2InputField = defineComponent({
   name: 'cf-m2-input-field',
   props: {
-    isVisible: propType.boolean.optional.defaultValue(false),
+    isVisible: propType.boolean.defaultValue(false),
     inputType: propType.string,
   },
   refs: {
