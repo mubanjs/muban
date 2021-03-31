@@ -109,6 +109,7 @@ export function refElement<T extends HTMLElement = HTMLElement>(
 
 export function refCollection<T extends HTMLElement = HTMLElement>(
   refIdOrQuery: string | ComponentRefItemCollection<T>['queryRef'],
+  { minimumItemsRequired = 0 }: { minimumItemsRequired?: number } = {},
 ): ComponentRefItemCollection<T> {
   return {
     ref: typeof refIdOrQuery === 'string' ? refIdOrQuery : '[custom]',
@@ -125,8 +126,11 @@ export function refCollection<T extends HTMLElement = HTMLElement>(
     createRef(instance) {
       const getElements = () => {
         const elements = this.queryRef(instance.element);
-        if (elements.length === 0) {
-          console.error('Elements not found', `[data-ref="${this.ref}"]`);
+        if (elements.length < minimumItemsRequired) {
+          console.error(
+            `Expected at least "${minimumItemsRequired}" elements, but found "${elements.length}"`,
+            `[data-ref="${this.ref}"]`,
+          );
         }
         return elements;
       };
@@ -227,7 +231,13 @@ export function refComponent<T extends ComponentFactory<any>>(
 
 export function refComponents<T extends ComponentFactory<any>>(
   component: T,
-  { ref: refIdOrQuery }: { ref?: string | ComponentRefItemComponentCollection<T>['queryRef'] } = {},
+  {
+    ref: refIdOrQuery,
+    minimumItemsRequired = 0,
+  }: {
+    ref?: string | ComponentRefItemComponentCollection<T>['queryRef'];
+    minimumItemsRequired?: number;
+  } = {},
 ): ComponentRefItemComponentCollection<T> {
   return {
     ref: typeof refIdOrQuery === 'function' ? '[custom]' : refIdOrQuery,
@@ -251,6 +261,13 @@ export function refComponents<T extends ComponentFactory<any>>(
 
       const getComponents = () => {
         const elements = this.queryRef(instance.element);
+
+        if (elements.length < minimumItemsRequired) {
+          console.error(
+            `Expected at least "${minimumItemsRequired}" elements, but found "${elements.length}"`,
+            `[data-ref="${this.ref}"]`,
+          );
+        }
 
         return elements.map((element) => {
           const existingInstance = instancesRef.value
