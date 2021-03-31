@@ -54,6 +54,14 @@ Research: [component-props](docs/research/component-props.md).
   - get rid of the chaining API to be consistent with `refs`
 - [tests] Finish unit tests for all cases
 - figure out how props from HTML and parent are behaving
+- prevent writing to the props object with an error message (but need to understand all other 
+  flows first)
+- better type/validate options for prop source function
+- allow defining an array of sources, where it picks the first undefined
+- document defaultValue for "boolean" type, since it would only work with "undefined" values, 
+  which boolean types often don't return
+- passing invalid ref fails by breaking everything without an error
+  `checkedOption: refElement('input[type="radio"]:checked', { isRequired: false }),`
 
 ## Refs
 
@@ -85,6 +93,11 @@ Research: [component-refs](docs/research/component-refs.md).
 **Todo**
 - [tests] Add unit tests
 - rename to element/elements/component/components
+- allow refs multiple components that share similar refs (intersect) 
+  tooltipCta: refComponent([Button, Link], {
+      ref: 'tooltip-cta',
+      isRequired: true,
+  }),
 
 **Parked**
 - [api] rename refs to something else, to not conflict with the reactive `ref/unref` functions?

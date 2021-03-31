@@ -21,7 +21,7 @@ type Validator<T, V extends Predicate<any>> = T & {
   validator: V;
 };
 type Validate<T extends PropTypeDefinition> = T & {
-  validate: <U extends ConstructorType<T['type']> | undefined>(
+  validate: <U extends ConstructorType<T['type']> | undefined | null>(
     predicate: Predicate<U>,
   ) => Source<Validator<T, typeof predicate>>;
 };
@@ -81,7 +81,7 @@ const addOptional = <T extends PropTypeDefinition>(obj: T): Optional<T> => {
 };
 const addPredicate = <T extends PropTypeDefinition>(obj: T): Validate<T> => ({
   ...obj,
-  validate: <U extends ConstructorType<T['type']> | undefined>(predicate: Predicate<U>) =>
+  validate: <U extends ConstructorType<T['type']> | undefined | null>(predicate: Predicate<U>) =>
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     addSource({
       ...obj,
