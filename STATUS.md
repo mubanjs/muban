@@ -1,5 +1,9 @@
 # Dev Status
 
+Document a "why", mentioning
+- https://github.github.io/catalyst/guide/introduction/
+- https://stimulus.hotwire.dev/
+
 ## Generic component structure
 
 **Done**
@@ -21,6 +25,8 @@
 - [build] Introduce dev MODE and Devtools FLAG
 - Find a way to have template-less components that can act as logic (e.g. context) wrappers
   without having to render "data-component divs" for them.
+- Also initialize global registered component after HTML update, now only existing refs are 
+  re-checked
 
 **External**
 - Animation setup, with nested component animations
@@ -119,6 +125,8 @@ Research: [component-refs](docs/research/component-refs.md).
 
 **Todo**
 - test use case with template binding and child components where bindings are not passed as props
+- Add support for "wrapper" components that don't interfere with component initalization or 
+  "guarding" element selection.
 
 ## Bindings
 

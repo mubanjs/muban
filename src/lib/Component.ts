@@ -179,7 +179,15 @@ export const defineComponent = <
           // console.log('new props', props);
           Object.entries(props).forEach(([name, value]) => {
             // todo check existence and validation
-            instance.reactiveProps[name] = value;
+            if (!(name in (instance.options.props ?? {}))) {
+              console.warn(
+                `Prop "${name}" does not exist on component "${
+                  instance.name
+                }", only supported props are [${Object.keys(instance.options.props ?? {})}]`,
+              );
+            } else {
+              instance.reactiveProps[name] = value;
+            }
           });
         },
         get props() {

@@ -49,14 +49,18 @@ export const applyBindings = (
             const bindingHelpers = createBindingsHelpers(binding);
             const bindings = typedObjectEntries(binding.props).flatMap(
               ([bindingName, bindingValue]) => {
-                if (bindingName in bindingsList && element) {
+                if (!(bindingName in bindingsList)) {
+                  console.warn(
+                    `No binding exists for "${bindingName}", only supported bindings are [${Object.keys(
+                      bindingsList,
+                    )}]`,
+                  );
+                } else if (element) {
                   return (bindingsList as any)[bindingName]?.(
                     element,
                     bindingValue as any,
                     bindingHelpers,
                   );
-                } else {
-                  console.warn(`No binding for "${bindingName}`);
                 }
               },
             );
@@ -74,7 +78,13 @@ export const applyBindings = (
             const bindingHelpers = createBindingsHelpers(binding);
             const bindings = typedObjectEntries(binding.props).flatMap(
               ([bindingName, bindingValue]) => {
-                if (bindingName in bindingsList && elements) {
+                if (!(bindingName in bindingsList)) {
+                  console.warn(
+                    `No binding exists for "${bindingName}", only supported bindings are [${Object.keys(
+                      bindingsList,
+                    )}]`,
+                  );
+                } else if (elements) {
                   return elements.flatMap((element) => {
                     return (bindingsList as any)[bindingName]?.(
                       element,
@@ -82,8 +92,6 @@ export const applyBindings = (
                       bindingHelpers,
                     );
                   });
-                } else {
-                  console.warn(`No binding for "${bindingName}`);
                 }
               },
             );
@@ -106,7 +114,6 @@ export const applyBindings = (
                 );
               }
             } else {
-              // TODO prop validation
               unref(binding.ref)?.setProps({
                 [propName]: unref(bindingValue),
               });
@@ -125,7 +132,6 @@ export const applyBindings = (
                     bindingValue as any,
                   );
                 } else {
-                  // TODO prop validation
                   ref?.setProps({
                     [propName]: unref(bindingValue),
                   });
