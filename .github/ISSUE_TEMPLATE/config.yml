@@ -1,0 +1,17 @@
+blank_issues_enabled: true
+contact_links:
+  - name: General Slack Help
+    url: https://mediamonks.slack.com/#muban
+    about: Please ask and answer questions here.
+  - name: Muban Dev Slack Conversations
+    url: https://mediamonks.slack.com/#muban-dev
+    about: Discuss ideas, issues and solutions.
+  - name: Todo list & Progress
+    url: https://github.com/mubanjs/muban/projects/1
+    about: Kanban-style board with todos and progress. Have a rough idea? Add it here!
+  - name: Discussions
+    url: https://github.com/mubanjs/muban/discussions
+    about: Questions, Ideas, Discussions and Share
+  - name: ocs
+    url: https://mubanjs.github.io/muban/
+    about: Please read the docs first
