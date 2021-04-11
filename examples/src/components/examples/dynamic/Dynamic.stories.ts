@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
-import { lazy } from '../../../../src';
-import { registerGlobalComponent } from '../../../../src/lib/utils/global';
+import { lazy } from '../../../../../src';
+import { registerGlobalComponent } from '../../../../../src/lib/utils/global';
 
 import { ProductCard, ProductCardProps } from '../filter-products/FilterProducts.card';
 import { ToggleExpand } from '../toggle-expand/ToggleExpand';

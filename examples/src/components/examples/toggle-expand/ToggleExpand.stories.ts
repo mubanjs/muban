@@ -2,7 +2,7 @@
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 import type { Ref } from '@vue/reactivity';
 import { unref, watchEffect } from '@vue/runtime-core';
-import { registerDomBinding } from '../../../../src/lib/bindings/bindings';
+import { registerDomBinding } from '../../../../../src/lib/bindings/bindings';
 import { ToggleExpand } from './ToggleExpand';
 import { toggleExpandTemplate, ToggleExpandTemplateProps } from './ToggleExpand.template';
 

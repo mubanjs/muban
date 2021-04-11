@@ -1,18 +1,24 @@
 import { ref } from '@vue/reactivity';
 import { html } from '@muban/template';
 import { defineComponent, lazy, refComponent, provide, createApp } from '../../src';
-import { FilterProducts, filterProducts } from './components/filter-products/FilterProducts';
+import {
+  FilterProducts,
+  filterProducts,
+} from './components/examples/filter-products/FilterProducts';
 import { CfM4Select } from './components/molecule/cf-m4-select/CfM4Select';
 import { cfM4Select } from './components/molecule/cf-m4-select/CfM4Select.template';
-import { ToggleExpand } from './components/toggle-expand/ToggleExpand';
-import { toggleExpandTemplate } from './components/toggle-expand/ToggleExpand.template';
+import { ToggleExpand } from './components/examples/toggle-expand/ToggleExpand';
+import { toggleExpandTemplate } from './components/examples/toggle-expand/ToggleExpand.template';
 
 import './style/main.scss';
 
 const MyComponent = defineComponent({
   name: 'my-component',
   components: [
-    lazy('lazy-test', () => import(/* webpackExports: "lazy" */ './components/dynamic/LazyTest')),
+    lazy(
+      'lazy-test',
+      () => import(/* webpackExports: "lazy" */ './components/examples/dynamic/LazyTest'),
+    ),
   ],
   refs: {
     toggleExpand: refComponent(ToggleExpand),

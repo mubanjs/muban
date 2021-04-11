@@ -2,10 +2,10 @@
 import { ref } from '@vue/reactivity';
 import { watch, watchEffect } from '@vue/runtime-core';
 import { html } from '@muban/template';
-import { defineComponent } from '../../../../src/lib/Component';
-import { propType } from '../../../../src/lib/props/propDefinitions';
-import { refCollection } from '../../../../src/lib/refs/refDefinitions';
-import { bind } from '../../../../src/lib/bindings/bindingDefinitions';
+import { defineComponent } from '../../../../../src/lib/Component';
+import { propType } from '../../../../../src/lib/props/propDefinitions';
+import { refCollection } from '../../../../../src/lib/refs/refDefinitions';
+import { bind } from '../../../../../src/lib/bindings/bindingDefinitions';
 
 export const FilterProductsChecklist = defineComponent({
   name: 'filter-products-checklist',

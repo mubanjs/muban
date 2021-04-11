@@ -7,7 +7,7 @@ import { bind } from '../../src';
 import { defineComponent } from '../../src/lib/Component';
 import { propType } from '../../src/lib/props/propDefinitions';
 import { refElement } from '../../src/lib/refs/refDefinitions';
-import { buttonTemplate } from './components/button/Button.template';
+import { buttonTemplate } from './components/examples/button/Button.template';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                    Create a story

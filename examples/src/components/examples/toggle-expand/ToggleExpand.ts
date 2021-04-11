@@ -1,14 +1,14 @@
 /* eslint-disable react/jsx-key */
 import { isBoolean, optional } from 'isntnt';
-import { bind } from '../../../../src/lib/bindings/bindingDefinitions';
-import { propType } from '../../../../src/lib/props/propDefinitions';
+import { bind } from '../../../../../src/lib/bindings/bindingDefinitions';
+import { propType } from '../../../../../src/lib/props/propDefinitions';
 
-import { defineComponent } from '../../../../src/lib/Component';
+import { defineComponent } from '../../../../../src/lib/Component';
 import { computed } from '@vue/reactivity';
-import { refElement } from '../../../../src/lib/refs/refDefinitions';
+import { refElement } from '../../../../../src/lib/refs/refDefinitions';
 
 import './toggle-expand.scss';
-import { useToggle } from '../../hooks/useToggle';
+import { useToggle } from '../../../hooks/useToggle';
 
 const getButtonLabel = (isExpanded: boolean) => (isExpanded ? 'read less...' : 'read more...');
 

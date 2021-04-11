@@ -1,8 +1,8 @@
 import { computed, ref } from '@vue/reactivity';
 import { html } from '@muban/template';
-import { defineComponent } from '../../../../src/lib/Component';
-import { bind, bindTemplate } from '../../../../src/lib/bindings/bindingDefinitions';
-import { refComponent, refComponents } from '../../../../src/lib/refs/refDefinitions';
+import { defineComponent } from '../../../../../src/lib/Component';
+import { bind, bindTemplate } from '../../../../../src/lib/bindings/bindingDefinitions';
+import { refComponent, refComponents } from '../../../../../src/lib/refs/refDefinitions';
 import { buttonTemplate } from '../button/Button.template';
 import { ProductCard, productCard } from '../filter-products/FilterProducts.card';
 import { ToggleExpand } from '../toggle-expand/ToggleExpand';
