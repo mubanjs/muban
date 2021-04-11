@@ -22,6 +22,7 @@ import type {
   ComponentRefItemComponentCollection,
   ComponentRefItemElement,
   ComponentsRef,
+  RefOptions,
 } from './refDefinitions.types';
 
 /**
@@ -30,16 +31,18 @@ import type {
  * return null.
  * @param parent
  * @param element
+ * @param ignoreGuard
  */
 export function ensureElementIsComponentChild<T extends HTMLElement>(
   parent: HTMLElement,
   element: T | null,
+  ignoreGuard: boolean = false,
 ): T | null {
   if (!element) {
     return null;
   }
 
-  if (parent === element) {
+  if (ignoreGuard || parent === element) {
     // valid if self
     return element;
   }
@@ -55,7 +58,7 @@ export function ensureElementIsComponentChild<T extends HTMLElement>(
 
 export function refElement<T extends HTMLElement = HTMLElement>(
   refIdOrQuery: string | ComponentRefItemElement<T>['queryRef'],
-  { isRequired = true }: { isRequired?: boolean } = {},
+  { isRequired = true, ignoreGuard }: RefOptions<{ isRequired?: boolean }> = {},
 ): ComponentRefItemElement<T> {
   return {
     ref: typeof refIdOrQuery === 'string' ? refIdOrQuery : '[custom]',
@@ -73,7 +76,7 @@ export function refElement<T extends HTMLElement = HTMLElement>(
       } else {
         element = (parent.querySelector<T>(`[data-ref="${this.ref}"]`) ?? null) as T | null;
       }
-      return ensureElementIsComponentChild(parent, element) as T | null;
+      return ensureElementIsComponentChild(parent, element, ignoreGuard);
     },
     createRef(instance) {
       const elementRef = ref<T>();
@@ -109,7 +112,7 @@ export function refElement<T extends HTMLElement = HTMLElement>(
 
 export function refCollection<T extends HTMLElement = HTMLElement>(
   refIdOrQuery: string | ComponentRefItemCollection<T>['queryRef'],
-  { minimumItemsRequired = 0 }: { minimumItemsRequired?: number } = {},
+  { minimumItemsRequired = 0, ignoreGuard }: RefOptions<{ minimumItemsRequired?: number }> = {},
 ): ComponentRefItemCollection<T> {
   return {
     ref: typeof refIdOrQuery === 'string' ? refIdOrQuery : '[custom]',
@@ -121,7 +124,9 @@ export function refCollection<T extends HTMLElement = HTMLElement>(
       } else {
         elements = Array.from(parent.querySelectorAll<T>(`[data-ref="${refIdOrQuery}"]`));
       }
-      return elements.filter((element) => Boolean(ensureElementIsComponentChild(parent, element)));
+      return elements.filter((element) =>
+        Boolean(ensureElementIsComponentChild(parent, element, ignoreGuard)),
+      );
     },
     createRef(instance) {
       const getElements = () => {
@@ -170,7 +175,11 @@ export function refComponent<T extends ComponentFactory<any>>(
   {
     ref: refIdOrQuery,
     isRequired = true,
-  }: { ref?: string | ComponentRefItemComponent<T>['queryRef']; isRequired?: boolean } = {},
+    ignoreGuard,
+  }: RefOptions<{
+    ref?: string | ComponentRefItemComponent<T>['queryRef'];
+    isRequired?: boolean;
+  }> = {},
 ): ComponentRefItemComponent<T> {
   const getQuery = () => {
     return refIdOrQuery
@@ -189,7 +198,7 @@ export function refComponent<T extends ComponentFactory<any>>(
       } else {
         element = parent.querySelector<HTMLElement>(getQuery()) ?? null;
       }
-      return ensureElementIsComponentChild(parent, element);
+      return ensureElementIsComponentChild(parent, element, ignoreGuard);
     },
     createRef(instance) {
       const instanceRef = ref() as Ref<ReturnType<T> | undefined>;
@@ -234,10 +243,11 @@ export function refComponents<T extends ComponentFactory<any>>(
   {
     ref: refIdOrQuery,
     minimumItemsRequired = 0,
-  }: {
+    ignoreGuard,
+  }: RefOptions<{
     ref?: string | ComponentRefItemComponentCollection<T>['queryRef'];
     minimumItemsRequired?: number;
-  } = {},
+  }> = {},
 ): ComponentRefItemComponentCollection<T> {
   return {
     ref: typeof refIdOrQuery === 'function' ? '[custom]' : refIdOrQuery,
@@ -254,7 +264,9 @@ export function refComponents<T extends ComponentFactory<any>>(
         elements = Array.from(parent.querySelectorAll(query));
       }
 
-      return elements.filter((element) => Boolean(ensureElementIsComponentChild(parent, element)));
+      return elements.filter((element) =>
+        Boolean(ensureElementIsComponentChild(parent, element, ignoreGuard)),
+      );
     },
     createRef(instance) {
       const instancesRef = ref([]) as Ref<Array<ReturnType<T>>>;

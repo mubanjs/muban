@@ -9,6 +9,10 @@ import type {
 } from '../bindings/bindingDefinitions';
 import type { BindProps } from '../bindings/bindings.types';
 
+export type RefOptions<T extends Record<string, any>> = T & {
+  ignoreGuard?: boolean;
+};
+
 /*
  * This is the raw "definition" for refs, represented as a simple object.
  * Any helper functions must return this object
