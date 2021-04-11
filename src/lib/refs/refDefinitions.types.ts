@@ -111,9 +111,8 @@ type RefOrValue<T extends Record<string, any>> = {
   [P in keyof T]: T[P] | Ref<T[P]>;
 };
 
-export type ComponentParams<T> =
-  | ComponentSetPropsParam<T>
-  | Pick<BindProps, 'css' | 'style' | 'attr' | 'event'>;
+export type ComponentParams<T> = ComponentSetPropsParam<T> &
+  Pick<BindProps, 'css' | 'style' | 'attr' | 'event'>;
 
 /**
  * Extracts the props from a component if it is one

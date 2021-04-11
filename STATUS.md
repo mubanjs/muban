@@ -95,15 +95,18 @@ Research: [component-refs](docs/research/component-refs.md).
 + Make sure to don't init global components that are also specified as ref, otherwise you'll get
   duplicate instances
 + Limit the depth of initialize child component to only direct children.
++ Add option to ignoreGuard element selection
++ `refComponent` supports multiple components that share similar props (intersect)
+  ```ts
+  tooltipCta: refComponent([Button, Link], {
+    ref: 'tooltip-cta',
+    isRequired: true,
+  })
+  ```
 
 **Todo**
 - [tests] Add unit tests
 - rename to element/elements/component/components
-- allow refs multiple components that share similar refs (intersect) 
-  tooltipCta: refComponent([Button, Link], {
-      ref: 'tooltip-cta',
-      isRequired: true,
-  }),
 
 **Parked**
 - [api] rename refs to something else, to not conflict with the reactive `ref/unref` functions?
@@ -177,11 +180,10 @@ Research: [component-refs](docs/research/component-refs.md).
 + add unsafeHtml util
 + add classMap util (has been removed, use existing `classnames` module)
 + replace classMap helper with classnames npm package
++ split off @muban/template package
 
 **Todo**
 - Add runtime (during dev) and build-time template prop validation
-- split off in own package (@muban/mtl`) to further separate the code (no need for code 
-  splitting)
 
 
 ## Styles

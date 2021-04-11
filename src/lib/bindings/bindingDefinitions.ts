@@ -26,7 +26,12 @@ import type { Binding, BindProps, TemplateProps } from './bindings.types';
 
 export function bind<T extends Pick<AnyRef, 'getBindingDefinition'>>(
   target: T,
-  props: Parameters<T['getBindingDefinition']>[0],
+  // make sure that if we bind props onto multiple components,
+  // we only allow setting props that exist on all of them
+  props: Pick<
+    Parameters<T['getBindingDefinition']>[0],
+    keyof Parameters<T['getBindingDefinition']>[0]
+  >,
 ) {
   return target.getBindingDefinition(props);
 }

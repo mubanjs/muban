@@ -171,7 +171,7 @@ export function refCollection<T extends HTMLElement = HTMLElement>(
 }
 
 export function refComponent<T extends ComponentFactory<any>>(
-  component: T,
+  component: T | Array<T>,
   {
     ref: refIdOrQuery,
     isRequired = true,
@@ -181,15 +181,16 @@ export function refComponent<T extends ComponentFactory<any>>(
     isRequired?: boolean;
   }> = {},
 ): ComponentRefItemComponent<T> {
+  const components = Array.isArray(component) ? component : [component];
   const getQuery = () => {
     return refIdOrQuery
       ? `[data-ref="${refIdOrQuery}"]`
-      : `[data-component="${component.displayName}"]`;
+      : components.map((c) => `[data-component="${c.displayName}"]`).join(', ');
   };
 
   return {
     ref: typeof refIdOrQuery === 'function' ? '[custom]' : refIdOrQuery,
-    componentRef: component.displayName,
+    componentRef: components[0].displayName,
     type: 'component',
     queryRef(parent) {
       let element: HTMLElement | null;
@@ -214,10 +215,21 @@ export function refComponent<T extends ComponentFactory<any>>(
           return instanceRef.value;
         }
         if (element) {
-          // create new component instance
-          const refInstance = component(element, { parent: instance }) as ReturnType<T>;
-          instance.children.push(refInstance);
-          return refInstance;
+          const newComponentFactory = (Array.isArray(component) ? component : [component]).find(
+            (c) => c.displayName === element.dataset.component,
+          );
+          if (newComponentFactory) {
+            // create new component instance
+            const refInstance = newComponentFactory(element, { parent: instance }) as ReturnType<T>;
+            instance.children.push(refInstance);
+            return refInstance;
+          } else {
+            console.error(
+              `[refComponent] Selected element that doesn't match any of the passed components`,
+              element,
+              (Array.isArray(component) ? component : [component]).map((c) => c.displayName),
+            );
+          }
         }
       };
 
