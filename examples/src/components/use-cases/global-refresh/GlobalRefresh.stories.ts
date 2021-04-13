@@ -1,3 +1,4 @@
+import { createDecoratorComponent } from '@muban/storybook';
 import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 import { computed, ref } from '@vue/reactivity';
@@ -55,3 +56,10 @@ export const GlobalRefresh: Story = () => ({
     </div>
   </div>`,
 });
+
+export const GlobalRefreshDecorator = GlobalRefresh.bind({});
+GlobalRefreshDecorator.decorators = [
+  createDecoratorComponent(({ template }) => ({
+    template: () => html`<div data-foo="bar">${template}</div>`,
+  })),
+];
