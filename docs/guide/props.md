@@ -285,11 +285,11 @@ const MyComponent = defineComponent({
   name: 'my-component',
   props: {
     // str can only be 'foo' or 'bar'
-    str: propType.string.predicate(either('foo', 'bar')),
+    str: propType.string.validate(either('foo', 'bar')),
     // num can only be a positive number
-    num: propType.string.predicate(isPositive),
+    num: propType.string.validate(isPositive),
     // obj must contain the foo and bar keys with their respective types
-    obj: propType.string.predicate(shape({ foo: isString, bar: isNumber })),
+    obj: propType.string.validate(shape({ foo: isString, bar: isNumber })),
   },
   setup({ props }) {
     return [];
