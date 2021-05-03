@@ -287,9 +287,9 @@ const MyComponent = defineComponent({
     // str can only be 'foo' or 'bar'
     str: propType.string.validate(either('foo', 'bar')),
     // num can only be a positive number
-    num: propType.string.validate(isPositive),
+    num: propType.number.validate(isPositive),
     // obj must contain the foo and bar keys with their respective types
-    obj: propType.string.validate(shape({ foo: isString, bar: isNumber })),
+    obj: propType.object.validate(shape({ foo: isString, bar: isNumber })),
   },
   setup({ props }) {
     return [];
