@@ -8,6 +8,7 @@ import {
   refElement,
 } from '../../../../../src';
 import classNames from 'classnames';
+import { cfA2IconTemplate } from '../../atom/cf-a2-icon/CfA2Icon.template';
 
 import {
   defaultButtonSize,
@@ -20,7 +21,7 @@ import type { CfM1ButtonTypes } from './CfM1Button.types';
 
 import './cf-m1-button.scss';
 import { isIcon } from '../../atom/cf-a2-icon/CfA2Icon.config';
-import { CfA2Icon, cfA2Icon } from '../../atom/cf-a2-icon/CfA2Icon';
+import { CfA2Icon } from '../../atom/cf-a2-icon/CfA2Icon';
 
 export const CfM1Button = defineComponent({
   name: 'cf-m1-button',
@@ -94,10 +95,10 @@ export const cfM1Button = (
     }}
   >
     ${loading
-      ? cfA2Icon({ name: 'loader', className: 'button-icon' }, 'loading-icon')
+      ? cfA2IconTemplate({ name: 'loader', className: 'button-icon' }, 'loading-icon')
       : html`
           ${label && html`<span data-ref="button-label" class="button-label">${label}</span>`}
-          ${icon && cfA2Icon({ name: icon, className: 'button-icon' }, 'button-icon')}
+          ${icon && cfA2IconTemplate({ name: icon, className: 'button-icon' }, 'button-icon')}
         `}
   <//>`;
 };
