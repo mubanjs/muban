@@ -1,3 +1,4 @@
+import { isUndefined } from 'isntnt';
 import type { ResolvedComponentRefItem, TypedRefs } from '../refs/refDefinitions.types';
 import typedObjectEntries from '../type-utils/typedObjectEntries';
 import type { PropTypeDefinition, PropTypeInfo } from './propDefinitions.types';
@@ -69,15 +70,17 @@ export function getComponentProps(
 
       // TODO: ignore function prop types for some sources?
 
-      // if target cannot be found, just return undefined
+      // if target cannot be found (and is required), just return undefined
       if (!propInfo.source.target) {
         if (!propType.isOptional) {
           console.error(
             `Property "${propInfo.name}" is marked as required, but the source target was not found.`,
           );
+          return accumulator;
         }
-        return accumulator;
       }
+
+      let extractedValue;
 
       // if source type is explicitly provided
       if (propInfo.source.type) {
@@ -88,15 +91,17 @@ export function getComponentProps(
             console.error(
               `Property "${propInfo.name}" is not available in source "${propInfo.source.type}".`,
             );
+            return accumulator;
           }
-          return accumulator;
+        } else {
+          extractedValue = source?.getProp(propInfo);
         }
-        accumulator[propName] = source?.getProp(propInfo);
       } else {
+        // otherwise, use the default sources
         const defaultSources = sources.filter((s) =>
           ['data', 'json', 'css'].includes(s.sourceName),
         );
-        // otherwise, find available sources from those that are registered
+        // find available sources from those that are registered
         const availableSources = defaultSources.filter(
           (s) =>
             (propInfo.source.type === undefined || propInfo.source.type === s.sourceName) &&
@@ -109,39 +114,42 @@ export function getComponentProps(
               `Property "${propInfo.name}" is marked as required, but not found at target.`,
               propInfo.source.target,
             );
+            return accumulator;
           }
-
-          return accumulator;
-        }
-
-        if (propType.type === Boolean) {
-          accumulator[propName] = availableSources.some((source) => source.getProp(propInfo));
         } else {
-          // if more than 1 sources, pick the first one (except for booleans)
-          const usedSource = availableSources[0];
-          if (availableSources.length > 1) {
-            console.warn(
-              `Property "${
-                propInfo.name
-              }" is defined in more than one property source: ${availableSources
-                .map((s) => s.sourceName)
-                .join(', ')}. We'll use the first from the list: "${usedSource.sourceName}"`,
-            );
-          }
-
-          const value = usedSource.getProp(propInfo);
-
-          if (propType.validator) {
-            if (!propType.validator(value)) {
-              // TODO: should we indeed throw errors here, or resolve the value to undefined?
-              throw new Error(
-                `Validation Error: This prop value ("${value}") is not valid for: ${propInfo.name}`,
+          if (propType.type === Boolean) {
+            extractedValue = availableSources.some((source) => source.getProp(propInfo));
+          } else {
+            // if more than 1 sources, pick the first one (except for booleans)
+            const usedSource = availableSources[0];
+            if (availableSources.length > 1) {
+              console.warn(
+                `Property "${
+                  propInfo.name
+                }" is defined in more than one property source: ${availableSources
+                  .map((s) => s.sourceName)
+                  .join(', ')}. We'll use the first from the list: "${usedSource.sourceName}"`,
               );
             }
+
+            extractedValue = usedSource.getProp(propInfo);
           }
-          accumulator[propName] = usedSource.getProp(propInfo);
         }
       }
+
+      if (propType.validator) {
+        if (!propType.validator(extractedValue)) {
+          // TODO: should we indeed throw errors here, or resolve the value to undefined?
+          throw new Error(
+            `Validation Error: This prop value ("${extractedValue}") is not valid for: ${propInfo.name}`,
+          );
+        }
+      }
+
+      if (!isUndefined(propType.default) && isUndefined(extractedValue)) {
+        extractedValue = propType.default;
+      }
+      accumulator[propName] = extractedValue;
 
       return accumulator;
     }, {} as Record<string, unknown>) ?? {};

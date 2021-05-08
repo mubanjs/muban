@@ -30,7 +30,7 @@ type SourceValue<T, V> = T & {
   sourceOptions: V;
 };
 type Source<T extends PropTypeDefinition> = T & {
-  source: <U = SourceOptions>(options: U) => SourceValue<T, typeof options>;
+  source: (options: SourceOptions) => SourceValue<T, typeof options>;
 };
 
 type ShapeType<T, V> = T & {
