@@ -22,6 +22,7 @@ const createPropsComponent = (props: Record<string, PropTypeDefinition>) => {
     },
     props,
     setup({ props, refs }) {
+      console.log('props', props);
       return [getInfoBinding(refs, props)];
     },
   });
@@ -30,6 +31,8 @@ const createPropsComponent = (props: Record<string, PropTypeDefinition>) => {
 export const DataString: Story = () => ({
   component: createPropsComponent({
     status: propType.string,
+    statusMissing: propType.string,
+    statusMissingWithDefault: propType.string.defaultValue('stringDefault'),
   }),
   template: () => html` <div data-component="props" data-status="success">
     <pre data-ref="info"></pre>
@@ -119,6 +122,8 @@ export const CssBoolean: Story = () => ({
     isActive: propType.boolean,
     isExpanded: propType.boolean,
     isMissing: propType.boolean,
+    isMissingWithDefault: propType.boolean.defaultValue(true),
+    isMissingWithDefaultData: propType.boolean.defaultValue(true).source({ type: 'data' }),
   }),
   template: () => html` <div data-component="props" class="is-active isExpanded">
     <pre data-ref="info"></pre>

@@ -66,14 +66,14 @@ export const DataNumber: Story = () => ({
 export const DataBoolean: Story = () => ({
   component: createPropsComponent(
     {
-      statusValue: propType.boolean.source({ type: 'data', target: 'props', name: 'status' }),
+      activeValue: propType.boolean.source({ type: 'data', target: 'props', name: 'active' }),
     },
     {
       props: 'props',
     },
   ),
   template: () => html` <div data-component="props">
-    <div data-ref="props" data-status="success"></div>
+    <div data-ref="props" data-active="true"></div>
     <pre data-ref="info"></pre>
   </div>`,
 });

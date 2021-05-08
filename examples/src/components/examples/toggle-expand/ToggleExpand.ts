@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-key */
-import { isBoolean, optional } from 'isntnt';
 import { bind } from '../../../../../src/lib/bindings/bindingDefinitions';
 import { propType } from '../../../../../src/lib/props/propDefinitions';
 
@@ -15,7 +14,7 @@ const getButtonLabel = (isExpanded: boolean) => (isExpanded ? 'read less...' : '
 export const ToggleExpand = defineComponent({
   name: 'toggle-expand',
   props: {
-    isExpanded: propType.boolean.validate(optional(isBoolean)),
+    isExpanded: propType.boolean.defaultValue(true).source({ type: 'data' }),
   },
   refs: {
     expandButton: refElement((parent) => parent.querySelector('[data-ref="expand-button"]')),
