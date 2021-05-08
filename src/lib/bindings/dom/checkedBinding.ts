@@ -50,7 +50,7 @@ export function checkedBinding(
       // being checked represents the value being trueish
       target.checked = Boolean(modelValue);
     } else {
-      console.log('else', elementValue, modelValue);
+      // console.log('else', elementValue, modelValue);
       target.checked = elementValue === modelValue;
     }
   });
