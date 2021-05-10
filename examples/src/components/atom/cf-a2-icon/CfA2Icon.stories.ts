@@ -1,7 +1,8 @@
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import { cfA2IconTemplate } from './CfA2Icon.template';
 
 import type { CfA2IconTypes } from './CfA2Icon.types';
-import { CfA2Icon, cfA2Icon } from './CfA2Icon';
+import { CfA2Icon } from './CfA2Icon';
 import { className, icon } from '../../../storybook/argTypes';
 
 export default {
@@ -18,6 +19,6 @@ export default {
 };
 
 export const Default: Story<CfA2IconTypes> = () => ({
-  template: cfA2Icon,
+  template: cfA2IconTemplate,
   component: CfA2Icon,
 });

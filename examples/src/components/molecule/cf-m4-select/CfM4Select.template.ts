@@ -1,9 +1,9 @@
+import { cfA2IconTemplate } from '../../atom/cf-a2-icon/CfA2Icon.template';
 import { defaultSelectMultiple } from './CfM4Select.config';
 import type { CfM4SelectTypes } from './CfM4Select.types';
 import { html } from '@muban/template';
 import classNames from 'classnames';
 import { cfM1Button } from '../cf-m1-button/CfM1Button';
-import { cfA2Icon } from '../../atom/cf-a2-icon/CfA2Icon';
 import { CfM4Select } from './CfM4Select';
 
 export const cfM4Select = (
@@ -58,7 +58,10 @@ export const cfM4Select = (
                   aria-selected=${selected}
                 >
                   <span class="copy-01 button-label">${label}</span>
-                  ${cfA2Icon({ name: 'checkmark', className: 'option-checkmark' }, 'checkmark')}
+                  ${cfA2IconTemplate(
+                    { name: 'checkmark', className: 'option-checkmark' },
+                    'checkmark',
+                  )}
                 </button>
               </li>`,
             )}

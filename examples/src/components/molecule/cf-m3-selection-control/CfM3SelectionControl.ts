@@ -4,7 +4,8 @@ import classNames from 'classnames';
 
 import './cf-m3-selection-control.scss';
 
-import { CfA2Icon, cfA2Icon } from '../../atom/cf-a2-icon/CfA2Icon';
+import { CfA2Icon } from '../../atom/cf-a2-icon/CfA2Icon';
+import { cfA2IconTemplate } from '../../atom/cf-a2-icon/CfA2Icon.template';
 import type { CfM3SelectionControlTypes } from './CfM3SelectionControl.types';
 
 export const CfM3SelectionControl = defineComponent({
@@ -34,7 +35,8 @@ export const cfM3SelectionControl = (
     <label class="input-wrapper">
       <input class="input-element" data-ref="input-field" type=${inputType} ...${props} />
       <div class="custom-input-element">
-        ${type !== 'toggle' && cfA2Icon({ name: 'checkmark', className: 'custom-input-icon' })}
+        ${type !== 'toggle' &&
+        cfA2IconTemplate({ name: 'checkmark', className: 'custom-input-icon' })}
       </div>
       <span class="input-label">${label}</span>
     </label>

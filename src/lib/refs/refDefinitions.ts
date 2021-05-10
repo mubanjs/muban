@@ -129,6 +129,7 @@ export function refCollection<T extends HTMLElement = HTMLElement>(
       );
     },
     createRef(instance) {
+      const elementsRef = ref([]) as Ref<Array<T>>;
       const getElements = () => {
         const elements = this.queryRef(instance.element);
         if (elements.length < minimumItemsRequired) {
@@ -137,9 +138,10 @@ export function refCollection<T extends HTMLElement = HTMLElement>(
             `[data-ref="${this.ref}"]`,
           );
         }
+
         return elements;
       };
-      const elementsRef = ref(getElements()) as Ref<Array<T>>;
+      elementsRef.value = getElements();
 
       return {
         type: 'collection',
@@ -163,7 +165,14 @@ export function refCollection<T extends HTMLElement = HTMLElement>(
           });
         },
         refreshRefs() {
-          elementsRef.value = getElements();
+          const elements = getElements();
+          // only re-assign if some refs are actually different
+          if (
+            elements.length !== elementsRef.value.length ||
+            !elements.every((el) => elementsRef.value.includes(el))
+          ) {
+            elementsRef.value = elements;
+          }
         },
       };
     },
