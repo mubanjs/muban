@@ -14,7 +14,7 @@ const getButtonLabel = (isExpanded: boolean) => (isExpanded ? 'read less...' : '
 export const ToggleExpand = defineComponent({
   name: 'toggle-expand',
   props: {
-    isExpanded: propType.boolean.defaultValue(true).source({ type: 'data' }),
+    isExpanded: propType.boolean.defaultValue(true).source({ type: 'json' }),
   },
   refs: {
     expandButton: refElement((parent) => parent.querySelector('[data-ref="expand-button"]')),

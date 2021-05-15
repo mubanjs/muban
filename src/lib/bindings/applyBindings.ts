@@ -65,7 +65,8 @@ export const applyBindings = (
               },
             );
             onInvalidate(() => {
-              console.log('onInvalidate element');
+              // TODO debug
+              // console.log('onInvalidate element');
               bindings.forEach((binding) => binding && binding());
             });
           },

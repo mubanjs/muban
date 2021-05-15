@@ -157,7 +157,7 @@ export function getComponentProps(
       }
 
       // validate value
-      if (propType.validator) {
+      if (propType.validator && !isUndefined(extractedValue)) {
         if (!propType.validator(extractedValue)) {
           // TODO: should we indeed throw errors here, or resolve the value to undefined?
           throw new Error(
