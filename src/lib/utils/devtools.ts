@@ -84,8 +84,8 @@ export function initDev() {
   target.__MUBAN__ = true;
   setDevtoolsHook(target.__MUBAN_DEVTOOLS_GLOBAL_HOOK__);
 
-  console.info(
-    `You are running a development build of Muban.\n` +
-      `Make sure to use the production build when deploying for production.`,
-  );
+  // console.info(
+  //   `You are running a development build of Muban.\n` +
+  //     `Make sure to use the production build when deploying for production.`,
+  // );
 }
