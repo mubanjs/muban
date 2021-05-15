@@ -56,6 +56,79 @@ function convertToInternalPropInfo(
   };
 }
 
+function errorUnlessOptional(propInfo: PropTypeInfo, msg: string, ...logParams: Array<unknown>) {
+  if (!propInfo.isOptional) {
+    console.error(msg, ...logParams);
+    throw new Error('Exit');
+  }
+  return undefined;
+}
+
+function getValueFromSource(propInfo: PropTypeInfo, sources: Array<ReturnType<PropertySource>>) {
+  // if target cannot be found, just return undefined
+  if (!propInfo.source.target) {
+    return errorUnlessOptional(
+      propInfo,
+      `Property "${propInfo.name}" is marked as required, but the source target was not found.`,
+    );
+  }
+
+  // if source type is explicitly provided
+  if (propInfo.source.type) {
+    const source = sources.find((s) => propInfo.source.type === s.sourceName);
+
+    if (!source?.hasProp(propInfo)) {
+      return errorUnlessOptional(
+        propInfo,
+        `Property "${propInfo.name}" is not available in source "${propInfo.source.type}".`,
+      );
+    }
+
+    return source?.getProp(propInfo);
+  }
+
+  // otherwise, use the default sources
+  const defaultSources = sources.filter((s) => ['data', 'json', 'css'].includes(s.sourceName));
+  // find available sources from those that are registered
+  const availableSources = defaultSources.filter(
+    (s) =>
+      (propInfo.source.type === undefined || propInfo.source.type === s.sourceName) &&
+      s.hasProp(propInfo),
+  );
+
+  if (availableSources.length === 0) {
+    return errorUnlessOptional(
+      propInfo,
+      `Property "${propInfo.name}" is marked as required, but not found at target.`,
+      propInfo.source.target,
+    );
+  }
+
+  if (propInfo.type === Boolean) {
+    return availableSources
+      .map((source) => source.getProp(propInfo))
+      .reduce((acc, val) => {
+        if (acc === true || val === true) return true;
+        if (val !== undefined) return val;
+        return acc;
+      }, undefined);
+  }
+
+  // if more than 1 sources, pick the first one (except for booleans)
+  const usedSource = availableSources[0];
+  if (availableSources.length > 1) {
+    console.warn(
+      `Property "${
+        propInfo.name
+      }" is defined in more than one property source: ${availableSources
+        .map((s) => s.sourceName)
+        .join(', ')}. We'll use the first from the list: "${usedSource.sourceName}"`,
+    );
+  }
+
+  return usedSource.getProp(propInfo);
+}
+
 export function getComponentProps(
   props: Record<string, PropTypeDefinition> | undefined,
   element: HTMLElement,
@@ -70,73 +143,20 @@ export function getComponentProps(
 
       // TODO: ignore function prop types for some sources?
 
-      // if target cannot be found (and is required), just return undefined
-      if (!propInfo.source.target) {
-        if (!propType.isOptional) {
-          console.error(
-            `Property "${propInfo.name}" is marked as required, but the source target was not found.`,
-          );
-          return accumulator;
-        }
-      }
-
       let extractedValue;
 
-      // if source type is explicitly provided
-      if (propInfo.source.type) {
-        const source = sources.find((s) => propInfo.source.type === s.sourceName);
-
-        if (!source?.hasProp(propInfo)) {
-          if (!propType.isOptional) {
-            console.error(
-              `Property "${propInfo.name}" is not available in source "${propInfo.source.type}".`,
-            );
-            return accumulator;
-          }
-        } else {
-          extractedValue = source?.getProp(propInfo);
-        }
-      } else {
-        // otherwise, use the default sources
-        const defaultSources = sources.filter((s) =>
-          ['data', 'json', 'css'].includes(s.sourceName),
-        );
-        // find available sources from those that are registered
-        const availableSources = defaultSources.filter(
-          (s) =>
-            (propInfo.source.type === undefined || propInfo.source.type === s.sourceName) &&
-            s.hasProp(propInfo),
-        );
-
-        if (availableSources.length === 0) {
-          if (!propType.isOptional) {
-            console.error(
-              `Property "${propInfo.name}" is marked as required, but not found at target.`,
-              propInfo.source.target,
-            );
-            return accumulator;
-          }
-        } else {
-          if (propType.type === Boolean) {
-            extractedValue = availableSources.some((source) => source.getProp(propInfo));
-          } else {
-            // if more than 1 sources, pick the first one (except for booleans)
-            const usedSource = availableSources[0];
-            if (availableSources.length > 1) {
-              console.warn(
-                `Property "${
-                  propInfo.name
-                }" is defined in more than one property source: ${availableSources
-                  .map((s) => s.sourceName)
-                  .join(', ')}. We'll use the first from the list: "${usedSource.sourceName}"`,
-              );
-            }
-
-            extractedValue = usedSource.getProp(propInfo);
-          }
-        }
+      try {
+        extractedValue = getValueFromSource(propInfo, sources);
+      } catch {
+        return accumulator;
       }
 
+      // set default value
+      if (!isUndefined(propType.default) && isUndefined(extractedValue)) {
+        extractedValue = propType.default;
+      }
+
+      // validate value
       if (propType.validator) {
         if (!propType.validator(extractedValue)) {
           // TODO: should we indeed throw errors here, or resolve the value to undefined?
@@ -146,9 +166,6 @@ export function getComponentProps(
         }
       }
 
-      if (!isUndefined(propType.default) && isUndefined(extractedValue)) {
-        extractedValue = propType.default;
-      }
       accumulator[propName] = extractedValue;
 
       return accumulator;

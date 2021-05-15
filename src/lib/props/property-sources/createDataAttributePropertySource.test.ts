@@ -70,7 +70,7 @@ describe('createDataAttributePropertySource', () => {
     });
   });
   describe('getProp', () => {
-    it('should return undefined if the propery does not exist', () => {
+    it('should return undefined if the property does not exist - undefined', () => {
       const element = document.createElement('div');
       const propInfo: PropTypeInfo = {
         name: 'foo',
@@ -82,7 +82,7 @@ describe('createDataAttributePropertySource', () => {
       };
       expect(createDataAttributePropertySource()(element).getProp(propInfo)).toBe(undefined);
     });
-    it('should return a string if property does exist', () => {
+    it('should return a string if property does exist - default', () => {
       const element = document.createElement('div');
       element.dataset.str = 'foobar';
       const propInfo: PropTypeInfo = {
@@ -95,7 +95,7 @@ describe('createDataAttributePropertySource', () => {
       };
       expect(createDataAttributePropertySource()(element).getProp(propInfo)).toBe('foobar');
     });
-    it('should return undefined if property is type Function', () => {
+    it('should return undefined if property is type Function - unsupported', () => {
       const element = document.createElement('div');
       element.dataset.str = 'foobar';
       const propInfo: PropTypeInfo = {

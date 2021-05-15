@@ -15,11 +15,18 @@ export function createClassListPropertySource(): PropertySource {
 
       // in case of boolean, check for existence
       if (propInfo.type === Boolean) {
-        return Boolean(
+        const hasValue = Boolean(
           target.classList.contains(propInfo.source.name) ||
             target.classList.contains(camelCase(propInfo.source.name)) ||
             target.classList.contains(kebabCase(propInfo.source.name)),
         );
+        // only return false from missing value if this source is used explicitly
+        // or if value is found
+        if (propInfo.source.type === 'css' || hasValue) {
+          return hasValue;
+        }
+        // otherwise return undefined to fallback to the default
+        return undefined;
       }
 
       // in case of string, check for cssPredicate existence

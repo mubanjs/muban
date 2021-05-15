@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { isString } from 'isntnt';
+import { isNumber, isString } from 'isntnt';
 import { propType } from './propDefinitions';
 
 describe('propDefinitions', () => {
@@ -153,6 +153,159 @@ describe('propDefinitions', () => {
         expect(propType.string.optional.validate(isString).optional).toBeUndefined();
         // @ts-expect-error
         expect(propType.string.optional.validate(isString).defaultValue).toBeUndefined();
+      });
+    });
+  });
+  describe('propType.number', () => {
+    it('should return default', () => {
+      expect(propType.number).toMatchObject({ type: Number });
+      expect(propType.number.optional).not.toBeUndefined();
+      expect(propType.number.defaultValue).not.toBeUndefined();
+      expect(propType.number.validate).not.toBeUndefined();
+      expect(propType.number.source).not.toBeUndefined();
+    });
+    it('should return optional', () => {
+      expect(propType.number.optional).toMatchObject({
+        type: Number,
+        isOptional: true,
+        missingValue: true,
+      });
+      expect(propType.number.optional.validate).not.toBeUndefined();
+      expect(propType.number.optional.source).not.toBeUndefined();
+      // @ts-expect-error
+      expect(propType.number.optional.defaultValue).toBeUndefined();
+    });
+    it('should return defaultValue', () => {
+      expect(propType.number.defaultValue(0)).toMatchObject({
+        type: Number,
+        default: 0,
+        isOptional: true,
+      });
+      expect(propType.number.defaultValue(0).validate).not.toBeUndefined();
+      expect(propType.number.defaultValue(0).source).not.toBeUndefined();
+      // @ts-expect-error
+      expect(propType.number.defaultValue(0).optional).toBeUndefined();
+    });
+    describe('validate', () => {
+      it('should be correct on the first level', () => {
+        expect(propType.number.validate(isNumber)).toMatchObject({
+          type: Number,
+          validator: isNumber,
+        });
+        expect(propType.number.validate(isNumber).source).not.toBeUndefined();
+        // @ts-expect-error
+        expect(propType.number.validate(isNumber).optional).toBeUndefined();
+        // @ts-expect-error
+        expect(propType.number.validate(isNumber).defaultValue).toBeUndefined();
+      });
+      it('should be correct on other levels', () => {
+        expect(propType.number.optional.validate(isNumber)).toMatchObject({
+          type: Number,
+          isOptional: true,
+          missingValue: true,
+          validator: isNumber,
+        });
+        expect(propType.number.optional.validate(isNumber).source).not.toBeUndefined();
+        // @ts-expect-error
+        expect(propType.number.optional.validate(isNumber).optional).toBeUndefined();
+        // @ts-expect-error
+        expect(propType.number.optional.validate(isNumber).defaultValue).toBeUndefined();
+
+        expect(propType.number.defaultValue(0).validate(isNumber)).toMatchObject({
+          type: Number,
+          default: 0,
+          isOptional: true,
+          validator: isNumber,
+        });
+        expect(propType.number.defaultValue(0).validate(isNumber).source).not.toBeUndefined();
+        // @ts-expect-error
+        expect(propType.number.defaultValue(0).validate(isNumber).defaultValue).toBeUndefined();
+        // @ts-expect-error
+        expect(propType.number.defaultValue(0).validate(isNumber).optional).toBeUndefined();
+      });
+    });
+    describe('source', () => {
+      it('should be correct on the first level', () => {
+        expect(propType.number.source({ name: 'foo', type: 'css', target: 'bar' })).toMatchObject({
+          sourceOptions: { name: 'foo', type: 'css', target: 'bar' },
+        });
+
+        // @ts-expect-error
+        expect(propType.number.source({}).validate).toBeUndefined();
+        // @ts-expect-error
+        expect(propType.number.source({}).optional).toBeUndefined();
+        // @ts-expect-error
+        expect(propType.number.source({}).defaultValue).toBeUndefined();
+      });
+
+      it('should be correct after optional', () => {
+        expect(
+          propType.number.optional.source({ name: 'foo', type: 'css', target: 'bar' }),
+        ).toMatchObject({
+          isOptional: true,
+          missingValue: true,
+          sourceOptions: { name: 'foo', type: 'css', target: 'bar' },
+        });
+
+        // @ts-expect-error
+        expect(propType.number.optional.source({}).validate).toBeUndefined();
+        // @ts-expect-error
+        expect(propType.number.optional.source({}).optional).toBeUndefined();
+        // @ts-expect-error
+        expect(propType.number.optional.source({}).defaultValue).toBeUndefined();
+      });
+
+      it('should be correct after defaultValue', () => {
+        expect(
+          propType.number.defaultValue(0).source({ name: 'foo', type: 'css', target: 'bar' }),
+        ).toMatchObject({
+          isOptional: true,
+          default: 0,
+          sourceOptions: { name: 'foo', type: 'css', target: 'bar' },
+        });
+
+        // @ts-expect-error
+        expect(propType.number.defaultValue(0).source({}).optional).toBeUndefined();
+        // @ts-expect-error
+        expect(propType.number.defaultValue(0).source({}).defaultValue).toBeUndefined();
+        // @ts-expect-error
+        expect(propType.number.defaultValue(0).source({}).validate).toBeUndefined();
+      });
+
+      it('should be correct after validate', () => {
+        expect(
+          propType.number.validate(isNumber).source({ name: 'foo', type: 'css', target: 'bar' }),
+        ).toMatchObject({
+          validator: isNumber,
+          sourceOptions: { name: 'foo', type: 'css', target: 'bar' },
+        });
+
+        // @ts-expect-error
+        expect(propType.number.validate(isNumber).source({}).validate).toBeUndefined();
+        // @ts-expect-error
+        expect(propType.number.validate(isNumber).source({}).optional).toBeUndefined();
+        // @ts-expect-error
+        expect(propType.number.validate(isNumber).source({}).defaultValue).toBeUndefined();
+      });
+      it('should be correct after everything', () => {
+        expect(
+          propType.number.optional
+            .validate(isNumber)
+            .source({ name: 'foo', type: 'css', target: 'bar' }),
+        ).toMatchObject({
+          type: Number,
+          isOptional: true,
+          missingValue: true,
+          validator: isNumber,
+          sourceOptions: { name: 'foo', type: 'css', target: 'bar' },
+        });
+
+        // @ts-expect-error
+        expect(propType.number.optional.validate(isNumber).source({}).validate).toBeUndefined();
+        // @ts-expect-error
+        expect(propType.number.optional.validate(isNumber).optional).toBeUndefined();
+        // @ts-expect-error
+        expect(propType.number.optional.validate(isNumber).defaultValue).toBeUndefined();
       });
     });
   });

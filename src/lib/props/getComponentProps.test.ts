@@ -49,4 +49,40 @@ describe('getComponentProps', () => {
       boolValueFalse: false,
     });
   });
+  it('should return default values for missing props', () => {
+    const sources = [
+      createDataAttributePropertySource(),
+      createJsonScriptPropertySource(),
+      createClassListPropertySource(),
+      createReactivePropertySource(),
+    ];
+
+    const defaultDate = new Date();
+    const defaultFn = () => void 0;
+    const element = document.createElement('div');
+    const refDefinition = {};
+    const propDefinition = {
+      stringValue: { type: String, isOptional: true, default: 'foo' },
+      numberValue: { type: Number, isOptional: true, default: 0 },
+      boolValueTrue: { type: Boolean, isOptional: true, default: true },
+      boolValueFalse: { type: Boolean, isOptional: true, default: false },
+      dateValue: { type: Date, isOptional: true, default: defaultDate },
+      fnValue: { type: Date, isOptional: true, default: defaultFn },
+    };
+
+    const instance = createComponentInstance({}, element, { name: 'foo', setup: () => [] });
+
+    const instanceRefs = createComponentRefs(refDefinition, instance);
+
+    const value = getComponentProps(propDefinition, element, sources, instanceRefs);
+
+    expect(value).toEqual({
+      stringValue: 'foo',
+      numberValue: 0,
+      boolValueTrue: true,
+      boolValueFalse: false,
+      dateValue: defaultDate,
+      fnValue: defaultFn,
+    });
+  });
 });
