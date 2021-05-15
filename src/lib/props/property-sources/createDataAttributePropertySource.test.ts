@@ -1,5 +1,15 @@
-import type { PropTypeInfo } from '../propDefinitions.types';
+import { createComponentInstance } from '../../Component';
+import { createComponentRefs } from '../../refs/createComponentRefs';
+import { getComponentProps } from '../getComponentProps';
+import { propType } from '../propDefinitions';
+import type { PropTypeDefinition, PropTypeInfo } from '../propDefinitions.types';
 import { createDataAttributePropertySource } from './createDataAttributePropertySource';
+
+function createElementHtml(content: string): HTMLElement {
+  const element = document.createElement('div');
+  element.innerHTML = content;
+  return element.firstChild as HTMLElement;
+}
 
 const mockConsoleWarn = () => {
   const consoleOutput: Array<unknown> = [];
@@ -18,10 +28,10 @@ const mockConsoleError = () => {
 describe('createDataAttributePropertySource', () => {
   const originalError = console.error;
   afterEach(() => (console.error = originalError));
-  mockConsoleError();
+  const errorOutput = mockConsoleError();
   const originalWarn = console.warn;
   afterEach(() => (console.warn = originalWarn));
-  mockConsoleWarn();
+  const warnOutput = mockConsoleWarn();
 
   it('should create without errors', () => {
     expect(createDataAttributePropertySource).not.toThrow();
@@ -254,6 +264,113 @@ describe('createDataAttributePropertySource', () => {
           expect(typeof value).toBe('undefined');
           expect(value).toEqual(undefined);
         });
+      });
+    });
+  });
+  // TODO: rename to 'data'
+  describe('attr', () => {
+    const sources = [createDataAttributePropertySource()];
+    const getResolvedProps = (element: HTMLElement, props: Record<string, PropTypeDefinition>) => {
+      const instance = createComponentInstance({}, element, {
+        name: 'test-component',
+        setup: () => [],
+      });
+      const instanceRefs = createComponentRefs({}, instance);
+
+      return getComponentProps(props, element, sources, instanceRefs);
+    };
+    describe('string', () => {
+      it('should return the value when exists', () => {
+        const element = createElementHtml(`<div data-value="foo">content</div>`);
+        const props = {
+          value: propType.string.source({ type: 'data' }),
+        };
+
+        expect(getResolvedProps(element, props)).toEqual({
+          value: 'foo',
+        });
+      });
+      it(`should return undefined when missing`, () => {
+        const element = createElementHtml(`<div>content</div>`);
+        const props = {
+          value: propType.string.source({ type: 'data' }),
+        };
+
+        const resolvedProps = getResolvedProps(element, props);
+
+        expect(resolvedProps).toEqual({});
+        expect(errorOutput.flat()).toContain('Property "value" is not available in source "data".');
+      });
+      it(`should return the default value when missing`, () => {
+        const element = createElementHtml(`<div>content</div>`);
+        const props = {
+          value: propType.string.defaultValue('bar').source({ type: 'data' }),
+        };
+
+        expect(getResolvedProps(element, props)).toEqual({
+          value: 'bar',
+        });
+      });
+      it(`should return undefined without error when missing and optional`, () => {
+        const element = createElementHtml(`<div>content</div>`);
+        const props = {
+          optionalValue: propType.string.optional.source({ type: 'data' }),
+        };
+
+        const resolvedProps = getResolvedProps(element, props);
+
+        expect(resolvedProps).toEqual({});
+        expect(errorOutput.flat()).not.toContain(
+          'Property "optionalValue" is not available in source "data".',
+        );
+      });
+    });
+    describe('boolean', () => {
+      it('should return the value when exists', () => {
+        const element = createElementHtml(`<div data-expanded="true">content</div>`);
+        const props = {
+          expanded: propType.boolean.source({ type: 'data' }),
+        };
+
+        expect(getResolvedProps(element, props)).toEqual({
+          expanded: true,
+        });
+      });
+      it(`should return undefined when missing`, () => {
+        const element = createElementHtml(`<div>content</div>`);
+        const props = {
+          expanded: propType.boolean.source({ type: 'data' }),
+        };
+
+        const resolvedProps = getResolvedProps(element, props);
+
+        expect(resolvedProps).toEqual({});
+        expect(errorOutput.flat()).toContain(
+          'Property "expanded" is not available in source "data".',
+        );
+      });
+      it(`should return the default value when missing`, () => {
+        const element = createElementHtml(`<div>content</div>`);
+        const props = {
+          expanded: propType.boolean.defaultValue(true).source({ type: 'data' }),
+        };
+
+        expect(getResolvedProps(element, props)).toEqual({
+          expanded: true,
+        });
+      });
+      it(`should return undefined without error when missing and optional`, () => {
+        const element = createElementHtml(`<div>content</div>`);
+        const props = {
+          optionalExpanded: propType.boolean.optional.source({ type: 'data' }),
+        };
+
+        const resolvedProps = getResolvedProps(element, props);
+
+        expect(resolvedProps).toEqual({});
+        expect(errorOutput.flat()).not.toContain(
+          'Property "optionalExpanded" is not available in source "data".',
+        );
       });
     });
   });
