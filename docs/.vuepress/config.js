@@ -7,6 +7,7 @@ module.exports = {
       { text: 'Home', link: '/' },
       { text: 'Guide', link: '/guide/' },
       { text: 'Api', link: '/api/' },
+      { text: 'Changelog', link: '/changelog/' },
       { text: 'Research', link: '/research/' },
     ],
     repo: 'mubanjs/muban',
@@ -45,6 +46,10 @@ module.exports = {
         'component-dynamic-templates',
         'reactivity',
         'pure-rendering',
+      ],
+
+      '/changelog/': [
+        '',
       ],
 
       // fallback
