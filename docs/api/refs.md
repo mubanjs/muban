@@ -10,21 +10,33 @@ The shape of the definition that you pass to the component is the following:
 ```ts
 // refs definition
 type ComponentRefItem =
-  // shortcut for element ref
+  // shortcut for element ref, will internally be turned into a `refElement()`
   | string
   | {
-      // different refs have their own type, to execute slightly different logic on them
+      // Different refs have their own type, to execute slightly different logic on them.
       type: 'element' | 'collection' | 'component' | 'componentCollection';
-      // the value of the `data-ref` attribute on the html element(s)
+      // The value of the `data-ref` attribute on the html element(s).
       ref: string;
-      // only used for element/component, and when true, it will log an error if the element
+      // Only used for element/component, and when true, it will log an error if the element
       // doesn't exist in the DOM. Nothing will break, it's just that the bindings will not
-      // be executed  
+      // be executed.
       isRequired?: boolean;
+      // A function that will find the right HTMLElement(s) that should be used for the refs.
+      // When `type` is element or component, it returns a single HTMLElement or null.
+      queryRef: (parent: HTMLElement) => HTMLElement | null | Array<HTMLElement>;
     }
 ```
 
-If you don't want to pass this by hand, you can make use of the available helper functions
+However, you would never pass this by hand, but instead make use of the available helper 
+functions described below.
+
+**ignoreGuard**
+
+By default, only refs directly within a component can be selected. Refs from child components 
+are not accessible. All `ref` functions have an `ignoreGuard` option.
+
+When setting `ignoreGuard` to true, it disables the guarding behaviour, and allows 
+you to query any ref.
 
 ### refElement
 
@@ -32,29 +44,58 @@ If you don't want to pass this by hand, you can make use of the available helper
 
 ```ts
 declare function refElement(
-  refId: string,
-  options?: { isRequired?: boolean },
+  refIdOrQuery: string | ((parent: HTMLElement) => HTMLElement | null),
+  options?: {
+    isRequired?: boolean;
+    ignoreGuard?: boolean;
+  },
 ): ComponentRefItemElement;
 ```
 
-By default, all refs are marked as required, and will log errors in the console when they cannot
-be found. If elements are optional, you can set `isRequired` to `false, and by doing that, the type
+#### refIdOrQuery
+
+`refId: string`
+
+`refQuery: (parent: HTMLElement) => HTMLElement | null)`
+
+When passing a `string`, it's the value of the `data-ref` attribute on one of the HTMLElements 
+in the DOM.
+
+When passing a `function`, you can query your elements by using `parent.querySelector(...)` to 
+return a single element. 
+
+Any elements that are queried are filtered against the component guard unless `options.
+ignoreGuard` is set to `true`.
+
+#### options.isRequired
+
+`isRequired?: boolean = false`
+
+By default, all refs are marked as **required**, and will log errors in the console when they cannot
+be found. If elements are optional, you can set `isRequired` to `false`, and by doing that, the type
 becomes optional as well.
 
-::: tip Shortcut
-Passing `'string'` is a quick shortcut for `refElement('string')`.
-:::
+#### options.ignoreGuard
+
+`ignoreGuard?: boolean = false`
+
+When set to `true`, it disables the guarding behaviour, and allows you to query any ref of any child 
+component.
+
 
 **Example**
 
 <code-group>
 <code-block title="Component">
-```ts{4-6}
+```ts{4-9}
 defineComponent({
   // ...
   refs: {
+    // the easiest way to use this, when not providing options
     shortcut: 'single-element',
+    // being more explicit, by default ref is required
     requiredElement: refElement('single-element'),
+    // making this ref optional
     optionalElement: refElement('single-element', { isRequired: false }),
   },
   // ...
@@ -71,28 +112,74 @@ defineComponent({
 </code-block>
 </code-group>
 
+
+::: tip Shortcut
+Passing `'string'` is a quick shortcut for `refElement('string')`.
+:::
+
 ### refCollection
 
 `refCollection` selects one or more DOM elements that have the `data-ref` attribute set. If no
 elements are found, the collection will be empty.
 
 ```ts
-declare function refCollection(refId: string): ComponentRefItemCollection;
+declare function refCollection(
+  refIdOrQuery: string | ((parent: HTMLElement) => Array<HTMLElement>),
+  options?: {
+    minimumItemsRequired?: number;
+    ignoreGuard?: boolean;
+  },
+): ComponentRefItemCollection;
 ```
 
 In the `setup` function, a collection can be used to apply the same binding to multiple items,
 or to loop over in a mapping function and specify a different binding based on each individual
 element or index in the collection.
 
+
+#### refIdOrQuery
+
+`refId: string`
+
+`refQuery: (parent: HTMLElement) => Array<HTMLElement>)`
+
+When passing a `string`, it's the value of the `data-ref` attribute on one or multiple HTMLElements
+in the DOM.
+
+When passing a `function`, you can query your elements by using `parent.querySelectorAll(...)` 
+to return one or multiple elements.
+
+Any elements that are queried are filtered against the component guard unless `options.
+ignoreGuard` is set to `true`.
+
+#### options.minimumItemsRequired
+
+`minimumItemsRequired?: number = 0`
+
+By default, the returned collection can be empty, and is thus optional by default. By setting
+`minimumItemsRequired` to a specific value, an error is thrown when the collection contains fewer 
+items. 
+
+#### options.ignoreGuard
+
+`ignoreGuard?: boolean = false`
+
+When set to `true`, it disables the guarding behaviour, and allows you to query any ref of any child
+component.
+
+
 **Example**
 
 <code-group>
 <code-block title="Component">
-```ts{4}
+```ts{4-7}
 defineComponent({
   // ...
   refs: {
+    // select all `data-ref=item`, the resulting collection contains 0 or more items
     items: refCollection('item'),
+    // expect at least 3 items to be available in the DOM, otherwise an error is thrown
+    items: refCollection('item', { minimumItemsRequired: 3 }),
   },
   // ...
 })
@@ -122,28 +209,78 @@ After selecting the DOM element, it will create a new component instance for tha
 
 ```ts
 declare function refComponent(
-  component: ComponentFactory,
-  options?: { ref?: string; isRequired?: boolean },
+  component: ComponentFactory | Array<ComponentFactory>,
+  options?: {
+    ref: string | ((parent: HTMLElement) => HTMLElement | null);
+    isRequired?: boolean;
+    ignoreGuard?: boolean;
+  },
 ): ComponentRefItemComponent;
 ```
 
+#### component
 
-By default, all refs are marked as required, and will log errors in the console when they cannot
-be found. If elements are optional, you can set `isRequired` to `false, and by doing that, the type
+`component: ComponentFactory | Array<ComponentFactory>`
+
+One or multiple components that will be created for this ref. In addition to almost all HTML 
+bindings, a component ref also allows you to bind against child component props, updating their
+values when things change, or providing callback functions that can be called.
+
+If `options.refIdOrQuery` is not passed, it will search for the first occurrence of the 
+`data-component` matching the passed component(s).
+
+If you pass an `Array` of multiple components, it will use the first one it finds. The most 
+common use case is by having one element with a specific `data-ref` that should match one of the 
+passed components.
+
+When doing that, only the component props that exists on all the passed components can be used 
+to bind against.
+
+#### options.ref
+
+`ref: string`
+
+`ref: (parent: HTMLElement) => HTMLElement | null)`
+
+If you have multiple component elements, and the ref should target a specific one, the 
+`ref` can be used. Or if you just want to be more strict about things, to make sure it 
+doesn't break in the future. Otherwise, if you just have a single child component, you can omit 
+the ref, and it still will be able to find the element based on the `data-component` attribute.
+
+When passing a `string`, it's the value of the `data-ref` attribute on one of the HTMLElements
+in the DOM.
+
+When passing a `function`, you can query your elements by using `parent.querySelector(...)` to
+return a single element.
+
+Any elements that are queried are filtered against the component guard unless `options.
+ignoreGuard` is set to `true`.
+
+Any elements that are queried are also filtered with the `data-component` attribute against the 
+`displayName` of the passed `ComponentFactory`.
+
+
+#### options.isRequired
+
+`isRequired?: boolean = false`
+
+By default, all refs are marked as **required**, and will log errors in the console when they cannot
+be found. If elements are optional, you can set `isRequired` to `false`, and by doing that, the type
 becomes optional as well.
 
-If you only have a single child component of the passed type, providing a `ref` is optional, since
-it just select that one component based on the `data-component` attribute.
+#### options.ignoreGuard
 
-However, if you have multiple instance of the same child component, and want to target each one
-individually (e.g. having multiple buttons that need different bindings), you have to use the
-`data-ref` attribute to make each one uniquely targetable.
+`ignoreGuard?: boolean = false`
+
+When set to `true`, it disables the guarding behaviour, and allows you to query any ref of any child
+component.
+
 
 **Example**
 
 <code-group>
 <code-block title="Component">
-```ts{4-9}
+```ts{4-16}
 defineComponent({
   // ...
   refs: {
@@ -153,6 +290,13 @@ defineComponent({
     // there are multiple buttons, target specific one
     acceptButton: refComponent(Button, { ref: 'accept-button' }),
     cancelButton: refComponent(Button, { ref: 'cancel-button', isRequired: false }),
+    // the component can either be a Button or a Link
+    someButton: refComponent([Button, Link], { ref: 'some-button' }),
+    // select the icon _inside_ the Button, using a custom querySelector and the ignoreGuard
+    buttonIcon: refComponent(Icon, {
+      ref: parent => parent.querySelector('[data-ref="some-button"] [data-ref="icon"]'),
+      ignoreGuard: true,
+    }),
   },
   // ...
 })
@@ -181,15 +325,61 @@ After selecting the DOM elements, it will create a new component instance for ea
 ```ts
 declare function refComponents(
   component: ComponentFactory,
-  options?: { ref?: string},
+  options?: {
+    ref: string | ((parent: HTMLElement) => Array<TMLElement>);
+    minimumItemsRequired?: number;
+    ignoreGuard?: boolean;
+  },
 ): ComponentRefItemComponentCollection;
 ```
 
-If all the components in the dom are the ones you want to query, providing a `ref` is optional,
-since it just select those components based on the `data-component` attribute.
+#### component
 
-However, if you have other instances of that components that you don't want in this collection,
-you have to use the `data-ref` attribute to target the ones you want specifically.
+`component: ComponentFactory`
+
+The component that will be created for this ref. In addition to almost all HTML bindings, a 
+component ref also allows you to bind against child component props, updating their values when 
+things change, or providing callback functions that can be called.
+
+If `options.ref` is not passed, it will search for the first occurrence of the
+`data-component` matching the passed component.
+
+#### options.ref
+
+`ref: string`
+
+`ref: (parent: HTMLElement) => HTMLElement | null)`
+
+If you have multiple component elements, and the ref should target specific ones, the
+`ref` can be used. Or if you just want to be more strict about things, to make sure it
+doesn't break in the future. Otherwise, if you just want to target all elements of this component, 
+you can omit the ref, and it still will use all element based on the `data-component` attribute.
+
+When passing a `string`, it's the value of the `data-ref` attribute on the HTMLElements in the DOM.
+
+When passing a `function`, you can query your elements by using `parent.querySelectorAll(...)` to
+return multiple elements.
+
+Any elements that are queried are filtered against the component guard unless `options.
+ignoreGuard` is set to `true`.
+
+Any elements that are queried are also filtered with the `data-component` attribute against the
+`displayName` of the passed `ComponentFactory`.
+
+#### options.minimumItemsRequired
+
+`minimumItemsRequired?: number = 0`
+
+By default, the returned collection can be empty, and is thus optional by default. By setting
+`minimumItemsRequired` to a specific value, an error is thrown when the collection contains fewer
+items.
+
+#### options.ignoreGuard
+
+`ignoreGuard?: boolean = false`
+
+When set to `true`, it disables the guarding behaviour, and allows you to query any ref of any child
+component.
 
 **Example**
 
@@ -243,9 +433,11 @@ type ElementRef = {
 };
 
 type CollectionRef<> = {
-  elements: Array<HTMLElement>;
+  // this is a function, and has refs inside, so causes `watch` or `watchEffect` to re-execute 
+  // when the DOM updates and the items inside the collection change 
+  getElements: () => Array<HTMLElement>;
   // nested refs for each single individual element
-  refs: Array<ElementRef>;
+  getRefs: () => Array<ElementRef>;
 };
 
 type ComponentRef = {
@@ -253,16 +445,18 @@ type ComponentRef = {
 };
 
 type ComponentsRef = {
-  components: Array<ComponentApi>;
+  // this is a function, and has refs inside, so causes `watch` or `watchEffect` to re-execute 
+  // when the DOM updates and the items inside the collection change 
+  getComponents: () => Array<ComponentApi>;
   // nested refs for each single individual component
-  refs: Array<ComponentRef>;
+  getRefs: () => Array<ComponentRef>;
 };
 ```
 
 As you can see, all 4 have a reference to the actual item(s) that they have selected as `element`, 
-`elements`, `component` or `components`. The two collection refs have access to the "item" `refs`,
-a list of "container refs" around each item in the collection, which could be useful when applying
-the individual bindings to each item.
+`getElements()`, `component` or `getComponents()`. The two collection refs have access to the 
+"item" `refs`, a list of "container refs" around each item in the collection, which could be 
+useful when applying  the individual bindings to each item.
 
 **Example**
 
@@ -276,11 +470,11 @@ defineComponent({
   },
   setup({ props, refs }) {
     refs.singleElement.element; // HTMLElement
-    refs.elementCollection.elements; // Array<HTMLElement>
+    refs.elementCollection.getElements(); // Array<HTMLElement>
 
     refs.singleComponent.component; // ComponentApi
     refs.singleComponent.component.props; // Access the component props, useful for intial state
-    refs.componentCollection.components; // Array<ComponentApi>
+    refs.componentCollection.getComponents(); // Array<ComponentApi>
     
     return [
       bind(refs.singleElement, { text: 'label' }), // bind to single element

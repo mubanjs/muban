@@ -131,13 +131,16 @@ type ComponentRefItem =
       // doesn't exist in the DOM. Nothing will break, it's just that the bindings will not
       // be executed  
       isRequired?: boolean;
-    }
+      // A function that will find the right HTMLElement(s) that should be used for the refs.
+      // When `type` is element or component, it returns a single HTMLElement or null.
+      queryRef: (parent: HTMLElement) => HTMLElement | null | Array<HTMLElement>;
+}
 ```
 
 Luckily there are helper functions available to easily define the refs without having to provide
 these complex objects yourself.
 
-You can find more info at the [Props API](./refs.md)
+You can find more info at the [Refs API](./refs.md)
 
 ### setup
 
