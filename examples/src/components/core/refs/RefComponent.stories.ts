@@ -147,3 +147,49 @@ Default3.argTypes = {
   },
 };
 Default3.storyName = 'Multi without ref';
+
+// The most basic version of a component throws a typescript error
+export const SomeComponent = defineComponent({
+  name: 'some-component',
+});
+
+// Adding the empty props makes sure it works.
+export const SomeOtherComponent = defineComponent({
+  name: 'some-other-component',
+  props: {},
+});
+
+export const Default4: Story<{ toRender?: 'button' | 'link' }> = () => ({
+  component: defineComponent({
+    name: 'ref-component',
+    refs: {
+      someComponent: refComponent(SomeComponent, { ref: 'some-component' }),
+      someOtherComponent: refComponent(SomeOtherComponent, { ref: 'some-other-component' }),
+    },
+    setup({ refs }) {
+      return [
+        bind(refs.someComponent, {
+          event: {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            click: () => {
+              // This will throw a typescript error when the @ts-ignore is removed.
+            },
+          },
+        }),
+        bind(refs.someOtherComponent, {
+          event: {
+            click: () => {
+              // This will work like expected because the `SomeOtherComponent` has an empty `props` object.
+            },
+          },
+        }),
+      ];
+    },
+  }),
+  template: () => html` <div data-component="ref-component">
+    <div data-component="some-component" />
+    <div data-component="some-other-component" />
+  </div>`,
+});
+Default4.storyName = 'Components without props';
