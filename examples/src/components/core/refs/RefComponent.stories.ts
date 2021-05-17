@@ -58,7 +58,13 @@ export const Default: Story = () => ({
     },
     setup({ refs }) {
       return [
-        bind(refs.btnComponent, { label: computed(() => 'label1'), to: computed(() => 'to1') }),
+        bind(refs.btnComponent, {
+          label: computed(() => 'label1'),
+          to: computed(() => 'to1'),
+          event: {
+            click: () => console.log('clicked'),
+          },
+        }),
         bind(refs.btnRef, { label: computed(() => 'label2'), to: computed(() => 'to2') }),
         bind(refs.lnkComponent, { label: computed(() => 'label3'), href: computed(() => '#to3') }),
         bind(refs.lnkRef, { label: computed(() => 'label4'), href: computed(() => '#to4') }),
