@@ -69,7 +69,7 @@ ignoreGuard` is set to `true`.
 
 #### options.isRequired
 
-`isRequired?: boolean = false`
+`isRequired?: boolean = true`
 
 By default, all refs are marked as **required**, and will log errors in the console when they cannot
 be found. If elements are optional, you can set `isRequired` to `false`, and by doing that, the type
@@ -262,7 +262,7 @@ Any elements that are queried are also filtered with the `data-component` attrib
 
 #### options.isRequired
 
-`isRequired?: boolean = false`
+`isRequired?: boolean = true`
 
 By default, all refs are marked as **required**, and will log errors in the console when they cannot
 be found. If elements are optional, you can set `isRequired` to `false`, and by doing that, the type
