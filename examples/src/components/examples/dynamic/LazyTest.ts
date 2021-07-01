@@ -1,12 +1,22 @@
 import { html } from '@muban/template';
-import { computed, ref } from '@vue/reactivity';
-import { bind, defineComponent } from '../../../../../src';
-import { supportLazy } from '../../../../../src/lib/api/apiLazy';
+import {
+  supportLazy,
+  computed,
+  ref,
+  bind,
+  defineComponent,
+  refComponent,
+} from '../../../../../src';
+import { SomeChildComponent, someChildComponentTemplate } from './SomeChildComponent';
 
 export const displayName = 'lazy-test';
 
 export const LazyTest = defineComponent({
   name: 'lazy-test',
+  refs: {
+    // Adding the SomeChildComponent as a ref here causes it to be initialized twice!
+    someChildComponent: refComponent(SomeChildComponent, { ref: 'child' }),
+  },
   setup({ refs }) {
     const count = ref(0);
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -25,8 +35,8 @@ export type LazyTestTemplateProps = {
 };
 
 export function lazyTestTemplate({ label }: LazyTestTemplateProps): string {
-  return html`<button data-component=${LazyTest.displayName} class="btn btn-primary">
-    ${label}
+  return html`<button data-component="lazy-test" class="btn btn-primary">
+    ${label} Test ${someChildComponentTemplate()}
   </button>`;
 }
 

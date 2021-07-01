@@ -11,6 +11,8 @@ import { ToggleExpand } from './components/examples/toggle-expand/ToggleExpand';
 import { toggleExpandTemplate } from './components/examples/toggle-expand/ToggleExpand.template';
 
 import './style/main.scss';
+import { lazyTestTemplate } from './components/examples/dynamic/LazyTest';
+import { SomeChildComponent } from './components/examples/dynamic/SomeChildComponent';
 
 const MyComponent = defineComponent({
   name: 'my-component',
@@ -130,12 +132,14 @@ function myComponentTemplate({ welcomeText }: MyComponentProps) {
       })}
     </div>
     <div>${filterProducts(dummyProductProps)}</div>
+    ${lazyTestTemplate({ label: 'test' })}
   </div>`;
 }
 
 const app = createApp(MyComponent);
 const appRoot = document.getElementById('app2');
 if (appRoot) {
+  app.component(SomeChildComponent);
   app.mount(appRoot, myComponentTemplate, {
     welcomeText: 'Hello',
   });
