@@ -119,7 +119,6 @@
     "eslint-plugin-react-hooks": "^4.0.8",
     "eslint-plugin-unicorn": "^21.0.0",
     "file-loader": "^6.2.0",
-    "gsap": "./examples/src/vendor/gsap-bonus.tgz",
     "jest": "^26.3.0",
     "lazysizes": "^5.2.2",
     "normalize.css": "^8.0.1",
