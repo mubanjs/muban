@@ -30,7 +30,7 @@
     "clean:test": "shx rm -rf coverage .nyc_output",
     "clean:build": "shx rm -rf tmp decl",
     "clean:npm": "shx rm -rf lib dist index.js index.d.ts",
-    "examples": "webpack serve -c ./examples/webpack.config.js",
+    "example:gsap": "webpack serve -c ./examples/gsap/webpack.config.js",
     "tests": "webpack serve -c ./tests/webpack.config.js",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx examples/src",
     "lint:single": "eslint /Volumes/Projects/mm/muban/muban-component/examples/src/components/toggle-expand/ToggleExpand.ts",
