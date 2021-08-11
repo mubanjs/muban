@@ -1,6 +1,6 @@
 import { ref } from '@vue/reactivity';
 import { html } from '@muban/template';
-import { defineComponent, lazy, refComponent, provide, createApp } from '../../src';
+import { defineComponent, lazy, refComponent, provide, createApp } from '../../../src';
 import {
   FilterProducts,
   filterProducts,

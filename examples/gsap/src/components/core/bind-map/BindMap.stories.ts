@@ -10,7 +10,7 @@ import {
   refCollection,
   refComponent,
   refComponents,
-} from '../../../../../src';
+} from '../../../../../../src';
 import { BindMapItem, bindMapItemTemplate } from './Item';
 
 export default {

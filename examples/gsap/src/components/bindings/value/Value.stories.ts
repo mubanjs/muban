@@ -1,7 +1,7 @@
 import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 import { ref } from '@vue/reactivity';
-import { bind, defineComponent } from '../../../../../src';
+import { bind, defineComponent } from '../../../../../../src';
 
 export default {
   title: 'bindings/value',

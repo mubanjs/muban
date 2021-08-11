@@ -2,7 +2,7 @@ import { html } from '@muban/template';
 import { ref } from '@vue/reactivity';
 
 import './paragraph.css';
-import { bind, defineComponent, refComponent, refElement } from '../../../../../src';
+import { bind, defineComponent, refComponent, refElement } from '../../../../../../src';
 
 ////////////////////////////////////////////////////////////////////////////////
 // Title

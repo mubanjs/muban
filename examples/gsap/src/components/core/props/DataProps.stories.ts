@@ -2,9 +2,9 @@
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 import { html } from '@muban/template';
 import { computed } from '@vue/reactivity';
-import { bind, defineComponent, propType } from '../../../../../src';
-import type { PropTypeDefinition } from '../../../../../src/lib/props/propDefinitions.types';
-import type { ComponentRefItem } from '../../../../../src/lib/refs/refDefinitions.types';
+import { bind, defineComponent, propType } from '../../../../../../src';
+import type { PropTypeDefinition } from '../../../../../../src/lib/props/propDefinitions.types';
+import type { ComponentRefItem } from '../../../../../../src/lib/refs/refDefinitions.types';
 
 export default {
   title: 'core/props/data',

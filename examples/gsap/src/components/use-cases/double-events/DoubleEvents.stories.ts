@@ -8,7 +8,7 @@ import {
   propType,
   refCollection,
   refComponent,
-} from '../../../../../src';
+} from '../../../../../../src';
 import { CfA2Icon } from '../../atom/cf-a2-icon/CfA2Icon';
 import { cfA2IconTemplate } from '../../atom/cf-a2-icon/CfA2Icon.template';
 

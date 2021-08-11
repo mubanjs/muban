@@ -2,7 +2,7 @@
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 import { html } from '@muban/template';
 import { computed } from '@vue/reactivity';
-import { bind, defineComponent, propType, refComponent } from '../../../../../src';
+import { bind, defineComponent, propType, refComponent } from '../../../../../../src';
 
 export default {
   title: 'core/refs/refComponent',

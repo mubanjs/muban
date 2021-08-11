@@ -1,5 +1,5 @@
 import { html } from '@muban/template';
-import { bind, defineComponent, propType, refComponent, refElement } from '../../../../../src';
+import { bind, defineComponent, propType, refComponent, refElement } from '../../../../../../src';
 import classNames from 'classnames';
 
 import './cf-m2-input-field.scss';

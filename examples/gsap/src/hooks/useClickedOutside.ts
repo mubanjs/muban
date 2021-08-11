@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted } from '../../../src';
+import { onMounted, onUnmounted } from '../../../../src';
 
 /**
  * A small wrapper method to easily check if a user clicked inside of a HTMLElement.

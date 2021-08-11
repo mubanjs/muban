@@ -27,8 +27,8 @@ module.exports = {
           {
             loader: 'sass-loader',
             options: {
-              additionalData: '@import "/examples/src/style/_global.scss";',
-            }
+              additionalData: '@import "/examples/gsap/src/style/_global.scss";',
+            },
           },
         ],
       },
@@ -70,7 +70,7 @@ module.exports = {
             },
           ];
         })(),
-      }
+      },
     ],
   },
   resolve: {

@@ -6,7 +6,7 @@ import {
   propType,
   refComponent,
   refElement,
-} from '../../../../../src';
+} from '../../../../../../src';
 import classNames from 'classnames';
 import { cfA2IconTemplate } from '../../atom/cf-a2-icon/CfA2Icon.template';
 

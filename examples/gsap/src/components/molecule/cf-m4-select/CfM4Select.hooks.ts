@@ -1,8 +1,8 @@
 import { useToggle } from '../../../hooks/useToggle';
 import { Ref, watch } from '@vue/runtime-core';
 import { closeSelectOptions, openSelectOptions } from './CfM4Select.animations';
-import type { ComponentRef, ElementRef } from '../../../../../src/lib/refs/refDefinitions.types';
-import type { BindProps } from '../../../../../src/lib/bindings/bindings.types';
+import type { ComponentRef, ElementRef } from '../../../../../../src/lib/refs/refDefinitions.types';
+import type { BindProps } from '../../../../../../src/lib/bindings/bindings.types';
 import focusLock from 'dom-focus-lock';
 import { useEscapeKeyEvent, useKeyboardEvent } from '../../../hooks/useKeyboardEvent';
 import { Key } from 'ts-key-enum';

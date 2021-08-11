@@ -1,5 +1,5 @@
 import { Key } from 'ts-key-enum';
-import { onMounted, onUnmounted } from '../../../src';
+import { onMounted, onUnmounted } from '../../../../src';
 
 type KeyPressCallback = (event: KeyboardEvent) => void;
 
