@@ -1,4 +1,5 @@
 import type { ComponentApi } from '../Component.types';
+import type { RefElementType } from '../refs/refDefinitions.types';
 import { getComponentForElement } from './global';
 
 export function getDirectChildComponents(container: HTMLElement): Array<HTMLElement> {
@@ -12,7 +13,7 @@ export function getDirectChildComponents(container: HTMLElement): Array<HTMLElem
  * Finds the parent data-component element that is not the element itself.
  * @param element
  */
-export function getParentComponentElement(element: HTMLElement): HTMLElement | null {
+export function getParentComponentElement(element: RefElementType): HTMLElement | null {
   return element.parentElement?.closest<HTMLElement>(`[data-component]`) ?? null;
 }
 

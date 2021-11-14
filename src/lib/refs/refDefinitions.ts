@@ -16,6 +16,7 @@ import {
   bindElement,
 } from '../bindings/bindingDefinitions';
 import { getParentComponentElement } from '../utils/domUtils';
+import type { RefElementType } from './refDefinitions.types';
 import type {
   ComponentRefItemCollection,
   ComponentRefItemComponent,
@@ -33,7 +34,7 @@ import type {
  * @param element
  * @param ignoreGuard
  */
-export function ensureElementIsComponentChild<T extends HTMLElement>(
+export function ensureElementIsComponentChild<T extends RefElementType>(
   parent: HTMLElement,
   element: T | null,
   ignoreGuard: boolean = false,
@@ -56,7 +57,7 @@ export function ensureElementIsComponentChild<T extends HTMLElement>(
   return null;
 }
 
-export function refElement<T extends HTMLElement = HTMLElement>(
+export function refElement<T extends RefElementType = RefElementType>(
   refIdOrQuery: string | ComponentRefItemElement<T>['queryRef'],
   { isRequired = true, ignoreGuard }: RefOptions<{ isRequired?: boolean }> = {},
 ): ComponentRefItemElement<T> {
@@ -82,7 +83,7 @@ export function refElement<T extends HTMLElement = HTMLElement>(
       const elementRef = ref<T>();
       const getElement = (initial: boolean = false) => {
         // when ref is not provided, pick the component element itself
-        const element = this.queryRef(instance.element);
+        const element = this.queryRef(instance.element as HTMLElement);
 
         if (isRequired && !element && (initial || elementRef.value !== element)) {
           console.error('Element not found', this.ref);
@@ -110,7 +111,7 @@ export function refElement<T extends HTMLElement = HTMLElement>(
   };
 }
 
-export function refCollection<T extends HTMLElement = HTMLElement>(
+export function refCollection<T extends RefElementType = RefElementType>(
   refIdOrQuery: string | ComponentRefItemCollection<T>['queryRef'],
   { minimumItemsRequired = 0, ignoreGuard }: RefOptions<{ minimumItemsRequired?: number }> = {},
 ): ComponentRefItemCollection<T> {
@@ -131,7 +132,7 @@ export function refCollection<T extends HTMLElement = HTMLElement>(
     createRef(instance) {
       const elementsRef = ref([]) as Ref<Array<T>>;
       const getElements = () => {
-        const elements = this.queryRef(instance.element);
+        const elements = this.queryRef(instance.element as HTMLElement);
         if (elements.length < minimumItemsRequired) {
           console.error(
             `Expected at least "${minimumItemsRequired}" elements, but found "${elements.length}"`,
@@ -214,7 +215,7 @@ export function refComponent<T extends ComponentFactory<any>>(
       const instanceRef = ref() as Ref<ReturnType<T> | undefined>;
 
       const getComponent = (initialRender: boolean = false) => {
-        const element = this.queryRef(instance.element);
+        const element = this.queryRef(instance.element as HTMLElement);
 
         if (initialRender && isRequired && !element) {
           console.error('Component not found', getQuery());
@@ -293,7 +294,7 @@ export function refComponents<T extends ComponentFactory<any>>(
       const instancesRef = ref([]) as Ref<Array<ReturnType<T>>>;
 
       const getComponents = () => {
-        const elements = this.queryRef(instance.element);
+        const elements = this.queryRef(instance.element as HTMLElement);
 
         if (elements.length < minimumItemsRequired) {
           console.error(

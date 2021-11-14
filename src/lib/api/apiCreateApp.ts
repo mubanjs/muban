@@ -114,7 +114,7 @@ export function createApp<C extends ComponentFactory>(rootComponent: C) {
         }
 
         isMounted = true;
-        app._container = app._instance?.element ?? null;
+        app._container = (app._instance?.element as HTMLElement) ?? null;
         // for devtools and telemetry
         // (rootContainer as any).__vue_app__ = app;
 

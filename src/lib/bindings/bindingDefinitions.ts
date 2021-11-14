@@ -5,6 +5,7 @@ import type { Ref } from '@vue/reactivity';
 import { watchEffect } from '@vue/runtime-core';
 import { getCurrentComponentInstance } from '../Component';
 import type { ComponentFactory } from '../Component.types';
+import type { RefElementType } from '../refs/refDefinitions.types';
 import type {
   CollectionRef,
   ComponentParams,
@@ -49,7 +50,7 @@ export function bind<T extends Pick<AnyRef, 'getBindingDefinition'>>(
  */
 export function bindMap<
   T extends Pick<
-    CollectionRef<HTMLElement, BindProps> | ComponentsRef<ComponentFactory<any>>,
+    CollectionRef<RefElementType, BindProps> | ComponentsRef<ComponentFactory<any>>,
     'getRefs' | 'getBindingDefinition'
   >
 >(
@@ -61,7 +62,7 @@ export function bindMap<
 ): Array<Binding>;
 export function bindMap<
   T extends Pick<
-    ElementRef<HTMLElement, BindProps> | ComponentRef<ComponentFactory<any>>,
+    ElementRef<RefElementType, BindProps> | ComponentRef<ComponentFactory<any>>,
     'getBindingDefinition'
   >
 >(
@@ -71,7 +72,7 @@ export function bindMap<
 export function bindMap(
   target: any,
   getProps: (
-    ref: ElementRef<HTMLElement, BindProps> | ComponentRef<ComponentFactory<any>>,
+    ref: ElementRef<RefElementType, BindProps> | ComponentRef<ComponentFactory<any>>,
     index: number,
   ) => any,
 ): Array<Binding> {
@@ -86,7 +87,7 @@ export function bindMap(
     watchEffect(() => {
       // TODO: should we check if this item already has bindings attached to it?
       const bindings = ((target as any).getRefs() as Array<
-        ElementRef<HTMLElement, BindProps> | ComponentRef<ComponentFactory<any>>
+        ElementRef<RefElementType, BindProps> | ComponentRef<ComponentFactory<any>>
       >).map((ref, index) => bind(ref, getProps(ref, index)));
 
       // TODO: should we register this as part of the component instance
@@ -99,7 +100,7 @@ export function bindMap(
 }
 
 export function bindTemplate<P extends any>(
-  target: ElementRef<HTMLElement, BindProps>,
+  target: ElementRef<RefElementType, BindProps>,
   data: Ref<P>,
   template: (data: P) => ComponentTemplateResult,
   {
@@ -112,7 +113,7 @@ export function bindTemplate<P extends any>(
     };
     renderImmediate?: boolean;
   } = {},
-): TemplateBinding<HTMLElement> {
+): TemplateBinding<RefElementType> {
   return BindTemplate({ ref: target, data, template, extract, renderImmediate });
 }
 
@@ -122,13 +123,13 @@ export function bindTemplate<P extends any>(
 // The response from these functions are used by the "applyBindings" function
 ////
 
-export type ElementBinding<T extends HTMLElement, P extends BindProps> = {
+export type ElementBinding<T extends RefElementType, P extends BindProps> = {
   ref: Ref<T | undefined>;
   type: 'element';
   props: P;
   getElements(): Array<T>;
 };
-export function bindElement<T extends HTMLElement, P extends BindProps>(
+export function bindElement<T extends RefElementType, P extends BindProps>(
   ref: Ref<T | undefined>,
   props: P,
 ): ElementBinding<T, P> {
@@ -143,13 +144,13 @@ export function bindElement<T extends HTMLElement, P extends BindProps>(
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export type CollectionBinding<T extends HTMLElement, P extends BindProps> = {
+export type CollectionBinding<T extends RefElementType, P extends BindProps> = {
   ref: Ref<Array<T>>;
   type: 'collection';
   props: P;
   getElements(): Array<T>;
 };
-export function bindCollection<T extends HTMLElement, P extends BindProps>(
+export function bindCollection<T extends RefElementType, P extends BindProps>(
   ref: Ref<Array<T>>,
   props: P,
 ): CollectionBinding<T, P> {
@@ -170,7 +171,7 @@ export type ComponentBinding<T extends SimpleComponentApi> = {
   ref: Ref<T | undefined>;
   type: 'component';
   props: ComponentParams<T>;
-  getElements(): Array<HTMLElement>;
+  getElements(): Array<RefElementType>;
 };
 export function BindComponent<T extends SimpleComponentApi>(
   ref: Ref<T | undefined>,
@@ -191,7 +192,7 @@ export type ComponentCollectionBinding<T extends SimpleComponentApi> = {
   ref: Ref<Array<T>>;
   type: 'componentCollection';
   props: ComponentParams<T>;
-  getElements(): Array<HTMLElement>;
+  getElements(): Array<RefElementType>;
 };
 export function bindComponentCollection<T extends SimpleComponentApi>(
   ref: Ref<Array<T>>,
@@ -207,12 +208,14 @@ export function bindComponentCollection<T extends SimpleComponentApi>(
   };
 }
 
-export type TemplateBinding<T extends HTMLElement> = {
+export type TemplateBinding<T extends RefElementType> = {
   type: 'template';
   props: TemplateProps<T>;
-  getElements(): Array<HTMLElement>;
+  getElements(): Array<RefElementType>;
 };
-export function BindTemplate<T extends HTMLElement>(props: TemplateProps<T>): TemplateBinding<T> {
+export function BindTemplate<T extends RefElementType>(
+  props: TemplateProps<T>,
+): TemplateBinding<T> {
   return {
     type: 'template',
     props: props,

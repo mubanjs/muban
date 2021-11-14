@@ -35,11 +35,12 @@ export function createJsonScriptPropertySource(): PropertySource {
       sourceName: 'json',
       hasProp: (propInfo) =>
         Boolean(
-          propInfo.source.target && propInfo.source.name in getJsonContent(propInfo.source.target),
+          propInfo.source.target &&
+            propInfo.source.name in getJsonContent(propInfo.source.target as HTMLElement),
         ),
       getProp: (propInfo) => {
         // TODO: convert to Date - all other data types should be fine in JSON already
-        return getJsonContent(propInfo.source.target!)[propInfo.source.name];
+        return getJsonContent(propInfo.source.target! as HTMLElement)[propInfo.source.name];
       },
     };
   };

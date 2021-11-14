@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Predicate, Primitive, Static } from 'isntnt';
 import type { IfAny } from '../Component.types';
+import type { RefElementType } from '../refs/refDefinitions.types';
 
 export type SourceOptions = {
   target?: string;
@@ -36,7 +37,7 @@ export type PropTypeInfo<T = any> = Pick<
   name: string;
   source: Required<Pick<SourceOptions, 'name'>> &
     Pick<SourceOptions, 'type' | 'options'> & {
-      target: HTMLElement | undefined;
+      target: RefElementType | undefined;
     };
 };
 

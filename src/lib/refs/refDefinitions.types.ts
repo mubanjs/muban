@@ -13,18 +13,20 @@ export type RefOptions<T extends Record<string, any>> = T & {
   ignoreGuard?: boolean;
 };
 
+export type RefElementType = HTMLElement | SVGElement;
+
 /*
  * This is the raw "definition" for refs, represented as a simple object.
  * Any helper functions must return this object
  */
-export type ComponentRefItemElement<T extends HTMLElement> = {
+export type ComponentRefItemElement<T extends RefElementType> = {
   type: 'element';
   ref: string;
   queryRef: (parent: HTMLElement) => T | null;
   createRef: (instance: InternalComponentInstance) => ElementRef<T, BindProps>;
   isRequired?: boolean;
 };
-export type ComponentRefItemCollection<T extends HTMLElement> = {
+export type ComponentRefItemCollection<T extends RefElementType> = {
   type: 'collection';
   ref: string;
   queryRef: (parent: HTMLElement) => Array<T>;
@@ -46,10 +48,12 @@ export type ComponentRefItemComponentCollection<T extends ComponentFactory<Recor
   createRef: (instance: InternalComponentInstance) => ComponentsRef<T>;
 };
 
-export type ComponentRefItemShortcuts = string | ComponentRefItemElement<HTMLElement>['queryRef'];
+export type ComponentRefItemShortcuts =
+  | string
+  | ComponentRefItemElement<RefElementType>['queryRef'];
 export type ResolvedComponentRefItem =
-  | ComponentRefItemElement<HTMLElement>
-  | ComponentRefItemCollection<HTMLElement>
+  | ComponentRefItemElement<RefElementType>
+  | ComponentRefItemCollection<RefElementType>
   | ComponentRefItemComponent<ComponentFactory<any>>
   | ComponentRefItemComponentCollection<ComponentFactory<any>>;
 
@@ -66,14 +70,14 @@ export type ComponentRefItem =
  * - applying bindings
  * - get access to the elements/components related to the ref
  */
-export type ElementRef<T extends HTMLElement, P extends BindProps> = {
+export type ElementRef<T extends RefElementType, P extends BindProps> = {
   type: 'element';
   getBindingDefinition: (props: P) => ElementBinding<T, P>;
   element: T | undefined;
   refreshRefs: () => void;
 };
 
-export type CollectionRef<T extends HTMLElement, P extends BindProps> = {
+export type CollectionRef<T extends RefElementType, P extends BindProps> = {
   type: 'collection';
   getBindingDefinition: (props: BindProps) => CollectionBinding<T, P>;
   getElements: () => Array<T>;
@@ -101,8 +105,8 @@ export type ComponentsRef<T extends ComponentFactory<any>> = {
 };
 
 export type AnyRef =
-  | ElementRef<HTMLElement, BindProps>
-  | CollectionRef<HTMLElement, BindProps>
+  | ElementRef<RefElementType, BindProps>
+  | CollectionRef<RefElementType, BindProps>
   | ComponentRef<ComponentFactory<any>>
   | ComponentsRef<ComponentFactory<any>>;
 
@@ -133,7 +137,7 @@ export type TypedRef<T extends ComponentRefItem> = T extends {
   createRef: (instance: InternalComponentInstance) => infer R;
 }
   ? Exclude<R, undefined>
-  : ElementRef<HTMLElement, BindProps>;
+  : ElementRef<RefElementType, BindProps>;
 
 /**
  * Extract typings out of the refDefinition input,

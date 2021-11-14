@@ -1,10 +1,11 @@
 import { isUndefined } from 'isntnt';
+import type { RefElementType } from '../refs/refDefinitions.types';
 import type { ResolvedComponentRefItem, TypedRefs } from '../refs/refDefinitions.types';
 import typedObjectEntries from '../type-utils/typedObjectEntries';
 import type { PropTypeDefinition, PropTypeInfo } from './propDefinitions.types';
 
 export type PropertySource = (
-  componentElement: HTMLElement,
+  componentElement: RefElementType,
 ) => {
   sourceName: string;
   hasProp: (info: PropTypeInfo) => boolean;
@@ -12,14 +13,14 @@ export type PropertySource = (
 };
 
 function convertToInternalPropInfo(
-  element: HTMLElement,
+  element: RefElementType,
   propName: string,
   propDefinition: PropTypeDefinition,
   refs: TypedRefs<Record<string, ResolvedComponentRefItem>>,
 ): PropTypeInfo {
   const { type, default: defaultValue, isOptional, validator } = propDefinition;
 
-  let target: HTMLElement | undefined;
+  let target: RefElementType | undefined;
   // resolve refs into elements
   if (propDefinition.sourceOptions?.target) {
     const targetRef = refs[propDefinition.sourceOptions?.target];
@@ -131,7 +132,7 @@ function getValueFromSource(propInfo: PropTypeInfo, sources: Array<ReturnType<Pr
 
 export function getComponentProps(
   props: Record<string, PropTypeDefinition> | undefined,
-  element: HTMLElement,
+  element: RefElementType,
   propertySources: Array<PropertySource>,
   refs: TypedRefs<Record<string, ResolvedComponentRefItem>>,
 ) {
