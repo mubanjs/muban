@@ -158,4 +158,5 @@ export const propType = {
   object: generateType(Object, {}),
   array: generateType(Array, {}),
   func: createFunc(Function, {}),
+  any: generateType({} as any, {}),
 };
