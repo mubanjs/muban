@@ -13,7 +13,7 @@ type Default<T, V> = T & {
 type Optional<T extends PropTypeDefinition> = T & {
   optional: Validate<OptionalValue<T>> & Source<OptionalValue<T>>;
   defaultValue: <U extends ConstructorType<T['type']> | undefined>(
-    value: U extends Primitive ? U : () => U,
+    value: ConstructorType<T['type']> extends Primitive ? U : () => U,
   ) => Validate<Default<T, typeof value>> & Source<Default<T, typeof value>>;
 };
 
@@ -63,7 +63,7 @@ const addOptional = <T extends PropTypeDefinition>(obj: T): Optional<T> => {
       ...addSource(optionalObj),
     },
     defaultValue: <U extends ConstructorType<T['type']> | undefined>(
-      value: U extends Primitive ? U : () => U,
+      value: ConstructorType<T['type']> extends Primitive ? U : () => U,
     ) => {
       const defaultObj = {
         ...obj,
