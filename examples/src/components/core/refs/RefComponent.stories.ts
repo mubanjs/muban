@@ -168,4 +168,52 @@ export const SvgRef: Story = () => ({
     <svg date-ref="mask-svg"></svg>
   </div>`,
 });
-Default3.storyName = 'SVG Ref';
+SvgRef.storyName = 'SVG Ref';
+
+// The most basic version of a component throws a typescript error
+export const NoPropsComponent = defineComponent({
+  name: 'no-props-component',
+});
+
+// Adding the empty props makes sure it works.
+export const PropsComponent = defineComponent({
+  name: 'props-component',
+  props: {},
+});
+
+export const Default4: Story<{ toRender?: 'button' | 'link' }> = () => ({
+  component: defineComponent({
+    name: 'ref-component',
+    refs: {
+      noPropsComponent: refComponent(NoPropsComponent),
+      propsComponent: refComponent(PropsComponent),
+    },
+    setup({ refs }) {
+      return [
+        bind(refs.noPropsComponent, {
+          event: {
+            click: () => {
+              // This would throw a typescript error because NoProps component has no `props` object.
+              // eslint-disable-next-line no-console
+              console.log('click no-props');
+            },
+          },
+        }),
+        bind(refs.propsComponent, {
+          event: {
+            click: () => {
+              // This will work like expected because the `PropsComponent` has an empty `props` object.
+              // eslint-disable-next-line no-console
+              console.log('click props');
+            },
+          },
+        }),
+      ];
+    },
+  }),
+  template: () => html` <div data-component="ref-component">
+    <div data-component="no-props-component">no-props-component</div>
+    <div data-component="props-component">props-component</div>
+  </div>`,
+});
+Default4.storyName = 'Components without props';

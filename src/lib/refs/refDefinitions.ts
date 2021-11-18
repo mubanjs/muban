@@ -218,7 +218,7 @@ export function refComponent<T extends ComponentFactory<any>>(
         const element = this.queryRef(instance.element as HTMLElement);
 
         if (initialRender && isRequired && !element) {
-          console.error('Component not found', getQuery());
+          console.error('Component not found in DOM', getQuery());
         }
 
         if (element === instanceRef.value?.element) {

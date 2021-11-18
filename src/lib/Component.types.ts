@@ -81,9 +81,9 @@ export type ComponentReturnValue<P extends Record<string, any> = Record<string, 
 };
 
 export type DefineComponentOptions<
-  P extends Record<string, PropTypeDefinition>,
-  R extends Record<string, ComponentRefItem>,
-  N extends string
+  P extends Record<string, PropTypeDefinition> = {},
+  R extends Record<string, ComponentRefItem> = {},
+  N extends string = ''
 > = {
   name: N;
   components?: Array<ComponentFactory | LazyComponent>;

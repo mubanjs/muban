@@ -118,9 +118,10 @@ export function createComponentInstance(
 }
 
 export const defineComponent = <
-  P extends Record<string, PropTypeDefinition>,
   R extends Record<string, ComponentRefItem>,
-  N extends string
+  N extends string,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  P extends Record<string, PropTypeDefinition> = {}
 >(
   options: DefineComponentOptions<P, R, N>,
 ): ComponentFactory<P, N> => {
