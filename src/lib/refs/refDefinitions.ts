@@ -8,7 +8,7 @@ declare module '@vue/reactivity' {
 }
 
 import { Ref, ref } from '@vue/reactivity';
-import type { ComponentFactory } from '../Component.types';
+import type { ComponentApi, ComponentFactory, InternalComponentInstance } from '../Component.types';
 import {
   bindCollection,
   BindComponent,
@@ -16,6 +16,7 @@ import {
   bindElement,
 } from '../bindings/bindingDefinitions';
 import { getParentComponentElement } from '../utils/domUtils';
+import { getComponentForElement } from '../utils/global';
 import type { RefElementType } from './refDefinitions.types';
 import type {
   ComponentRefItemCollection,
@@ -55,6 +56,39 @@ export function ensureElementIsComponentChild<T extends RefElementType>(
   }
 
   return null;
+}
+
+/**
+ * Checks if a child component instance for a Ref, that is about to be created
+ * already exists as a globally created component, and re-parents it
+ * @param element
+ * @param instance
+ */
+function getExistingGlobalRefComponent<T extends ComponentApi>(
+  element: HTMLElement,
+  instance: InternalComponentInstance,
+): T {
+  const existingComponent = getComponentForElement(element);
+  let refInstance: T;
+  if (existingComponent) {
+    // only if the component currently links to the app root
+    // in that case, it was initialized globally already
+    if (existingComponent.__instance.parent?.uid === 0) {
+      // relink this component to it's proper parent
+      existingComponent.__instance.parent = instance;
+      refInstance = existingComponent as T;
+    } else {
+      // TODO: not sure what to do here, for now we just let the component be
+      //  re-created, which shows additional warnings
+      console.error(
+        'This refComponent does already exist as part of another parent',
+        existingComponent.__instance.parent,
+      );
+    }
+  }
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore used before assigned - incorrect
+  return refInstance;
 }
 
 export function refElement<T extends RefElementType = RefElementType>(
@@ -229,8 +263,12 @@ export function refComponent<T extends ComponentFactory<any>>(
             (c) => c.displayName === element.dataset.component,
           );
           if (newComponentFactory) {
-            // create new component instance
-            const refInstance = newComponentFactory(element, { parent: instance }) as ReturnType<T>;
+            let refInstance = getExistingGlobalRefComponent<ReturnType<T>>(element, instance);
+
+            if (!refInstance) {
+              // create new component instance
+              refInstance = newComponentFactory(element, { parent: instance }) as ReturnType<T>;
+            }
             instance.children.push(refInstance);
             return refInstance;
           } else {
@@ -308,8 +346,12 @@ export function refComponents<T extends ComponentFactory<any>>(
             .map((instance) => instance.element)
             .indexOf(element);
           if (existingInstance === -1) {
-            // create new component instance
-            const refInstance = component(element, { parent: instance }) as ReturnType<T>;
+            let refInstance = getExistingGlobalRefComponent<ReturnType<T>>(element, instance);
+
+            if (!refInstance) {
+              // create new component instance
+              refInstance = component(element, { parent: instance }) as ReturnType<T>;
+            }
             instance.children.push(refInstance);
             return refInstance;
           } else {
