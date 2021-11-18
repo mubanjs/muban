@@ -51,8 +51,17 @@ export const DataNumber: Story = () => ({
 export const DataBoolean: Story = () => ({
   component: createPropsComponent({
     active: propType.boolean,
+    isMissing: propType.boolean,
+    isMissingWithDefault: propType.boolean.defaultValue(true),
+    isPresentWithDefault: propType.boolean.defaultValue(true),
+    isPresentWithDefaultDynamic: propType.boolean.defaultValue(true),
   }),
-  template: () => html` <div data-component="props" data-active="true">
+  template: () => html` <div
+    data-component="props"
+    data-active="true"
+    data-is-present-with-default="false"
+    data-is-present-with-default-dynamic=${false}
+  >
     <pre data-ref="info"></pre>
   </div>`,
 });

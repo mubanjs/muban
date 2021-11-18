@@ -63,6 +63,9 @@ export const BindMapComponents: Story = () => {
           ...bindMap(refs.items, (ref) => ({
             isActive: computed(() => activeValue.value === ref.component?.props.value),
             onActivate: () => (activeValue.value = ref.component?.props.value ?? null),
+            event: {
+              mouseenter: () => console.log('mouse enter'),
+            },
           })),
         ];
       },
