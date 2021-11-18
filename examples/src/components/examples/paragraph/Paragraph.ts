@@ -14,6 +14,7 @@ export const Title = defineComponent({
     title: 'title',
     mustache: refElement('mustache', { isRequired: false }),
   },
+  props: {},
   setup() {
     return [];
   },

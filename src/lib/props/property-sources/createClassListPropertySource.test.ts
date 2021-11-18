@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment,@typescript-eslint/no-unused-vars */
 import type { PropTypeInfo } from '../propDefinitions.types';
 import { createClassListPropertySource } from './createClassListPropertySource';
 
+// @ts-ignore TS6133 unused variable
 function createElementHtml(content: string): HTMLElement {
   const element = document.createElement('div');
   element.innerHTML = content;
@@ -24,9 +26,11 @@ const mockConsoleError = () => {
 describe('createClassListPropertySource', () => {
   const originalError = console.error;
   afterEach(() => (console.error = originalError));
+  // @ts-ignore TS6133 unused variable
   const errorOutput = mockConsoleError();
   const originalWarn = console.warn;
   afterEach(() => (console.warn = originalWarn));
+  // @ts-ignore TS6133 unused variable
   const warnOutput = mockConsoleWarn();
 
   it('should create without errors', () => {
