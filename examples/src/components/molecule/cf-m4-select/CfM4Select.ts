@@ -41,7 +41,7 @@ export const CfM4Select = defineComponent({
     selectElementOptions: refCollection<HTMLOptionElement>('select-element-option'),
     customSelectButton: refComponent(CfM1Button, { ref: 'custom-select-button' }),
     customSelectOptions: refCollection<HTMLButtonElement>('custom-select-option'),
-    customSelectOptionsWrapper: refElement('custom-select-options-wrapper'),
+    customSelectOptionsWrapper: refElement<HTMLDivElement>('custom-select-options-wrapper'),
   },
   setup({ props, refs, element }) {
     const [isExpanded, toggleIsExpanded] = useSelectExpanding(

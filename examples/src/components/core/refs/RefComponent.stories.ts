@@ -2,7 +2,7 @@
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 import { html } from '@muban/template';
 import { computed } from '@vue/reactivity';
-import { bind, defineComponent, propType, refComponent } from '../../../../../src';
+import { bind, defineComponent, propType, refComponent, refElement } from '../../../../../src';
 
 export default {
   title: 'core/refs/refComponent',
@@ -153,3 +153,19 @@ Default3.argTypes = {
   },
 };
 Default3.storyName = 'Multi without ref';
+
+export const SvgRef: Story = () => ({
+  component: defineComponent({
+    name: 'ref-component',
+    refs: {
+      maskSvg: refElement<SVGElement>('mask-svg'),
+    },
+    setup() {
+      return [];
+    },
+  }),
+  template: () => html` <div data-component="ref-component">
+    <svg date-ref="mask-svg"></svg>
+  </div>`,
+});
+Default3.storyName = 'SVG Ref';
