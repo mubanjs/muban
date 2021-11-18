@@ -8,6 +8,7 @@ export function convertSourceValue(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any {
   switch (propInfo.type) {
+    default:
     case String: {
       return value;
     }

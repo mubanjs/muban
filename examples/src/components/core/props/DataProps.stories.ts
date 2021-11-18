@@ -130,3 +130,17 @@ export const DataObject: Story = () => ({
     <pre data-ref="info"></pre>
   </div>`,
 });
+
+export const DataAny: Story = () => ({
+  component: createPropsComponent({
+    str: propType.any,
+    strDefault: propType.any.defaultValue('default-value'),
+    int: propType.any,
+    intDefault: propType.any.defaultValue(42),
+    bool: propType.any,
+    boolDefault: propType.any.defaultValue(true),
+  }),
+  template: () => html` <div data-component="props" data-str="value" data-int="1" data-bool="true">
+    <pre data-ref="info"></pre>
+  </div>`,
+});
