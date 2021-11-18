@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Predicate, Primitive, Static } from 'isntnt';
 import type { IfAny } from '../Component.types';
+import type { RefElementType } from '../refs/refDefinitions.types';
 
 export type SourceOptions = {
   target?: string;
@@ -20,7 +21,7 @@ export type PropTypeDefinition<T = any> = {
     | typeof Array
     | typeof Object
     | typeof Function;
-  default?: T extends Primitive ? T : () => T;
+  default?: T extends Primitive ? T : IfAny<T, any, () => T>;
   validator?: Predicate<T>;
   isOptional?: boolean;
   missingValue?: boolean;
@@ -36,7 +37,7 @@ export type PropTypeInfo<T = any> = Pick<
   name: string;
   source: Required<Pick<SourceOptions, 'name'>> &
     Pick<SourceOptions, 'type' | 'options'> & {
-      target: HTMLElement | undefined;
+      target: RefElementType | undefined;
     };
 };
 
@@ -59,12 +60,18 @@ export type ConstructorType<
   ? ReturnType<T>
   : InstanceType<T>;
 
+type IsAnyPropTypeDefinition<T extends PropTypeDefinition> = 'default' extends Keys<T>
+  ? IfAny<T['default'], never, 0>
+  : 0;
+
 // if a validator is available, use the type from that predicate
 // otherwise, use the instanceType from passed `type` (e.g. Number or String)
 // type ExtractType<T extends PropTypeDefinition> = 'validator' extends RequiredPropertyKeys<T>
 //   ? Static<Exclude<T['validator'], undefined>>
 //   : ReturnType<T['type']>;
-export type ExtractType<T extends PropTypeDefinition> = 'shapeType' extends Keys<T>
+export type ExtractType<T extends PropTypeDefinition> = IsAnyPropTypeDefinition<T> extends never
+  ? any
+  : 'shapeType' extends Keys<T>
   ? T['shapeType']
   : 'validator' extends Keys<T>
   ? Static<Exclude<T['validator'], undefined>>
@@ -78,11 +85,6 @@ type ExtractOptionalType<
 
 export type TypedProp<T extends PropTypeDefinition> = ExtractOptionalType<T, ExtractType<T>>;
 
-// the IsAny check makes sure that "any" component props result in "any" instead of {}
-export type TypedProps<T extends Record<string, PropTypeDefinition>> = IfAny<
-  T,
-  any,
-  {
-    [P in keyof T]: TypedProp<T[P]>;
-  }
->;
+export type TypedProps<T extends Record<string, PropTypeDefinition>> = {
+  [P in keyof T]: TypedProp<T[P]>;
+};

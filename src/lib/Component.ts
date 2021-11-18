@@ -118,9 +118,10 @@ export function createComponentInstance(
 }
 
 export const defineComponent = <
-  P extends Record<string, PropTypeDefinition>,
   R extends Record<string, ComponentRefItem>,
-  N extends string
+  N extends string,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  P extends Record<string, PropTypeDefinition> = {}
 >(
   options: DefineComponentOptions<P, R, N>,
 ): ComponentFactory<P, N> => {
@@ -208,7 +209,7 @@ export const defineComponent = <
       };
 
       instance.api = componentApiInstance;
-      registerComponentForElement(instance.element, componentApiInstance);
+      registerComponentForElement(instance.element as HTMLElement, componentApiInstance);
 
       return componentApiInstance;
     }) as ComponentReturnValue<TypedProps<P>>,
@@ -249,13 +250,13 @@ function createObservers(instance: InternalComponentInstance) {
  */
 function processNonRefChildComponents(instance: InternalComponentInstance) {
   // get all direct child data-component elements to see what we need to load and/or instantiate
-  getDirectChildComponents(instance.element).forEach((childElement) =>
+  getDirectChildComponents(instance.element as HTMLElement).forEach((childElement) =>
     instantiateChildComponent(instance, childElement),
   );
 
   queueMicrotask(() => {
     // init globally registered components for anything that's not picked up in this component
-    initGlobalComponents(instance.element);
+    initGlobalComponents(instance.element as HTMLElement);
   });
 }
 
@@ -338,7 +339,7 @@ function setupComponent(instance: InternalComponentInstance) {
   const bindings = instance.options.setup?.({
     props: instance.reactiveProps as any,
     refs: instance.refs,
-    element: instance.element,
+    element: instance.element as HTMLElement,
   });
   instance.bindings = bindings || [];
 

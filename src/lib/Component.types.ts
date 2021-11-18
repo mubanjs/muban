@@ -3,7 +3,7 @@ import type { App, AppContext } from './api/apiCreateApp';
 import type { Binding } from './bindings/bindings.types';
 import { LifecycleHooks } from './api/apiLifecycle';
 import type { PropTypeDefinition, TypedProps } from './props/propDefinitions.types';
-import type { ComponentRefItem, TypedRefs } from './refs/refDefinitions.types';
+import type { ComponentRefItem, RefElementType, TypedRefs } from './refs/refDefinitions.types';
 
 type CheckAny<T, Y, N> = 0 extends 1 & T ? Y : N;
 export type IsAny<T> = CheckAny<T, true, never>;
@@ -25,7 +25,7 @@ export type InternalNodeInstance = {
   name: string;
   parent: InternalComponentInstance | null;
   appContext: AppContext;
-  element: HTMLElement;
+  element: RefElementType;
   binding?: Binding;
 };
 
@@ -81,9 +81,9 @@ export type ComponentReturnValue<P extends Record<string, any> = Record<string, 
 };
 
 export type DefineComponentOptions<
-  P extends Record<string, PropTypeDefinition>,
-  R extends Record<string, ComponentRefItem>,
-  N extends string
+  P extends Record<string, PropTypeDefinition> = {},
+  R extends Record<string, ComponentRefItem> = {},
+  N extends string = ''
 > = {
   name: N;
   components?: Array<ComponentFactory | LazyComponent>;

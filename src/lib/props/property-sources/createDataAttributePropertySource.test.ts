@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment,@typescript-eslint/no-unused-vars */
 import { createComponentInstance } from '../../Component';
 import { createComponentRefs } from '../../refs/createComponentRefs';
 import { getComponentProps } from '../getComponentProps';
@@ -31,6 +32,7 @@ describe('createDataAttributePropertySource', () => {
   const errorOutput = mockConsoleError();
   const originalWarn = console.warn;
   afterEach(() => (console.warn = originalWarn));
+  // @ts-ignore TS6133 unused variable
   const warnOutput = mockConsoleWarn();
 
   it('should create without errors', () => {

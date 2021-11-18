@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Ref } from '@vue/reactivity';
+import type { RefElementType } from '../refs/refDefinitions.types';
 import type { ElementRef } from '../refs/refDefinitions.types';
 import type {
   CollectionBinding,
@@ -11,7 +12,7 @@ import type {
 } from './bindingDefinitions';
 import type { bindingsList } from './bindings';
 
-export type TemplateProps<T extends HTMLElement> = {
+export type TemplateProps<T extends RefElementType> = {
   ref: ElementRef<T, BindProps> | undefined;
   extract?: {
     config: any;
@@ -23,11 +24,11 @@ export type TemplateProps<T extends HTMLElement> = {
 };
 
 export type Binding =
-  | ElementBinding<HTMLElement, BindProps>
-  | CollectionBinding<HTMLElement, BindProps>
+  | ElementBinding<RefElementType, BindProps>
+  | CollectionBinding<RefElementType, BindProps>
   | ComponentBinding<SimpleComponentApi>
   | ComponentCollectionBinding<SimpleComponentApi>
-  | TemplateBinding<HTMLElement>;
+  | TemplateBinding<RefElementType>;
 
 export type BindingValue<T> = Ref<T>;
 export type BindingMap<T> = Ref<Record<string, T>> | Record<string, Ref<T>>;

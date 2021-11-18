@@ -3,6 +3,7 @@ import { watch, watchEffect } from '@vue/runtime-core';
 import { ref, unref } from '@vue/reactivity';
 import { extractFromHTML } from 'html-extract-data';
 import type { InternalComponentInstance } from '../Component.types';
+import type { RefElementType } from '../refs/refDefinitions.types';
 import typedObjectEntries from '../type-utils/typedObjectEntries';
 import typedObjectKeys from '../type-utils/typedObjectKeys';
 import { devtoolsComponentUpdated } from '../utils/devtools';
@@ -12,7 +13,7 @@ import { bindingsList } from './bindings';
 import type { Binding, BindingsHelpers, BindProps } from './bindings.types';
 
 function createBindingsHelpers(
-  binding: ElementBinding<HTMLElement, BindProps> | CollectionBinding<HTMLElement, BindProps>,
+  binding: ElementBinding<RefElementType, BindProps> | CollectionBinding<RefElementType, BindProps>,
 ): BindingsHelpers {
   // used to trigger the "has" and "get" bindings when a new binding is added
   const bindingProps = ref(typedObjectKeys(binding.props));
@@ -144,7 +145,7 @@ export const applyBindings = (
       } else if (binding.type === 'template') {
         const { ref, extract, data, template, renderImmediate } = binding.props;
         if (ref && ref.element && extract) {
-          const extracted = extractFromHTML(ref.element, extract.config);
+          const extracted = extractFromHTML(ref.element as HTMLElement, extract.config);
           extract.onData(extracted);
         }
         watch(

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars,no-console */
+/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars,no-console,@typescript-eslint/ban-ts-comment */
 import { isString, isNumber, optional, isDate } from 'isntnt';
 import { propType } from '../../src/lib/props/propDefinitions';
 import type {
@@ -197,97 +197,126 @@ const dsf = {
   type: Function,
   shapeType: (1 as unknown) as (value: string) => number,
 };
+// @ts-ignore TS6133 unused variable
 type DSF = ExtractType<typeof dsf>;
 
 // type Props = TypedProps<typeof props>;
 
 // basic shapes
 const oo1 = { type: String };
+// @ts-ignore TS6133 unused variable
 type OO1 = Expect<Equal<string, TypedProp<typeof oo1>>>;
 
 const oo2 = { type: String, missingValue: true };
+// @ts-ignore TS6133 unused variable
 type OO2 = Expect<Equal<string | undefined, TypedProp<typeof oo2>>>;
 
 const oo3 = { type: String, missingValue: true, default: 'foo' };
+// @ts-ignore TS6133 unused variable
 type OO3 = Expect<Equal<string | undefined, TypedProp<typeof oo3>>>;
 
 const oo4 = { type: String, validator: isNumber };
+// @ts-ignore TS6133 unused variable
 type OO4 = Expect<Equal<number, TypedProp<typeof oo4>>>;
 
 const oo4a = { type: String, validator: optional(isNumber) };
+// @ts-ignore TS6133 unused variable
 type OO4a = Expect<Equal<number | undefined, TypedProp<typeof oo4a>>>;
 
 const oo5 = { type: String, validator: isNumber, missingValue: true };
+// @ts-ignore TS6133 unused variable
 type OO5 = Expect<Equal<number | undefined, TypedProp<typeof oo5>>>;
 
 // helper functions
 const p21 = propType.string;
+// @ts-ignore TS6133 unused variable
 type P21 = Expect<Equal<string, TypedProp<typeof p21>>>;
 
 const p22 = propType.string.optional;
+// @ts-ignore TS6133 unused variable
 type P22 = Expect<Equal<string | undefined, TypedProp<typeof p22>>>;
 
 const p23 = propType.string.defaultValue('foo');
+// @ts-ignore TS6133 unused variable
 type P23 = Expect<Equal<string, TypedProp<typeof p23>>>;
 
 const p24 = propType.string.validate(isString);
+// @ts-ignore TS6133 unused variable
 type P24 = Expect<Equal<string, TypedProp<typeof p24>>>;
 
 const p24a = propType.string.validate(optional(isString));
+// @ts-ignore TS6133 unused variable
 type P24a = Expect<Equal<string | undefined, TypedProp<typeof p24a>>>;
 
 const p25 = propType.string.optional.validate(isString);
+// @ts-ignore TS6133 unused variable
 type P25 = Expect<Equal<string | undefined, TypedProp<typeof p25>>>;
 
 const p25a = propType.string.defaultValue('1');
-type P25a = Expect<Equal<string | undefined, TypedProp<typeof p25>>>;
+// @ts-ignore TS6133 unused variable
+type P25a = Expect<Equal<string | undefined, TypedProp<typeof p25a>>>;
 
 const p25b = propType.string.defaultValue('1').validate(isString);
-type P25b = Expect<Equal<string | undefined, TypedProp<typeof p25>>>;
+// @ts-ignore TS6133 unused variable
+type P25b = Expect<Equal<string | undefined, TypedProp<typeof p25b>>>;
 
 // Number helper functions
 const n21 = propType.number;
+// @ts-ignore TS6133 unused variable
 type N21 = Expect<Equal<number, TypedProp<typeof n21>>>;
 
 const n22 = propType.number.optional;
+// @ts-ignore TS6133 unused variable
 type N22 = Expect<Equal<number | undefined, TypedProp<typeof n22>>>;
 
 const n23 = propType.number.defaultValue(3);
+// @ts-ignore TS6133 unused variable
 type N23 = Expect<Equal<number, TypedProp<typeof n23>>>;
 
 const n24 = propType.number.validate(isNumber);
+// @ts-ignore TS6133 unused variable
 type N24 = Expect<Equal<number, TypedProp<typeof n24>>>;
 
 const n24a = propType.number.validate(optional(isNumber));
+// @ts-ignore TS6133 unused variable
 type N24a = Expect<Equal<number | undefined, TypedProp<typeof n24a>>>;
 
 const n25 = propType.number.optional.validate(isNumber);
+// @ts-ignore TS6133 unused variable
 type N25 = Expect<Equal<number | undefined, TypedProp<typeof n25>>>;
 
 // Date helper functions
 const d21 = propType.date;
+// @ts-ignore TS6133 unused variable
 type D21 = Expect<Equal<Date, TypedProp<typeof d21>>>;
 
 const d22 = propType.date.optional;
+// @ts-ignore TS6133 unused variable
 type D22 = Expect<Equal<Date | undefined, TypedProp<typeof d22>>>;
 
 const d23 = propType.date.defaultValue(() => new Date());
+// @ts-ignore TS6133 unused variable
 type D23 = Expect<Equal<Date, TypedProp<typeof d23>>>;
 
 const d24 = propType.date.validate(isDate);
+// @ts-ignore TS6133 unused variable
 type D24 = Expect<Equal<Date, TypedProp<typeof d24>>>;
 
 const d24a = propType.date.validate(optional(isDate));
+// @ts-ignore TS6133 unused variable
 type D24a = Expect<Equal<Date | undefined, TypedProp<typeof d24a>>>;
 
 const d25 = propType.date.optional.validate(isDate);
+// @ts-ignore TS6133 unused variable
 type D25 = Expect<Equal<Date | undefined, TypedProp<typeof d25>>>;
 
 // Function helper functions
 const f21 = propType.func;
+// @ts-ignore TS6133 unused variable
 type F21 = Expect<Equal<Function, TypedProp<typeof f21>>>;
 
 const f22 = propType.func.optional;
+// @ts-ignore TS6133 unused variable
 type F22 = Expect<Equal<Function | undefined, TypedProp<typeof f22>>>;
 
 // not working :(
@@ -305,18 +334,22 @@ type F22 = Expect<Equal<Function | undefined, TypedProp<typeof f22>>>;
 // type F25 = Expect<Equal<Function | undefined, TypedProp<typeof f25>>>;
 
 const f26a = propType.func.shape();
+// @ts-ignore TS6133 unused variable
 type F26a = Expect<Equal<Function, TypedProp<typeof f26a>>>;
 
 const f26b = propType.func.shape<(value: string) => number>();
+// @ts-ignore TS6133 unused variable
 type F26b = Expect<Equal<(value: string) => number, TypedProp<typeof f26b>>>;
 
 // const f27a = propType.func.optional.shape();
 // type F27a = Expect<Equal<Function | undefined, TypedProp<typeof f27a>>>;
 
 const f27a1 = propType.func.optional.shape();
+// @ts-ignore TS6133 unused variable
 type F27a1 = Expect<Equal<Function | undefined, TypedProp<typeof f27a1>>>;
 
 const f27b = propType.func.optional.shape<(value: string) => number>();
+// @ts-ignore TS6133 unused variable
 type F27b = Expect<Equal<undefined | ((value: string) => number), TypedProp<typeof f27b>>>;
 
 // meh, issues :(
