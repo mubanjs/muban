@@ -143,28 +143,46 @@ export const applyBindings = (
           });
         });
       } else if (binding.type === 'template') {
-        const { ref, extract, data, template, renderImmediate } = binding.props;
-        if (ref && ref.element && extract) {
-          const extracted = extractFromHTML(ref.element as HTMLElement, extract.config);
-          extract.onData(extracted);
-        }
-        watch(
-          () => data.value,
-          (templateData) => {
-            if (ref?.element) {
-              // TODO: attach parent component for context
-              ref.element.innerHTML = [].concat(template(templateData) as any).join('');
+        const { ref, extract, forceImmediateRender, onUpdate } = binding.props;
+        let initialRender = true;
+        let containerIsEmpty = false;
 
-              // TODO: make nicer?
-              // it takes some time for the MutationObserver to detect the newly added DOM elements
-              // for the "ref" watcher to update and instantiate and add the new children
-              setTimeout(() => {
-                instance.children.forEach((component) => component.setup());
-              }, 1);
+        if (ref && ref.element) {
+          if (extract) {
+            const extracted = extractFromHTML(ref.element as HTMLElement, extract.config);
+            extract.onData(extracted);
+          }
+          // if the container is empty, we probably want to do an initial render
+          // otherwise, we might want to leave the container as-is initially
+          containerIsEmpty = ref.element.innerHTML.trim() === '';
+        }
+
+        watchEffect(() => {
+          if (ref?.element) {
+            // if neither of these are true, we should not do an initial render,
+            // but instead only "watch" the data in the onUpdate function
+            const shouldRenderUpdate = containerIsEmpty || forceImmediateRender || !initialRender;
+
+            // TODO: attach parent component for context
+            // pass along ohw the result of the update function is going to be used,
+            // so the implementation can conditionally only invoke the watched observables, but
+            // omit the template rendering
+            const result = onUpdate(!shouldRenderUpdate);
+
+            if (shouldRenderUpdate) {
+              ref.element.innerHTML = result ? [].concat(result as any).join('') : '';
             }
-          },
-          { immediate: !!renderImmediate },
-        );
+
+            initialRender = false;
+
+            // TODO: make nicer?
+            // it takes some time for the MutationObserver to detect the newly added DOM elements
+            // for the "ref" watcher to update and instantiate and add the new children
+            setTimeout(() => {
+              instance.children.forEach((component) => component.setup());
+            }, 1);
+          }
+        });
       }
     });
   }

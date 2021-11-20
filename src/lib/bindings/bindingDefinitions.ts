@@ -99,22 +99,15 @@ export function bindMap(
   return [];
 }
 
-export function bindTemplate<P extends any>(
+export function bindTemplate(
   target: ElementRef<RefElementType, BindProps>,
-  data: Ref<P>,
-  template: (data: P) => ComponentTemplateResult,
-  {
-    extract,
-    renderImmediate = false,
-  }: {
-    extract?: {
-      config: any;
-      onData: (data: any) => void;
-    };
-    renderImmediate?: boolean;
+  onUpdate: TemplateProps<RefElementType>['onUpdate'],
+  options: {
+    forceImmediateRender?: boolean;
+    extract?: TemplateProps<RefElementType>['extract'];
   } = {},
 ): TemplateBinding<RefElementType> {
-  return BindTemplate({ ref: target, data, template, extract, renderImmediate });
+  return BindTemplate({ ref: target, onUpdate, ...options });
 }
 
 /////

@@ -95,12 +95,14 @@ return [
 ```ts
 declare function bindTemplate<P extends Record<string, unknown>>(
   target: ElementRef,
-  data: Ref<P>,
-  template: (props: P) => TemplateResult | Array<TemplateResult>,
-  extract?: {
-    config: any;
-    onData: (data: any) => void;
-  },
+  onUpdate: (onlyWatch: boolean) => ComponentTemplateResult | undefined,
+  options?: {
+    forceImmediateRender?: boolean,
+    extract?: {
+      config: any;
+      onData: (data: any) => void;
+    },
+  }
 ): Binding;
 ```
 
@@ -113,16 +115,14 @@ return [
   bindTemplate(
     // control the contents of this container, clearing it on each re-render
     refs.productsContainer,
-    // this is the data being passed, keeping track of when it changes
-    computed(() => ({ products: filteredProducts.value })),
-    // render this template each time, passing the received data
-    productList,
+    // render this template each time when the used observables update
+    (onlyWatch) => filteredProducts.value.map(item => renderItem(item)),
     {
       // optionally extract any exiting data from the HTML that was rendered on the server
       extract: { config: extractConfig, onData: (products) => productData.push(...products) },
-      // configure if you want to update the UI based on client side template immediately,
-      // or only when the data changes afterwards
-      renderImmediate: true, // default = false
+      // by default muban will check if the container is empty from the server, and ignore updating
+      // it initially when it's not. Set this to true if you want to update the initial HTML anyway.
+      forceImmediateRender: true,
     },
   ),
 
@@ -132,6 +132,13 @@ return [
 ::: tip html-extract-data
 The data extraction makes use of the [html-extract-data](https://www.npmjs.com/package/html-extract-data)
 npm module, check their documentation to all the possibilities and configuration.
+:::
+
+::: tip onlyWatch
+The `onlyWatch` boolean passed to the onUpdate function indicates that the initial execution of this
+function will only be used to watch the observables. The result is not used to update the HTML.
+This allows you to omit heavy calculations or calling template functions whenever this is needed 
+for optimization.
 :::
 
 ## DOM bindings
