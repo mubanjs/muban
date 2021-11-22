@@ -164,7 +164,7 @@ export const applyBindings = (
             const shouldRenderUpdate = containerIsEmpty || forceImmediateRender || !initialRender;
 
             // TODO: attach parent component for context
-            // pass along ohw the result of the update function is going to be used,
+            // pass along how the result of the update function is going to be used,
             // so the implementation can conditionally only invoke the watched observables, but
             // omit the template rendering
             const result = onUpdate(!shouldRenderUpdate);
