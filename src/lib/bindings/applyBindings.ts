@@ -170,7 +170,7 @@ export const applyBindings = (
             const result = onUpdate(!shouldRenderUpdate);
 
             if (shouldRenderUpdate) {
-              ref.element.innerHTML = result ? [].concat(result as any).join('') : '';
+              ref.element.innerHTML = Array.isArray(result) ? result.join('') : result ?? '';
             }
 
             initialRender = false;
