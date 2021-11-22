@@ -3,9 +3,23 @@ import type { Predicate, Primitive, Static } from 'isntnt';
 import type { IfAny } from '../Component.types';
 import type { RefElementType } from '../refs/refDefinitions.types';
 
-export type SourceOptions = {
+export type SourceOptions =
+  | SourceOptionCSS
+  | SourceOptionHtmlText
+  | {
+      type?: 'data' | 'json' | 'attr';
+      target?: string;
+      name?: string;
+    };
+
+export type SourceOptionHtmlText = {
+  type: 'text' | 'html';
   target?: string;
-  type?: 'data' | 'json' | 'attr' | 'css' | 'text' | 'html';
+};
+
+export type SourceOptionCSS = {
+  type: 'css';
+  target?: string;
   name?: string;
   options?: {
     cssPredicate?: Predicate<string>;
@@ -35,10 +49,11 @@ export type PropTypeInfo<T = any> = Pick<
   'type' | 'default' | 'validator' | 'isOptional'
 > & {
   name: string;
-  source: Required<Pick<SourceOptions, 'name'>> &
-    Pick<SourceOptions, 'type' | 'options'> & {
-      target: RefElementType | undefined;
-    };
+  source: {
+    name: string;
+    target: RefElementType | undefined;
+  } & Pick<SourceOptions, 'type'> &
+    Pick<SourceOptionCSS, 'options'>;
 };
 
 // type OptionalPropertyKeys<T> = {
