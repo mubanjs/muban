@@ -48,10 +48,18 @@ function convertToInternalPropInfo(
     isOptional,
     validator,
     source: {
-      name: propDefinition.sourceOptions?.name ?? propName,
+      name:
+        (propDefinition.sourceOptions &&
+          'name' in propDefinition.sourceOptions &&
+          propDefinition.sourceOptions.name) ||
+        propName,
       target,
       type: propDefinition.sourceOptions?.type,
-      options: propDefinition.sourceOptions?.options,
+      options:
+        (propDefinition.sourceOptions &&
+          'options' in propDefinition.sourceOptions &&
+          propDefinition.sourceOptions.options) ||
+        undefined,
     },
   };
 }
