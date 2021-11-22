@@ -11,13 +11,13 @@ export function createAttributePropertySource(): PropertySource {
           propInfo.source.target.hasAttribute(propInfo.source.name),
       ),
     getProp: (propInfo) => {
-      const value =
+      let value =
         propInfo.type !== Function
           ? propInfo.source.target!.getAttribute(propInfo.source.name) ?? undefined
           : undefined;
 
       if (value !== undefined) {
-        convertSourceValue(propInfo, value);
+        value = convertSourceValue(propInfo, value);
       } else {
         if (propInfo.type === Boolean) {
           console.warn();
