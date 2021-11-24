@@ -7,7 +7,7 @@ declare module '@vue/reactivity' {
   }
 }
 
-import { Ref, ref } from '@vue/reactivity';
+import { Ref, ref, unref } from '@vue/reactivity';
 import type { ComponentApi, ComponentFactory, InternalComponentInstance } from '../Component.types';
 import {
   bindCollection,
@@ -164,7 +164,7 @@ export function refCollection<T extends RefElementType = RefElementType>(
       );
     },
     createRef(instance) {
-      const elementsRef = ref([]) as Ref<Array<T>>;
+      const elementsRef = ref([]) as Ref<Array<Ref<T>>>;
       const getElements = () => {
         const elements = this.queryRef(instance.element as HTMLElement);
         if (elements.length < minimumItemsRequired) {
@@ -174,7 +174,7 @@ export function refCollection<T extends RefElementType = RefElementType>(
           );
         }
 
-        return elements;
+        return elements.map((e) => ref(e) as Ref<T>);
       };
       elementsRef.value = getElements();
 
@@ -184,18 +184,18 @@ export function refCollection<T extends RefElementType = RefElementType>(
           return bindCollection(elementsRef, props);
         },
         getElements() {
-          return elementsRef.value;
+          return elementsRef.value.map((ref) => unref(ref));
         },
         // elements: elementsRef.value,
         getRefs() {
-          return elementsRef.value.map((element) => {
+          return elementsRef.value.map((elementRef) => {
             return {
               type: 'element',
               getBindingDefinition(props) {
-                return bindElement(ref(element) as Ref<T>, props);
+                return bindElement(elementRef, props);
               },
               // TODO: this is currently not reactive, so is only correct in the setup function, not in async code or callbacks
-              element: element,
+              element: elementRef.value,
             };
           });
         },
@@ -204,8 +204,13 @@ export function refCollection<T extends RefElementType = RefElementType>(
           // only re-assign if some refs are actually different
           if (
             elements.length !== elementsRef.value.length ||
-            !elements.every((el) => elementsRef.value.includes(el))
+            !elements.every((elRef) =>
+              elementsRef.value.some((oldRef) => oldRef.value === elRef.value),
+            )
           ) {
+            // first, "de-ref" the old array to trigger binding cleanup
+            elementsRef.value.forEach((ref) => ((ref.value as any) = undefined));
+
             elementsRef.value = elements;
           }
         },
@@ -329,7 +334,7 @@ export function refComponents<T extends ComponentFactory<any>>(
       );
     },
     createRef(instance) {
-      const instancesRef = ref([]) as Ref<Array<ReturnType<T>>>;
+      const instancesRef = ref([]) as Ref<Array<Ref<ReturnType<T>>>>;
 
       const getComponents = () => {
         const elements = this.queryRef(instance.element as HTMLElement);
@@ -343,7 +348,7 @@ export function refComponents<T extends ComponentFactory<any>>(
 
         return elements.map((element) => {
           const existingInstance = instancesRef.value
-            .map((instance) => instance.element)
+            .map((instanceRef) => instanceRef.value.element)
             .indexOf(element);
           if (existingInstance === -1) {
             let refInstance = getExistingGlobalRefComponent<ReturnType<T>>(element, instance);
@@ -353,9 +358,9 @@ export function refComponents<T extends ComponentFactory<any>>(
               refInstance = component(element, { parent: instance }) as ReturnType<T>;
             }
             instance.children.push(refInstance);
-            return refInstance;
+            return ref(refInstance) as Ref<ReturnType<T>>;
           } else {
-            return instancesRef.value[existingInstance];
+            return ref(instancesRef.value[existingInstance]) as Ref<ReturnType<T>>;
           }
         });
       };
@@ -368,21 +373,33 @@ export function refComponents<T extends ComponentFactory<any>>(
           return bindComponentCollection(instancesRef, props);
         },
         getComponents() {
-          return instancesRef.value;
+          return instancesRef.value.map((ref) => unref(ref));
         },
         getRefs() {
-          return instancesRef.value.map((instance) => {
+          return instancesRef.value.map((instanceRef) => {
             return {
               type: 'component',
               getBindingDefinition(props) {
-                return BindComponent(ref(instance), props);
+                return BindComponent(instanceRef, props);
               },
-              component: instance,
+              component: instanceRef.value,
             };
           }) as ReturnType<ComponentsRef<T>['getRefs']>;
         },
         refreshRefs() {
-          instancesRef.value = getComponents();
+          const components = getComponents();
+          // only re-assign if some refs are actually different
+          if (
+            components.length !== instancesRef.value.length ||
+            !components.every((elRef) =>
+              instancesRef.value.some((oldRef) => oldRef.value === elRef.value),
+            )
+          ) {
+            // first, "de-ref" the old array to trigger binding cleanup
+            instancesRef.value.forEach((ref) => ((ref.value as any) = undefined));
+
+            instancesRef.value = components;
+          }
         },
       };
     },
