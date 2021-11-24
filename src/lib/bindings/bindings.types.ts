@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Ref } from '@vue/reactivity';
 import type { ElementRef } from '../refs/refDefinitions.types';
+import type { BindMapBinding } from './bindingDefinitions';
 import type {
   CollectionBinding,
   ComponentBinding,
@@ -27,7 +28,8 @@ export type Binding =
   | CollectionBinding<HTMLElement, BindProps>
   | ComponentBinding<SimpleComponentApi>
   | ComponentCollectionBinding<SimpleComponentApi>
-  | TemplateBinding<HTMLElement>;
+  | TemplateBinding<HTMLElement>
+  | BindMapBinding;
 
 export type BindingValue<T> = Ref<T>;
 export type BindingMap<T> = Ref<Record<string, T>> | Record<string, Ref<T>>;

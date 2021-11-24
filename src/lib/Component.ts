@@ -240,6 +240,7 @@ function createObservers(instance: InternalComponentInstance) {
       instance.unmount();
     }
   });
+  // TODO: only add this once
   documentObserver.observe(document, { attributes: false, childList: true, subtree: true });
 }
 
