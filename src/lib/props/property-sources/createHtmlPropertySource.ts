@@ -7,11 +7,12 @@ export function createHtmlPropertySource(): PropertySource {
       sourceName: 'html',
       hasProp: (propInfo) => Boolean(propInfo.source.target),
       getProp: (propInfo) => {
-        let value =
+        let value;
+        const rawValue =
           propInfo.type !== Function ? propInfo.source.target?.innerHTML ?? undefined : undefined;
 
-        if (value !== undefined) {
-          value = convertSourceValue(propInfo, value);
+        if (rawValue !== undefined) {
+          value = convertSourceValue(propInfo, rawValue);
         } else {
           if (propInfo.type === Boolean) {
             console.warn();

@@ -11,15 +11,18 @@ export function createAttributePropertySource(): PropertySource {
           propInfo.source.target.hasAttribute(propInfo.source.name),
       ),
     getProp: (propInfo) => {
-      const value =
+      let value;
+      const rawValue =
         propInfo.type !== Function
           ? propInfo.source.target!.getAttribute(propInfo.source.name) ?? undefined
           : undefined;
 
-      if (value !== undefined) {
-        convertSourceValue(propInfo, value);
+      if (rawValue !== undefined) {
+        value = convertSourceValue(propInfo, rawValue);
       } else {
         if (propInfo.type === Boolean) {
+          // TODO: output warning about undefined booleans once we document
+          //  how these should behave for all type of sources
           console.warn();
         }
       }

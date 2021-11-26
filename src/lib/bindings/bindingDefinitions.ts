@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention,@typescript-eslint/no-explicit-any */
 
-import type { ComponentTemplateResult } from '@muban/template';
-import type { Ref } from '@vue/reactivity';
-import { watchEffect } from '@vue/runtime-core';
+import { Ref, unref } from '@vue/reactivity';
+import { watch } from '@vue/runtime-core';
 import { getCurrentComponentInstance } from '../Component';
 import type { ComponentFactory } from '../Component.types';
 import type { RefElementType } from '../refs/refDefinitions.types';
@@ -37,6 +36,13 @@ export function bind<T extends Pick<AnyRef, 'getBindingDefinition'>>(
   return target.getBindingDefinition(props);
 }
 
+export type BindMapBinding = {
+  type: 'bindMap';
+  getElements(): ReadonlyArray<RefElementType>;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  props: {};
+  dispose: () => void;
+};
 /**
  *
  * @param target Either a ref collection (either element or component),
@@ -78,25 +84,62 @@ export function bindMap(
 ): Array<Binding> {
   const instance = getCurrentComponentInstance();
   if (instance) {
+    // If we pass an array of refs instead of a refCollection,
+    // these are only set up once
     if (Array.isArray(target)) {
       return target.map((ref, index) => bind(ref, getProps(ref, index)));
     }
+
     // target.getRefs() is reactive and triggers this watchEffect to update
     // as soon as the underlying ref array updates when the items in the DOM
     // are updated
-    watchEffect(() => {
-      // TODO: should we check if this item already has bindings attached to it?
-      const bindings = ((target as any).getRefs() as Array<
-        ElementRef<RefElementType, BindProps> | ComponentRef<ComponentFactory<any>>
-      >).map((ref, index) => bind(ref, getProps(ref, index)));
+    const disposeWatch = watch(
+      () =>
+        (target as any).getRefs() as Array<
+          ElementRef<RefElementType, BindProps> | ComponentRef<ComponentFactory<any>>
+        >,
+      (refs, oldValue, onInvalidate) => {
+        const bindings = refs.map((ref, index) => bind(ref, getProps(ref, index)));
 
-      // TODO: should we register this as part of the component instance
-      //  so they get cleaned up on unmount?
-      applyBindings(bindings, instance);
-    });
+        const removeBindingList = applyBindings(bindings, instance) || [];
+
+        onInvalidate(() => {
+          removeBindingList.forEach((binding) => binding?.());
+        });
+      },
+      { immediate: true },
+    );
+
+    return [
+      {
+        type: 'bindMap',
+        getElements: () => [],
+        props: {},
+        dispose() {
+          disposeWatch();
+        },
+      },
+    ];
   }
 
   return [];
+}
+
+export type TemplateBinding<T extends RefElementType> = {
+  type: 'template';
+  props: TemplateProps<T>;
+  getElements(): ReadonlyArray<RefElementType>;
+};
+export function BindTemplate<T extends RefElementType>(
+  props: TemplateProps<T>,
+): TemplateBinding<T> {
+  return {
+    type: 'template',
+    props: props,
+    getElements() {
+      return props.ref?.element ? [props.ref.element] : [];
+    },
+  };
 }
 
 export function bindTemplate(
@@ -138,13 +181,13 @@ export function bindElement<T extends RefElementType, P extends BindProps>(
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type CollectionBinding<T extends RefElementType, P extends BindProps> = {
-  ref: Ref<Array<T>>;
+  ref: Ref<ReadonlyArray<Ref<T>>>;
   type: 'collection';
   props: P;
-  getElements(): Array<T>;
+  getElements(): ReadonlyArray<T>;
 };
 export function bindCollection<T extends RefElementType, P extends BindProps>(
-  ref: Ref<Array<T>>,
+  ref: Ref<ReadonlyArray<Ref<T>>>,
   props: P,
 ): CollectionBinding<T, P> {
   return {
@@ -152,7 +195,7 @@ export function bindCollection<T extends RefElementType, P extends BindProps>(
     type: 'collection',
     props: props,
     getElements() {
-      return ref.value;
+      return ref.value.map((r) => unref(r));
     },
   };
 }
@@ -164,7 +207,7 @@ export type ComponentBinding<T extends SimpleComponentApi> = {
   ref: Ref<T | undefined>;
   type: 'component';
   props: ComponentParams<T>;
-  getElements(): Array<RefElementType>;
+  getElements(): ReadonlyArray<RefElementType>;
 };
 export function BindComponent<T extends SimpleComponentApi>(
   ref: Ref<T | undefined>,
@@ -182,13 +225,13 @@ export function BindComponent<T extends SimpleComponentApi>(
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type ComponentCollectionBinding<T extends SimpleComponentApi> = {
-  ref: Ref<Array<T>>;
+  ref: Ref<ReadonlyArray<Ref<T>>>;
   type: 'componentCollection';
   props: ComponentParams<T>;
-  getElements(): Array<RefElementType>;
+  getElements(): ReadonlyArray<RefElementType>;
 };
 export function bindComponentCollection<T extends SimpleComponentApi>(
-  ref: Ref<Array<T>>,
+  ref: Ref<ReadonlyArray<Ref<T>>>,
   props: ComponentParams<T>,
 ): ComponentCollectionBinding<T> {
   return {
@@ -196,24 +239,7 @@ export function bindComponentCollection<T extends SimpleComponentApi>(
     type: 'componentCollection',
     props: props,
     getElements() {
-      return ref.value.map((component) => component.element);
-    },
-  };
-}
-
-export type TemplateBinding<T extends RefElementType> = {
-  type: 'template';
-  props: TemplateProps<T>;
-  getElements(): Array<RefElementType>;
-};
-export function BindTemplate<T extends RefElementType>(
-  props: TemplateProps<T>,
-): TemplateBinding<T> {
-  return {
-    type: 'template',
-    props: props,
-    getElements() {
-      return props.ref?.element ? [props.ref.element] : [];
+      return ref.value.map((ref) => ref.value.element);
     },
   };
 }

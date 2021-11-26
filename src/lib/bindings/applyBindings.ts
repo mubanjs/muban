@@ -67,7 +67,6 @@ export const applyBindings = (
             );
             onInvalidate(() => {
               // TODO debug
-              // console.log('onInvalidate element');
               bindings.forEach((binding) => binding && binding());
             });
           },
@@ -75,7 +74,7 @@ export const applyBindings = (
         );
       } else if (binding.type === 'collection') {
         return watch(
-          () => unref(binding.ref),
+          () => unref(binding.ref).map((ref) => unref(ref)),
           (elements, oldValue, onInvalidate) => {
             const bindingHelpers = createBindingsHelpers(binding);
             const bindings = typedObjectEntries(binding.props).flatMap(
@@ -98,7 +97,6 @@ export const applyBindings = (
               },
             );
             onInvalidate(() => {
-              console.log('onInvalidate collection');
               bindings.forEach((binding) => binding && binding());
             });
           },
@@ -125,7 +123,7 @@ export const applyBindings = (
       } else if (binding.type === 'componentCollection') {
         typedObjectEntries(binding.props).forEach(([propName, bindingValue]) => {
           watchEffect(() => {
-            const reff = unref(binding.ref);
+            const reff = unref(binding.ref).map((r) => unref(r));
             reff?.forEach((ref) => {
               watchEffect(() => {
                 if (['css', 'style', 'attr'].includes(propName)) {
@@ -183,6 +181,8 @@ export const applyBindings = (
             }, 1);
           }
         });
+      } else if (binding.type === 'bindMap') {
+        return binding.dispose;
       }
     });
   }

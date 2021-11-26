@@ -3,6 +3,7 @@ import type { ComponentTemplateResult } from '@muban/template';
 import type { Ref } from '@vue/reactivity';
 import type { RefElementType } from '../refs/refDefinitions.types';
 import type { ElementRef } from '../refs/refDefinitions.types';
+import type { BindMapBinding } from './bindingDefinitions';
 import type {
   CollectionBinding,
   ComponentBinding,
@@ -28,7 +29,8 @@ export type Binding =
   | CollectionBinding<RefElementType, BindProps>
   | ComponentBinding<SimpleComponentApi>
   | ComponentCollectionBinding<SimpleComponentApi>
-  | TemplateBinding<RefElementType>;
+  | TemplateBinding<RefElementType>
+  | BindMapBinding;
 
 export type BindingValue<T> = Ref<T>;
 export type BindingMap<T> = Ref<Record<string, T>> | Record<string, Ref<T>>;

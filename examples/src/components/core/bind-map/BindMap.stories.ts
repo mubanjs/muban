@@ -156,8 +156,8 @@ export const BindMapLiveList: Story = () => ({
             data.value = data.value.filter((item, i) => i !== index);
           },
         })),
-        bindTemplate(refs.container, data, (items) =>
-          items.map(
+        bindTemplate(refs.container, () =>
+          data.value.map(
             (item) =>
               html`<p><span>${item}</span><button data-ref="removeButton">remove</button></p>`,
           ),
