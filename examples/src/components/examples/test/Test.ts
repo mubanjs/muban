@@ -1,4 +1,4 @@
-import { computed, ref } from '@vue/reactivity';
+import { ref } from '@vue/reactivity';
 import { html } from '@muban/template';
 import { defineComponent } from '../../../../../src/lib/Component';
 import { bind, bindTemplate } from '../../../../../src/lib/bindings/bindingDefinitions';
@@ -28,19 +28,13 @@ export const Test = defineComponent({
     return [
       bind(refs.toggleExpandUnmount, { click: () => (shouldRenderToggleExpand.value = false) }),
       bind(refs.toggleExpandRemount, { click: () => (shouldRenderToggleExpand.value = true) }),
-      bindTemplate(
-        refs.toggleExpandContainer,
-        computed(() => ({ shouldRender: shouldRenderToggleExpand.value })),
-        renderToggleExpand,
+      bindTemplate(refs.toggleExpandContainer, () =>
+        renderToggleExpand({ shouldRender: shouldRenderToggleExpand.value }),
       ),
       bind(refs.cardsAll, { click: () => (cardsRenderCount.value = 2) }),
       bind(refs.cardsOne, { click: () => (cardsRenderCount.value = 1) }),
       bind(refs.cardsNone, { click: () => (cardsRenderCount.value = 0) }),
-      bindTemplate(
-        refs.cardsContainer,
-        computed(() => ({ renderCount: cardsRenderCount.value })),
-        renderCards,
-      ),
+      bindTemplate(refs.cardsContainer, () => renderCards({ renderCount: cardsRenderCount.value })),
     ];
   },
 });

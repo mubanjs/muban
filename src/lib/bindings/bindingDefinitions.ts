@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention,@typescript-eslint/no-explicit-any */
 
-import type { ComponentTemplateResult } from '@muban/template';
 import { Ref, unref } from '@vue/reactivity';
 import { watch } from '@vue/runtime-core';
 import { getCurrentComponentInstance } from '../Component';
@@ -143,22 +142,15 @@ export function BindTemplate<T extends RefElementType>(
   };
 }
 
-export function bindTemplate<P extends any>(
+export function bindTemplate(
   target: ElementRef<RefElementType, BindProps>,
-  data: Ref<P>,
-  template: (data: P) => ComponentTemplateResult,
-  {
-    extract,
-    renderImmediate = false,
-  }: {
-    extract?: {
-      config: any;
-      onData: (data: any) => void;
-    };
-    renderImmediate?: boolean;
+  onUpdate: TemplateProps<RefElementType>['onUpdate'],
+  options: {
+    forceImmediateRender?: boolean;
+    extract?: TemplateProps<RefElementType>['extract'];
   } = {},
 ): TemplateBinding<RefElementType> {
-  return BindTemplate({ ref: target, data, template, extract, renderImmediate });
+  return BindTemplate({ ref: target, onUpdate, ...options });
 }
 
 /////

@@ -95,11 +95,10 @@ export const FilterProducts = defineComponent({
       bind(refs.resetButton, { click: resetFilters }),
       bindTemplate(
         refs.productsContainer,
-        computed(() => ({ products: filteredProducts.value })),
-        productList,
+        () => productList({ products: filteredProducts.value }),
         {
           extract: { config: extractConfig, onData: (products) => productData.push(...products) },
-          renderImmediate: true,
+          forceImmediateRender: true,
         },
       ),
     ];

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { ComponentTemplateResult } from '@muban/template';
 import type { Ref } from '@vue/reactivity';
 import type { RefElementType } from '../refs/refDefinitions.types';
 import type { ElementRef } from '../refs/refDefinitions.types';
@@ -19,9 +20,8 @@ export type TemplateProps<T extends RefElementType> = {
     config: any;
     onData: (data: any) => void;
   };
-  renderImmediate?: boolean;
-  data: any;
-  template: (props: any) => string | Array<string>;
+  forceImmediateRender?: boolean;
+  onUpdate: (onlyWatch: boolean) => ComponentTemplateResult | undefined;
 };
 
 export type Binding =

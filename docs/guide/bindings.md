@@ -129,18 +129,24 @@ bindMap(refs.slides, (ref, index) => ({
 ### bindTemplate
 
 ```ts
-bindTemplate(refContainer, data, template, { extractConfig?, renderImmediate? })
+bindTemplate(refContainer, onUpdate, { extractConfig?, forceImmediateRender? })
 ```
 
 The `bindTemplate` is slightly different from the ones above, and is specifically designed to
 control the complete content of a DOM element by rendering templates client-side - getting as close
 to a SPA as we get in Muban.
 
-Besides the container ref, you need to pass an observable object/array as data, and a template
-function that will render that data - initially, and whenever it changes.
+Besides the container ref, have to pass an update function that returns the output to be placed 
+in the DOM. Any observables that are referenced in the `onUpdate` functions will be watched, and 
+when they change, the `onUpdate` will be called again to update the container with new HTML.
 
 Optionally, you can pass some configuration to extract existing HTML from the server-rendered
 template, to populate your observable as initial data.
+
+By default, muban will detect if an initial render is needed by checking if the container 
+element is empty or not – if there is already HTML in it, the initial render is omitted.
+If you do want to do an initial render based on changed client-side information, you can pass
+`forceImmediateRender` as `true`.
 
 ::: tip Note
 Keep in mind that this binding completely removes and replaces the HTML on the page with what has
@@ -156,16 +162,14 @@ return [
   bindTemplate(
     // control the contents of this container, clearing it on each re-render
     refs.productsContainer,
-    // this is the data being passed, keeping track of when it changes
-    computed(() => ({ products: filteredProducts.value })),
-    // render this template each time, passing the received data
-    productList,
+    // render this template each time when the used observables update
+    (onlyWatch) => filteredProducts.value.map(item => renderItem(item)),
     {
       // optionally extract any exiting data from the HTML that was rendered on the server
       extract: { config: extractConfig, onData: (products) => productData.push(...products) },
-      // configure if you want to update the UI based on client side template immediately,
-      // or only when the data changes afterwards
-      renderImmediate: true, // default = false
+      // by default muban will check if the container is empty from the server, and ignore updating
+      // it initially when it's not. Set this to true if you want to update the initial HTML anyway.
+      forceImmediateRender: true,
     },
   ),
 
