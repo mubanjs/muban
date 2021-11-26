@@ -39,7 +39,7 @@ export function bind<T extends Pick<AnyRef, 'getBindingDefinition'>>(
 
 export type BindMapBinding = {
   type: 'bindMap';
-  getElements(): Array<RefElementType>;
+  getElements(): ReadonlyArray<RefElementType>;
   // eslint-disable-next-line @typescript-eslint/ban-types
   props: {};
   dispose: () => void;
@@ -105,7 +105,7 @@ export function bindMap(
         const removeBindingList = applyBindings(bindings, instance) || [];
 
         onInvalidate(() => {
-          removeBindingList.forEach((binding) => binding && binding());
+          removeBindingList.forEach((binding) => binding?.());
         });
       },
       { immediate: true },
@@ -129,7 +129,7 @@ export function bindMap(
 export type TemplateBinding<T extends RefElementType> = {
   type: 'template';
   props: TemplateProps<T>;
-  getElements(): Array<RefElementType>;
+  getElements(): ReadonlyArray<RefElementType>;
 };
 export function BindTemplate<T extends RefElementType>(
   props: TemplateProps<T>,
@@ -189,13 +189,13 @@ export function bindElement<T extends RefElementType, P extends BindProps>(
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type CollectionBinding<T extends RefElementType, P extends BindProps> = {
-  ref: Ref<Array<Ref<T>>>;
+  ref: Ref<ReadonlyArray<Ref<T>>>;
   type: 'collection';
   props: P;
-  getElements(): Array<T>;
+  getElements(): ReadonlyArray<T>;
 };
 export function bindCollection<T extends RefElementType, P extends BindProps>(
-  ref: Ref<Array<Ref<T>>>,
+  ref: Ref<ReadonlyArray<Ref<T>>>,
   props: P,
 ): CollectionBinding<T, P> {
   return {
@@ -215,7 +215,7 @@ export type ComponentBinding<T extends SimpleComponentApi> = {
   ref: Ref<T | undefined>;
   type: 'component';
   props: ComponentParams<T>;
-  getElements(): Array<RefElementType>;
+  getElements(): ReadonlyArray<RefElementType>;
 };
 export function BindComponent<T extends SimpleComponentApi>(
   ref: Ref<T | undefined>,
@@ -233,13 +233,13 @@ export function BindComponent<T extends SimpleComponentApi>(
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type ComponentCollectionBinding<T extends SimpleComponentApi> = {
-  ref: Ref<Array<Ref<T>>>;
+  ref: Ref<ReadonlyArray<Ref<T>>>;
   type: 'componentCollection';
   props: ComponentParams<T>;
-  getElements(): Array<RefElementType>;
+  getElements(): ReadonlyArray<RefElementType>;
 };
 export function bindComponentCollection<T extends SimpleComponentApi>(
-  ref: Ref<Array<Ref<T>>>,
+  ref: Ref<ReadonlyArray<Ref<T>>>,
   props: ComponentParams<T>,
 ): ComponentCollectionBinding<T> {
   return {
