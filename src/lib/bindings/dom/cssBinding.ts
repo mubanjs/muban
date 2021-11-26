@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { unref, watchEffect } from '@vue/runtime-core';
 import type { BindingMap, BindingValue } from '../bindings.types';
+import type { Ref } from '@vue/reactivity';
 
 const previousCssBindingKey = '__muban__cssValue';
 
@@ -9,7 +10,7 @@ export function cssBinding(
   value: BindingValue<string> | BindingMap<boolean>,
 ): () => void {
   return watchEffect(() => {
-    const classes = unref(value);
+    const classes = unref<string | Record<string, boolean> | Record<string, Ref<boolean>>>(value);
 
     if (typeof classes === 'string') {
       // first remove the previously set classes, since our binding has changed
