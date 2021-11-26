@@ -18,9 +18,9 @@ const getJsonContent = memoize(
         (() => {
           try {
             return parseJson(propContent);
-          } catch (e) {
+          } catch (error) {
             // eslint-disable-next-line no-console
-            console.error('Malformed JSON props', e);
+            console.error('Malformed JSON props', error);
             return {};
           }
         })()) ||
