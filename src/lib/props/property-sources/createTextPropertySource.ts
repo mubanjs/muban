@@ -7,13 +7,16 @@ export function createTextPropertySource(): PropertySource {
       sourceName: 'text',
       hasProp: (propInfo) => Boolean(propInfo.source.target),
       getProp: (propInfo) => {
-        let value =
+        let value;
+        const rawValue =
           propInfo.type !== Function ? propInfo.source.target?.textContent ?? undefined : undefined;
 
-        if (value !== undefined) {
-          value = convertSourceValue(propInfo, value);
+        if (rawValue !== undefined) {
+          value = convertSourceValue(propInfo, rawValue);
         } else {
           if (propInfo.type === Boolean) {
+            // TODO: output warning about undefined booleans once we document
+            //  how these should behave for all type of sources
             console.warn();
           }
         }
