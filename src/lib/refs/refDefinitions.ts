@@ -187,7 +187,7 @@ If you want to select a custom target, pass a function like;
       );
     },
     createRef(instance) {
-      const elementsRef = ref([]) as Ref<Array<Ref<T>>>;
+      const elementsRef = ref([]) as Ref<ReadonlyArray<Ref<T>>>;
       const getElements = () => {
         const elements = this.queryRef(instance.element);
         if (elements.length < minimumItemsRequired) {
@@ -357,7 +357,7 @@ export function refComponents<T extends ComponentFactory<any>>(
       );
     },
     createRef(instance) {
-      const instancesRef = ref([]) as Ref<Array<Ref<ReturnType<T>>>>;
+      const instancesRef = ref([]) as Ref<ReadonlyArray<Ref<ReturnType<T>>>>;
 
       const getComponents = () => {
         const elements = this.queryRef(instance.element);

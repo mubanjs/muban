@@ -38,7 +38,7 @@ export function bind<T extends Pick<AnyRef, 'getBindingDefinition'>>(
 
 export type BindMapBinding = {
   type: 'bindMap';
-  getElements(): Array<RefElementType>;
+  getElements(): ReadonlyArray<RefElementType>;
   // eslint-disable-next-line @typescript-eslint/ban-types
   props: {};
   dispose: () => void;
@@ -104,7 +104,7 @@ export function bindMap(
         const removeBindingList = applyBindings(bindings, instance) || [];
 
         onInvalidate(() => {
-          removeBindingList.forEach((binding) => binding && binding());
+          removeBindingList.forEach((binding) => binding?.());
         });
       },
       { immediate: true },
@@ -171,13 +171,13 @@ export function bindElement<T extends HTMLElement, P extends BindProps>(
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type CollectionBinding<T extends HTMLElement, P extends BindProps> = {
-  ref: Ref<Array<Ref<T>>>;
+  ref: Ref<ReadonlyArray<Ref<T>>>;
   type: 'collection';
   props: P;
-  getElements(): Array<T>;
+  getElements(): ReadonlyArray<T>;
 };
 export function bindCollection<T extends HTMLElement, P extends BindProps>(
-  ref: Ref<Array<Ref<T>>>,
+  ref: Ref<ReadonlyArray<Ref<T>>>,
   props: P,
 ): CollectionBinding<T, P> {
   return {
@@ -197,7 +197,7 @@ export type ComponentBinding<T extends SimpleComponentApi> = {
   ref: Ref<T | undefined>;
   type: 'component';
   props: ComponentParams<T>;
-  getElements(): Array<HTMLElement>;
+  getElements(): ReadonlyArray<HTMLElement>;
 };
 export function BindComponent<T extends SimpleComponentApi>(
   ref: Ref<T | undefined>,
@@ -215,13 +215,13 @@ export function BindComponent<T extends SimpleComponentApi>(
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type ComponentCollectionBinding<T extends SimpleComponentApi> = {
-  ref: Ref<Array<Ref<T>>>;
+  ref: Ref<ReadonlyArray<Ref<T>>>;
   type: 'componentCollection';
   props: ComponentParams<T>;
-  getElements(): Array<HTMLElement>;
+  getElements(): ReadonlyArray<HTMLElement>;
 };
 export function bindComponentCollection<T extends SimpleComponentApi>(
-  ref: Ref<Array<Ref<T>>>,
+  ref: Ref<ReadonlyArray<Ref<T>>>,
   props: ComponentParams<T>,
 ): ComponentCollectionBinding<T> {
   return {
@@ -237,7 +237,7 @@ export function bindComponentCollection<T extends SimpleComponentApi>(
 export type TemplateBinding<T extends HTMLElement> = {
   type: 'template';
   props: TemplateProps<T>;
-  getElements(): Array<HTMLElement>;
+  getElements(): ReadonlyArray<HTMLElement>;
 };
 export function BindTemplate<T extends HTMLElement>(props: TemplateProps<T>): TemplateBinding<T> {
   return {
