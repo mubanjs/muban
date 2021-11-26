@@ -110,8 +110,8 @@ export function refElement<T extends HTMLElement = HTMLElement>(
       } else {
         try {
           element = (parent.querySelector<T>(`[data-ref="${this.ref}"]`) ?? null) as T | null;
-        } catch (e) {
-          if (e instanceof DOMException) {
+        } catch (error) {
+          if (error instanceof DOMException) {
             console.warn(`
 [Error querying ref] The first argument of refElement should be the value of a data-ref in the DOM, not a querySelector.
 If you want to select a custom target, pass a function like;
@@ -119,7 +119,7 @@ If you want to select a custom target, pass a function like;
   refElement((parent) => parent.querySelector('${this.ref}'));
             `);
           }
-          throw e;
+          throw error;
         }
       }
       return ensureElementIsComponentChild(parent, element, ignoreGuard);
@@ -170,8 +170,8 @@ export function refCollection<T extends HTMLElement = HTMLElement>(
       } else {
         try {
           elements = Array.from(parent.querySelectorAll<T>(`[data-ref="${refIdOrQuery}"]`));
-        } catch (e) {
-          if (e instanceof DOMException) {
+        } catch (error) {
+          if (error instanceof DOMException) {
             console.warn(`
 [Error querying ref] The first argument of refElement should be the value of a data-ref in the DOM, not a querySelector.
 If you want to select a custom target, pass a function like;
@@ -179,7 +179,7 @@ If you want to select a custom target, pass a function like;
   refElement((parent) => parent.querySelector('${refIdOrQuery}'));
             `);
           }
-          throw e;
+          throw error;
         }
       }
       return elements.filter((element) =>
