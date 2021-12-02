@@ -31,7 +31,7 @@ import type {
   DefineComponentOptions,
   InternalComponentInstance,
 } from './Component.types';
-import { reactive, toRaw, watchEffect } from '@vue/runtime-core';
+import { reactive, toRaw, watchEffect, readonly } from '@vue/runtime-core';
 import type { ComponentRefItem } from './refs/refDefinitions.types';
 import { recursiveUnref } from './utils/utils';
 
@@ -338,7 +338,7 @@ function setupComponent(instance: InternalComponentInstance) {
   currentInstance = instance;
   // console.log('[setup]', instance.options.name);
   const bindings = instance.options.setup?.({
-    props: instance.reactiveProps as any,
+    props: readonly(instance.reactiveProps) as any,
     refs: instance.refs,
     element: instance.element as HTMLElement,
   });
