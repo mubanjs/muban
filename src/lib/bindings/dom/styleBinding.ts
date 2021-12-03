@@ -1,10 +1,11 @@
 import { camelCase } from 'lodash-es';
 import { unref, watchEffect } from '@vue/runtime-core';
 import type { BindingMap } from '../bindings.types';
+import type { Ref } from '@vue/reactivity';
 
 export function styleBinding(target: HTMLElement, valueAccessor: BindingMap<string>) {
   return watchEffect(() => {
-    const styles = unref(valueAccessor);
+    const styles = unref<Record<string, string> | Record<string, Ref<string>>>(valueAccessor);
     Object.entries(styles).forEach(([name, value]) => {
       let styleValue = unref(value);
 
