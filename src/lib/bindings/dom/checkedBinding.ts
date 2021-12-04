@@ -3,6 +3,7 @@ import type { Ref } from '@vue/reactivity';
 import { computed, unref } from '@vue/reactivity';
 import { watch, watchEffect } from '@vue/runtime-core';
 import type { BindingsHelpers } from '../bindings.types';
+import { checkInitialBindingState } from '../utils/checkInitialBindingState';
 
 export function checkedBinding(
   target: HTMLInputElement,
@@ -38,24 +39,31 @@ export function checkedBinding(
   const valueIsArray = isCheckbox && Array.isArray(rawValue);
   useElementValue = isRadio || valueIsArray;
 
-  const unwatch = watchEffect(() => {
+  const getNewHtmlValueFromModel = () => {
     const modelValue = unref(model);
     const elementValue = checkedValue.value;
+    let newValue: boolean;
 
     if (Array.isArray(modelValue)) {
       // When a checkbox is bound to an array,
       // being checked represents its value being present in that array
-      target.checked = modelValue.includes(elementValue);
+      newValue = modelValue.includes(elementValue);
     } else if (isCheckbox && elementValue === undefined) {
       // When a checkbox is bound to any other value (not an array) and "checkedValue" is not defined,
       // being checked represents the value being trueish
-      target.checked = Boolean(modelValue);
+      newValue = Boolean(modelValue);
     } else {
-      // console.log('else', elementValue, modelValue);
-      target.checked = elementValue === modelValue;
+      newValue = elementValue === modelValue;
     }
-  });
-  const updateModel = () => {
+    return newValue;
+  };
+
+  // update the checkbox based on model changes
+  const updateHTML = () => {
+    target.checked = getNewHtmlValueFromModel();
+  };
+
+  const getNewModelValueFromHtml = () => {
     const isChecked = target.checked;
     let elementValue = checkedValue.value;
 
@@ -67,6 +75,7 @@ export function checkedBinding(
     }
 
     const modelValue = unref(model);
+    let newModelValue;
 
     if (Array.isArray(modelValue)) {
       saveOldValue = oldElementValue;
@@ -77,19 +86,22 @@ export function checkedBinding(
         // currently checked, replace the old elem value with the new elem value
         // in the model array.
         if (isChecked) {
-          // add current
-          model.value = (model.value as Array<any>).concat(elementValue);
-          // remove old
-          model.value = (model.value as Array<any>).filter((v) => v !== saveOldValue);
+          newModelValue = (modelValue as Array<any>)
+            // add current
+            .concat(elementValue)
+            // remove old
+            .filter((v) => v !== saveOldValue);
+        } else {
+          newModelValue = (modelValue as Array<string>).filter((v) => v !== elementValue);
         }
       } else {
         // When we're responding to the user having checked/unchecked a checkbox,
         // add/remove the element value to the model array.
         // eslint-disable-next-line no-lonely-if
-        if (target.checked) {
-          model.value = (model.value as Array<string>).concat(elementValue);
+        if (isChecked) {
+          newModelValue = (modelValue as Array<string>).concat(elementValue);
         } else {
-          model.value = (model.value as Array<string>).filter((v) => v !== elementValue);
+          newModelValue = (modelValue as Array<string>).filter((v) => v !== elementValue);
         }
       }
     } else {
@@ -100,12 +112,32 @@ export function checkedBinding(
           elementValue = undefined;
         }
       }
-      model.value = elementValue;
+      newModelValue = elementValue;
     }
+    return newModelValue;
   };
 
-  target.addEventListener('change', updateModel);
+  // update the modal based on user input
+  const updateModel = () => {
+    model.value = getNewModelValueFromHtml();
+  };
+
+  if (
+    checkInitialBindingState(
+      'checked',
+      target.checked,
+      model.value,
+      unref(bindingHelpers.getBinding('initialValueSource')),
+    ) === 'binding'
+  ) {
+    updateModel();
+  }
+
+  // when checkedValue changes it should first update the modal,
+  // so when it later triggers the updateHTML, the modal already correctly reflects the updated state
   const unwatchCheckedValue = watch(() => checkedValue.value, updateModel);
+  const unwatch = watchEffect(updateHTML);
+  target.addEventListener('change', updateModel);
 
   return () => {
     unwatch();

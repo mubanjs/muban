@@ -1,28 +1,42 @@
 import { unref, watchEffect } from '@vue/runtime-core';
-import type { BindingValue } from '../bindings.types';
+import type { BindingValue, BindingsHelpers } from '../bindings.types';
+import { checkInitialBindingState } from '../utils/checkInitialBindingState';
 
 export function textInputBinding(
   target: HTMLInputElement,
-  valueAccessor: BindingValue<string | number | boolean | null | undefined>,
+  model: BindingValue<string | number | boolean | null | undefined>,
+  bindingHelpers: BindingsHelpers,
 ) {
-  const unwatch = watchEffect(() => {
-    let inputValue = unref(valueAccessor);
-    if (inputValue === null || inputValue === undefined) {
-      inputValue = '';
+  const updateHtml = () => {
+    let modelValue = unref(model);
+    if (modelValue === null || modelValue === undefined) {
+      modelValue = '';
     }
-    target.value = String(inputValue);
-  });
-
-  const onInputChange = function () {
-    valueAccessor.value = target.value;
+    target.value = String(modelValue);
   };
 
-  target.addEventListener('input', onInputChange);
-  target.addEventListener('change', onInputChange);
+  const updateModel = function () {
+    model.value = target.value;
+  };
+
+  if (
+    checkInitialBindingState(
+      'textInput',
+      target.value,
+      model.value,
+      unref(bindingHelpers.getBinding('initialValueSource')),
+    ) === 'binding'
+  ) {
+    updateModel();
+  }
+
+  const unwatch = watchEffect(updateHtml);
+  target.addEventListener('input', updateModel);
+  target.addEventListener('change', updateModel);
 
   return () => {
     unwatch();
-    target.removeEventListener('input', onInputChange);
-    target.removeEventListener('change', onInputChange);
+    target.removeEventListener('input', updateModel);
+    target.removeEventListener('change', updateModel);
   };
 }
