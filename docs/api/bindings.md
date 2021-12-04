@@ -148,7 +148,7 @@ for optimization.
 The `text` binding sets the `textContent` property of the associated DOM element.
 
 ```ts
-Ref<string>
+text: Ref<string>
 ```
 
 **Examples**
@@ -173,7 +173,7 @@ bind(refs.fullName, { text: computed(() => `${firstName.value} ${lastName.value}
 The `html` binding sets the `innerHTML` property of the associated DOM element.
 
 ```ts
-Ref<string>
+htlm: Ref<string>
 ```
 
 **Examples**
@@ -198,7 +198,7 @@ bind(refs.fullName, { html: computed(() => `${firstName.value} ${lastName.value}
 The `css` binding adds or removes one or more CSS classes to the associated DOM element.
 
 ```ts
-Ref<string> | Ref<Record<string, boolean>> | Record<string, Ref<boolean>>
+css: Ref<string> | Ref<Record<string, boolean>> | Record<string, Ref<boolean>>
 ```
 
 **Examples**
@@ -227,7 +227,7 @@ The `style` binding sets the style properties of the associated DOM element, sim
 styles.
 
 ```ts
-Ref<Record<string, boolean>> | Record<string, Ref<boolean>>
+style: Ref<Record<string, boolean>> | Record<string, Ref<boolean>>
 ```
 
 **Examples**
@@ -246,7 +246,7 @@ bind(refs.item, { style: {
 The attribute binding sets the attributes of the associated DOM element.
 
 ```ts
-Ref<Record<string, Ref<any>>
+attr: Ref<Record<string, Ref<any>>
 ```
 
 **Examples**
@@ -265,7 +265,7 @@ bind(refs.item, { attr: {
 The `click` binding calls the passed callback whenever the user clicks on the associated DOM element.
 
 ```ts
-(event: HTMLElementEventMap['click']) => void;
+click: (event: HTMLElementEventMap['click']) => void;
 ```
 
 **Examples**
@@ -279,13 +279,122 @@ bind(refs.item, { click: (event) => console.log(event.currentTarget) });
 bind(refs.item, { click: toggleActive });
 ```
 
+## Form bindings
+
+These bindings are two-way, and apply to form elements where users can modify the HTML – input 
+text or change a selection. These changes are kept in sync with the passed binding value.
+
+### initialValueSource
+
+This is a special "binding modifier" that is available for all the two-way bindings 
+
+```ts
+initialValueSource?: 'html' | 'binding';
+```
+
+Muban always treats the HTML as it's initial source of truth. However, when dealing with two-way
+bindings, we also have to take the initial value of the passed ref into account. When muban
+detects that the initial HTML and the initial binding value are not in sync, it will log a clear
+warning to the console. It also overrides the binding value to what was set in the HTML.
+
+When the initial values are not in sync, and a warning is logged, you have two options:
+
+1) Either to change your binding value to be initially `undefined`, or match up with the
+   expected HTML value (only if you know for sure what it will be).
+2) Explicitly set what source it should use.
+
+The latter can be done by passing `initialValueSource: 'html'` or `initialValueSource: 'binding'`
+as an additional binding value.
+
+```ts
+bind(refs.inputElement, { value: inputValue, initialValueSource: 'binding' });
+```
+
+### value
+
+The `value` binding is a two-way binding, connecting the state with the associated input 
+elements. It works with `<input>`, `<textarea>` and `<select>` elements, except for **checkboxes**
+and **radio buttons**; they have their own `checked` binding.
+
+```ts
+value: Ref<string>;
+allowUnset?: boolean;
+
+```
+
+It will sync the value of the passed `ref` with the value of the targeted element.
+
+**Examples**
+
+```ts
+
+const inputValue = ref('hello');
+const textValue = ref('world');
+const selectValue = ref('bar');
+
+// bind to a regular `<input>` element
+bind(refs.inputElement, { value: inputValue });
+
+// bind to a `<textarea>` element
+bind(refs.textareaElement, { value: textValue });
+
+// bind to a `<select>` element
+bind(refs.selectElement, { value: selectValue });
+```
+
+#### allowUnset
+
+When binding to a `<select>` element, if the binding value is changed to a value that is not 
+supported by any of the options in the select, it will not do the update.
+
+However, when passing `allowUnset: true` as an additional binding value, it will set the 
+`<select>` element to its unselected value, and keep the binding value to what it was.
+
+```ts
+bind(refs.selectElement, { value: selectValue, allowUnset: true });
+```
+
+
+### textInput
+
+The `textInput` binding is a two-way binding, connecting the state with the associated input
+elements. It works with `<input type="text">` and `<textarea>`, and can be used instead of the 
+`value` binding when immediate updates to the binding value should be done when the user is 
+inputting text.
+
+The value binding only updates when the `changed` event is fired, normally when leaving focus. 
+The `textInput` binding also listens to the `input` event, which fires directly after any 
+internal change to the input element.
+
+```ts
+textInput: Ref<string>;
+initialValueSource?: 'html' | 'binding';
+```
+
+It will sync the value of the passed `ref` with the value of the targeted element.
+
+**Examples**
+
+```ts
+
+const inputValue = ref('hello');
+const textValue = ref('world');
+
+// bind to a regular `<input>` element
+bind(refs.inputElement, { textInput: inputValue });
+
+// bind to a `<textarea>` element
+bind(refs.textareaElement, { textInput: textValue });
+```
+
+
 ### checked
 
 The `checked` binding is a two-way binding, connecting the state with the associated checkbox
 or radio button DOM element.
 
 ```ts
-Ref<boolean | Array<string>>
+checked: Ref<boolean | Array<string>>
 ```
 
 If passed a single `boolean` value, it will sync the passed `ref` and the `checked ` state of the

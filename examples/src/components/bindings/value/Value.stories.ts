@@ -22,7 +22,7 @@ export const Default: Story = () => ({
       const value = ref<string | undefined>('hello');
 
       return [
-        bind(refs.info, { text: value }),
+        bind(refs.info, { value, initialValueSource: 'binding' }),
         bind(refs.field, { value }),
         bind(refs.resetBtn, { click: () => (value.value = 'hello') }),
         bind(refs.undefinedBtn, { click: () => (value.value = undefined) }),
@@ -31,8 +31,8 @@ export const Default: Story = () => ({
     },
   }),
   template: () => html`<div data-component="value">
-    <p>Value: <span data-ref="info"></span></p>
-    <div><input data-ref="field" /></div>
+    <p>Value binding: <input data-ref="info" /></p>
+    <div>User Input:<input data-ref="field" value="hello" /></div>
     <div>
       <button data-ref="btn-reset">reset value</button>
       <button data-ref="btn-undefined">set to undefined</button>
@@ -53,7 +53,7 @@ export const Select: Story = () => ({
       fooBtn: 'btn-foo',
     },
     setup({ refs }) {
-      const value = ref<string | undefined>('hello');
+      const value = ref<string | undefined>();
 
       return [
         bind(refs.info, { text: value }),
@@ -105,14 +105,14 @@ export const AllowUnset: Story = () => ({
         bind(refs.resetBtn, { click: () => (value.value = 'hello') }),
         bind(refs.undefinedBtn, { click: () => (value.value = undefined) }),
         bind(refs.fooBtn, { click: () => (value.value = 'foo') }),
-        bind(refs.select, { value, allowUnset }),
-        bind(refs.allowUnsetCheckbox, { checked: allowUnset }),
+        bind(refs.select, { value, allowUnset, initialValueSource: 'binding' }),
+        bind(refs.allowUnsetCheckbox, { checked: allowUnset, initialValueSource: 'binding' }),
       ];
     },
   }),
   template: () => html`<div data-component="value">
     <p>Value: <span data-ref="info"></span></p>
-    <div><input data-ref="field" /></div>
+    <div><input data-ref="field" value="hello" /></div>
     <div>
       <button data-ref="btn-reset">reset value</button>
       <button data-ref="btn-undefined">set to undefined</button>

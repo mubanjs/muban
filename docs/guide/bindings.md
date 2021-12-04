@@ -79,6 +79,10 @@ bind(refs.button, {
 })
 ```
 
+::: tip API
+Read more on the [DOM bindings API](../api/bindings.html#dom-bindings) page.
+:::
+
 #### Component bindings
 
 TODO 
@@ -93,6 +97,10 @@ bind(refs.filter, {
   onChange: (newValue) => setNewValue(newValue),
 })
 ```
+
+::: tip API
+Read more on the [Component bindings API](../api/bindings.html#component-bindings) page.
+:::
 
 ### bindMap
 
