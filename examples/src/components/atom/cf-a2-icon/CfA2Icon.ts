@@ -1,4 +1,4 @@
-import { bind, defineComponent, propType } from '../../../../../src';
+import { bind, defineComponent, propType, supportLazy } from '../../../../../src';
 
 import './cf-a2-icon.scss';
 import { isIcon, svgContext } from './CfA2Icon.config';
@@ -17,3 +17,5 @@ export const CfA2Icon = defineComponent({
     ];
   },
 });
+
+export const lazy = supportLazy(CfA2Icon);

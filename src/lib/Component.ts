@@ -76,6 +76,7 @@ export function createComponentInstance(
     children: [],
     refChildren: [],
     removeBindingsList: [],
+    disposers: [],
     mount() {
       // console.log('[mount]', options.name);
       this[LifecycleHooks.Mounted]?.forEach((hook) => hook());
@@ -86,6 +87,7 @@ export function createComponentInstance(
     unmount() {
       // console.log('[unmount]', options.name);
       this.removeBindingsList?.forEach((binding) => binding?.());
+      this.disposers?.forEach((dispose) => dispose());
       this[LifecycleHooks.Unmounted]?.forEach((hook) => hook());
 
       // unregister itself from its parent
@@ -163,7 +165,7 @@ export const defineComponent = <
       processNonRefChildComponents(instance);
 
       // listen for DOM removal and child component DOM updates
-      createObservers(instance);
+      instance.disposers.push(createObservers(instance));
 
       // only initialize itself when it's a "root" component
       // otherwise it's initialized by its parent
@@ -216,6 +218,26 @@ export const defineComponent = <
   );
 };
 
+let documentObserver: MutationObserver;
+const callbacks = new Set<() => void>();
+function onNodeRemoval(callback: () => void): () => void {
+  // observer is only added once on the document, and will trigger the callback for
+  // each mounted component, which will do its own checks
+  if (!documentObserver) {
+    documentObserver = new MutationObserver(() => {
+      for (const callback of callbacks) {
+        callback();
+      }
+    });
+    documentObserver.observe(document, { attributes: false, childList: true, subtree: true });
+  }
+  callbacks.add(callback);
+
+  return () => {
+    callbacks.delete(callback);
+  };
+}
+
 /**
  * Create MutationObservers for:
  * - the document to detect the deletion of this component
@@ -233,15 +255,16 @@ function createObservers(instance: InternalComponentInstance) {
   });
   elementObserver.observe(instance.element, { attributes: false, childList: true, subtree: true });
 
-  // each component will detect its own DOM removal and unmount itself
-  const documentObserver = new MutationObserver((mutations) => {
-    const removedNodes = mutations.flatMap((mutation) => Array.from(mutation.removedNodes));
-    if (removedNodes.some((node) => node === instance.element || node.contains(instance.element))) {
+  const disposeNodeRemovalCallback = onNodeRemoval(() => {
+    if (!instance.element.isConnected) {
       instance.unmount();
     }
   });
-  // TODO: only add this once
-  documentObserver.observe(document, { attributes: false, childList: true, subtree: true });
+
+  return () => {
+    elementObserver.disconnect();
+    disposeNodeRemovalCallback();
+  };
 }
 
 /**
