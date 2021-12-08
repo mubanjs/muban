@@ -42,6 +42,7 @@ export type InternalComponentInstance = InternalNodeInstance & {
   bindings: Array<Binding>;
   refChildren: Array<InternalNodeInstance>;
   removeBindingsList?: Array<(() => void) | undefined>;
+  disposers: Array<() => void>;
   options: DefineComponentOptions<
     Record<string, PropTypeDefinition>,
     Record<string, ComponentRefItem>,
