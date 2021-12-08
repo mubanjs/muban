@@ -2,7 +2,9 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "module": "ESNext",
+    "target": "ES6",
     "outDir": "./dist/esm",
-    "declarationDir": "./dist/esm"
+    "declarationDir": "./dist/esm",
+    "downlevelIteration": false
   }
 }
