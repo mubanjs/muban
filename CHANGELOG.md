@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-alpha.28] - 2021-12-09
+
+### Added
+
+- Add `propType.any`
+- Fix `propType.object.defaultValue` to allow receiving function value
+
+### Fixed
+
+- Don't re-create ref components when previously created globally
+- Fix `attr` source conversion
+- Improve `bindMap` and other bindings after `bindTemplate` updates
+- Fix some internal typing issues that were causing build error
+- Check current HTML value before setting innerHTML
+- Improve performance with global MutationObserver
+
+### Changed
+
+- Upgrade `vue/reactivity` and `vue/runtime-core` to `3.2.22`
+- Improve types for prop `source` options
+- Improve error reporting for invalid refs
+
+### Misc
+
+- Add example stories
+- Update docs
+- Exclude type test files in Jest
+- Update Arrays for refs/elements to ReadonlyArray
+- Change target for ESM builds to es6 to be more modern
+
 ## [1.0.0-alpha.27] - 2021-05-16
 
 ### Added
