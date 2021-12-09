@@ -38,7 +38,7 @@ export function bind<T extends Pick<AnyRef, 'getBindingDefinition'>>(
 
 export type BindMapBinding = {
   type: 'bindMap';
-  getElements(): ReadonlyArray<RefElementType>;
+  getElements(): ReadonlyArray<HTMLElement>;
   // eslint-disable-next-line @typescript-eslint/ban-types
   props: {};
   dispose: () => void;
