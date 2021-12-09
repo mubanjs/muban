@@ -6,7 +6,7 @@
     "allowJs": false,
     "outDir": "tmp",
     "declaration": true,
-    "declarationDir": "./decl"
+    "declarationDir": "./decl",
   },
   "include": [
     "./src/**/*"
