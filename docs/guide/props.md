@@ -14,7 +14,7 @@ application.
 ### Initial State
 
 So, how is this "initial state" stored inside the HTML, and how can we extract that to make it 
-usable in our component? We can divide this up into 3 different catgories:
+usable in our component? We can divide this up into 3 different categories:
 
 1) **Explicit state** – stored in `data-attributes` or `<script type="application/json">`, that 
    serves no function on the page for the user, but allows us to extract that state into our 
@@ -100,6 +100,11 @@ component in their setup function, since the setup function of the parent compon
 to execute. Use `watch` or `watchEffect` if you need to know when they become available.
 
 > TODO; link to full component lifecycle
+
+### Read Only
+
+The `props` object passed to the `setup` function is **readonly**, so it cannot be used to
+communicate back to the parent component or as initial state.
 
 ## Prop Definition
 

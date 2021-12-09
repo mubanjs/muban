@@ -144,6 +144,11 @@ You can find more info at the [Refs API](./refs.md)
 
 ### setup
 
+::: warning Readonly 
+The `props` object passed to the `setup` function is **readonly**, so it cannot be used to
+communicate back to the parent component or as initial state.
+:::
+
 ### lifecycle
 
 [See hooks](./hooks.md)

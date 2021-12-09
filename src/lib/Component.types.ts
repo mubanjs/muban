@@ -91,7 +91,7 @@ export type DefineComponentOptions<
   props?: P;
   refs?: R;
   setup?: (context: {
-    props: TypedProps<P>;
+    props: Readonly<TypedProps<P>>;
     refs: TypedRefs<R>;
     element: HTMLElement;
   }) => undefined | null | Array<Binding>;
