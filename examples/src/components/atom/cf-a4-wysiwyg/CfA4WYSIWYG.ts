@@ -1,5 +1,6 @@
-import { html, unsafeHTML } from '@muban/template';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import classNames from 'classnames';
+import { html, unsafeHTML } from '@muban/template';
 
 import './cf-a4-wysiwyg.scss';
 import type { CfA4WYSIWYGTypes } from './CfA4WYSIWYG.types';

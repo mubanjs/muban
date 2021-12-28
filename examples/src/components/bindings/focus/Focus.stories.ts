@@ -1,5 +1,5 @@
 import { html } from '@muban/template';
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook/types-6-0';
 import { computed, ref } from '@vue/reactivity';
 import { watchEffect } from '@vue/runtime-core';
 import { bind, defineComponent } from '../../../../../src';
@@ -32,7 +32,7 @@ export const Default: Story = () => ({
 
       return [
         bind(refs.info, { text: computed(() => (hasFocus.value ? 'yes' : 'no')) }),
-        bind(refs.field, { hasFocus: hasFocus }),
+        bind(refs.field, { hasFocus }),
       ];
     },
   }),

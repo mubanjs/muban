@@ -1,8 +1,9 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import classNames from 'classnames';
+import { html } from '@muban/template';
 import { cfA2IconTemplate } from '../../atom/cf-a2-icon/CfA2Icon.template';
 import { defaultSelectMultiple } from './CfM4Select.config';
 import type { CfM4SelectTypes } from './CfM4Select.types';
-import { html } from '@muban/template';
-import classNames from 'classnames';
 import { cfM1Button } from '../cf-m1-button/CfM1Button';
 import { CfM4Select } from './CfM4Select';
 

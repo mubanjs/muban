@@ -116,7 +116,7 @@ module.exports = {
 
 Create your story file:
 ```ts
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook/types-6-0';
 
 export default {
   title: 'MyComponent',

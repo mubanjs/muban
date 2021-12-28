@@ -1,5 +1,6 @@
-import { html } from '@muban/template';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import classNames from 'classnames';
+import { html } from '@muban/template';
 import { CfA2Icon } from './CfA2Icon';
 import type { CfA2IconTypes } from './CfA2Icon.types';
 

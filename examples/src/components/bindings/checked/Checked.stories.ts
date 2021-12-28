@@ -1,5 +1,5 @@
 import { html } from '@muban/template';
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook/types-6-0';
 import { ref } from '@vue/reactivity';
 import { watch } from '@vue/runtime-core';
 import { bind, defineComponent, refCollection } from '../../../../../src';
@@ -18,7 +18,7 @@ export const Checkbox: Story = () => ({
     setup({ refs }) {
       const checked = ref<boolean>(false);
 
-      return [bind(refs.info, { text: checked }), bind(refs.checkbox, { checked: checked })];
+      return [bind(refs.info, { text: checked }), bind(refs.checkbox, { checked })];
     },
   }),
   template: () => html` <div data-component="checked">
@@ -38,10 +38,7 @@ export const CheckedValue: Story = () => ({
       const checked = ref<boolean>();
       const checkedValue = ref<string>('hello');
 
-      return [
-        bind(refs.info, { value: checked }),
-        bind(refs.checkbox, { checked: checked, checkedValue: checkedValue }),
-      ];
+      return [bind(refs.info, { value: checked }), bind(refs.checkbox, { checked, checkedValue })];
     },
   }),
   template: () => html` <div data-component="checked">
@@ -64,7 +61,7 @@ export const ValueCheckedValue: Story = () => ({
 
       return [
         bind(refs.info, { value: checked }),
-        bind(refs.checkbox, { checked: checked, value: checkedValue }),
+        bind(refs.checkbox, { checked, value: checkedValue }),
       ];
     },
   }),
@@ -94,6 +91,7 @@ export const CheckedArray: Story = () => ({
             if (Array.isArray(list)) {
               selectedItems.value = list;
             }
+            // eslint-disable-next-line no-empty
           } catch {}
         },
       );

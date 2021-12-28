@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
-import { meta, FilterProductsProps } from './FilterProducts';
+import type { Story } from '@muban/storybook/types-6-0';
+import type { FilterProductsProps } from './FilterProducts';
+import { meta } from './FilterProducts';
 
 export default {
   title: 'FilterProducts',

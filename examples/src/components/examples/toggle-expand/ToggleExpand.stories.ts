@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook/types-6-0';
 import type { Ref } from '@vue/reactivity';
 import { unref, watchEffect } from '@vue/runtime-core';
 import { registerDomBinding } from '../../../../../src/lib/bindings/bindings';
 import { ToggleExpand } from './ToggleExpand';
-import { toggleExpandTemplate, ToggleExpandTemplateProps } from './ToggleExpand.template';
+import type { ToggleExpandTemplateProps } from './ToggleExpand.template';
+import { toggleExpandTemplate } from './ToggleExpand.template';
 
 export default {
   title: 'ToggleExpand',

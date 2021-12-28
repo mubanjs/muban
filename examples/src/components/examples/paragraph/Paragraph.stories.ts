@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
-import { meta, ParagraphProps } from './Paragraph';
+import type { Story } from '@muban/storybook/types-6-0';
+import type { ParagraphProps } from './Paragraph';
+import { meta } from './Paragraph';
 
 export default {
   title: 'Paragraph',

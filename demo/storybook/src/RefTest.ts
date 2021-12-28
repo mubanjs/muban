@@ -1,5 +1,5 @@
 import { defineComponent, refElement } from '@muban/muban';
-import type { ElementRef } from '@muban/muban/lib/refs/refDefinitions.types';
+import type { ElementRef } from '@muban/muban';
 
 // These are some library functions that can be typed as generic or specific
 // uses the generic type, defaults to HTMLElement

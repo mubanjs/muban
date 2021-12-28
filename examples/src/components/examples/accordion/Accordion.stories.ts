@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Story } from '@muban/storybook/types-6-0';
 import { Accordion } from './Accordion';
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 import { accordionTemplate } from './Accordion.template';
 import type { AccordionTemplateProps } from './Accordion.template';
 

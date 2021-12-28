@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars,no-console,@typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars,no-console,@typescript-eslint/ban-ts-comment,babel/no-unused-expressions */
 import { isString, isNumber, optional, isDate } from 'isntnt';
 import { propType } from '../../src/lib/props/propDefinitions';
 import type {
@@ -464,7 +464,7 @@ dc({
 // };
 
 //
-////////
+/// /////
 //
 
 // const addOptional = <T extends PropTypeDefinition>(type: T): WithOptional<T> => {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook/types-6-0';
 import { html } from '@muban/template';
 import { computed } from '@vue/reactivity';
 import { bind, defineComponent, propType, refComponent, refElement } from '../../../../../src';
@@ -19,7 +19,7 @@ const Button = defineComponent({
   },
 });
 
-function btnTemplate(props: any, ref?: string) {
+function buttonTemplate(props: any, ref?: string) {
   return html`<button data-component="button" data-ref=${ref}></button>`;
 }
 
@@ -81,12 +81,12 @@ export const Default: Story = () => ({
     },
   }),
   template: () => html` <div data-component="ref-component">
-    <div>${btnTemplate({})}</div>
-    <div>${btnTemplate({}, 'btn')}</div>
-    <div>${btnTemplate({}, 'btn2')}</div>
+    <div>${buttonTemplate({})}</div>
+    <div>${buttonTemplate({}, 'btn')}</div>
+    <div>${buttonTemplate({}, 'btn2')}</div>
     <div>${linkTemplate({})}</div>
     <div>${linkTemplate({}, 'lnk')}</div>
-    <div>${btnTemplate({}, 'btnTarget')}</div>
+    <div>${buttonTemplate({}, 'btnTarget')}</div>
     <div>${linkTemplate({}, 'linkTarget')}</div>
   </div>`,
 });
@@ -113,7 +113,7 @@ export const Default2: Story = () => ({
     },
   }),
   template: () => html` <div data-component="ref-component">
-    <div>${btnTemplate({}, 'btnTarget')}</div>
+    <div>${buttonTemplate({}, 'btnTarget')}</div>
     <div>${linkTemplate({}, 'linkTarget')}</div>
   </div>`,
 });
@@ -138,7 +138,7 @@ export const Default3: Story<{ toRender?: 'button' | 'link' }> = () => ({
   template: ({ toRender = 'button' }: { toRender?: 'button' | 'link' }) => html` <div
     data-component="ref-component"
   >
-    <div>${toRender === 'button' ? btnTemplate({}) : linkTemplate({})}</div>
+    <div>${toRender === 'button' ? buttonTemplate({}) : linkTemplate({})}</div>
   </div>`,
 });
 Default3.args = {

@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { computed, ref } from '@vue/reactivity';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import classNames from 'classnames';
+import { computed, ref } from '@vue/reactivity';
+import { html, unsafeHTML } from '@muban/template';
 import { defineComponent } from '../../../../../src/lib/Component';
 import { bindMap } from '../../../../../src/lib/bindings/bindingDefinitions';
 import { propType } from '../../../../../src/lib/props/propDefinitions';
 import { refCollection } from '../../../../../src/lib/refs/refDefinitions';
-import { html, unsafeHTML } from '@muban/template';
 
 export const TabbedContent = defineComponent({
   name: 'tabbed-content',
@@ -22,7 +23,9 @@ export const TabbedContent = defineComponent({
     return [
       ...bindMap(refs.tabs, (ref, index) => ({
         css: computed(() => ({ active: index === selectedIndex.value })),
-        click: () => (selectedIndex.value = index),
+        click() {
+          selectedIndex.value = index;
+        },
       })),
       ...bindMap(refs.tabContentItems, (ref, index) => ({
         style: computed(() => ({ display: index === selectedIndex.value ? 'block' : 'none' })),

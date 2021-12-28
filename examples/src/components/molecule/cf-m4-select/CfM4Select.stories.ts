@@ -1,4 +1,4 @@
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook/types-6-0';
 
 import type { CfM4SelectTypes } from './CfM4Select.types';
 import { className, disabled, placeholder } from '../../../storybook/argTypes';

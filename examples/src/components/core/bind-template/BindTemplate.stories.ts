@@ -1,5 +1,5 @@
 import { html } from '@muban/template';
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook/types-6-0';
 import { ref } from '@vue/reactivity';
 import { bind, bindMap, bindTemplate, defineComponent, refCollection } from '../../../../../src';
 import type {
@@ -27,11 +27,13 @@ function useItemControls({
 
   const bindings = [
     bind(refs.addButton, {
-      click: () => (data.value = data.value.concat(Math.random().toString())),
+      click() {
+        data.value = data.value.concat(Math.random().toString());
+      },
     }),
     ...bindMap(refs.removeButton, (ref, index) => ({
-      click: () => {
-        data.value = data.value.filter((item, i) => i !== index);
+      click() {
+        data.value = data.value.filter((item, index_) => index_ !== index);
       },
     })),
   ];
@@ -61,7 +63,9 @@ export const ServerRenderedAuto: Story = () => ({
           {
             extract: {
               config: { query: 'p', list: true, data: { title: 'span' } },
-              onData: (items: Array<{ title: string }>) => (data.value = items.map((i) => i.title)),
+              onData(items: Array<{ title: string }>) {
+                data.value = items.map((index) => index.title);
+              },
             },
           },
         ),
@@ -96,7 +100,9 @@ export const ServerRenderedForce: Story = () => ({
           {
             extract: {
               config: { query: 'p', list: true, data: { title: 'span' } },
-              onData: (items: Array<{ title: string }>) => (data.value = items.map((i) => i.title)),
+              onData(items: Array<{ title: string }>) {
+                data.value = items.map((index) => index.title);
+              },
             },
             forceImmediateRender: true,
           },

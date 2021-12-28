@@ -5,12 +5,10 @@ import { defineComponent } from '../../../../../src/lib/Component';
 import type { ComponentApi } from '../../../../../src/lib/Component.types';
 import { bind, bindMap, bindTemplate } from '../../../../../src/lib/bindings/bindingDefinitions';
 import { refComponents, refElement } from '../../../../../src/lib/refs/refDefinitions';
-import { ProductCard, productCard, ProductCardProps } from './FilterProducts.card';
-import {
-  FilterProductsChecklist,
-  filterProductsChecklist,
-  FilterProductsChecklistProps,
-} from './FilterProducts.checklist';
+import type { ProductCardProps } from './FilterProducts.card';
+import { ProductCard, productCard } from './FilterProducts.card';
+import type { FilterProductsChecklistProps } from './FilterProducts.checklist';
+import { FilterProductsChecklist, filterProductsChecklist } from './FilterProducts.checklist';
 
 import './filter-products.scss';
 
@@ -51,7 +49,10 @@ const useFilters = (
   });
 
   const resetFilters = () => {
-    activeFilters.every((filter) => (filter.active = []));
+    activeFilters.forEach((filter) => {
+      // eslint-disable-next-line no-param-reassign
+      filter.active = [];
+    });
   };
 
   return {

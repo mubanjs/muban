@@ -1,6 +1,7 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import classNames from 'classnames';
 import { html } from '@muban/template';
 import { defineComponent } from '../../../../../src';
-import classNames from 'classnames';
 
 import './cf-m3-selection-control.scss';
 

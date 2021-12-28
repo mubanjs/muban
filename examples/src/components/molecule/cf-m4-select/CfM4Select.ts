@@ -1,3 +1,6 @@
+import { ref } from '@vue/reactivity';
+import { extractFromHTML } from 'html-extract-data';
+
 import {
   bind,
   bindMap,
@@ -15,9 +18,7 @@ import { CfA2Icon } from '../../atom/cf-a2-icon/CfA2Icon';
 import type { SelectOption } from './CfM4Select.types';
 import { CfM1Button } from '../cf-m1-button/CfM1Button';
 
-import { ref } from '@vue/reactivity';
 import { useSelectExpanding } from './CfM4Select.hooks';
-import { extractFromHTML } from 'html-extract-data';
 import { selectOptionExtractConfig } from './CfM4Select.config';
 import { getSelectedValues } from './CfM4Select.utils';
 import { useClickedOutside } from '../../../hooks/useClickedOutside';
@@ -93,10 +94,12 @@ export const CfM4Select = defineComponent({
         click: () => {
           refs.selectElementOptions.getElements().forEach((option) => {
             if (props.multiple) {
+              // eslint-disable-next-line no-param-reassign
               option.selected =
                 (option.selected && option.value !== ref.element?.value) ||
                 (option.value === ref.element?.value && !option.selected);
             } else {
+              // eslint-disable-next-line no-param-reassign
               option.selected = option.value === ref.element?.value;
               // Just like a native select we close it once a user clicks on a value.
               toggleIsExpanded(false);

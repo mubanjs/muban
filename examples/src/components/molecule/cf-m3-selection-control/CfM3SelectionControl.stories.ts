@@ -1,4 +1,4 @@
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook/types-6-0';
 
 import { CfM3SelectionControl, cfM3SelectionControl } from './CfM3SelectionControl';
 import { selectionControlInputTypes } from './CfM3SelectionControl.config';

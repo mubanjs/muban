@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook/types-6-0';
 import { html } from '@muban/template';
 import { computed } from '@vue/reactivity';
 import { bind, defineComponent, propType } from '../../../../../src';

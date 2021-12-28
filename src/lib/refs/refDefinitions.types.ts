@@ -111,7 +111,7 @@ export type AnyRef =
   | ComponentsRef<ComponentFactory<any>>;
 
 // Turn the keys of an object into the types, or a Ref around that type
-type RefOrValue<T extends Record<string, any>> = {
+export type RefOrValue<T extends Record<string, any>> = {
   [P in keyof T]: T[P] | Ref<T[P]>;
 };
 

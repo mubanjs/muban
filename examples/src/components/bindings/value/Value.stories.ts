@@ -1,5 +1,6 @@
+/* eslint-disable no-return-assign */
 import { html } from '@muban/template';
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook/types-6-0';
 import { ref } from '@vue/reactivity';
 import { bind, defineComponent } from '../../../../../src';
 
@@ -22,7 +23,7 @@ export const Default: Story = () => ({
 
       return [
         bind(refs.info, { text: value }),
-        bind(refs.field, { value: value }),
+        bind(refs.field, { value }),
         bind(refs.resetBtn, { click: () => (value.value = 'hello') }),
         bind(refs.undefinedBtn, { click: () => (value.value = undefined) }),
         bind(refs.fooBtn, { click: () => (value.value = 'foo') }),
@@ -56,11 +57,11 @@ export const Select: Story = () => ({
 
       return [
         bind(refs.info, { text: value }),
-        bind(refs.field, { value: value }),
+        bind(refs.field, { value }),
         bind(refs.resetBtn, { click: () => (value.value = 'hello') }),
         bind(refs.undefinedBtn, { click: () => (value.value = undefined) }),
         bind(refs.fooBtn, { click: () => (value.value = 'foo') }),
-        bind(refs.select, { value: value }),
+        bind(refs.select, { value }),
       ];
     },
   }),
@@ -100,11 +101,11 @@ export const AllowUnset: Story = () => ({
 
       return [
         bind(refs.info, { text: value }),
-        bind(refs.field, { value: value }),
+        bind(refs.field, { value }),
         bind(refs.resetBtn, { click: () => (value.value = 'hello') }),
         bind(refs.undefinedBtn, { click: () => (value.value = undefined) }),
         bind(refs.fooBtn, { click: () => (value.value = 'foo') }),
-        bind(refs.select, { value: value, allowUnset: allowUnset }),
+        bind(refs.select, { value, allowUnset }),
         bind(refs.allowUnsetCheckbox, { checked: allowUnset }),
       ];
     },

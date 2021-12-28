@@ -1,3 +1,5 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import classNames from 'classnames';
 import { html } from '@muban/template';
 import {
   bind,
@@ -7,7 +9,6 @@ import {
   refComponent,
   refElement,
 } from '../../../../../src';
-import classNames from 'classnames';
 import { cfA2IconTemplate } from '../../atom/cf-a2-icon/CfA2Icon.template';
 
 import {

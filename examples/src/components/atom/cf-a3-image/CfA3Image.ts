@@ -1,5 +1,6 @@
-import { html } from '@muban/template';
+/* eslint-disable import/no-extraneous-dependencies */
 import classNames from 'classnames';
+import { html } from '@muban/template';
 
 import 'lazysizes';
 import 'lazysizes/plugins/object-fit/ls.object-fit';
