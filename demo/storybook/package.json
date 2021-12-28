@@ -1,0 +1,24 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Arjan van Wijk",
+  "license": "MIT",
+  "scripts": {
+    "storybook": "start-storybook -p 6006",
+    "check-types": "tsc --project tsconfig.json --noEmit --noUnusedLocals"
+  },
+  "devDependencies": {
+    "@muban/muban": "file:../../",
+    "@muban/template": "^1.0.0-alpha.1",
+    "@muban/hooks": "^1.0.0-alpha.3",
+    "@muban/storybook": "^7.0.0-alpha.15",
+    "@storybook/addon-actions": "^6.4.9",
+    "@storybook/addon-essentials": "^6.4.9",
+    "@storybook/addon-links": "^6.4.9",
+    "@storybook/addon-postcss": "^2.0.0",
+    "@storybook/builder-webpack5": "^6.4.9",
+    "@storybook/manager-webpack5": "^6.4.9",
+    "typescript": "4.1.2"
+  }
+}
