@@ -1,6 +1,7 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { createDecoratorComponent } from '@muban/storybook';
 import { html } from '@muban/template';
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook/types-6-0';
 import { computed, ref } from '@vue/reactivity';
 import { bind, defineComponent, propType, refComponent } from '../../../../../src';
 

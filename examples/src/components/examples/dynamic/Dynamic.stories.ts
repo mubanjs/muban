@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook/types-6-0';
 import { lazy } from '../../../../../src';
 import { registerGlobalComponent } from '../../../../../src/lib/utils/global';
 
-import { ProductCard, ProductCardProps } from '../filter-products/FilterProducts.card';
+import type { ProductCardProps } from '../filter-products/FilterProducts.card';
+import { ProductCard } from '../filter-products/FilterProducts.card';
 import { ToggleExpand } from '../toggle-expand/ToggleExpand';
 import type { ToggleExpandTemplateProps } from '../toggle-expand/ToggleExpand.template';
-import { meta, DynamicProps } from './Dynamic';
+import type { DynamicProps } from './Dynamic';
+import { meta } from './Dynamic';
 import type { LazyTestTemplateProps } from './LazyTest';
 
 export default {

@@ -1,5 +1,4 @@
-import type { iconAlignments } from './CfM1Button.config';
-import type { buttonSizes } from './CfM1Button.config';
+import type { iconAlignments, buttonSizes } from './CfM1Button.config';
 
 export type IconAlignment = typeof iconAlignments[number];
 export type ButtonSize = typeof buttonSizes[number];

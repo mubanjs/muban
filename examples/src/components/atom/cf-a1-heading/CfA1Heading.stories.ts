@@ -1,3 +1,4 @@
+import type { Story } from '@muban/storybook/types-6-0';
 import { cfA1Heading } from './CfA1Heading';
 import {
   defaultHeadingAlignment,
@@ -8,7 +9,6 @@ import {
   headingTypes,
 } from './CfA1Heading.config';
 import type { CFa1HeadingProps } from './CfA1Heading.types';
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 import { className } from '../../../storybook/argTypes';
 
 export default {

@@ -1,6 +1,7 @@
 import { html } from '@muban/template';
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
-import { defineComponent, provide, inject, bind, ref, Ref } from '../../../../../src';
+import type { Story } from '@muban/storybook/types-6-0';
+import type { Ref } from '../../../../../src';
+import { defineComponent, provide, inject, bind, ref } from '../../../../../src';
 
 export default {
   title: 'core/provideInject',

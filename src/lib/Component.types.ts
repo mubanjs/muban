@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types,@typescript-eslint/no-use-before-define */
 import type { App, AppContext } from './api/apiCreateApp';
 import type { Binding } from './bindings/bindings.types';
-import { LifecycleHooks } from './api/apiLifecycle';
+import type { LifecycleHooks } from './api/apiLifecycle';
 import type { PropTypeDefinition, TypedProps } from './props/propDefinitions.types';
 import type { ComponentRefItem, RefElementType, TypedRefs } from './refs/refDefinitions.types';
 

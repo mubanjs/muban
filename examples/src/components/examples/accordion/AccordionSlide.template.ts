@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-
-import './accordion.scss';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import classnames from 'classnames';
 import { html } from '@muban/template';
 import { AccordionSlide } from './AccordionSlide';
+
+import './accordion.scss';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type AccordionSlideTemplateProps = {

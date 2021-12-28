@@ -1,4 +1,4 @@
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook/types-6-0';
 
 import type { CfM2InputFieldTypes } from './CfM2InputField.types';
 import { cfM2InputField, CfM2InputField } from './CfM2InputField';

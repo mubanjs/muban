@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import { html, templateComponentFactory } from '@muban/template';
 import { buttonTemplate } from '../button/Button.template';
 

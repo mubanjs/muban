@@ -78,6 +78,9 @@
     "./src/**/*.ts",
     "./examples/src/types.d.ts",
     "./examples/src/**/*.ts",
-    "./tests/**/*.ts",
+    "./tests/**/*.ts"
+  ],
+  "exclude": [
+    "./src/**/*.types.test.ts"
   ]
 }

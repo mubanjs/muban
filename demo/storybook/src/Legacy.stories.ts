@@ -1,4 +1,5 @@
-import type { Meta } from "@muban/storybook/dist/client/preview/types-6-0";
+import type { Meta } from "@muban/storybook";
+import type { Story } from "@muban/storybook/types-6-0";
 import { StoryComponent, storyTemplate } from './TestComponent';
 
 export default {
@@ -7,7 +8,7 @@ export default {
 } as Meta;
 
 // Storybook 6.x Story function - CSFv2
-export const ClientFn = () => ({
+export const ClientFn: Story<{ initialValue?: boolean }> = () => ({
   component: StoryComponent,
   template: storyTemplate
 });

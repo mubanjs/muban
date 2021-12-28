@@ -1,9 +1,9 @@
 export function submitBinding(
   target: HTMLFormElement,
-  fn: (event: HTMLElementEventMap['submit']) => void | boolean,
+  callback: (event: HTMLElementEventMap['submit']) => void | boolean,
 ) {
-  const submitHandler = (event: Event) => {
-    const returnValue = fn(event);
+  const submitHandler = (event: SubmitEvent) => {
+    const returnValue = callback(event);
     // by default, prevent default form execution, unless explicitly returned by the handler
     if (returnValue !== true) {
       event.preventDefault();

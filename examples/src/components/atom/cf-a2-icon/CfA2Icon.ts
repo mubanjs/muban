@@ -1,8 +1,8 @@
+import { computed } from '@vue/reactivity';
 import { bind, defineComponent, propType, supportLazy } from '../../../../../src';
+import { isIcon, svgContext } from './CfA2Icon.config';
 
 import './cf-a2-icon.scss';
-import { isIcon, svgContext } from './CfA2Icon.config';
-import { computed } from '@vue/reactivity';
 
 export const CfA2Icon = defineComponent({
   name: 'cf-a2-icon',

@@ -89,4 +89,4 @@ export const inputLabel = {
       summary: 'string',
     },
   },
-}
+};

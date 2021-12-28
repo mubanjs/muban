@@ -1,12 +1,16 @@
+import type { Ref } from '@vue/runtime-core';
+import { watch } from '@vue/runtime-core';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import focusLock from 'dom-focus-lock';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Key } from 'ts-key-enum';
 import { useToggle } from '../../../hooks/useToggle';
-import { Ref, watch } from '@vue/runtime-core';
 import { closeSelectOptions, openSelectOptions } from './CfM4Select.animations';
 import type { ComponentRef, ElementRef } from '../../../../../src/lib/refs/refDefinitions.types';
 import type { BindProps } from '../../../../../src/lib/bindings/bindings.types';
-import focusLock from 'dom-focus-lock';
 import { useEscapeKeyEvent, useKeyboardEvent } from '../../../hooks/useKeyboardEvent';
-import { Key } from 'ts-key-enum';
-import { FocusDirection, moveFocus } from './CfM4Select.utils';
+import type { FocusDirection } from './CfM4Select.utils';
+import { moveFocus } from './CfM4Select.utils';
 import type { CfM1Button } from '../cf-m1-button/CfM1Button';
 
 export const useSelectExpanding = (

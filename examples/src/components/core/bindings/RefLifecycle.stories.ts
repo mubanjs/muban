@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+/* eslint-disable @typescript-eslint/no-explicit-any,no-param-reassign */
+import type { Story } from '@muban/storybook/types-6-0';
 import { html } from '@muban/template';
 import {
   bind,

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars,@typescript-eslint/naming-convention */
 import { defineComponent } from '../Component';
 import type { ComponentFactory, IfAny } from '../Component.types';
 import type { ComponentSetPropsParam } from '../refs/refDefinitions.types';
@@ -49,6 +49,7 @@ type E = TypedProps<{}>;
 function createTest<P extends Record<string, PropTypeDefinition> = any>(options: { props?: P }) {
   return {
     setProps(props: TypedProps<P>) {
+      // eslint-disable-next-line no-console
       console.log('nothing', options, props);
     },
   };

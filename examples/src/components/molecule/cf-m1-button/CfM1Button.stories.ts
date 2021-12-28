@@ -1,4 +1,4 @@
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook/types-6-0';
 
 import type { CfM1ButtonTypes } from './CfM1Button.types';
 import { CfM1Button, cfM1Button } from './CfM1Button';

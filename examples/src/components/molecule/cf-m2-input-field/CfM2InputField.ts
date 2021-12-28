@@ -1,11 +1,12 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import classNames from 'classnames';
+import { computed } from '@vue/reactivity';
 import { html } from '@muban/template';
 import { bind, defineComponent, propType, refComponent, refElement } from '../../../../../src';
-import classNames from 'classnames';
 
 import './cf-m2-input-field.scss';
 import type { CfM2InputFieldTypes } from './CfM2InputField.types';
 import { useToggle } from '../../../hooks/useToggle';
-import { computed } from '@vue/reactivity';
 import { CfM1Button, cfM1Button } from '../cf-m1-button/CfM1Button';
 import { defaultInputTypeOption } from './CfM2InputField.config';
 

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+// eslint-disable-next-line import/no-extraneous-dependencies
 import classnames from 'classnames';
 import { html, unsafeHTML } from '@muban/template';
 import { TabbedContent } from './TabbedContent';
@@ -24,7 +25,7 @@ export const tabButtonTemplate = (
   </li>
 `;
 
-/////
+/// //
 
 type TabContentItemTemplateProps = {
   content: string;
@@ -37,7 +38,7 @@ export const tabContentItem = (
 ): string =>
   html`<div class="tab-content" data-ref=${ref} data-index=${index}>${unsafeHTML(content)}</div>`;
 
-/////
+/// //
 
 export type TabbedContentTemplateProps = {
   items: Array<Omit<TabButtonTemplateProps & TabContentItemTemplateProps, 'index'>>;

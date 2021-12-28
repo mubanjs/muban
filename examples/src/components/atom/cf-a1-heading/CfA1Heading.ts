@@ -1,13 +1,15 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import classNames from 'classnames';
 import { html, unsafeHTML } from '@muban/template';
 
-import './cf-a1-heading.scss';
 import type { CFa1HeadingProps } from './CfA1Heading.types';
 import {
   defaultHeadingAlignment,
   defaultHeadingClass,
   defaultHeadingType,
 } from './CfA1Heading.config';
-import classNames from 'classnames';
+
+import './cf-a1-heading.scss';
 
 export const cfA1Heading = (
   {

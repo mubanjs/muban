@@ -1,9 +1,7 @@
-import { Circ } from 'gsap';
-
 export const defaultSelectMultiple = false;
 
 export const selectExpandDuration = 0.4;
-export const selectExpandEase = Circ.easeInOut;
+// export const selectExpandEase = Circ.easeInOut;
 export const selectOverflowBuffer = 4;
 
 export const selectOptionExtractConfig = {

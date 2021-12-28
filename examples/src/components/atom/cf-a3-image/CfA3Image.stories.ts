@@ -1,6 +1,8 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { createDecoratorComponent } from '@muban/storybook';
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook/types-6-0';
 
+import { html } from '@muban/template';
 import type { CfA3ImageTypes } from './CfA3Image.types';
 import { cfA3Image } from './CfA3Image';
 import {
@@ -8,7 +10,6 @@ import {
   defaultEnableTransitionIn,
   imageObjectFitOptions,
 } from './CfA3Image.config';
-import { html } from '@muban/template';
 import { className } from '../../../storybook/argTypes';
 
 export default {

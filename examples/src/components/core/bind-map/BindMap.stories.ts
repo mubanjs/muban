@@ -1,4 +1,4 @@
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook/types-6-0';
 import { computed, ref } from '@vue/reactivity';
 import { html } from '@muban/template';
 import {
@@ -62,7 +62,9 @@ export const BindMapComponents: Story = () => {
         return [
           ...bindMap(refs.items, (ref) => ({
             isActive: computed(() => activeValue.value === ref.component?.props.value),
-            onActivate: () => (activeValue.value = ref.component?.props.value ?? null),
+            onActivate() {
+              activeValue.value = ref.component?.props.value ?? null;
+            },
             event: {
               mouseenter: () => console.log('mouse enter'),
             },
@@ -149,11 +151,13 @@ export const BindMapLiveList: Story = () => ({
 
       return [
         bind(refs.addButton, {
-          click: () => (data.value = data.value.concat(Math.random().toString())),
+          click() {
+            data.value = data.value.concat(Math.random().toString());
+          },
         }),
         ...bindMap(refs.removeButton, (ref, index) => ({
-          click: () => {
-            data.value = data.value.filter((item, i) => i !== index);
+          click() {
+            data.value = data.value.filter((item, index_) => index_ !== index);
           },
         })),
         bindTemplate(refs.container, () =>

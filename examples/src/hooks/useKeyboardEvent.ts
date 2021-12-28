@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Key } from 'ts-key-enum';
 import { onMounted, onUnmounted } from '../../../src';
 

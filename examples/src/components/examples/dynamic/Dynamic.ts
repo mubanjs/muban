@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ComponentTemplate, html } from '@muban/template';
+import type { ComponentTemplate } from '@muban/template';
+import { html } from '@muban/template';
 import { defineComponent } from '../../../../../src/lib/Component';
 import { ProductCard, productCard } from '../filter-products/FilterProducts.card';
 import { ToggleExpand } from '../toggle-expand/ToggleExpand';
@@ -25,7 +26,7 @@ const componentMap: Record<string, ComponentTemplate> = {
   [ToggleExpand.displayName]: toggleExpandTemplate,
   [ProductCard.displayName]: productCard,
   // can't import the template if we want to test this code splitting in dev
-  ['lazy-test']: ({ label }: LazyTestTemplateProps) =>
+  'lazy-test': ({ label }: LazyTestTemplateProps) =>
     html`<button data-component="lazy-test" class="btn btn-primary">${label}</button>`,
 };
 

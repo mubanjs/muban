@@ -1,4 +1,5 @@
-import { isRef, ref, Ref, unref } from '@vue/reactivity';
+import type { Ref } from '@vue/reactivity';
+import { isRef, ref, unref } from '@vue/reactivity';
 import { watchEffect } from '@vue/runtime-core';
 
 export const useToggle = (

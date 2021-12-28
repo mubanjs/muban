@@ -1,4 +1,4 @@
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook/types-6-0';
 import { cfA2IconTemplate } from './CfA2Icon.template';
 
 import type { CfA2IconTypes } from './CfA2Icon.types';

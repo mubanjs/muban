@@ -1,5 +1,5 @@
 import { html } from '@muban/template';
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook/types-6-0';
 import { bind, computed, defineComponent, lazy, propType } from '../../../../../src';
 import { cfA1Heading } from '../../atom/cf-a1-heading/CfA1Heading';
 import { cfA2IconTemplate } from '../../atom/cf-a2-icon/CfA2Icon.template';
@@ -14,7 +14,7 @@ export const Icons: Story = () => ({
   ],
   component: defineComponent({
     name: 'global-refresh',
-    setup({}) {
+    setup() {
       console.log('foo');
       return [];
     },
@@ -45,7 +45,7 @@ export const Text: Story = () => ({
   ],
   component: defineComponent({
     name: 'global-refresh',
-    setup({}) {
+    setup() {
       console.log('foo');
       return [];
     },
@@ -56,7 +56,7 @@ export const Text: Story = () => ({
       ${cfA2IconTemplate({ name: 'loader' })}
       ${Array.from(
         { length: 2000 },
-        (_, i) => html`<span data-component="text-test">this is line ${i} </span>`,
+        (_, index) => html`<span data-component="text-test">this is line ${index} </span>`,
       )}
     </div>
   </div>`,
