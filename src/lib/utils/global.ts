@@ -41,6 +41,7 @@ declare global {
 
 const global = ((globalThis || window || {}) as unknown) as Window;
 
+// eslint-disable-next-line no-multi-assign
 const globalInstance = (global.__muban__ = global.__muban__ ?? new MubanGlobal());
 export function getGlobalMubanInstance(): MubanGlobal {
   return globalInstance;
@@ -97,13 +98,11 @@ export function initGlobalComponents(container: HTMLElement, watch: boolean = fa
           // setComponentElementLoadingState(componentElement, false);
         }
       });
-    } else {
-      if (!isComponentElementLoadingOrInitialized(componentElement)) {
-        const childInstance = component(componentElement, { parent });
+    } else if (!isComponentElementLoadingOrInitialized(componentElement)) {
+      const childInstance = component(componentElement, { parent });
 
-        // since this is managed outside of the normal component flow, set it up immediately
-        childInstance.setup();
-      }
+      // since this is managed outside of the normal component flow, set it up immediately
+      childInstance.setup();
     }
   };
 
@@ -117,9 +116,9 @@ export function initGlobalComponents(container: HTMLElement, watch: boolean = fa
         const factory = componentName && globalInstance.components.get(componentName);
         if (factory) {
           initComponent(factory, componentElement);
-        } else {
-          return componentElement;
+          return undefined;
         }
+        return componentElement;
       })
       .filter(Boolean) as Array<HTMLElement>;
 
@@ -148,7 +147,8 @@ export function getComponentForElement<T extends ComponentApi>(
 
 export function registerComponentForElement(element: HTMLElement, instance: ComponentApi): void {
   if (globalInstance.instances.has(element)) {
-    console.warn(`Overwriting already existing instance for element: `, { element, instance });
+    // eslint-disable-next-line no-console
+    console.warn(`Overwriting already existing instance for element:`, { element, instance });
   }
   globalInstance.instances.set(element, instance);
 }

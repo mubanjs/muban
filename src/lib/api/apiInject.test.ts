@@ -12,6 +12,7 @@ type CreateOptions = {
 };
 function createComponent(
   name: string,
+  // eslint-disable-next-line no-shadow
   { provide, injectSpy, injectKeys }: CreateOptions,
 ): ComponentFactory {
   return defineComponent({

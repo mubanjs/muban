@@ -1,8 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any,max-lines */
+import { reactive, toRaw, watchEffect, readonly } from '@vue/runtime-core';
 import type {
   ComponentCreateOptions,
   InternalNodeInstance,
   LazyComponent,
+  ComponentFactory,
+  ComponentReturnValue,
+  DefineComponentOptions,
+  InternalComponentInstance,
 } from './Component.types';
 import { createAppContext } from './api/apiCreateApp';
 import { applyBindings } from './bindings/applyBindings';
@@ -25,13 +30,6 @@ import { LifecycleHooks } from './api/apiLifecycle';
 import { getComponentProps } from './props/getComponentProps';
 import type { PropTypeDefinition, TypedProps } from './props/propDefinitions.types';
 import { createComponentRefs } from './refs/createComponentRefs';
-import type {
-  ComponentFactory,
-  ComponentReturnValue,
-  DefineComponentOptions,
-  InternalComponentInstance,
-} from './Component.types';
-import { reactive, toRaw, watchEffect, readonly } from '@vue/runtime-core';
 import type { ComponentRefItem } from './refs/refDefinitions.types';
 import { recursiveUnref } from './utils/utils';
 
@@ -53,7 +51,8 @@ export function createComponentInstance(
   element: HTMLElement,
   options: DefineComponentOptions<any, any, string>,
 ): InternalComponentInstance {
-  const parent = createOptions.parent;
+  const { parent } = createOptions;
+  // eslint-disable-next-line no-underscore-dangle
   const appContext = createOptions.app?._context ?? parent?.appContext ?? emptyAppContext;
 
   const instance: InternalComponentInstance = {
@@ -183,6 +182,7 @@ export const defineComponent = <
           Object.entries(props).forEach(([name, value]) => {
             // todo check existence and validation
             if (!(name in (instance.options.props ?? {}))) {
+              // eslint-disable-next-line no-console
               console.warn(
                 `Prop "${name}" does not exist on component "${
                   instance.name
@@ -226,8 +226,8 @@ function onNodeRemoval(callback: () => void): () => void {
   // each mounted component, which will do its own checks
   if (!documentObserver) {
     documentObserver = new MutationObserver(() => {
-      for (const callback of callbacks) {
-        callback();
+      for (const callbackItem of callbacks) {
+        callbackItem();
       }
     });
     documentObserver.observe(document, { attributes: false, childList: true, subtree: true });
@@ -250,7 +250,7 @@ function createObservers(instance: InternalComponentInstance) {
   // This should happen before applyBindings is called, since that can update the DOM
   const elementObserver = new MutationObserver(() => {
     // check refs
-    Object.values(instance.refs).forEach((refFn) => refFn.refreshRefs());
+    Object.values(instance.refs).forEach((refFunction) => refFunction.refreshRefs());
     // check non-ref components
     processNonRefChildComponents(instance);
   });
@@ -318,13 +318,11 @@ export function instantiateChildComponent(
           setComponentElementLoadingState(componentElement, false);
         }
       });
-    } else {
-      if (!getComponentForElement(componentElement)) {
-        const childInstance = component(componentElement, { parent: instance });
+    } else if (!getComponentForElement(componentElement)) {
+      const childInstance = component(componentElement, { parent: instance });
 
-        // this will be "setup" later with the other ref-components
-        instance.children.push(childInstance);
-      }
+      // this will be "setup" later with the other ref-components
+      instance.children.push(childInstance);
     }
   };
 
@@ -365,6 +363,7 @@ function setupComponent(instance: InternalComponentInstance) {
     refs: instance.refs,
     element: instance.element as HTMLElement,
   });
+  /* eslint-disable no-param-reassign */
   instance.bindings = bindings || [];
 
   // TODO: Devtools only
@@ -379,6 +378,7 @@ function setupComponent(instance: InternalComponentInstance) {
   instance.removeBindingsList = applyBindings(bindings, instance);
 
   instance.mount();
+  /* eslint-enable no-param-reassign */
 
   // console.log('[/Create]');
 }
@@ -420,7 +420,7 @@ function createRefComponentInstance(
     get element() {
       return binding.getElements()[0];
     },
-    binding: binding,
+    binding,
   };
 
   // update devtools if the DOM changes and bindings become (in)active
@@ -435,6 +435,7 @@ function createRefComponentInstance(
       // remove from subTree
     } else {
       // add to subTree
+      // eslint-disable-next-line no-lonely-if
       if (
         shouldRefInstanceBeIncludedInSubtree(instance, refInstance) &&
         !instance.subTree.includes(refInstance)

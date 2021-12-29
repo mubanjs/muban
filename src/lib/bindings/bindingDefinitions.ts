@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention,@typescript-eslint/no-explicit-any */
 
-import { Ref, unref } from '@vue/reactivity';
+import type { Ref } from '@vue/reactivity';
+import { unref } from '@vue/reactivity';
 import { watch } from '@vue/runtime-core';
 import { getCurrentComponentInstance } from '../Component';
 import type { ComponentFactory } from '../Component.types';
-import type { RefElementType } from '../refs/refDefinitions.types';
 import type {
+  RefElementType,
   CollectionRef,
   ComponentParams,
   ComponentsRef,
@@ -16,13 +17,13 @@ import type {
 import { applyBindings } from './applyBindings';
 import type { Binding, BindProps, TemplateProps } from './bindings.types';
 
-/////
+/// //
 // Component functions
 // These are called from within your components' setup function, and return the response from one of the
 // `BindXXX` functions below, wrapped through the refDefinitions they apply to.
 // The `getBindingDefinition` just forwards the props, but passes long the target Elements/Components
 // inside a `ref` so they can be updated when the DOM changes
-////
+/// /
 
 export function bind<T extends Pick<AnyRef, 'getBindingDefinition'>>(
   target: T,
@@ -135,7 +136,7 @@ export function BindTemplate<T extends RefElementType>(
 ): TemplateBinding<T> {
   return {
     type: 'template',
-    props: props,
+    props,
     getElements() {
       return props.ref?.element ? [props.ref.element] : [];
     },
@@ -153,11 +154,11 @@ export function bindTemplate(
   return BindTemplate({ ref: target, onUpdate, ...options });
 }
 
-/////
+/// //
 // Definitions
 // These are called via the refDefinitions from the bind/Map/Template above
 // The response from these functions are used by the "applyBindings" function
-////
+/// /
 
 export type ElementBinding<T extends RefElementType, P extends BindProps> = {
   ref: Ref<T | undefined>;
@@ -172,7 +173,7 @@ export function bindElement<T extends RefElementType, P extends BindProps>(
   return {
     ref,
     type: 'element',
-    props: props,
+    props,
     getElements() {
       return ref.value ? [ref.value] : [];
     },
@@ -193,7 +194,7 @@ export function bindCollection<T extends RefElementType, P extends BindProps>(
   return {
     ref,
     type: 'collection',
-    props: props,
+    props,
     getElements() {
       return ref.value.map((r) => unref(r));
     },
@@ -216,7 +217,7 @@ export function BindComponent<T extends SimpleComponentApi>(
   return {
     ref,
     type: 'component',
-    props: props,
+    props,
     getElements() {
       return ref.value?.element ? [ref.value.element] : [];
     },
@@ -237,9 +238,9 @@ export function bindComponentCollection<T extends SimpleComponentApi>(
   return {
     ref,
     type: 'componentCollection',
-    props: props,
+    props,
     getElements() {
-      return ref.value.map((ref) => ref.value.element);
+      return ref.value.map((refItem) => refItem.value.element);
     },
   };
 }

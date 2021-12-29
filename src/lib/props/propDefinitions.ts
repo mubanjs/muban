@@ -43,83 +43,83 @@ type Shape<T extends PropTypeDefinition> = T & {
 };
 
 type GenericType<T extends PropTypeDefinition> = T & Optional<T> & Validate<T> & Source<T>;
-type FuncType<T extends PropTypeDefinition> = T &
+type FunctionType<T extends PropTypeDefinition> = T &
   Shape<T> & {
     optional: Shape<OptionalValue<T>>;
   };
 
-const addOptional = <T extends PropTypeDefinition>(obj: T): Optional<T> => {
-  const optionalObj = {
-    ...obj,
+const addOptional = <T extends PropTypeDefinition>(object: T): Optional<T> => {
+  const optionalObject = {
+    ...object,
     isOptional: true as const,
     missingValue: true as const,
   };
   return {
-    ...obj,
+    ...object,
     optional: {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      ...addPredicate(optionalObj),
+      ...addPredicate(optionalObject),
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      ...addSource(optionalObj),
+      ...addSource(optionalObject),
     },
     defaultValue: <U extends ConstructorType<T['type']> | undefined>(
       value: ConstructorType<T['type']> extends Primitive ? U : () => U,
     ) => {
-      const defaultObj = {
-        ...obj,
+      const defaultObject = {
+        ...object,
         isOptional: true as const,
         default: value,
       };
       return {
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        ...addPredicate(defaultObj),
+        ...addPredicate(defaultObject),
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        ...addSource(defaultObj),
+        ...addSource(defaultObject),
       };
     },
   };
 };
-const addPredicate = <T extends PropTypeDefinition>(obj: T): Validate<T> => ({
-  ...obj,
+const addPredicate = <T extends PropTypeDefinition>(object: T): Validate<T> => ({
+  ...object,
   validate: <U extends ConstructorType<T['type']> | undefined | null>(predicate: Predicate<U>) =>
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     addSource({
-      ...obj,
+      ...object,
       validator: predicate,
     }),
 });
 
-const addSource = <T extends PropTypeDefinition>(obj: T): Source<T> =>
+const addSource = <T extends PropTypeDefinition>(object: T): Source<T> =>
   ({
-    ...obj,
+    ...object,
     source: (options: SourceOptions) => ({
-      ...obj,
+      ...object,
       sourceOptions: options,
     }),
   } as Source<T>);
 
-const addShape = <T extends PropTypeDefinition>(obj: T): Shape<T> => ({
-  ...obj,
+const addShape = <T extends PropTypeDefinition>(object: T): Shape<T> => ({
+  ...object,
   // eslint-disable-next-line @typescript-eslint/ban-types
   shape: <U extends Function>() => ({
-    ...obj,
+    ...object,
     shapeType: (true as unknown) as U,
   }),
 });
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-const createFunc = <T extends PropTypeDefinition['type'], U extends {}>(
+const createFunction = <T extends PropTypeDefinition['type'], U extends {}>(
   type: T,
-  obj: U,
-): FuncType<U & { type: T }> => {
-  const typeObj = {
-    ...obj,
+  object: U,
+): FunctionType<U & { type: T }> => {
+  const typeObject = {
+    ...object,
     type,
   };
   return {
-    ...addShape(typeObj),
+    ...addShape(typeObject),
     optional: addShape({
-      ...typeObj,
+      ...typeObject,
       isOptional: true as const,
       missingValue: true as const,
     }),
@@ -137,16 +137,16 @@ const createFunc = <T extends PropTypeDefinition['type'], U extends {}>(
 // eslint-disable-next-line @typescript-eslint/ban-types
 const generateType = <T extends PropTypeDefinition['type'], U extends {}>(
   type: T,
-  obj: U,
+  object: U,
 ): GenericType<U & { type: T }> => {
-  const typeObj = {
-    ...obj,
+  const typeObject = {
+    ...object,
     type,
   };
   return {
-    ...addOptional(typeObj),
-    ...addPredicate(typeObj),
-    ...addSource(typeObj),
+    ...addOptional(typeObject),
+    ...addPredicate(typeObject),
+    ...addSource(typeObject),
   };
 };
 
@@ -157,6 +157,6 @@ export const propType = {
   date: generateType(Date, {}),
   object: generateType(Object, {}),
   array: generateType(Array, {}),
-  func: createFunc(Function, {}),
+  func: createFunction(Function, {}),
   any: generateType({} as any, {}),
 };

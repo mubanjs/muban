@@ -50,6 +50,7 @@ export function registerDomBinding(
   fn: (target: HTMLElement, value: any, bindingHelpers: BindingsHelpers) => void | (() => void),
 ): void {
   if (name in bindingsList) {
+    // eslint-disable-next-line no-console
     console.error(`Binding "${name}" has already been registered`);
     return;
   }

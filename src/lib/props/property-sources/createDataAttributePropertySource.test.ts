@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment,@typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment,@typescript-eslint/no-unused-vars,no-console,unicorn/prevent-abbreviations,no-return-assign,max-lines */
 import { createComponentInstance } from '../../Component';
 import { createComponentRefs } from '../../refs/createComponentRefs';
 import { getComponentProps } from '../getComponentProps';
