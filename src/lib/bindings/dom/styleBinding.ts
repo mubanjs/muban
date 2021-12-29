@@ -1,4 +1,4 @@
-import { camelCase } from 'lodash-es';
+import { camelCase } from 'change-case';
 import { unref, watchEffect } from '@vue/runtime-core';
 import type { Ref } from '@vue/reactivity';
 import type { BindingMap } from '../bindings.types';

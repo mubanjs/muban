@@ -1,4 +1,5 @@
-import { kebabCase, camelCase } from 'lodash-es';
+import { camelCase, paramCase } from 'change-case';
+
 import dedent from 'ts-dedent';
 import type { PropertySource } from '../getComponentProps';
 
@@ -18,7 +19,7 @@ export function createClassListPropertySource(): PropertySource {
         const hasValue = Boolean(
           target.classList.contains(propInfo.source.name) ||
             target.classList.contains(camelCase(propInfo.source.name)) ||
-            target.classList.contains(kebabCase(propInfo.source.name)),
+            target.classList.contains(paramCase(propInfo.source.name)),
         );
         // only return false from missing value if this source is used explicitly
         // or if value is found
