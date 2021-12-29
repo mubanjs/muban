@@ -1,6 +1,6 @@
 import { memoize } from 'lodash-es';
-import type { PropertySource } from '../getComponentProps';
 import parseJson from 'json-parse-better-errors';
+import type { PropertySource } from '../getComponentProps';
 
 const getJsonContent = memoize(
   (element: HTMLElement): Record<string, unknown> => {

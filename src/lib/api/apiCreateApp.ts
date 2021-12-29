@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention,@typescript-eslint/no-explicit-any */
-import type { LazyComponent } from '../Component.types';
-import type { ComponentApi, ComponentFactory, InternalComponentInstance } from '../Component.types';
+import type {
+  ComponentApi,
+  ComponentFactory,
+  InternalComponentInstance,
+  LazyComponent,
+} from '../Component.types';
 import { devtoolsInitApp, devtoolsUnmountApp } from '../utils/devtools';
 import { registerGlobalComponent } from '../utils/global';
 import { mount } from '../utils/mount';
@@ -77,6 +81,7 @@ export function createApp<C extends ComponentFactory>(rootComponent: C) {
 
   let isMounted = false;
 
+  // eslint-disable-next-line no-multi-assign
   const app: App = (context.app = {
     _uid: uid++,
     _component: rootComponent as ComponentFactory,
@@ -92,6 +97,7 @@ export function createApp<C extends ComponentFactory>(rootComponent: C) {
     },
 
     set config(v) {
+      // eslint-disable-next-line no-console
       console.warn(`app.config cannot be replaced. Modify individual options instead.`);
     },
 
@@ -124,14 +130,14 @@ export function createApp<C extends ComponentFactory>(rootComponent: C) {
         // }
 
         return component as ReturnType<C>;
-      } else {
-        console.warn(
-          `App has already been mounted.\n` +
-            `If you want to remount the same app, move your app creation logic ` +
-            `into a factory function and create fresh app instances for each ` +
-            `mount - e.g. \`const createMyApp = () => createApp(App)\``,
-        );
       }
+      // eslint-disable-next-line no-console
+      console.warn(
+        `App has already been mounted.\n` +
+          `If you want to remount the same app, move your app creation logic ` +
+          `into a factory function and create fresh app instances for each ` +
+          `mount - e.g. \`const createMyApp = () => createApp(App)\``,
+      );
     },
 
     unmount() {
@@ -144,12 +150,14 @@ export function createApp<C extends ComponentFactory>(rootComponent: C) {
         devtoolsUnmountApp(app);
         // }
       } else {
+        // eslint-disable-next-line no-console
         console.warn(`Cannot unmount an app that is not mounted.`);
       }
     },
 
     provide<T>(key: InjectionKey<T> | string, value: T) {
       if ((key as string | symbol) in context.provides) {
+        // eslint-disable-next-line no-console
         console.warn(
           `App already provides property with key "${String(key)}". ` +
             `It will be overwritten with the new value.`,

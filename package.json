@@ -33,7 +33,7 @@
     "clean:test": "shx rm -rf coverage .nyc_output",
     "clean:build": "shx rm -rf tmp",
     "clean:npm": "shx rm -rf dist types",
-    "lint": "eslint --ext .js,.jsx,.ts,.tsx examples/src",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx src examples/src",
     "lint:single": "eslint /Volumes/Projects/mm/muban/muban-component/examples/src/components/toggle-expand/ToggleExpand.ts",
     "test": "jest ./src/",
     "check-types": "tsc --project tsconfig.json --noEmit --noUnusedLocals",

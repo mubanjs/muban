@@ -32,6 +32,7 @@ export function createClassListPropertySource(): PropertySource {
       // in case of string, check for cssPredicate existence
       if (propInfo.type === String) {
         if (!propInfo.source.options?.cssPredicate) {
+          // eslint-disable-next-line no-console
           console.warn(
             dedent`The property "${propInfo.name}" of type "${propInfo.type.name}" requires the use of "source.options.cssPredicate" to be set.
               Returning "undefined".`,
@@ -49,11 +50,12 @@ export function createClassListPropertySource(): PropertySource {
 
       if (propInfo.type === Object) {
         return Array.from(target.classList).reduce(
-          (acc, className) => ({ ...acc, [className]: true }),
+          (accumulator, className) => ({ ...accumulator, [className]: true }),
           {} as Record<string, boolean>,
         );
       }
 
+      // eslint-disable-next-line no-console
       console.warn(
         dedent`The property "${propInfo.name}" of type "${propInfo.type.name}" does not support the "css" source.
               Returning "undefined".`,

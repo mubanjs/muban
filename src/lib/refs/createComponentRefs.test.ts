@@ -40,8 +40,8 @@ describe('getComponentRefs', () => {
     const parent = root.querySelector<HTMLElement>('[data-component="my-component"]')!;
     const refDefinition = {
       elementString: 'element-string',
-      elementQuery: (parent: HTMLElement) =>
-        parent.querySelector<HTMLElement>('[data-ref=element-query]'),
+      elementQuery: (parentElement: HTMLElement) =>
+        parentElement.querySelector<HTMLElement>('[data-ref=element-query]'),
       elementRef: refElement('element-ref'),
       collectionRef: refCollection('collection-ref'),
       componentRef: refComponent(Dummy1),

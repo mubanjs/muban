@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { computed, unref, Ref } from '@vue/reactivity';
+import type { Ref } from '@vue/reactivity';
+import { computed, unref } from '@vue/reactivity';
 import { watch, watchEffect } from '@vue/runtime-core';
 import type { BindingsHelpers } from '../bindings.types';
 
@@ -16,12 +17,12 @@ export function checkedBinding(
     // Treat "value" like "checkedValue" when it is included with "checked" binding
     if (bindingHelpers.hasBinding('checkedValue')) {
       return unref(bindingHelpers.getBinding('checkedValue'));
-    } else if (useElementValue) {
+    }
+    if (useElementValue) {
       if (bindingHelpers.hasBinding('value')) {
         return unref(bindingHelpers.getBinding('value'));
-      } else {
-        return target.value;
       }
+      return target.value;
     }
   });
 
@@ -84,6 +85,7 @@ export function checkedBinding(
       } else {
         // When we're responding to the user having checked/unchecked a checkbox,
         // add/remove the element value to the model array.
+        // eslint-disable-next-line no-lonely-if
         if (target.checked) {
           model.value = (model.value as Array<string>).concat(elementValue);
         } else {

@@ -22,6 +22,7 @@ function createBindingsHelpers(
     hasBinding: (bindingName) => bindingProps.value.includes(bindingName),
     getBinding: (bindingName) => bindingProps.value && binding.props[bindingName],
     setBinding: (bindingName, bindingValue) => {
+      // eslint-disable-next-line no-param-reassign
       binding.props[bindingName] = bindingValue;
       bindingProps.value = typedObjectKeys(binding.props);
     },
@@ -48,9 +49,11 @@ export const applyBindings = (
           () => unref(binding.ref),
           (element, oldValue, onInvalidate) => {
             const bindingHelpers = createBindingsHelpers(binding);
+            // eslint-disable-next-line no-shadow
             const bindings = typedObjectEntries(binding.props).flatMap(
               ([bindingName, bindingValue]) => {
                 if (!(bindingName in bindingsList)) {
+                  // eslint-disable-next-line no-console
                   console.warn(
                     `No binding exists for "${bindingName}", only supported bindings are [${Object.keys(
                       bindingsList,
@@ -63,23 +66,29 @@ export const applyBindings = (
                     bindingHelpers,
                   );
                 }
+                return undefined;
               },
             );
             onInvalidate(() => {
               // TODO debug
+              // eslint-disable-next-line no-shadow
               bindings.forEach((binding) => binding && binding());
             });
           },
           { immediate: true },
         );
-      } else if (binding.type === 'collection') {
+      }
+      if (binding.type === 'collection') {
         return watch(
+          // eslint-disable-next-line no-shadow
           () => unref(binding.ref).map((ref) => unref(ref)),
           (elements, oldValue, onInvalidate) => {
             const bindingHelpers = createBindingsHelpers(binding);
+            // eslint-disable-next-line no-shadow
             const bindings = typedObjectEntries(binding.props).flatMap(
               ([bindingName, bindingValue]) => {
                 if (!(bindingName in bindingsList)) {
+                  // eslint-disable-next-line no-console
                   console.warn(
                     `No binding exists for "${bindingName}", only supported bindings are [${Object.keys(
                       bindingsList,
@@ -94,16 +103,19 @@ export const applyBindings = (
                     );
                   });
                 }
+                return undefined;
               },
             );
             onInvalidate(() => {
+              // eslint-disable-next-line no-shadow
               bindings.forEach((binding) => binding && binding());
             });
           },
           { immediate: true },
         );
-      } else if (binding.type === 'component') {
-        typedObjectEntries(binding.props).map(([propName, bindingValue]) => {
+      }
+      if (binding.type === 'component') {
+        typedObjectEntries(binding.props).forEach(([propName, bindingValue]) => {
           watchEffect(() => {
             if (['css', 'style', 'attr', 'event'].includes(propName)) {
               const element = unref(binding.ref)?.element;
@@ -124,6 +136,7 @@ export const applyBindings = (
         typedObjectEntries(binding.props).forEach(([propName, bindingValue]) => {
           watchEffect(() => {
             const reff = unref(binding.ref).map((r) => unref(r));
+            // eslint-disable-next-line no-shadow
             reff?.forEach((ref) => {
               watchEffect(() => {
                 if (['css', 'style', 'attr'].includes(propName)) {
@@ -141,6 +154,7 @@ export const applyBindings = (
           });
         });
       } else if (binding.type === 'template') {
+        // eslint-disable-next-line no-shadow
         const { ref, extract, forceImmediateRender, onUpdate } = binding.props;
         let initialRender = true;
         let containerIsEmpty = false;
@@ -184,6 +198,7 @@ export const applyBindings = (
       } else if (binding.type === 'bindMap') {
         return binding.dispose;
       }
+      return undefined;
     });
   }
 };

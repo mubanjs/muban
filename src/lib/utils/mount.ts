@@ -12,12 +12,14 @@ export function mount<P extends Record<string, unknown>>(
   data?: P,
 ): ComponentApi | undefined {
   if (!container) {
+    // eslint-disable-next-line no-console
     console.error(`The received container is null, so nothing can be rendered`);
     return;
   }
 
   if (template) {
     const templateResult = template(data || ({} as P));
+    // eslint-disable-next-line no-param-reassign
     container.innerHTML = [].concat(templateResult as any).join('');
   }
 
@@ -27,6 +29,7 @@ export function mount<P extends Record<string, unknown>>(
       : container.querySelector<HTMLElement>(`[data-component="${component.displayName}"]`);
 
   if (!rootElement) {
+    // eslint-disable-next-line no-console
     console.error(
       `No element found with "data-component" set to "${component.displayName}", unable to render the component.`,
     );
