@@ -11,6 +11,7 @@ export { refElement, refCollection, refComponent, refComponents } from './lib/re
 export { provide, inject, createContext } from './lib/api/apiInject';
 export { onMounted, onUnmounted } from './lib/api/apiLifecycle';
 export { bind, bindMap, bindTemplate } from './lib/bindings/bindingDefinitions';
+export { registerDomBinding } from './lib/bindings/bindings';
 
 // types that are often used (exposing too much internal stuff makes refactoring more difficult later)
 export type { ComponentFactory, ComponentApi, LazyComponent } from './lib/Component.types';
