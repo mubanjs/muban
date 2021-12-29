@@ -1,29 +1,34 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
 import { html } from '@muban/template';
-import { defineComponent, refComponent } from '../../../../../src';
+import { defineComponent, refComponent, refElement } from '../../../../../src';
 
 export default {
   title: 'use-cases/child-refs',
 };
 
-const SomeOtherChildComponent = defineComponent({
-  name: 'some-other-child-component',
-  refs: {},
-});
-
 const ChildComponent = defineComponent({
   name: 'child-component',
   refs: {
-    // This component also has a ref that is named `some-child`
-    someOtherChild: refComponent(SomeOtherChildComponent, { ref: 'some-child' }),
+    // This component also has a ref that is named `some-child` even though the component it self
+    // has the same data-ref applied to it.
+    someOtherChild: refElement('some-child'),
+  },
+  setup({ refs }) {
+    console.warn(
+      'Note that the `ref.self.element` is the same as `refs.someOtherChild.element`',
+      refs.self.element,
+      refs.someOtherChild.element,
+    );
+
+    return [];
   },
 });
 
 const ParentComponent = defineComponent({
   name: 'parent-component',
   refs: {
-    someChild: refComponent(ChildComponent, { ref: 'some-child' }),
+    childComponent: refComponent(ChildComponent, { ref: 'some-child' }),
   },
 });
 
@@ -39,9 +44,7 @@ export const Default: Story = () => ({
       parent
       <div data-component="child-component" data-ref="some-child">
         child
-        <div data-component="some-other-child-component" data-ref="some-child">
-          some-other-child
-        </div>
+        <div data-ref="some-child">some-other-child</div>
       </div>
     </div>
   </div>`,
