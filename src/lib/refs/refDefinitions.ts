@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types,max-lines */
+/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types,no-console,max-lines */
 
 // see https://github.com/vuejs/vue-next/blob/ca8276d1fa01c06fd63394a2c0d572581618ae3d/packages/reactivity/src/ref.ts#L184-L201
 import type { Ref } from '@vue/reactivity';
@@ -23,7 +23,7 @@ import type {
 } from './refDefinitions.types';
 
 declare module '@vue/reactivity' {
-  export interface ReferenceUnwrapBailTypes {
+  export interface RefUnwrapBailTypes {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     runtimeDOMBailTypes: Node | Window | HTMLElement;
   }
@@ -254,7 +254,7 @@ If you want to select a custom target, pass a function like;
 }
 
 export function refComponent<T extends ComponentFactory<any>>(
-  component: T | Array<T>,
+  component: T | ReadonlyArray<T>,
   {
     ref: refIdOrQuery,
     isRequired = true,
@@ -282,11 +282,20 @@ export function refComponent<T extends ComponentFactory<any>>(
       } else {
         element = parent.querySelector<HTMLElement>(getQuery()) ?? null;
       }
+      if (element && !components.some((c) => c.displayName === element?.dataset.component)) {
+        console.error(
+          `[refComponent] Selected element that doesn't match any of the passed components`,
+          element,
+          components.map((c) => c.displayName),
+        );
+        return null;
+      }
       return ensureElementIsComponentChild(parent, element, ignoreGuard);
     },
     createRef(instance) {
       const instanceRef = ref() as Ref<ReturnType<T> | undefined>;
 
+      // eslint-disable-next-line consistent-return
       const getComponent = (initialRender: boolean = false) => {
         const element = this.queryRef(instance.element as HTMLElement);
 
@@ -295,6 +304,7 @@ export function refComponent<T extends ComponentFactory<any>>(
           console.error('Component not found in DOM', getQuery());
         }
 
+        // return if instance was already created for this element
         if (element === instanceRef.value?.element) {
           return instanceRef.value;
         }
@@ -315,12 +325,6 @@ export function refComponent<T extends ComponentFactory<any>>(
             instance.children.push(refInstance);
             return refInstance;
           }
-          // eslint-disable-next-line no-console
-          console.error(
-            `[refComponent] Selected element that doesn't match any of the passed components`,
-            element,
-            (Array.isArray(component) ? component : [component]).map((c) => c.displayName),
-          );
         }
       };
 
@@ -342,7 +346,7 @@ export function refComponent<T extends ComponentFactory<any>>(
 }
 
 export function refComponents<T extends ComponentFactory<any>>(
-  component: T,
+  component: T | ReadonlyArray<T>,
   {
     ref: refIdOrQuery,
     minimumItemsRequired = 0,
@@ -352,24 +356,38 @@ export function refComponents<T extends ComponentFactory<any>>(
     minimumItemsRequired?: number;
   }> = {},
 ): ComponentRefItemComponentCollection<T> {
+  const components = Array.isArray(component) ? component : [component];
+  const getQuery = () => {
+    return refIdOrQuery
+      ? `[data-ref="${refIdOrQuery}"]`
+      : components.map((c) => `[data-component="${c.displayName}"]`).join(', ');
+  };
   return {
     ref: typeof refIdOrQuery === 'function' ? '[custom]' : refIdOrQuery,
-    componentRef: component.displayName,
+    componentRef: components[0].displayName,
     type: 'componentCollection',
     queryRef(parent) {
       let elements: Array<HTMLElement>;
       if (typeof refIdOrQuery === 'function') {
         elements = refIdOrQuery(parent);
       } else {
-        const query = refIdOrQuery
-          ? `[data-ref="${refIdOrQuery}"]`
-          : `[data-component="${component.displayName}"]`;
-        elements = Array.from(parent.querySelectorAll(query));
+        elements = Array.from(parent.querySelectorAll(getQuery()));
       }
 
-      return elements.filter((element) =>
-        Boolean(ensureElementIsComponentChild(parent, element, ignoreGuard)),
-      );
+      return elements
+        .filter((element) => Boolean(ensureElementIsComponentChild(parent, element, ignoreGuard)))
+        .filter((element) => {
+          if (!components.some((c) => c.displayName === element?.dataset.component)) {
+            // eslint-disable-next-line no-console
+            console.error(
+              `[refComponent] Selected element that doesn't match any of the passed components`,
+              element,
+              components.map((c) => c.displayName),
+            );
+            return false;
+          }
+          return true;
+        });
     },
     createRef(instance) {
       const instancesRef = ref([]) as Ref<ReadonlyArray<Ref<ReturnType<T>>>>;
@@ -390,14 +408,19 @@ export function refComponents<T extends ComponentFactory<any>>(
             .map((instanceRef) => instanceRef.value.element)
             .indexOf(element);
           if (existingInstance === -1) {
-            let refInstance = getExistingGlobalRefComponent<ReturnType<T>>(element, instance);
+            const newComponentFactory = (Array.isArray(component) ? component : [component]).find(
+              (c) => c.displayName === element.dataset.component,
+            );
+            if (newComponentFactory) {
+              let refInstance = getExistingGlobalRefComponent<ReturnType<T>>(element, instance);
 
-            if (!refInstance) {
-              // create new component instance
-              refInstance = component(element, { parent: instance }) as ReturnType<T>;
+              if (!refInstance) {
+                // create new component instance
+                refInstance = newComponentFactory(element, { parent: instance }) as ReturnType<T>;
+              }
+              instance.children.push(refInstance);
+              return ref(refInstance) as Ref<ReturnType<T>>;
             }
-            instance.children.push(refInstance);
-            return ref(refInstance) as Ref<ReturnType<T>>;
           }
           return ref(instancesRef.value[existingInstance]) as Ref<ReturnType<T>>;
         });
@@ -425,6 +448,7 @@ export function refComponents<T extends ComponentFactory<any>>(
           }) as ReturnType<ComponentsRef<T>['getRefs']>;
         },
         refreshRefs() {
+          // eslint-disable-next-line no-shadow
           const components = getComponents();
           // only re-assign if some refs are actually different
           if (

@@ -25,3 +25,27 @@ export const bindMapItemTemplate = ({ label }: { label: string }, ref?: string) 
     <button data-ref="btn" type="button">${label}</button>
   </div>`;
 };
+
+export const BindMapItem2 = defineComponent({
+  name: 'item2',
+  refs: {
+    btn: 'btn',
+  },
+  props: {
+    value: propType.string,
+    onActivate: propType.func.optional.shape<() => void>(),
+  },
+  setup({ refs, props }) {
+    return [
+      bind(refs.btn, {
+        text: computed(() => `${props.value}`),
+        click: () => props.onActivate?.(),
+      }),
+    ];
+  },
+});
+export const bindMapItem2Template = ({ label }: { label: string }, ref?: string) => {
+  return html`<div data-component="item2" data-value=${label} data-ref=${ref}>
+    <button data-ref="btn" type="button">${label} 2</button>
+  </div>`;
+};
