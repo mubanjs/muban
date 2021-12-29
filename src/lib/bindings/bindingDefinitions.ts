@@ -17,13 +17,13 @@ import type {
 import { applyBindings } from './applyBindings';
 import type { Binding, BindProps, TemplateProps } from './bindings.types';
 
-/// //
+///
 // Component functions
 // These are called from within your components' setup function, and return the response from one of the
 // `BindXXX` functions below, wrapped through the refDefinitions they apply to.
 // The `getBindingDefinition` just forwards the props, but passes long the target Elements/Components
 // inside a `ref` so they can be updated when the DOM changes
-/// /
+///
 
 export function bind<T extends Pick<AnyRef<RefElementType>, 'getBindingDefinition'>>(
   target: T,
@@ -151,11 +151,11 @@ export function bindTemplate(
   return BindTemplate({ ref: target, onUpdate, ...options });
 }
 
-/// //
+///
 // Definitions
 // These are called via the refDefinitions from the bind/Map/Template above
 // The response from these functions are used by the "applyBindings" function
-/// /
+///
 
 export type ElementBinding<T extends RefElementType, P extends BindProps> = {
   ref: Ref<T | undefined>;
