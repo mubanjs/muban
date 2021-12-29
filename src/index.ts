@@ -12,6 +12,7 @@ export { provide, inject, createContext } from './lib/api/apiInject';
 export { onMounted, onUnmounted } from './lib/api/apiLifecycle';
 export { watch, watchEffect } from './lib/api/apiWatch';
 export { bind, bindMap, bindTemplate } from './lib/bindings/bindingDefinitions';
+export { registerDomBinding } from './lib/bindings/bindings';
 
 // types that are often used (exposing too much internal stuff makes refactoring more difficult later)
 export type { ComponentFactory, ComponentApi, LazyComponent } from './lib/Component.types';
