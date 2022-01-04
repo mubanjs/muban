@@ -48,13 +48,12 @@
   "dependencies": {
     "@muban/muban": "file:./src/",
     "@types/json-parse-better-errors": "^1.0.0",
-    "@types/lodash-es": "^4.17.3",
     "@vue/reactivity": "^3.2.22",
     "@vue/runtime-core": "^3.2.22",
+    "change-case": "^4.1.2",
+    "html-extract-data": "^1.2.3",
     "isntnt": "^1.4.4",
-    "html-extract-data": "^1.0.1",
     "json-parse-better-errors": "^1.0.2",
-    "lodash-es": "^4.17.15",
     "ts-dedent": "^1.1.1"
   },
   "devDependencies": {

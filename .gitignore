@@ -34,6 +34,7 @@ yarn-error.log*
 
 # npm publish artifects
 /dist
+/demo/library-size/dist
 /types
 /tmp
 /decl
