@@ -307,6 +307,9 @@ export function refComponent<T extends ComponentFactory<any>>(
 
             if (!refInstance) {
               // create new component instance
+              // TODO: This component only gets "set up" when HTML is updated through `bindTemplate`.
+              //  If not, this is just an empty component that doesn't do anything.
+              //  Would be nice if we could improve this
               refInstance = newComponentFactory(element, { parent: instance }) as ReturnType<T>;
             }
             instance.children.push(refInstance);

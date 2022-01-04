@@ -95,10 +95,7 @@ export function bindMap(
     // as soon as the underlying ref array updates when the items in the DOM
     // are updated
     const disposeWatch = watch(
-      () =>
-        (target as any).getRefs() as Array<
-          ElementRef<RefElementType, BindProps> | ComponentRef<ComponentFactory<any>>
-        >,
+      () => (target as any).getRefs() as Array<ElementRef | ComponentRef<ComponentFactory<any>>>,
       (refs, oldValue, onInvalidate) => {
         const bindings = refs.map((ref, index) => bind(ref, getProps(ref, index)));
 
