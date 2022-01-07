@@ -3,7 +3,7 @@ import type { Predicate, Primitive, Static } from 'isntnt';
 import type { IfAny } from '../Component.types';
 import type { RefElementType } from '../refs/refDefinitions.types';
 
-export type SourceOptions =
+export type SourceOption =
   | SourceOptionCss
   | SourceOptionHtmlText
   | {
@@ -11,6 +11,8 @@ export type SourceOptions =
       target?: string;
       name?: string;
     };
+
+export type SourceOptions = SourceOption | Array<SourceOption>;
 
 export type SourceOptionHtmlText = {
   type: 'text' | 'html';
@@ -52,7 +54,7 @@ export type PropTypeInfo<T = any> = Pick<
   source: {
     name: string;
     target: RefElementType | undefined;
-  } & Pick<SourceOptions, 'type'> &
+  } & Pick<SourceOption, 'type'> &
     Pick<SourceOptionCss, 'options'>;
 };
 

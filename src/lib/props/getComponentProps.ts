@@ -5,7 +5,7 @@ import type {
   TypedRefs,
 } from '../refs/refDefinitions.types';
 import typedObjectEntries from '../type-utils/typedObjectEntries';
-import type { PropTypeDefinition, PropTypeInfo } from './propDefinitions.types';
+import type { PropTypeDefinition, PropTypeInfo, SourceOption } from './propDefinitions.types';
 
 export type PropertySource = (componentElement: RefElementType) => {
   sourceName: string;
@@ -13,10 +13,33 @@ export type PropertySource = (componentElement: RefElementType) => {
   getProp: (info: PropTypeInfo) => unknown;
 };
 
+function convertToInternalPropInfoArray(
+  element: RefElementType,
+  propName: string,
+  propDefinition: PropTypeDefinition & {
+    sourceOptions: Array<SourceOption>;
+  },
+  refs: TypedRefs<Record<string, ResolvedComponentRefItem>>,
+): Array<PropTypeInfo> {
+  return propDefinition.sourceOptions.map((sourceOption) =>
+    convertToInternalPropInfo(
+      element,
+      propName,
+      {
+        ...propDefinition,
+        sourceOptions: sourceOption,
+      },
+      refs,
+    ),
+  );
+}
+
 function convertToInternalPropInfo(
   element: RefElementType,
   propName: string,
-  propDefinition: PropTypeDefinition,
+  propDefinition: PropTypeDefinition & {
+    sourceOptions: SourceOption;
+  },
   refs: TypedRefs<Record<string, ResolvedComponentRefItem>>,
 ): PropTypeInfo {
   const { type, default: defaultValue, isOptional, validator } = propDefinition;
@@ -24,7 +47,9 @@ function convertToInternalPropInfo(
   let target: RefElementType | undefined;
   // resolve refs into elements
   if (propDefinition.sourceOptions?.target) {
-    const targetRef = refs[propDefinition.sourceOptions?.target];
+    const targetRef = propDefinition.sourceOptions.target
+      ? refs[propDefinition.sourceOptions.target]
+      : undefined;
     if (!targetRef) {
       // eslint-disable-next-line no-console
       console.error(
@@ -78,6 +103,21 @@ function errorUnlessOptional(
     throw new Error('Exit');
   }
   return undefined;
+}
+
+function getValueFromMultipleSources(
+  propInfo: Array<PropTypeInfo>,
+  sources: Array<ReturnType<PropertySource>>,
+  currentIndex: number = 0,
+): any {
+  try {
+    const currentValue = getValueFromSource(propInfo[currentIndex], sources);
+    return currentValue;
+  } catch {
+    if (currentIndex < propInfo.length - 1) {
+      return getValueFromMultipleSources(propInfo, sources, currentIndex + 1);
+    }
+  }
 }
 
 function getValueFromSource(propInfo: PropTypeInfo, sources: Array<ReturnType<PropertySource>>) {
@@ -154,14 +194,39 @@ export function getComponentProps(
 
   const p =
     typedObjectEntries(props ?? {}).reduce((accumulator, [propName, propType]) => {
-      const propInfo = convertToInternalPropInfo(element, propName, propType, refs);
+      let propInfo;
+
+      if (propType.sourceOptions instanceof Array) {
+        propInfo = convertToInternalPropInfoArray(
+          element,
+          propName,
+          {
+            ...propType,
+            sourceOptions: propType.sourceOptions as Array<SourceOption>,
+          },
+          refs,
+        );
+      } else {
+        propInfo = convertToInternalPropInfo(
+          element,
+          propName,
+          {
+            ...propType,
+            sourceOptions: propType.sourceOptions as SourceOption,
+          },
+          refs,
+        );
+      }
 
       // TODO: ignore function prop types for some sources?
 
       let extractedValue;
 
       try {
-        extractedValue = getValueFromSource(propInfo, sources);
+        extractedValue =
+          propInfo instanceof Array
+            ? getValueFromMultipleSources(propInfo, sources)
+            : getValueFromSource(propInfo, sources);
       } catch {
         return accumulator;
       }
@@ -176,7 +241,7 @@ export function getComponentProps(
         if (!propType.validator(extractedValue)) {
           // TODO: should we indeed throw errors here, or resolve the value to undefined?
           throw new Error(
-            `Validation Error: This prop value ("${extractedValue}") is not valid for: ${propInfo.name}`,
+            `Validation Error: This prop value ("${extractedValue}") is not valid for:`,
           );
         }
       }
