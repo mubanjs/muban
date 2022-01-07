@@ -94,7 +94,7 @@ function getExistingGlobalRefComponent<T extends ComponentApi>(
   return refInstance;
 }
 
-export function refElement<T extends RefElementType = RefElementType>(
+export function refElement<T extends RefElementType = HTMLElement>(
   refIdOrQuery: string | ComponentRefItemElement<T>['queryRef'],
   { isRequired = true, ignoreGuard }: RefOptions<{ isRequired?: boolean }> = {},
 ): ComponentRefItemElement<T> {
@@ -162,7 +162,7 @@ If you want to select a custom target, pass a function like;
   };
 }
 
-export function refCollection<T extends RefElementType = RefElementType>(
+export function refCollection<T extends RefElementType = HTMLElement>(
   refIdOrQuery: string | ComponentRefItemCollection<T>['queryRef'],
   { minimumItemsRequired = 0, ignoreGuard }: RefOptions<{ minimumItemsRequired?: number }> = {},
 ): ComponentRefItemCollection<T> {

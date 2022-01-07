@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Story } from '@muban/storybook/dist/client/preview/types-6-0';
+import type { Story } from '@muban/storybook';
 import { html } from '@muban/template';
 import {
   bind,
@@ -58,42 +58,47 @@ const Test = defineComponent({
   },
 });
 
-export const Default: Story = () => ({
-  component: defineComponent({
-    name: 'story',
-    // components: [Test],
-    refs: {
-      btnMount: 'btnMount',
-      btnUnmount: 'btnUnmount',
-      container: 'container',
-      test: refComponent(Test, { isRequired: false }),
-    },
-    setup({ refs }) {
-      const [isMounted, toggleMounted] = useToggle(true);
-      return [
-        bind(refs.btnMount, {
-          click() {
-            toggleMounted(true);
-          },
-        }),
-        bind(refs.btnUnmount, {
-          click() {
-            toggleMounted(false);
-          },
-        }),
-        bindTemplate(refs.container, () => {
-          return isMounted.value ? html`<div data-component="test">Alive</div>` : '';
-        }),
-      ];
-    },
-  }),
-  template: () => html` <div data-component="story">
-    <p style="max-width: 350px">
-      Watch the console.log. After unmounting the component, the logging should stop. Even thought
-      the interval keeps updating the ref, the watchEffect is not being executed anymore.
-    </p>
-    <button data-ref="btnMount">mount</button>
-    <button data-ref="btnUnmount">unmount</button>
-    <div data-ref="container"></div>
-  </div>`,
-});
+export const Default: Story = {
+  render() {
+    return {
+      component: defineComponent({
+        name: 'story',
+        // components: [Test],
+        refs: {
+          btnMount: 'btnMount',
+          btnUnmount: 'btnUnmount',
+          container: 'container',
+          test: refComponent(Test, { isRequired: false }),
+        },
+        setup({ refs }) {
+          const [isMounted, toggleMounted] = useToggle(true);
+          return [
+            bind(refs.btnMount, {
+              click() {
+                toggleMounted(true);
+              },
+            }),
+            bind(refs.btnUnmount, {
+              click() {
+                toggleMounted(false);
+              },
+            }),
+            bindTemplate(refs.container, () => {
+              return isMounted.value ? html`<div data-component="test">Alive</div>` : '';
+            }),
+          ];
+        },
+      }),
+      template: () => html` <div data-component="story">
+        <p style="max-width: 350px">
+          Watch the console.log. After unmounting the component, the logging should stop. Even
+          thought the interval keeps updating the ref, the watchEffect is not being executed
+          anymore.
+        </p>
+        <button data-ref="btnMount">mount</button>
+        <button data-ref="btnUnmount">unmount</button>
+        <div data-ref="container"></div>
+      </div>`,
+    };
+  },
+};

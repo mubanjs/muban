@@ -59,7 +59,7 @@ export function checkedBinding(
   };
 
   // update the checkbox based on model changes
-  const updateHTML = () => {
+  const updateHtml = () => {
     target.checked = getNewHtmlValueFromModel();
   };
 
@@ -136,7 +136,7 @@ export function checkedBinding(
   // when checkedValue changes it should first update the modal,
   // so when it later triggers the updateHTML, the modal already correctly reflects the updated state
   const unwatchCheckedValue = watch(() => checkedValue.value, updateModel);
-  const unwatch = watchEffect(updateHTML);
+  const unwatch = watchEffect(updateHtml);
   target.addEventListener('change', updateModel);
 
   return () => {
