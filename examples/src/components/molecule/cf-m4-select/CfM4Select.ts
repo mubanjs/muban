@@ -53,7 +53,7 @@ export const CfM4Select = defineComponent({
     useClickedOutside(element, () => toggleIsExpanded(false));
 
     const selectOptionsData = ref<Array<Omit<SelectOption, 'selected'>>>(
-      extractFromHTML(element, selectOptionExtractConfig),
+      extractFromHTML(element, selectOptionExtractConfig) as Array<Omit<SelectOption, 'selected'>>,
     );
 
     const selectedOptionsValue = ref<Array<string>>(

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { computed, ref } from '@vue/reactivity';
@@ -80,16 +81,16 @@ export const CheckedValue: Story = () => ({
         bind(refs.checkedValue, {
           value: checkedValue,
         }),
-        bind(refs.checkbox1a, { checked: checked1a, checkedValue: checkedValue }),
-        bind(refs.checkbox1b, { checked: checked1b, checkedValue: checkedValue }),
+        bind(refs.checkbox1a, { checked: checked1a, checkedValue }),
+        bind(refs.checkbox1b, { checked: checked1b, checkedValue }),
         bind(refs.checkbox2a, {
           checked: checked2a,
-          checkedValue: checkedValue,
+          checkedValue,
           initialValueSource: 'binding',
         }),
         bind(refs.checkbox2b, {
           checked: checked2b,
-          checkedValue: checkedValue,
+          checkedValue,
           initialValueSource: 'html',
         }),
       ];
@@ -207,6 +208,7 @@ export const CheckedArrayDefaultHtml: Story = () => ({
             if (Array.isArray(list)) {
               selectedItems.value = list;
             }
+            // eslint-disable-next-line no-empty
           } catch {}
         },
       );
@@ -263,6 +265,7 @@ export const CheckedArrayDefaultBinding: Story = () => ({
             if (Array.isArray(list)) {
               selectedItems.value = list;
             }
+            // eslint-disable-next-line no-empty
           } catch {}
         },
       );
@@ -314,15 +317,16 @@ export const Radio: Story = () => ({
     ${['foo', 'bar', 'baz'].map(
       (item) => html`
         <p>
-          <label
-            ><input
+          <label>
+            <input
               data-ref="radio"
               type="radio"
               name="radio"
               checked=${item === 'bar'}
               value=${item}
-            />${item}</label
-          >
+            />
+            ${item}
+          </label>
         </p>
       `,
     )}

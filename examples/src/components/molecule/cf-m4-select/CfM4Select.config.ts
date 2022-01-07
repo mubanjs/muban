@@ -17,4 +17,4 @@ export const selectOptionExtractConfig = {
       html: true,
     },
   },
-};
+} as const;
