@@ -25,7 +25,7 @@ import type { Binding, BindProps, TemplateProps } from './bindings.types';
 // inside a `ref` so they can be updated when the DOM changes
 /// /
 
-export function bind<T extends Pick<AnyRef, 'getBindingDefinition'>>(
+export function bind<T extends Pick<AnyRef<RefElementType>, 'getBindingDefinition'>>(
   target: T,
   // make sure that if we bind props onto multiple components,
   // we only allow setting props that exist on all of them

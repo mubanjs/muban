@@ -107,9 +107,9 @@ export type ComponentsRef<T extends ComponentFactory<any>> = {
   refreshRefs: () => void;
 };
 
-export type AnyRef =
-  | ElementRef
-  | CollectionRef
+export type AnyRef<T extends RefElementType> =
+  | ElementRef<T>
+  | CollectionRef<T>
   | ComponentRef<ComponentFactory<any>>
   | ComponentsRef<ComponentFactory<any>>;
 
