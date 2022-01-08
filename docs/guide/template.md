@@ -67,7 +67,7 @@ A typical template would look like this:
 
 ```ts
 import { html } from '@muban/template';
-import classnames from 'classnames';
+import classnames from 'clsx';
 
 type AccordionSlideProps = {
   heading: string;
@@ -177,7 +177,7 @@ the container div, and as a `data-` attribute on the component.
 
 ```ts {6,8}
 import { html } from '@muban/template';
-import classnames from 'classnames';
+import classnames from 'clsx';
 
 export function accordionSlide({ heading, content, expanded }: AccordionSlideProps) {
   return html`<div

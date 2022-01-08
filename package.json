@@ -25,28 +25,25 @@
     "README.md"
   ],
   "scripts": {
+    "dev": "npm-run-all -p dev:*",
+    "dev:esm": "tsc -p ./tsconfig.build.esm.json --watch",
     "build": "npm-run-all -s clean build:* clean:build",
     "build:ts-cjs": "tsc -p ./tsconfig.build.cjs.json",
     "build:ts-esm": "tsc -p ./tsconfig.build.esm.json",
-    "build:ts-types": "tsc -p ./tsconfig.build.types.json",
     "clean": "npm-run-all clean:*",
     "clean:test": "shx rm -rf coverage .nyc_output",
     "clean:build": "shx rm -rf tmp",
     "clean:npm": "shx rm -rf dist types",
-    "lint": "eslint --ext .js,.jsx,.ts,.tsx src examples/src",
-    "lint:single": "eslint /Volumes/Projects/mm/muban/muban-component/examples/src/components/toggle-expand/ToggleExpand.ts",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
     "test": "jest ./src/",
     "check-types": "tsc --project tsconfig.json --noEmit --noUnusedLocals",
     "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook -o ./dist/storybook"
+    "docs:build": "vuepress build docs"
   },
   "peerDependencies": {
     "@muban/template": "^1.0.0-alpha.1"
   },
   "dependencies": {
-    "@muban/muban": "file:./src/",
     "@types/json-parse-better-errors": "^1.0.0",
     "@vue/reactivity": "^3.2.22",
     "@vue/runtime-core": "^3.2.22",
@@ -58,31 +55,15 @@
   },
   "devDependencies": {
     "@muban/eslint-config": "^1.0.0-alpha.4",
-    "@muban/storybook": "^7.0.0-alpha.17",
     "@muban/template": "^1.0.0-alpha.1",
-    "@storybook/addon-actions": "^6.1.6",
-    "@storybook/addon-essentials": "^6.1.6",
-    "@storybook/addon-links": "^6.1.6",
-    "@storybook/preset-scss": "^1.0.3",
-    "@types/classnames": "^2.2.11",
     "@types/jest": "^26.0.15",
-    "autoprefixer": "^9.8.5",
-    "classnames": "^2.2.6",
-    "cssnano": "^4.1.10",
-    "dom-focus-lock": "^1.0.4",
     "eslint-config-prettier": "^8.3.0",
     "jest": "^26.3.0",
-    "lazysizes": "^5.2.2",
-    "normalize.css": "^8.0.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.0.5",
     "shx": "^0.3.3",
-    "svg-inline-loader": "^0.8.2",
-    "svgo-loader": "^2.2.1",
     "ts-jest": "^26.2.0",
-    "ts-key-enum": "2.0.4",
     "typescript": "^4.5.4",
-    "url-loader": "^4.1.1",
     "vuepress": "^1.8.2"
   }
 }

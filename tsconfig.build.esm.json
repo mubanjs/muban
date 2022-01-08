@@ -4,6 +4,8 @@
     "module": "ESNext",
     "target": "ES6",
     "outDir": "./dist/esm",
-    "downlevelIteration": false
+    "downlevelIteration": false,
+    "declaration": true,
+    "declarationDir": "./types"
   }
 }
