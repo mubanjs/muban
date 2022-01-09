@@ -8,6 +8,7 @@ Please check the [full documentation](https://mubanjs.github.io/muban/)
 
 Add `muban` to your project:
 ```sh
+npm i @muban/muban
 yarn add @muban/muban
 ```
 
@@ -87,6 +88,7 @@ app.mount(appRoot, myComponentTemplate, { welcomeText: 'Hello' });
 
 Add `@muban/storybook` to your project:
 ```sh
+npm i -D @muban/storybook
 yarn add @muban/storybook
 ```
 
@@ -116,7 +118,7 @@ module.exports = {
 
 Create your story file:
 ```ts
-import type { Story } from '@muban/storybook/types-6-0';
+import type { Story } from '@muban/storybook';
 
 export default {
   title: 'MyComponent',
@@ -125,30 +127,26 @@ export default {
   },
 };
 
-export const Default: Story<MyComponentProps> = () => ({
-  template: myComponentTemplate,
-  component: MyComponent,
-});
-Default.args = {
-  welcomeText: 'Hello',
-};
+export const Default: Story<MyComponentProps> = {
+  render() {
+    return {
+      template: myComponentTemplate,
+      component: MyComponent,
+    }
+  },
+  args: {
+    welcomeText: 'Hello',
+  }
+}
 ```
 
 Run storybook:
 ```sh
+npm run storybook
 yarn storybook
 ```
 
+# Contributing
 
-## Storybook Examples
-
-```sh
-yarn storybook
-```
-
-Open [http://localhost:8080/](http://localhost:6006/).
-
-Example components are located in `./examples/src/components`. Each component has its own folder,
-with a TS, CSS and Story file in it.
-
-This project uses postcss (with only basic nesting and $vars plugin).
+Please read the [CONTRIBUTING.md](./CONTRIBUTING.md) for more information. Your help is much 
+appreciated!
