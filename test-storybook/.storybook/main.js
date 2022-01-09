@@ -16,6 +16,7 @@ module.exports = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-postcss',
+    '@storybook/addon-interactions',
   ],
-  // staticDirs: ['../public'],
+  staticDirs: ['../public'],
 };

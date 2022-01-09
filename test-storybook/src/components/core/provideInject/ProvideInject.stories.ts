@@ -1,7 +1,9 @@
 import { html } from '@muban/template';
-import type { Story } from '@muban/storybook/types-6-0';
+import type { Story } from '@muban/storybook';
 import type { Ref } from '@muban/muban';
 import { defineComponent, provide, inject, bind, ref } from '@muban/muban';
+import { screen, userEvent, waitFor } from '@storybook/testing-library';
+import { expect } from '@storybook/jest';
 
 export default {
   title: 'core/provideInject',
@@ -105,43 +107,149 @@ const App = defineComponent({
   },
 });
 
-export const Default: Story = () => ({
-  component: App,
-  template: () => html`<div data-component="App">
-    <div data-component="ComponentA">
-      <p>A</p>
-      <ul>
-        <li>context 1: <input data-ref="input1" /></li>
-        <li>context 2: <input data-ref="input2" /></li>
-      </ul>
-      <div data-component="ComponentB">
-        <p>B</p>
-        <ul>
-          <li>context1: <span data-ref="context1"></span></li>
-          <li>context2: <span data-ref="context2"></span></li>
-        </ul>
-        <ul>
-          <li>context 2: <input data-ref="input2" /></li>
-        </ul>
-        <div data-component="ComponentC">
-          <p>C</p>
-          <ul>
-            <li>context1: <span data-ref="context1"></span></li>
-            <li>context2: <span data-ref="context2"></span></li>
-          </ul>
-          <ul>
-            <li>context 3: <input data-ref="input3" /></li>
-          </ul>
-          <div data-component="ComponentD">
-            <p>D</p>
-            <ul>
-              <li>context1: <span data-ref="context1"></span></li>
-              <li>context2: <span data-ref="context2"></span></li>
-              <li>context3: <span data-ref="context3"></span></li>
-            </ul>
+function contextInput({ which, component }: { which: number; component: string }, ref?: string) {
+  return html`<div class="form-floating mb-3">
+    <input
+      data-testid="component${component}-input${which}"
+      data-ref="${ref}"
+      type="text"
+      class="form-control"
+      id=${ref}
+      placeholder="Context ${which}"
+    />
+    <label for=${ref}>Context ${which}</label>
+  </div>`;
+}
+
+function contextInfo({ which, component }: { which: number; component: string }) {
+  return html`
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      Context ${which}
+      <span
+        data-testid="component${component}-context${which}"
+        data-ref=${`context${which}`}
+        class="badge bg-primary rounded-pill"
+      ></span>
+    </li>
+  `;
+}
+
+export const Default: Story = {
+  render() {
+    return {
+      component: App,
+      template: () => html`<div data-component="App">
+        <div class="alert alert-primary">
+          <h5 class="alert-heading">Instructions!</h5>
+          <p class="mb-0">
+            This Story similated 4 nested components, where values are injected and overridden at
+            different levels. It tests if provided values are correctly show up in inherited
+            components.
+          </p>
+        </div>
+        <div
+          data-component="ComponentA"
+          class="card border-secondary mb-3"
+          style="max-width: 30rem;"
+        >
+          <div>
+            <div class="card-header">Component A</div>
+            <div class="card-body">
+              <h5 class="card-title">Inject context</h5>
+              <div class="form-group">
+                ${contextInput({ which: 1, component: 'A' }, 'input1')}
+                ${contextInput({ which: 2, component: 'A' }, 'input2')}
+              </div>
+            </div>
+
+            <div data-component="ComponentB" class="card border-secondary m-3 mt-0">
+              <div class="card-header">Component B</div>
+              <div class="card-body">
+                <h5 class="card-title">Provided context</h5>
+                <ul class="list-group">
+                  ${contextInfo({ which: 1, component: 'B' })}
+                  ${contextInfo({ which: 2, component: 'B' })}
+                </ul>
+                <h5 class="card-title mt-3">Inject context</h5>
+                <div class="form-group">
+                  ${contextInput({ which: 2, component: 'B' }, 'input2')}
+                </div>
+              </div>
+              <div data-component="ComponentC" class="card border-secondary m-3 mt-0">
+                <div class="card-header">Component C</div>
+                <div class="card-body">
+                  <h5 class="card-title">Provided context</h5>
+                  <ul class="list-group">
+                    ${contextInfo({ which: 1, component: 'C' })}
+                    ${contextInfo({ which: 2, component: 'C' })}
+                  </ul>
+                  <h5 class="card-title mt-3">Inject context</h5>
+                  <div class="form-group">
+                    ${contextInput({ which: 3, component: 'C' }, 'input3')}
+                  </div>
+                </div>
+                <div data-component="ComponentD" class="card border-secondary m-3 mt-0">
+                  <div class="card-header">Component D</div>
+                  <div class="card-body">
+                    <h5 class="card-title">Provided context</h5>
+
+                    <ul class="list-group">
+                      ${contextInfo({ which: 1, component: 'D' })}
+                      ${contextInfo({ which: 2, component: 'D' })}
+                      ${contextInfo({ which: 3, component: 'D' })}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>`,
-});
+      </div>`,
+    };
+  },
+  async play() {
+    expect(screen.getByTestId('componentB-context1').textContent).toBe('componentA');
+    expect(screen.getByTestId('componentB-context2').textContent).toBe('componentA');
+
+    expect(screen.getByTestId('componentC-context1').textContent).toBe('componentA');
+    expect(screen.getByTestId('componentC-context2').textContent).toBe('componentB');
+
+    expect(screen.getByTestId('componentD-context1').textContent).toBe('componentA');
+    expect(screen.getByTestId('componentD-context2').textContent).toBe('componentB');
+    expect(screen.getByTestId('componentD-context3').textContent).toBe('componentC');
+
+    // change context 1
+    userEvent.clear(screen.getByTestId('componentA-input1'));
+    userEvent.type(screen.getByTestId('componentA-input1'), 'AA');
+
+    await waitFor(() => expect(screen.getByTestId('componentB-context1').textContent).toBe('AA'));
+    expect(screen.getByTestId('componentC-context1').textContent).toBe('AA');
+    expect(screen.getByTestId('componentD-context1').textContent).toBe('AA');
+
+    // change context 2 - Component A
+    userEvent.clear(screen.getByTestId('componentA-input2'));
+    userEvent.type(screen.getByTestId('componentA-input2'), 'AAA');
+
+    await waitFor(() => expect(screen.getByTestId('componentB-context2').textContent).toBe('AAA'));
+    await waitFor(() =>
+      expect(screen.getByTestId('componentC-context2').textContent).toBe('componentB'),
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId('componentD-context2').textContent).toBe('componentB'),
+    );
+
+    // change context 2 - Component B
+    userEvent.clear(screen.getByTestId('componentB-input2'));
+    userEvent.type(screen.getByTestId('componentB-input2'), 'BB');
+
+    await waitFor(() => expect(screen.getByTestId('componentB-context2').textContent).toBe('AAA'));
+    await waitFor(() => expect(screen.getByTestId('componentC-context2').textContent).toBe('BB'));
+    await waitFor(() => expect(screen.getByTestId('componentD-context2').textContent).toBe('BB'));
+
+    // change context 3 - Component C
+    userEvent.clear(screen.getByTestId('componentC-input3'));
+    userEvent.type(screen.getByTestId('componentC-input3'), 'CC');
+
+    await waitFor(() => expect(screen.getByTestId('componentD-context3').textContent).toBe('CC'));
+  },
+};
