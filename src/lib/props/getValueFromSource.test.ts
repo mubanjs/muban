@@ -31,6 +31,9 @@ describe('getValueFromSource', () => {
 
     element.innerHTML = dedent`
       <input data-ref="input" value="value-from-attr" data-value="value-from-data" />
+      <div data-ref="content" data-value="value-from-data">
+        inner text value
+      </div>
     `;
 
     document.body.appendChild(element);
@@ -39,15 +42,26 @@ describe('getValueFromSource', () => {
       name: 'my-component',
       refs: {
         input: refElement('input'),
+        content: refElement('content'),
       },
       props: {
         value: propType.string.source([
           { type: 'attr', target: 'idnput', name: 'value' }, // idnput target does not exist
           { type: 'data', target: 'input' },
         ]),
+        contentDataFirst: propType.string.source([
+          { type: 'data', target: 'content', name: 'value' },
+          { type: 'text', target: 'content' },
+        ]),
+        contentTextFirst: propType.string.source([
+          { type: 'text', target: 'content' },
+          { type: 'data', target: 'content', name: 'value' },
+        ]),
       },
     })(element);
 
     expect(MyComponent.props.value).toBe('value-from-data');
+    expect(MyComponent.props.contentDataFirst).toBe('value-from-data');
+    expect(MyComponent.props.contentTextFirst.trim()).toBe('inner text value');
   });
 });
