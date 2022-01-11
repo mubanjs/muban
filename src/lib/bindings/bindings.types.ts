@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ComponentTemplateResult } from '@muban/template';
 import type { Ref } from '@vue/reactivity';
-import type { RefElementType } from '../refs/refDefinitions.types';
-import type { ElementRef } from '../refs/refDefinitions.types';
-import type { BindMapBinding } from './bindingDefinitions';
+import type { RefElementType, ElementRef } from '../refs/refDefinitions.types';
 import type {
+  BindMapBinding,
   CollectionBinding,
   ComponentBinding,
   ComponentCollectionBinding,

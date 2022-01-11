@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type TypedObjectKeys = <T extends { [key: string]: any }>(
-  obj: T,
+  object: T,
 ) => Array<
   Extract<
     {

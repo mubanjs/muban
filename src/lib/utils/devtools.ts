@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/naming-convention,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/naming-convention,@typescript-eslint/ban-types,spaced-comment */
 import type { InternalComponentInstance, InternalNodeInstance } from '../Component.types';
 import type { App } from '../api/apiCreateApp';
 
@@ -9,6 +9,7 @@ interface AppRecord {
   types: Record<string, string | symbol>;
 }
 
+// eslint-disable-next-line no-shadow
 enum DevtoolsHooks {
   APP_INIT = 'app:init',
   APP_UNMOUNT = 'app:unmount',
@@ -26,6 +27,7 @@ interface DevtoolsHook {
   appRecords: Array<AppRecord>;
 }
 
+// eslint-disable-next-line import/no-mutable-exports
 export let devtools: DevtoolsHook;
 
 export function setDevtoolsHook(hook: DevtoolsHook): void {
@@ -71,12 +73,19 @@ function createDevtoolsComponentHook(hook: DevtoolsHooks) {
 export function devtoolsComponentEmit(
   component: InternalComponentInstance,
   event: string,
-  params: Array<any>,
+  parameters: Array<any>,
 ) {
   if (!devtools) return;
-  devtools.emit(DevtoolsHooks.COMPONENT_EMIT, component.appContext.app, component, event, params);
+  devtools.emit(
+    DevtoolsHooks.COMPONENT_EMIT,
+    component.appContext.app,
+    component,
+    event,
+    parameters,
+  );
 }
 
+// eslint-disable-next-line unicorn/prevent-abbreviations
 export function initDev() {
   // TODO window interface
   const target = (globalThis || window || {}) as any;

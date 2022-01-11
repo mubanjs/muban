@@ -8,6 +8,7 @@ export type InjectionKey<T> = symbol;
 export function provide<T>(key: InjectionKey<T> | string, value: T) {
   const currentInstance = getCurrentComponentInstance();
   if (!currentInstance) {
+    // eslint-disable-next-line no-console
     console.error(`provide() can only be used inside setup().`);
   } else {
     // TS doesn't allow symbol as index type
@@ -46,12 +47,14 @@ export function inject(
     if (provides && (key as string | symbol) in provides) {
       // TS doesn't allow symbol as index type
       return provides[key as string];
-    } else if (arguments.length > 1) {
-      return treatDefaultAsFactory && isFunction(defaultValue) ? defaultValue() : defaultValue;
-    } else {
-      console.error(`injection "${String(key)}" not found.`);
     }
+    if (arguments.length > 1) {
+      return treatDefaultAsFactory && isFunction(defaultValue) ? defaultValue() : defaultValue;
+    }
+    // eslint-disable-next-line no-console
+    console.error(`injection "${String(key)}" not found.`);
   } else {
+    // eslint-disable-next-line no-console
     console.error(`inject() can only be used inside setup() or functional components.`);
   }
 }
@@ -64,8 +67,8 @@ export function createContext<T>(key: InjectionKey<T> | string, defaultValue?: T
     provide(key, value || defaultValue);
   };
 
-  const useContext = (defaultValue?: T | (() => T), treatDefaultAsFactory?: boolean): T => {
-    return inject(key, defaultValue, treatDefaultAsFactory as any) as T;
+  const useContext = (defaultInjectValue?: T | (() => T), treatDefaultAsFactory?: boolean): T => {
+    return inject(key, defaultInjectValue, treatDefaultAsFactory as any) as T;
   };
 
   return [provideContext, useContext] as const;

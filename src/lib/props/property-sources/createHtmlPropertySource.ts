@@ -13,10 +13,9 @@ export function createHtmlPropertySource(): PropertySource {
 
         if (rawValue !== undefined) {
           value = convertSourceValue(propInfo, rawValue);
-        } else {
-          if (propInfo.type === Boolean) {
-            console.warn();
-          }
+        } else if (propInfo.type === Boolean) {
+          // eslint-disable-next-line no-console
+          console.warn();
         }
         return value;
       },

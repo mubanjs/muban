@@ -1,9 +1,10 @@
-/* eslint-disable @typescript-eslint/naming-convention,@typescript-eslint/ban-types,@typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/naming-convention,@typescript-eslint/ban-types,@typescript-eslint/no-explicit-any,no-underscore-dangle */
 
 import { pauseTracking, resetTracking } from '@vue/reactivity';
 import { getCurrentComponentInstance, setCurrentComponentInstance } from '../Component';
 import type { InternalComponentInstance } from '../Component.types';
 
+// eslint-disable-next-line no-shadow
 export enum LifecycleHooks {
   Mounted = 'm',
   Unmounted = 'um',
@@ -21,12 +22,14 @@ export function injectHook(
   prepend: boolean = false,
 ): Function | undefined {
   if (target) {
+    // eslint-disable-next-line no-param-reassign
     const hooks = target[type] || (target[type] = []);
     // cache the error handling wrapper for injected hooks so the same hook
     // can be properly deduped by the scheduler. "__weh" stands for "with error
     // handling".
     const wrappedHook =
       hook.__weh ||
+      // eslint-disable-next-line no-param-reassign
       (hook.__weh = () => {
         if (target.isUnmounted) {
           return;
@@ -48,14 +51,14 @@ export function injectHook(
       hooks.push(wrappedHook);
     }
     return wrappedHook;
-  } else {
-    const apiName = ErrorTypeStrings[type];
-    console.warn(
-      `${apiName} is called when there is no active component instance to be ` +
-        `associated with. ` +
-        `Lifecycle injection APIs can only be used during execution of setup().`,
-    );
   }
+  const apiName = ErrorTypeStrings[type];
+  // eslint-disable-next-line no-console
+  console.warn(
+    `${apiName} is called when there is no active component instance to be ` +
+      `associated with. ` +
+      `Lifecycle injection APIs can only be used during execution of setup().`,
+  );
 }
 
 export const createHook = <T extends Function = () => any>(lifecycle: LifecycleHooks) => (

@@ -41,6 +41,7 @@ export const bindingsList = {
   textInput: textInputBinding,
   // bindings that only store data used by other bindings, but not execute any logic
   allowUnset: (() => undefined) as DataBinding<boolean>,
+  initialValueSource: (() => undefined) as DataBinding<'binding' | 'html'>,
   // selectedOptions // for multi-select list
   // options binding (need to decide if needed, or what to do if options are already rendered in the HTML)
 };
@@ -50,6 +51,7 @@ export function registerDomBinding(
   fn: (target: HTMLElement, value: any, bindingHelpers: BindingsHelpers) => void | (() => void),
 ): void {
   if (name in bindingsList) {
+    // eslint-disable-next-line no-console
     console.error(`Binding "${name}" has already been registered`);
     return;
   }

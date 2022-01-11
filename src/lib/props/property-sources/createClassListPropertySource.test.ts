@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment,@typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment,@typescript-eslint/no-unused-vars,unicorn/prevent-abbreviations,no-console,no-return-assign */
 import type { PropTypeInfo } from '../propDefinitions.types';
 import { createClassListPropertySource } from './createClassListPropertySource';
 

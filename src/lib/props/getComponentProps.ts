@@ -1,6 +1,9 @@
 import { isUndefined } from 'isntnt';
-import type { RefElementType } from '../refs/refDefinitions.types';
-import type { ResolvedComponentRefItem, TypedRefs } from '../refs/refDefinitions.types';
+import type {
+  RefElementType,
+  ResolvedComponentRefItem,
+  TypedRefs,
+} from '../refs/refDefinitions.types';
 import typedObjectEntries from '../type-utils/typedObjectEntries';
 import type { PropTypeDefinition, PropTypeInfo, SourceOption } from './propDefinitions.types';
 
@@ -50,6 +53,7 @@ function convertToInternalPropInfo(
       ? refs[propDefinition.sourceOptions.target]
       : undefined;
     if (!targetRef) {
+      // eslint-disable-next-line no-console
       console.error(
         `Property "${propName}" would like to use target "${propDefinition.sourceOptions?.target}", but is not found in available refs.`,
         Object.keys(refs),
@@ -90,9 +94,14 @@ function convertToInternalPropInfo(
   };
 }
 
-function errorUnlessOptional(propInfo: PropTypeInfo, msg: string, ...logParams: Array<unknown>) {
+function errorUnlessOptional(
+  propInfo: PropTypeInfo,
+  message: string,
+  ...logParameters: Array<unknown>
+) {
   if (!propInfo.isOptional) {
-    console.error(msg, ...logParams);
+    // eslint-disable-next-line no-console
+    console.error(message, ...logParameters);
     throw new Error('Exit');
   }
   return undefined;
@@ -156,16 +165,17 @@ function getValueFromSource(propInfo: PropTypeInfo, sources: Array<ReturnType<Pr
   if (propInfo.type === Boolean) {
     return availableSources
       .map((source) => source.getProp(propInfo))
-      .reduce((acc, val) => {
-        if (acc === true || val === true) return true;
-        if (val !== undefined) return val;
-        return acc;
+      .reduce((accumulator, value) => {
+        if (accumulator === true || value === true) return true;
+        if (value !== undefined) return value;
+        return accumulator;
       }, undefined);
   }
 
   // if more than 1 sources, pick the first one (except for booleans)
   const usedSource = availableSources[0];
   if (availableSources.length > 1) {
+    // eslint-disable-next-line no-console
     console.warn(
       `Property "${
         propInfo.name

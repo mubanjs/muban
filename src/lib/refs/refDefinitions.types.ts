@@ -19,14 +19,14 @@ export type RefElementType = HTMLElement | SVGElement;
  * This is the raw "definition" for refs, represented as a simple object.
  * Any helper functions must return this object
  */
-export type ComponentRefItemElement<T extends RefElementType> = {
+export type ComponentRefItemElement<T extends RefElementType = HTMLElement> = {
   type: 'element';
   ref: string;
   queryRef: (parent: HTMLElement) => T | null;
   createRef: (instance: InternalComponentInstance) => ElementRef<T, BindProps>;
   isRequired?: boolean;
 };
-export type ComponentRefItemCollection<T extends RefElementType> = {
+export type ComponentRefItemCollection<T extends RefElementType = HTMLElement> = {
   type: 'collection';
   ref: string;
   queryRef: (parent: HTMLElement) => Array<T>;
@@ -70,14 +70,17 @@ export type ComponentRefItem =
  * - applying bindings
  * - get access to the elements/components related to the ref
  */
-export type ElementRef<T extends RefElementType, P extends BindProps> = {
+export type ElementRef<T extends RefElementType = HTMLElement, P extends BindProps = BindProps> = {
   type: 'element';
   getBindingDefinition: (props: P) => ElementBinding<T, P>;
   element: T | undefined;
   refreshRefs: () => void;
 };
 
-export type CollectionRef<T extends RefElementType, P extends BindProps> = {
+export type CollectionRef<
+  T extends RefElementType = HTMLElement,
+  P extends BindProps = BindProps
+> = {
   type: 'collection';
   getBindingDefinition: (props: BindProps) => CollectionBinding<T, P>;
   getElements: () => Array<T>;
@@ -104,14 +107,14 @@ export type ComponentsRef<T extends ComponentFactory<any>> = {
   refreshRefs: () => void;
 };
 
-export type AnyRef =
-  | ElementRef<RefElementType, BindProps>
-  | CollectionRef<RefElementType, BindProps>
+export type AnyRef<T extends RefElementType> =
+  | ElementRef<T>
+  | CollectionRef<T>
   | ComponentRef<ComponentFactory<any>>
   | ComponentsRef<ComponentFactory<any>>;
 
 // Turn the keys of an object into the types, or a Ref around that type
-type RefOrValue<T extends Record<string, any>> = {
+export type RefOrValue<T extends Record<string, any>> = {
   [P in keyof T]: T[P] | Ref<T[P]>;
 };
 
@@ -137,7 +140,7 @@ export type TypedRef<T extends ComponentRefItem> = T extends {
   createRef: (instance: InternalComponentInstance) => infer R;
 }
   ? Exclude<R, undefined>
-  : ElementRef<RefElementType, BindProps>;
+  : ElementRef;
 
 /**
  * Extract typings out of the refDefinition input,
@@ -147,4 +150,4 @@ export type TypedRef<T extends ComponentRefItem> = T extends {
  */
 export type TypedRefs<T extends Record<string, ComponentRefItem>> = {
   [P in keyof T]: TypedRef<T[P]>;
-} & { self: ElementRef<HTMLElement, BindProps> };
+} & { self: ElementRef };

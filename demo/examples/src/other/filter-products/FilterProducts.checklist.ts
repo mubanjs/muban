@@ -1,0 +1,84 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ref } from '@vue/reactivity';
+import { html } from '@muban/template';
+import { defineComponent } from '../../../../../src/lib/Component';
+import { propType } from '../../../../../src/lib/props/propDefinitions';
+import { refCollection } from '../../../../../src/lib/refs/refDefinitions';
+import { bind } from '../../../../../src/lib/bindings/bindingDefinitions';
+import { watch, watchEffect } from '../../../../../src/lib/api/apiWatch';
+
+export const FilterProductsChecklist = defineComponent({
+  name: 'filter-products-checklist',
+  props: {
+    // TODO: add Array proptype, although that needs a nested type (conversion)
+    categoryId: propType.string,
+    onChange: propType.func.optional.shape<(category: string, value: Array<string>) => void>(),
+    selected: propType.string.optional,
+  },
+  refs: {
+    checkboxes: refCollection('checkbox'),
+  },
+  setup({ props, refs }) {
+    const selectedItems = ref<Array<string>>([]);
+
+    watchEffect(() => {
+      selectedItems.value = (props.selected || undefined)?.split(',') || [];
+    });
+
+    watch(
+      () => selectedItems.value,
+      (items) => {
+        props.onChange?.(props.categoryId, items);
+      },
+    );
+
+    return [bind(refs.checkboxes, { checked: selectedItems })];
+  },
+});
+
+export type FilterProductsChecklistProps = {
+  id: string;
+  label: string;
+  options: Array<{
+    id: string;
+    label: string;
+  }>;
+  selected?: Array<string>;
+};
+export const filterProductsChecklist = (
+  { id, label, options, selected = [] }: FilterProductsChecklistProps,
+  ref?: string,
+): string => html`
+  <fieldset
+    data-component=${FilterProductsChecklist.displayName}
+    data-ref=${ref}
+    class="form-fieldset"
+    data-category-id=${id}
+    data-selected=${selected.join(',')}
+  >
+    <legend>${label}</legend>
+    <div class="form-group">
+      ${options.map(
+        (option) => html`
+          <div class="form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id=${`${id}${option.id}`}
+              name=${`${id}[]`}
+              value=${option.id}
+              ?checked=${selected.includes(option.id)}
+              data-ref="checkbox"
+            />
+            <label class="form-check-label" for=${`${id}${option.id}`}>${option.label}</label>
+          </div>
+        `,
+      )}
+    </div>
+  </fieldset>
+`;
+
+export const meta = {
+  component: FilterProductsChecklist,
+  template: filterProductsChecklist,
+};

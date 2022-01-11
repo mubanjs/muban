@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type TypedObjectValues = <T extends { [key: string]: any }>(
-  obj: T,
+  object: T,
 ) => Array<
   {
     [K in keyof T]: K extends string ? T[K] : never;

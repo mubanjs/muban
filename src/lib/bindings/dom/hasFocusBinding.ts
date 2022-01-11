@@ -8,16 +8,14 @@ export function hasFocusBinding(target: HTMLElement, valueAccessor: BindingValue
       if (document.activeElement !== target) {
         target.focus();
       }
-    } else {
-      if (document.activeElement === target) {
-        target.blur();
-      }
+    } else if (document.activeElement === target) {
+      target.blur();
     }
   });
 
-  const onFocusChange = function () {
+  function onFocusChange() {
     valueAccessor.value = document.activeElement === target;
-  };
+  }
   // Nice: https://hiddedevries.nl/en/blog/2019-01-30-console-logging-the-focused-element-as-it-changes
   target.addEventListener('focus', onFocusChange);
   target.addEventListener('blur', onFocusChange);

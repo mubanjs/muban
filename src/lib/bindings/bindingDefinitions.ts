@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention,@typescript-eslint/no-explicit-any */
 
-import { Ref, unref } from '@vue/reactivity';
+import type { Ref } from '@vue/reactivity';
+import { unref } from '@vue/reactivity';
 import { watch } from '@vue/runtime-core';
 import { getCurrentComponentInstance } from '../Component';
 import type { ComponentFactory } from '../Component.types';
-import type { RefElementType } from '../refs/refDefinitions.types';
 import type {
+  RefElementType,
   CollectionRef,
   ComponentParams,
   ComponentsRef,
@@ -16,15 +17,15 @@ import type {
 import { applyBindings } from './applyBindings';
 import type { Binding, BindProps, TemplateProps } from './bindings.types';
 
-/////
+/// //
 // Component functions
 // These are called from within your components' setup function, and return the response from one of the
 // `BindXXX` functions below, wrapped through the refDefinitions they apply to.
 // The `getBindingDefinition` just forwards the props, but passes long the target Elements/Components
 // inside a `ref` so they can be updated when the DOM changes
-////
+/// /
 
-export function bind<T extends Pick<AnyRef, 'getBindingDefinition'>>(
+export function bind<T extends Pick<AnyRef<RefElementType>, 'getBindingDefinition'>>(
   target: T,
   // make sure that if we bind props onto multiple components,
   // we only allow setting props that exist on all of them
@@ -94,10 +95,7 @@ export function bindMap(
     // as soon as the underlying ref array updates when the items in the DOM
     // are updated
     const disposeWatch = watch(
-      () =>
-        (target as any).getRefs() as Array<
-          ElementRef<RefElementType, BindProps> | ComponentRef<ComponentFactory<any>>
-        >,
+      () => (target as any).getRefs() as Array<ElementRef | ComponentRef<ComponentFactory<any>>>,
       (refs, oldValue, onInvalidate) => {
         const bindings = refs.map((ref, index) => bind(ref, getProps(ref, index)));
 
@@ -135,7 +133,7 @@ export function BindTemplate<T extends RefElementType>(
 ): TemplateBinding<T> {
   return {
     type: 'template',
-    props: props,
+    props,
     getElements() {
       return props.ref?.element ? [props.ref.element] : [];
     },
@@ -153,11 +151,11 @@ export function bindTemplate(
   return BindTemplate({ ref: target, onUpdate, ...options });
 }
 
-/////
+/// //
 // Definitions
 // These are called via the refDefinitions from the bind/Map/Template above
 // The response from these functions are used by the "applyBindings" function
-////
+/// /
 
 export type ElementBinding<T extends RefElementType, P extends BindProps> = {
   ref: Ref<T | undefined>;
@@ -172,7 +170,7 @@ export function bindElement<T extends RefElementType, P extends BindProps>(
   return {
     ref,
     type: 'element',
-    props: props,
+    props,
     getElements() {
       return ref.value ? [ref.value] : [];
     },
@@ -193,7 +191,7 @@ export function bindCollection<T extends RefElementType, P extends BindProps>(
   return {
     ref,
     type: 'collection',
-    props: props,
+    props,
     getElements() {
       return ref.value.map((r) => unref(r));
     },
@@ -216,7 +214,7 @@ export function BindComponent<T extends SimpleComponentApi>(
   return {
     ref,
     type: 'component',
-    props: props,
+    props,
     getElements() {
       return ref.value?.element ? [ref.value.element] : [];
     },
@@ -237,9 +235,9 @@ export function bindComponentCollection<T extends SimpleComponentApi>(
   return {
     ref,
     type: 'componentCollection',
-    props: props,
+    props,
     getElements() {
-      return ref.value.map((ref) => ref.value.element);
+      return ref.value.map((refItem) => refItem.value.element);
     },
   };
 }

@@ -58,7 +58,7 @@ describe('getComponentProps', () => {
     ];
 
     const defaultDate = new Date();
-    const defaultFn = () => void 0;
+    const defaultFunction = () => undefined;
     const element = document.createElement('div');
     const refDefinition = {};
     const propDefinition = {
@@ -67,7 +67,7 @@ describe('getComponentProps', () => {
       boolValueTrue: { type: Boolean, isOptional: true, default: true },
       boolValueFalse: { type: Boolean, isOptional: true, default: false },
       dateValue: { type: Date, isOptional: true, default: defaultDate },
-      fnValue: { type: Date, isOptional: true, default: defaultFn },
+      fnValue: { type: Date, isOptional: true, default: defaultFunction },
     };
 
     const instance = createComponentInstance({}, element, { name: 'foo', setup: () => [] });
@@ -82,7 +82,7 @@ describe('getComponentProps', () => {
       boolValueTrue: true,
       boolValueFalse: false,
       dateValue: defaultDate,
-      fnValue: defaultFn,
+      fnValue: defaultFunction,
     });
   });
 });

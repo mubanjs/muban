@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/naming-convention */
 import { unref } from '@vue/reactivity';
 
 type ObjectIterator<TObject, TResult> = (
@@ -8,11 +8,11 @@ type ObjectIterator<TObject, TResult> = (
 ) => TResult;
 
 export function mapValues<T extends Record<string, any>, TResult>(
-  obj: T,
+  object: T,
   fn: ObjectIterator<T, TResult>,
 ): { [P in keyof T]: TResult } {
   return Object.fromEntries(
-    Object.entries(obj).map(([key, value]) => [key, fn(value, key, obj)]),
+    Object.entries(object).map(([key, value]) => [key, fn(value, key, object)]),
   ) as any;
 }
 

@@ -1,7 +1,7 @@
-import { camelCase } from 'lodash-es';
+import { camelCase } from 'change-case';
 import { unref, watchEffect } from '@vue/runtime-core';
-import type { BindingMap } from '../bindings.types';
 import type { Ref } from '@vue/reactivity';
+import type { BindingMap } from '../bindings.types';
 
 export function styleBinding(target: HTMLElement, valueAccessor: BindingMap<string>) {
   return watchEffect(() => {

@@ -1,8 +1,8 @@
-import { memoize } from 'lodash-es';
-import type { PropertySource } from '../getComponentProps';
 import parseJson from 'json-parse-better-errors';
+import { simpleMemo } from '../../utils/simple-memo';
+import type { PropertySource } from '../getComponentProps';
 
-const getJsonContent = memoize(
+const getJsonContent = simpleMemo(
   (element: HTMLElement): Record<string, unknown> => {
     // get props json script tag
     // TODO: use ":scope >" to only select direct descendant

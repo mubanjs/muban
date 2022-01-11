@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import typedObjectEntries from '../../type-utils/typedObjectEntries';
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export type HTMLElementEventCallbackMap = {
   [P in keyof HTMLElementEventMap]?: (event: HTMLElementEventMap[P]) => void;
 };

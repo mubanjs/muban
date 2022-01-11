@@ -1,13 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types,max-lines */
 
 // see https://github.com/vuejs/vue-next/blob/ca8276d1fa01c06fd63394a2c0d572581618ae3d/packages/reactivity/src/ref.ts#L184-L201
-declare module '@vue/reactivity' {
-  export interface RefUnwrapBailTypes {
-    runtimeDOMBailTypes: Node | Window | HTMLElement;
-  }
-}
-
-import { Ref, ref, unref } from '@vue/reactivity';
+import type { Ref } from '@vue/reactivity';
+import { ref, unref } from '@vue/reactivity';
 import type { ComponentApi, ComponentFactory, InternalComponentInstance } from '../Component.types';
 import {
   bindCollection,
@@ -17,8 +12,8 @@ import {
 } from '../bindings/bindingDefinitions';
 import { getParentComponentElement } from '../utils/domUtils';
 import { getComponentForElement } from '../utils/global';
-import type { RefElementType } from './refDefinitions.types';
 import type {
+  RefElementType,
   ComponentRefItemCollection,
   ComponentRefItemComponent,
   ComponentRefItemComponentCollection,
@@ -26,6 +21,13 @@ import type {
   ComponentsRef,
   RefOptions,
 } from './refDefinitions.types';
+
+declare module '@vue/reactivity' {
+  export interface ReferenceUnwrapBailTypes {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    runtimeDOMBailTypes: Node | Window | HTMLElement;
+  }
+}
 
 /**
  * Ensures that the passed element is a direct child of the parent, so that the
@@ -80,6 +82,7 @@ function getExistingGlobalRefComponent<T extends ComponentApi>(
     } else {
       // TODO: not sure what to do here, for now we just let the component be
       //  re-created, which shows additional warnings
+      // eslint-disable-next-line no-console
       console.error(
         'This refComponent does already exist as part of another parent',
         existingComponent.__instance.parent,
@@ -91,7 +94,7 @@ function getExistingGlobalRefComponent<T extends ComponentApi>(
   return refInstance;
 }
 
-export function refElement<T extends RefElementType = RefElementType>(
+export function refElement<T extends RefElementType = HTMLElement>(
   refIdOrQuery: string | ComponentRefItemElement<T>['queryRef'],
   { isRequired = true, ignoreGuard }: RefOptions<{ isRequired?: boolean }> = {},
 ): ComponentRefItemElement<T> {
@@ -113,6 +116,7 @@ export function refElement<T extends RefElementType = RefElementType>(
           element = (parent.querySelector<T>(`[data-ref="${this.ref}"]`) ?? null) as T | null;
         } catch (error) {
           if (error instanceof DOMException) {
+            // eslint-disable-next-line no-console
             console.warn(`
 [Error querying ref] The first argument of refElement should be the value of a data-ref in the DOM, not a querySelector.
 If you want to select a custom target, pass a function like;
@@ -132,6 +136,7 @@ If you want to select a custom target, pass a function like;
         const element = this.queryRef(instance.element as HTMLElement);
 
         if (isRequired && !element && (initial || elementRef.value !== element)) {
+          // eslint-disable-next-line no-console
           console.error('Element not found', this.ref);
         }
         return element;
@@ -157,7 +162,7 @@ If you want to select a custom target, pass a function like;
   };
 }
 
-export function refCollection<T extends RefElementType = RefElementType>(
+export function refCollection<T extends RefElementType = HTMLElement>(
   refIdOrQuery: string | ComponentRefItemCollection<T>['queryRef'],
   { minimumItemsRequired = 0, ignoreGuard }: RefOptions<{ minimumItemsRequired?: number }> = {},
 ): ComponentRefItemCollection<T> {
@@ -173,6 +178,7 @@ export function refCollection<T extends RefElementType = RefElementType>(
           elements = Array.from(parent.querySelectorAll<T>(`[data-ref="${refIdOrQuery}"]`));
         } catch (error) {
           if (error instanceof DOMException) {
+            // eslint-disable-next-line no-console
             console.warn(`
 [Error querying ref] The first argument of refElement should be the value of a data-ref in the DOM, not a querySelector.
 If you want to select a custom target, pass a function like;
@@ -192,13 +198,14 @@ If you want to select a custom target, pass a function like;
       const getElements = () => {
         const elements = this.queryRef(instance.element as HTMLElement);
         if (elements.length < minimumItemsRequired) {
+          // eslint-disable-next-line no-console
           console.error(
             `Expected at least "${minimumItemsRequired}" elements, but found "${elements.length}"`,
             `[data-ref="${this.ref}"]`,
           );
         }
 
-        return elements.map((e) => ref(e) as Ref<T>);
+        return elements.map((element) => ref(element) as Ref<T>);
       };
       elementsRef.value = getElements();
 
@@ -208,7 +215,7 @@ If you want to select a custom target, pass a function like;
           return bindCollection(elementsRef, props);
         },
         getElements() {
-          return elementsRef.value.map((ref) => unref(ref));
+          return elementsRef.value.map((refItem) => unref(refItem));
         },
         // elements: elementsRef.value,
         getRefs() {
@@ -228,12 +235,15 @@ If you want to select a custom target, pass a function like;
           // only re-assign if some refs are actually different
           if (
             elements.length !== elementsRef.value.length ||
-            !elements.every((elRef) =>
-              elementsRef.value.some((oldRef) => oldRef.value === elRef.value),
+            !elements.every((elementRef) =>
+              elementsRef.value.some((oldRef) => oldRef.value === elementRef.value),
             )
           ) {
             // first, "de-ref" the old array to trigger binding cleanup
-            elementsRef.value.forEach((ref) => ((ref.value as any) = undefined));
+            elementsRef.value.forEach((refItem) => {
+              // eslint-disable-next-line no-param-reassign
+              (refItem.value as any) = undefined;
+            });
 
             elementsRef.value = elements;
           }
@@ -281,6 +291,7 @@ export function refComponent<T extends ComponentFactory<any>>(
         const element = this.queryRef(instance.element as HTMLElement);
 
         if (initialRender && isRequired && !element) {
+          // eslint-disable-next-line no-console
           console.error('Component not found in DOM', getQuery());
         }
 
@@ -296,17 +307,20 @@ export function refComponent<T extends ComponentFactory<any>>(
 
             if (!refInstance) {
               // create new component instance
+              // TODO: This component only gets "set up" when HTML is updated through `bindTemplate`.
+              //  If not, this is just an empty component that doesn't do anything.
+              //  Would be nice if we could improve this
               refInstance = newComponentFactory(element, { parent: instance }) as ReturnType<T>;
             }
             instance.children.push(refInstance);
             return refInstance;
-          } else {
-            console.error(
-              `[refComponent] Selected element that doesn't match any of the passed components`,
-              element,
-              (Array.isArray(component) ? component : [component]).map((c) => c.displayName),
-            );
           }
+          // eslint-disable-next-line no-console
+          console.error(
+            `[refComponent] Selected element that doesn't match any of the passed components`,
+            element,
+            (Array.isArray(component) ? component : [component]).map((c) => c.displayName),
+          );
         }
       };
 
@@ -364,6 +378,7 @@ export function refComponents<T extends ComponentFactory<any>>(
         const elements = this.queryRef(instance.element as HTMLElement);
 
         if (elements.length < minimumItemsRequired) {
+          // eslint-disable-next-line no-console
           console.error(
             `Expected at least "${minimumItemsRequired}" elements, but found "${elements.length}"`,
             `[data-ref="${this.ref}"]`,
@@ -383,9 +398,8 @@ export function refComponents<T extends ComponentFactory<any>>(
             }
             instance.children.push(refInstance);
             return ref(refInstance) as Ref<ReturnType<T>>;
-          } else {
-            return ref(instancesRef.value[existingInstance]) as Ref<ReturnType<T>>;
           }
+          return ref(instancesRef.value[existingInstance]) as Ref<ReturnType<T>>;
         });
       };
 
@@ -397,7 +411,7 @@ export function refComponents<T extends ComponentFactory<any>>(
           return bindComponentCollection(instancesRef, props);
         },
         getComponents() {
-          return instancesRef.value.map((ref) => unref(ref));
+          return instancesRef.value.map((refItem) => unref(refItem));
         },
         getRefs() {
           return instancesRef.value.map((instanceRef) => {
@@ -415,12 +429,15 @@ export function refComponents<T extends ComponentFactory<any>>(
           // only re-assign if some refs are actually different
           if (
             components.length !== instancesRef.value.length ||
-            !components.every((elRef) =>
-              instancesRef.value.some((oldRef) => oldRef.value === elRef.value),
+            !components.every((elementRef) =>
+              instancesRef.value.some((oldRef) => oldRef.value === elementRef.value),
             )
           ) {
             // first, "de-ref" the old array to trigger binding cleanup
-            instancesRef.value.forEach((ref) => ((ref.value as any) = undefined));
+            instancesRef.value.forEach((refItem) => {
+              // eslint-disable-next-line no-param-reassign
+              (refItem.value as any) = undefined;
+            });
 
             instancesRef.value = components;
           }

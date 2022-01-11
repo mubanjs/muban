@@ -4,7 +4,7 @@ import type { IfAny } from '../Component.types';
 import type { RefElementType } from '../refs/refDefinitions.types';
 
 export type SourceOption =
-  | SourceOptionCSS
+  | SourceOptionCss
   | SourceOptionHtmlText
   | {
       type?: 'data' | 'json' | 'attr';
@@ -19,7 +19,7 @@ export type SourceOptionHtmlText = {
   target?: string;
 };
 
-export type SourceOptionCSS = {
+export type SourceOptionCss = {
   type: 'css';
   target?: string;
   name?: string;
@@ -55,7 +55,7 @@ export type PropTypeInfo<T = any> = Pick<
     name: string;
     target: RefElementType | undefined;
   } & Pick<SourceOption, 'type'> &
-    Pick<SourceOptionCSS, 'options'>;
+    Pick<SourceOptionCss, 'options'>;
 };
 
 // type OptionalPropertyKeys<T> = {
@@ -97,7 +97,7 @@ export type ExtractType<T extends PropTypeDefinition> = IsAnyPropTypeDefinition<
 // if required is not undefined, then it's set to false, so the type should become optional
 type ExtractOptionalType<
   T extends PropTypeDefinition,
-  V extends any
+  V
 > = 'missingValue' extends RequiredPropertyKeys<T> ? V | undefined : V;
 
 export type TypedProp<T extends PropTypeDefinition> = ExtractOptionalType<T, ExtractType<T>>;
