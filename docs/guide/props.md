@@ -202,6 +202,37 @@ The `source` helper allows you to configure the following:
   or similar cases in other sources.
 * The `options` object which allows even further configuration, with options for specific sources.
 
+You could also pass an array of source configurations, they will be tried one by one and return the first non undefined value
+
+```ts
+const MyComponent = defineComponent({
+  name: 'my-component',
+  refs: {
+    input: refElement('input'),
+  },
+  props: {
+    value: propType.string.source([
+      { type: 'attr', target: 'idnput', name: 'value' }, // idnput target does not exist
+      { type: 'data', target: 'input' },
+    ]),
+  },
+  setup({ props }) {
+    // this will output: value-from-data
+    console.log(props.value);
+    
+    return [];
+  }
+})
+```
+
+```html
+<div data-component="my-component">
+  <input data-ref="input" value="value-from-attr" data-value="value-from-data" />
+</div>
+```
+
+The above example first tries to get the value from the attribute using the `attr` type, because the target element (idnput) does not exists it tries the second source configuration, that configuration uses the `data` type, and returns the value from the dataset. 
+
 ::: tip API
 Read more on the [source API](../api/props.html#source) page.
 :::
