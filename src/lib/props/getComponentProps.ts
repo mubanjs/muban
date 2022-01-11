@@ -105,7 +105,7 @@ function errorUnlessOptional(
   return undefined;
 }
 
-function getValueFromMultipleSources(
+export function getValueFromMultipleSources(
   propInfo: Array<PropTypeInfo>,
   sources: Array<ReturnType<PropertySource>>,
   currentIndex: number = 0,
@@ -120,7 +120,10 @@ function getValueFromMultipleSources(
   }
 }
 
-function getValueFromSource(propInfo: PropTypeInfo, sources: Array<ReturnType<PropertySource>>) {
+export function getValueFromSource(
+  propInfo: PropTypeInfo,
+  sources: Array<ReturnType<PropertySource>>,
+) {
   // if target cannot be found, just return undefined
   if (!propInfo.source.target) {
     return errorUnlessOptional(
