@@ -15,83 +15,56 @@ export type PropertySource = (
   getProp: (info: PropTypeInfo) => unknown;
 };
 
-function convertToInternalPropInfoArray(
-  element: RefElementType,
-  propName: string,
-  propDefinition: PropTypeDefinition & {
-    sourceOptions: Array<SourceOption>;
-  },
-  refs: TypedRefs<Record<string, ResolvedComponentRefItem>>,
-): Array<PropTypeInfo> {
-  return propDefinition.sourceOptions.map((sourceOption) =>
-    convertToInternalPropInfo(
-      element,
-      propName,
-      {
-        ...propDefinition,
-        sourceOptions: sourceOption,
-      },
-      refs,
-    ),
-  );
-}
-
 function convertToInternalPropInfo(
   element: RefElementType,
   propName: string,
-  propDefinition: PropTypeDefinition & {
-    sourceOptions: SourceOption;
-  },
+  propDefinition: PropTypeDefinition,
   refs: TypedRefs<Record<string, ResolvedComponentRefItem>>,
-): PropTypeInfo {
+): Array<PropTypeInfo> {
   const { type, default: defaultValue, isOptional, validator } = propDefinition;
 
-  let target: RefElementType | undefined;
-  // resolve refs into elements
-  if (propDefinition.sourceOptions?.target) {
-    const targetRef = propDefinition.sourceOptions.target
-      ? refs[propDefinition.sourceOptions.target]
-      : undefined;
-    if (!targetRef) {
-      // eslint-disable-next-line no-console
-      console.error(
-        `Property "${propName}" would like to use target "${propDefinition.sourceOptions?.target}", but is not found in available refs.`,
-        Object.keys(refs),
-      );
+  const getPropInfo = (sourceOption: SourceOption): PropTypeInfo => {
+    let target: RefElementType | undefined;
+    // resolve refs into elements
+    if (sourceOption?.target) {
+      const targetRef = sourceOption.target ? refs[sourceOption.target] : undefined;
+      if (!targetRef) {
+        // eslint-disable-next-line no-console
+        console.error(
+          `Property "${propName}" would like to use target "${sourceOption?.target}", but is not found in available refs.`,
+          Object.keys(refs),
+        );
+      } else {
+        // TODO: support collections... but how?
+        if (targetRef.type === 'element' && targetRef.element) {
+          target = targetRef.element;
+        }
+        if (targetRef.type === 'component' && targetRef.component?.element) {
+          target = targetRef.component.element;
+        }
+      }
     } else {
-      // TODO: support collections... but how?
-      if (targetRef.type === 'element' && targetRef.element) {
-        target = targetRef.element;
-      }
-      if (targetRef.type === 'component' && targetRef.component?.element) {
-        target = targetRef.component.element;
-      }
+      target = element;
     }
-  } else {
-    target = element;
-  }
 
-  return {
-    name: propName,
-    type,
-    default: defaultValue,
-    isOptional,
-    validator,
-    source: {
-      name:
-        (propDefinition.sourceOptions &&
-          'name' in propDefinition.sourceOptions &&
-          propDefinition.sourceOptions.name) ||
-        propName,
-      target,
-      type: propDefinition.sourceOptions?.type,
-      options:
-        (propDefinition.sourceOptions &&
-          'options' in propDefinition.sourceOptions &&
-          propDefinition.sourceOptions.options) ||
-        undefined,
-    },
+    return {
+      name: propName,
+      type,
+      default: defaultValue,
+      isOptional,
+      validator,
+      source: {
+        name: (sourceOption && 'name' in sourceOption && sourceOption.name) || propName,
+        target,
+        type: sourceOption?.type,
+        options: (sourceOption && 'options' in sourceOption && sourceOption.options) || undefined,
+      },
+    };
   };
+
+  return propDefinition.sourceOptions instanceof Array
+    ? propDefinition.sourceOptions?.map(getPropInfo)
+    : [getPropInfo(propDefinition.sourceOptions as SourceOption)];
 }
 
 function errorUnlessOptional(
@@ -110,16 +83,24 @@ function errorUnlessOptional(
 export function getValueFromMultipleSources(
   propInfo: Array<PropTypeInfo>,
   sources: Array<ReturnType<PropertySource>>,
-  currentIndex: number = 0,
 ): any {
-  try {
-    const currentValue = getValueFromSource(propInfo[currentIndex], sources);
-    return currentValue;
-  } catch {
-    if (currentIndex < propInfo.length - 1) {
-      return getValueFromMultipleSources(propInfo, sources, currentIndex + 1);
+  let value: any;
+
+  propInfo.forEach((propTypeInfo) => {
+    let propInfoValue;
+
+    try {
+      propInfoValue = getValueFromSource(propTypeInfo, sources);
+    } catch {
+      propInfoValue = undefined;
     }
-  }
+
+    if (value === undefined) {
+      value = propInfoValue;
+    }
+  });
+
+  return value;
 }
 
 export function getValueFromSource(
@@ -201,39 +182,14 @@ export function getComponentProps(
 
   const p =
     typedObjectEntries(props ?? {}).reduce((accumulator, [propName, propType]) => {
-      let propInfo;
-
-      if (propType.sourceOptions instanceof Array) {
-        propInfo = convertToInternalPropInfoArray(
-          element,
-          propName,
-          {
-            ...propType,
-            sourceOptions: propType.sourceOptions as Array<SourceOption>,
-          },
-          refs,
-        );
-      } else {
-        propInfo = convertToInternalPropInfo(
-          element,
-          propName,
-          {
-            ...propType,
-            sourceOptions: propType.sourceOptions as SourceOption,
-          },
-          refs,
-        );
-      }
+      const propInfo = convertToInternalPropInfo(element, propName, propType, refs);
 
       // TODO: ignore function prop types for some sources?
 
       let extractedValue;
 
       try {
-        extractedValue =
-          propInfo instanceof Array
-            ? getValueFromMultipleSources(propInfo, sources)
-            : getValueFromSource(propInfo, sources);
+        extractedValue = getValueFromMultipleSources(propInfo, sources);
       } catch {
         return accumulator;
       }
