@@ -84,19 +84,12 @@ export function getValueFromMultipleSources(
 ): any {
   let value: any;
 
-  propInfo.forEach((propTypeInfo) => {
-    let propInfoValue;
-
+  for (let index = 0; index < propInfo.length; index++) {
     try {
-      propInfoValue = getValueFromSource(propTypeInfo, sources);
-    } catch {
-      propInfoValue = undefined;
-    }
-
-    if (value === undefined) {
-      value = propInfoValue;
-    }
-  });
+      value = getValueFromSource(propInfo[index], sources);
+      break;
+    } catch {}
+  }
 
   return value;
 }
