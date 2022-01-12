@@ -7,9 +7,7 @@ import type {
 import typedObjectEntries from '../type-utils/typedObjectEntries';
 import type { PropTypeDefinition, PropTypeInfo, SourceOption } from './propDefinitions.types';
 
-export type PropertySource = (
-  componentElement: RefElementType,
-) => {
+export type PropertySource = (componentElement: RefElementType) => {
   sourceName: string;
   hasProp: (info: PropTypeInfo) => boolean;
   getProp: (info: PropTypeInfo) => unknown;
@@ -86,19 +84,12 @@ export function getValueFromMultipleSources(
 ): any {
   let value: any;
 
-  propInfo.forEach((propTypeInfo) => {
-    let propInfoValue;
-
+  for (let index = 0; index < propInfo.length; index++) {
     try {
-      propInfoValue = getValueFromSource(propTypeInfo, sources);
-    } catch {
-      propInfoValue = undefined;
-    }
-
-    if (value === undefined) {
-      value = propInfoValue;
-    }
-  });
+      value = getValueFromSource(propInfo[index], sources);
+      break;
+    } catch {}
+  }
 
   return value;
 }
@@ -161,9 +152,7 @@ export function getValueFromSource(
   if (availableSources.length > 1) {
     // eslint-disable-next-line no-console
     console.warn(
-      `Property "${
-        propInfo.name
-      }" is defined in more than one property source: ${availableSources
+      `Property "${propInfo.name}" is defined in more than one property source: ${availableSources
         .map((s) => s.sourceName)
         .join(', ')}. We'll use the first from the list: "${usedSource.sourceName}"`,
     );
