@@ -81,17 +81,12 @@ function errorUnlessOptional(
 export function getValueFromMultipleSources(
   propInfo: Array<PropTypeInfo>,
   sources: Array<ReturnType<PropertySource>>,
-): any {
-  let value: any;
-
-  for (let index = 0; index < propInfo.length; index++) {
+): unknown {
+  for (const info of propInfo) {
     try {
-      value = getValueFromSource(propInfo[index], sources);
-      break;
+      return getValueFromSource(info, sources);
     } catch {}
   }
-
-  return value;
 }
 
 export function getValueFromSource(
@@ -175,7 +170,7 @@ export function getComponentProps(
 
       // TODO: ignore function prop types for some sources?
 
-      let extractedValue;
+      let extractedValue: unknown;
 
       try {
         extractedValue = getValueFromMultipleSources(propInfo, sources);
