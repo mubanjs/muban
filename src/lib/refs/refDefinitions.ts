@@ -241,8 +241,11 @@ If you want to select a custom target, pass a function like;
           ) {
             // first, "de-ref" the old array to trigger binding cleanup
             elementsRef.value.forEach((refItem) => {
-              // eslint-disable-next-line no-param-reassign
-              (refItem.value as any) = undefined;
+              // but only if it doesn't exist in the new array
+              if (!elements.includes(refItem)) {
+                // eslint-disable-next-line no-param-reassign
+                (refItem as any).value = undefined;
+              }
             });
 
             elementsRef.value = elements;
@@ -459,8 +462,11 @@ export function refComponents<T extends ComponentFactory<any>>(
           ) {
             // first, "de-ref" the old array to trigger binding cleanup
             instancesRef.value.forEach((refItem) => {
-              // eslint-disable-next-line no-param-reassign
-              (refItem.value as any) = undefined;
+              // but only if it doesn't exist in the new array
+              if (!components.includes(refItem)) {
+                // eslint-disable-next-line no-param-reassign
+                (refItem as any).value = undefined;
+              }
             });
 
             instancesRef.value = components;
