@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-alpha.29] - 2022-01-18
+
+### Fixed
+
+- Don't set refs to undefined in component or element ref collections that stay in the DOM.
+
+
 ## [1.0.0-alpha.28] - 2021-12-09
 
 ### Added
