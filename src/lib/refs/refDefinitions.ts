@@ -422,7 +422,7 @@ export function refComponents<T extends ComponentFactory<any>>(
               return ref(refInstance) as Ref<ReturnType<T>>;
             }
           }
-          return ref(instancesRef.value[existingInstance]) as Ref<ReturnType<T>>;
+          return instancesRef.value[existingInstance];
         });
       };
 
