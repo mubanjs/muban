@@ -103,7 +103,7 @@ const addShape = <T extends PropTypeDefinition>(object: T): Shape<T> => ({
   // eslint-disable-next-line @typescript-eslint/ban-types
   shape: <U extends Function>() => ({
     ...object,
-    shapeType: (true as unknown) as U,
+    shapeType: true as unknown as U,
   }),
 });
 

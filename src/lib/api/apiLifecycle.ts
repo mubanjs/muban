@@ -61,10 +61,10 @@ export function injectHook(
   );
 }
 
-export const createHook = <T extends Function = () => any>(lifecycle: LifecycleHooks) => (
-  hook: T,
-  target: InternalComponentInstance | null = getCurrentComponentInstance(),
-) => injectHook(lifecycle, hook, target);
+export const createHook =
+  <T extends Function = () => any>(lifecycle: LifecycleHooks) =>
+  (hook: T, target: InternalComponentInstance | null = getCurrentComponentInstance()) =>
+    injectHook(lifecycle, hook, target);
 
 // export const onBeforeMount = createHook(LifecycleHooks.BEFORE_MOUNT);
 export const onMounted = createHook(LifecycleHooks.Mounted);

@@ -122,7 +122,7 @@ export const defineComponent = <
   R extends Record<string, ComponentRefItem>,
   N extends string,
   // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends Record<string, PropTypeDefinition> = {}
+  P extends Record<string, PropTypeDefinition> = {},
 >(
   options: DefineComponentOptions<P, R, N>,
 ): ComponentFactory<P, N> => {

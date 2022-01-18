@@ -39,7 +39,7 @@ declare global {
   }
 }
 
-const global = ((globalThis || window || {}) as unknown) as Window;
+const global = (globalThis || window || {}) as unknown as Window;
 
 // eslint-disable-next-line no-multi-assign
 const globalInstance = (global.__muban__ = global.__muban__ ?? new MubanGlobal());

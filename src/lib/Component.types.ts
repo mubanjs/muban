@@ -11,7 +11,7 @@ export type IfAny<T, I, E> = IsAny<T> extends never ? E : I;
 
 export type ComponentFactory<
   P extends Record<string, PropTypeDefinition> = any,
-  N extends string = any
+  N extends string = any,
 > = ComponentReturnValue<TypedProps<P>> & ComponentDisplayName<N>;
 
 // export type ComponentApi<T extends ComponentFactory<any>> = ReturnType<T>;
@@ -84,7 +84,7 @@ export type ComponentReturnValue<P extends Record<string, any> = Record<string, 
 export type DefineComponentOptions<
   P extends Record<string, PropTypeDefinition> = {},
   R extends Record<string, ComponentRefItem> = {},
-  N extends string = ''
+  N extends string = '',
 > = {
   name: N;
   components?: Array<ComponentFactory | LazyComponent>;
@@ -99,5 +99,5 @@ export type DefineComponentOptions<
 
 export type LazyComponent<
   N extends string = any,
-  P extends Record<string, PropTypeDefinition> = any
+  P extends Record<string, PropTypeDefinition> = any,
 > = (() => Promise<ComponentFactory<P>>) & ComponentDisplayName<N> & { isLazy: true };

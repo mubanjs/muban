@@ -79,7 +79,7 @@ export type ElementRef<T extends RefElementType = HTMLElement, P extends BindPro
 
 export type CollectionRef<
   T extends RefElementType = HTMLElement,
-  P extends BindProps = BindProps
+  P extends BindProps = BindProps,
 > = {
   type: 'collection';
   getBindingDefinition: (props: BindProps) => CollectionBinding<T, P>;

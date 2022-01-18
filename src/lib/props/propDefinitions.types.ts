@@ -69,11 +69,10 @@ type Keys<T> = keyof T;
 
 // maps String to string, but keeps Date as Date
 // primitives go back to normal, other stuff keep their instance type
-export type ConstructorType<
-  T extends PropTypeDefinition['type']
-> = InstanceType<T> extends InstanceType<typeof String | typeof Boolean | typeof Number>
-  ? ReturnType<T>
-  : InstanceType<T>;
+export type ConstructorType<T extends PropTypeDefinition['type']> =
+  InstanceType<T> extends InstanceType<typeof String | typeof Boolean | typeof Number>
+    ? ReturnType<T>
+    : InstanceType<T>;
 
 type IsAnyPropTypeDefinition<T extends PropTypeDefinition> = 'default' extends Keys<T>
   ? IfAny<T['default'], never, 0>
@@ -95,7 +94,7 @@ export type ExtractType<T extends PropTypeDefinition> = IsAnyPropTypeDefinition<
 // if required is not undefined, then it's set to false, so the type should become optional
 type ExtractOptionalType<
   T extends PropTypeDefinition,
-  V
+  V,
 > = 'missingValue' extends RequiredPropertyKeys<T> ? V | undefined : V;
 
 export type TypedProp<T extends PropTypeDefinition> = ExtractOptionalType<T, ExtractType<T>>;

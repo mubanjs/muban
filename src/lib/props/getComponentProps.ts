@@ -7,9 +7,7 @@ import type {
 import typedObjectEntries from '../type-utils/typedObjectEntries';
 import type { PropTypeDefinition, PropTypeInfo } from './propDefinitions.types';
 
-export type PropertySource = (
-  componentElement: RefElementType,
-) => {
+export type PropertySource = (componentElement: RefElementType) => {
   sourceName: string;
   hasProp: (info: PropTypeInfo) => boolean;
   getProp: (info: PropTypeInfo) => unknown;
@@ -137,9 +135,7 @@ function getValueFromSource(propInfo: PropTypeInfo, sources: Array<ReturnType<Pr
   if (availableSources.length > 1) {
     // eslint-disable-next-line no-console
     console.warn(
-      `Property "${
-        propInfo.name
-      }" is defined in more than one property source: ${availableSources
+      `Property "${propInfo.name}" is defined in more than one property source: ${availableSources
         .map((s) => s.sourceName)
         .join(', ')}. We'll use the first from the list: "${usedSource.sourceName}"`,
     );

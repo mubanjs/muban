@@ -59,7 +59,7 @@ export function bindMap<
   T extends Pick<
     CollectionRef<RefElementType, BindProps> | ComponentsRef<ComponentFactory<any>>,
     'getRefs' | 'getBindingDefinition'
-  >
+  >,
 >(
   target: T,
   getProps: (
@@ -71,7 +71,7 @@ export function bindMap<
   T extends Pick<
     ElementRef<RefElementType, BindProps> | ComponentRef<ComponentFactory<any>>,
     'getBindingDefinition'
-  >
+  >,
 >(
   target: Array<T>,
   getProps: (ref: T, index: number) => Parameters<T['getBindingDefinition']>[0],

@@ -30,7 +30,7 @@ export function watch<T extends MultiWatchSources, Immediate extends Readonly<bo
 ): WatchStopHandle;
 export function watch<
   T extends Readonly<MultiWatchSources>,
-  Immediate extends Readonly<boolean> = false
+  Immediate extends Readonly<boolean> = false,
 >(
   source: T,
   callback: WatchCallback<MapSources<T, false>, MapSources<T, Immediate>>,
