@@ -232,7 +232,12 @@ If you want to select a custom target, pass a function like;
             )
           ) {
             // first, "de-ref" the old array to trigger binding cleanup
-            elementsRef.value.forEach((ref) => ((ref.value as any) = undefined));
+            elementsRef.value.forEach((ref) => {
+              // but only if it doesn't exist in the new array
+              if (!elements.includes(ref)) {
+                (ref as any).value = undefined;
+              }
+            });
 
             elementsRef.value = elements;
           }
@@ -419,7 +424,12 @@ export function refComponents<T extends ComponentFactory<any>>(
             )
           ) {
             // first, "de-ref" the old array to trigger binding cleanup
-            instancesRef.value.forEach((ref) => ((ref.value as any) = undefined));
+            instancesRef.value.forEach((ref) => {
+              // but only if it doesn't exist in the new array
+              if (!components.includes(ref)) {
+                (ref as any).value = undefined;
+              }
+            });
 
             instancesRef.value = components;
           }
