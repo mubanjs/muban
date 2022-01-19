@@ -15,7 +15,9 @@ export function cssBinding(
     if (typeof classes === 'string') {
       // first remove the previously set classes, since our binding has changed
       const previousCssValue = (target as any)[previousCssBindingKey];
-      target.classList.remove(...previousCssValue.split(/\s/gi));
+      if (previousCssValue) {
+        target.classList.remove(...previousCssValue.split(/\s/gi));
+      }
 
       // then store and set our new classes
       (target as any)[previousCssBindingKey] = classes;
