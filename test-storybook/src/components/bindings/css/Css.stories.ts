@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
-import { bind, defineComponent, refCollection, computed, ref, watch, refElement, propType } from '@muban/muban';
+import { bind, defineComponent, computed, ref } from '@muban/muban';
 
 export default {
   title: 'bindings/css',
