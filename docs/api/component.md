@@ -163,17 +163,23 @@ Allows async loading of components when they are actually used, to be used in th
 ```ts
 declare function lazy(
   displayName: string,
-  getComponent: () => Promise<{ lazy: { component: ComponentFactory } }>,
+  getComponent: () => Promise<{ [key: string]: ComponentFactory }>,
+  componentName?: string,
 ): () => Promise<ComponentFactory>;
 ```
 
 See below for how to use it, and what makes it tick.
 
 ```ts
-// in the component that you want to lazy load
-import { supportLazy } from '@muban/muban';
+// in the component you want to lazy load, export a component definition
+import { defineComponent } from '@muban/muban';
 
-export const lazy = supportLazy(MyLazyComponent);
+export const LazyComponent = defineComponent({
+  name: 'lazy-component',
+  setup() {
+    return [];
+  }
+});
 ```
 ```ts
 // in your "parent" component
@@ -184,8 +190,16 @@ defineComponent({
   components: [
     // sync
     SomeSyncComponent,
-    // lazy async
-    lazy('my-lazy-component', () => import(/* webpackExports: "lazy" */ './MyLazyComponent'))
+    /* 
+    lazy will try to asynchronously import the named child component by converting the
+    given displayName to pascal case, in this example it will look for MyLazyComponent
+    inside the imported file './MyLazyComponent'
+
+    If the pascal cased displayName is different than the named export you can pass
+    a third parameter with the name of the named export
+    */
+
+    lazy('my-lazy-component', () => import('./MyLazyComponent'), 'LazyComponent')
   ],
   setup() {
     return [];
@@ -193,21 +207,8 @@ defineComponent({
 });
 ```
 
-::: tip lazy export
-To make importing lazy components consistent, we require a `lazy` export with a set structure.
-Using the `supportLay` helper makes sure it can be properly imported. 
-:::
-
 ::: tip `'my-lazy-component'`
 To know if the component should be loaded, the first `'my-lazy-component'` is needed to detect
 any `data-component` usages in the HTML. Only then the component is actually loaded.
-:::
-
-::: tip webpackExports
-The `/* webpackExports: "lazy" */` comment is needed to _only_ leave the lazy component
-in the code-splitted bundle. Any other exports like templates will be stripped out that way.
-
-**Note** This is a webpack 5 feature. If you can't use webpack 5 yet and care about bundle size,
-consider splitting up your templates and component code into separate files.
 :::
 
