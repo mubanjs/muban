@@ -1,15 +1,12 @@
+import { pascalCase } from 'change-case';
 import type { ComponentFactory, LazyComponent } from '../Component.types';
 
 export function lazy(
   displayName: string,
   getComponent: () => Promise<{ [key: string]: ComponentFactory }>,
-  componentName?: string,
+  exportName?: string,
 ): LazyComponent {
-  const capitalize = ([first, ...rest]: string) => first.toUpperCase() + rest.join('');
-
-  const pascalDisplayName = displayName.split('-').map(capitalize).join('');
-
-  const fn = async () => (await getComponent())[componentName || pascalDisplayName];
+  const fn = async () => (await getComponent())[exportName || pascalCase(displayName)];
 
   fn.displayName = displayName;
   fn.isLazy = true as const;
