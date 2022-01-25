@@ -6,6 +6,23 @@ type ComponentExportName<T extends string, U extends string | undefined> = undef
   ? PascalCase<T>
   : Exclude<U, undefined>;
 
+/**
+ * Lazy loads a component
+ *
+ * Usually the exported component name is equal to the pascal cased version of
+ * the 'name' passed to the defineComponent function, the lazy function expects
+ * the component's named export in the imported file to be equal to the pascal
+ * cased version of the first argument 'displayName'
+ *
+ * If the named export does not match the pascalCased version of 'displayName'
+ * a third argument 'exportName' can be passed, with the exact name of the
+ * exported component
+ *
+ * @param {string} displayName The name of the component declared in the defineComponent() function
+ * @param {function} getComponent A function that returns an import of the component file
+ * @param {string} exportName The name of the exported component
+ * @returns {Object} LazyComponent
+ */
 export function lazy<T extends string, U extends string | undefined>(
   displayName: T,
   getComponent: () => Promise<{ [Key in ComponentExportName<T, U>]: ComponentFactory }>,
@@ -30,13 +47,9 @@ export function lazy<T extends string, U extends string | undefined>(
   return fn;
 }
 
-/*
-This function is doing nothing, it's here only to support projects made with the
-previous pattern:
-
-export const MyComponent = defineComponent({ name: 'my-component' });
-export const lazy = supportLazy(MyComponent);
-*/
+/**
+ * @deprecated
+ */
 export function supportLazy(component: ComponentFactory) {
   return component;
 }
