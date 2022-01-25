@@ -1,4 +1,4 @@
-import { defineComponent, propType, supportLazy } from "@muban/muban";
+import { defineComponent, propType } from "@muban/muban";
 import { isBoolean, optional } from "isntnt";
 
 export const LazyTest = defineComponent({
@@ -11,5 +11,3 @@ export const LazyTest = defineComponent({
     return [];
   },
 });
-
-export const lazy = supportLazy(LazyTest);

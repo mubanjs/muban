@@ -1,5 +1,5 @@
 import { useToggle } from "@muban/hooks";
-import { bind, defineComponent, propType, supportLazy } from "@muban/muban";
+import { bind, defineComponent, propType } from "@muban/muban";
 import { html } from "@muban/template";
 import { optional, isBoolean } from "isntnt";
 
@@ -37,8 +37,6 @@ export const StoryComponent = defineComponent({
     ];
   },
 });
-
-export const lazy = supportLazy(StoryComponent);
 
 export function storyTemplate({initialValue}: { initialValue?: boolean }, ref?: string) {
   return html`<div

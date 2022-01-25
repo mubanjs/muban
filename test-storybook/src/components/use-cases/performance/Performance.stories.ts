@@ -11,9 +11,7 @@ export default {
 export const Icons: Story = {
   render() {
     return {
-      appComponents: [
-        lazy('cf-a2-icon', () => import(/* webpackExports: "lazy" */ './cf-a2-icon/CfA2Icon')),
-      ],
+      appComponents: [lazy('cf-a2-icon', () => import('./cf-a2-icon/CfA2Icon'))],
       component: defineComponent({
         name: 'global-refresh',
         setup() {
@@ -48,10 +46,7 @@ const TextTest = defineComponent({
 export const Text: Story = {
   render() {
     return {
-      appComponents: [
-        lazy('cf-a2-icon', () => import(/* webpackExports: "lazy" */ './cf-a2-icon/CfA2Icon')),
-        TextTest,
-      ],
+      appComponents: [lazy('cf-a2-icon', () => import('./cf-a2-icon/CfA2Icon')), TextTest],
       component: defineComponent({
         name: 'global-refresh',
         setup() {

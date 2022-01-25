@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/naming-convention */
 import { html } from '@muban/template';
-import { supportLazy } from '../../../../../src/lib/api/apiLazy';
 import { defineComponent } from '../../../../../src/lib/Component';
 import { bind } from '../../../../../src/lib/bindings/bindingDefinitions';
 import { buttonTemplate } from '../button/Button.template';
@@ -48,5 +47,3 @@ export const meta = {
   component: ProductCard,
   template: productCard,
 };
-
-export const lazy = supportLazy(ProductCard);
