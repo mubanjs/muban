@@ -7,16 +7,21 @@ type ComponentExportName<T extends string, U extends string | undefined> = undef
   : Exclude<U, undefined>;
 
 /**
- * Lazy loads a component
+ * A wrapper to allow the registration of "lazy" components.
  *
- * Usually the exported component name is equal to the pascal cased version of
- * the 'name' passed to the defineComponent function, the lazy function expects
- * the component's named export in the imported file to be equal to the pascal
- * cased version of the first argument 'displayName'
+ * Instead of providing an actual Component to the `components` array within
+ * `defineComponent`, this wrapper can be used to provide a "lazy" component.
  *
- * If the named export does not match the pascalCased version of 'displayName'
- * a third argument 'exportName' can be passed, with the exact name of the
- * exported component
+ * Lazy components are only loaded when the passed `displayName`
+ * (1st parameter) exists as a `data-component` attribute in the DOM.
+ *
+ * When that is the case, the `getComponent` (2nd parameter) is called, which
+ * should return a `Promise` with the module exports.
+ *
+ * Once loaded, it tries to use the export that matches the `PascalCase` version
+ * of the `displayName` (which is the default convention). If for some reason
+ * the export doesn't match this convention, or a file exports two components,
+ * you can provide the `exportName` (3rd parameter) to be used instead.
  *
  * @param {string} displayName The name of the component declared in the defineComponent() function
  * @param {function} getComponent A function that returns an import of the component file
