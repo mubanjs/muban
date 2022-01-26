@@ -7,6 +7,7 @@ import {
   ref,
   refCollection,
   ComponentFactory,
+  ComponentRefItem,
 } from '@muban/muban';
 import { screen, userEvent } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
@@ -61,19 +62,26 @@ const interactiveTest = async () => {
   await expect(screen.getByTestId('box').classList.value).toBe('box');
 };
 
-const createCssComponent = (setup: (context) => Array<Binding>) => {
+const createCssComponent = (
+  setup: (context) => Array<Binding>,
+  refs: Record<string, ComponentRefItem> = {},
+) => {
   return defineComponent({
     name: 'css',
     refs: {
       box: 'box',
       info: 'info',
       checkboxes: refCollection('checkbox'),
+      ...refs,
     },
     setup,
   });
 };
 
-const createCssStory = (component: ComponentFactory<any>) => {
+const createCssStory = (
+  component: ComponentFactory<any>,
+  play: () => Promise<void> = interactiveTest,
+) => {
   return {
     render() {
       return {
@@ -81,7 +89,7 @@ const createCssStory = (component: ComponentFactory<any>) => {
         template: cssTemplate,
       };
     },
-    play: interactiveTest,
+    play,
   };
 };
 
@@ -101,6 +109,46 @@ export const CssObject: Story = createCssStory(
       bind(refs.checkboxes, { checked: checkedClasses, initialValueSource: 'binding' }),
     ];
   }),
+);
+
+export const CssObjectWithMultipleClassnames: Story = createCssStory(
+  createCssComponent(({ refs }) => {
+    const classList = Array.from(
+      refs.checkboxes.getElements(),
+      (checkbox) => (<HTMLInputElement>checkbox).defaultValue,
+    );
+    const checkedClasses = ref(['box', 'bg-primary']);
+    const selectedClasses = computed(() =>
+      classList.reduce(
+        (o, key, i) => ({ ...o, [`${key} foobar${i}`]: checkedClasses.value.includes(key) }),
+        {},
+      ),
+    );
+    return [
+      bind(refs.info, { text: computed(() => JSON.stringify(selectedClasses.value)) }),
+      bind(refs.box, { css: selectedClasses }),
+      bind(refs.checkboxes, { checked: checkedClasses, initialValueSource: 'binding' }),
+    ];
+  }),
+  async () => {
+    await expect(screen.getByTestId('box').classList.value).toBe('box bg-primary foobar0 foobar1');
+    await userEvent.click(screen.getByTestId('checkbox-text-success'));
+    await expect(screen.getByTestId('box').classList.value).toBe(
+      'box bg-primary foobar0 foobar1 text-success foobar2',
+    );
+    await userEvent.click(screen.getByTestId('checkbox-fs-3'));
+    await expect(screen.getByTestId('box').classList.value).toBe(
+      'box bg-primary foobar0 foobar1 text-success foobar2 fs-3 foobar3',
+    );
+    await userEvent.click(screen.getByTestId('checkbox-bg-primary'));
+    await expect(screen.getByTestId('box').classList.value).toBe(
+      'box foobar0 text-success foobar2 fs-3 foobar3',
+    );
+    await userEvent.click(screen.getByTestId('checkbox-text-success'));
+    await expect(screen.getByTestId('box').classList.value).toBe('box foobar0 fs-3 foobar3');
+    await userEvent.click(screen.getByTestId('checkbox-fs-3'));
+    await expect(screen.getByTestId('box').classList.value).toBe('box foobar0');
+  },
 );
 
 export const CssString: Story = createCssStory(
