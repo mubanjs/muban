@@ -1,5 +1,5 @@
 import { computed } from '@vue/reactivity';
-import { bind, defineComponent, propType, supportLazy } from '../../../../../src';
+import { bind, defineComponent, propType } from '../../../../../src';
 import { isIcon, svgContext } from './CfA2Icon.config';
 
 import './cf-a2-icon.scss';
@@ -17,5 +17,3 @@ export const CfA2Icon = defineComponent({
     ];
   },
 });
-
-export const lazy = supportLazy(CfA2Icon);

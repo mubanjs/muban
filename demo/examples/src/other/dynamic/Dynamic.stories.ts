@@ -20,11 +20,8 @@ export default {
 
 registerGlobalComponent(
   ToggleExpand,
-  lazy(
-    'product-card',
-    () => import(/* webpackExports: "lazy" */ '../filter-products/FilterProducts.card'),
-  ),
-  lazy('lazy-test', () => import(/* webpackExports: "lazy" */ './LazyTest')),
+  lazy('product-card', () => import('../filter-products/FilterProducts.card')),
+  lazy('lazy-test', () => import('./LazyTest')),
 );
 
 export const Default: Story<DynamicProps> = () => meta;

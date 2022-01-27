@@ -1,5 +1,4 @@
-import { computed } from '@vue/reactivity';
-import { bind, defineComponent, propType, supportLazy } from '@muban/muban';
+import { bind, defineComponent, propType, computed } from '@muban/muban';
 import { isIcon, svgContext } from './CfA2Icon.config';
 
 export const CfA2Icon = defineComponent({
@@ -15,5 +14,3 @@ export const CfA2Icon = defineComponent({
     ];
   },
 });
-
-export const lazy = supportLazy(CfA2Icon);

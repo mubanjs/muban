@@ -84,7 +84,7 @@ app.component(ToggleExpand);
 
 // register a lazy component
 app.component(
-  lazy('lazy-test', () => import(/* webpackExports: "lazy" */ './LazyTest'))
+  lazy('lazy-test', () => import('./LazyTest'))
 );
 
 // or register multiple at the same time
@@ -92,9 +92,9 @@ app.component(
   ToggleExpand,
   lazy(
     'product-card',
-    () => import(/* webpackExports: "lazy" */ '../filter-products/FilterProducts.card'),
+    () => import('../filter-products/FilterProducts.card'),
   ),
-  lazy('lazy-test', () => import(/* webpackExports: "lazy" */ './LazyTest')),
+  lazy('lazy-test', () => import('./LazyTest')),
 );
 ```
 

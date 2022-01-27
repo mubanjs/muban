@@ -1,7 +1,6 @@
 import { html } from '@muban/template';
 import { computed, ref } from '@vue/reactivity';
 import { bind, defineComponent } from '../../../../../src';
-import { supportLazy } from '../../../../../src/lib/api/apiLazy';
 
 export const displayName = 'lazy-test';
 
@@ -29,5 +28,3 @@ export function lazyTestTemplate({ label }: LazyTestTemplateProps): string {
     ${label}
   </button>`;
 }
-
-export const lazy = supportLazy(LazyTest);
