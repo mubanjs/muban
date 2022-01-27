@@ -1,21 +1,23 @@
-module.exports = {
+import { defineUserConfig } from 'vuepress';
+import type { DefaultThemeOptions } from 'vuepress';
+
+export default defineUserConfig<DefaultThemeOptions>({
   title: 'Muban',
   description: 'Writing components for server-rendered HTML',
   base: '/muban/',
   themeConfig: {
-    nav: [
+    repo: 'mubanjs/muban',
+    docsDir: 'docs',
+    navbar: [
       { text: 'Home', link: '/' },
       { text: 'Guide', link: '/guide/' },
       { text: 'Api', link: '/api/' },
       { text: 'Changelog', link: '/changelog/' },
       { text: 'Research', link: '/research/' },
     ],
-    repo: 'mubanjs/muban',
-    docsDir: 'docs',
     // displayAllHeaders: true,
     sidebarDepth: 2,
     sidebar: {
-
       '/guide/': [
         '', // getting started
         'app',
@@ -48,14 +50,10 @@ module.exports = {
         'pure-rendering',
       ],
 
-      '/changelog/': [
-        '',
-      ],
+      '/changelog/': [''],
 
       // fallback
-      '/': [
-        '',        /* / */
-      ]
-    }
-  }
-}
+      '/': ['' /* / */],
+    },
+  },
+});
