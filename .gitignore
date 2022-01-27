@@ -40,3 +40,6 @@ yarn-error.log*
 /decl
 
 /examples/src/vendor/gsap-bonus.tgz
+
+.cache
+.temp

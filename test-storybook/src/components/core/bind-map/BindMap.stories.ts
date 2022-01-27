@@ -12,7 +12,7 @@ import {
   computed,
   ref,
 } from '@muban/muban';
-import { BindMapItem, bindMapItemTemplate } from './Item';
+import { BindMapItem, BindMapItem2, bindMapItem2Template, bindMapItemTemplate } from "./Item";
 
 export default {
   title: 'core/bind/bindMap',
@@ -80,6 +80,37 @@ export const BindMapComponents: Story = () => {
 };
 BindMapComponents.storyName = 'refComponents';
 
+// TODO: type of `getProps` doesn't intersect correctly
+export const BindMapComponentsMultiple: Story = () => {
+  return {
+    component: defineComponent({
+      name: 'bindMap',
+      refs: {
+        items: refComponents([BindMapItem, BindMapItem2]),
+      },
+      setup({ refs }) {
+        const activeValue = ref<string | null>(null);
+        return [
+          ...bindMap(refs.items, (ref) => ({
+            isActive: computed(() => activeValue.value === ref.component?.props.value),
+            onActivate() {
+              activeValue.value = ref.component?.props.value ?? null;
+            },
+            event: {
+              mouseenter: () => console.log('mouse enter'),
+            },
+          })),
+        ];
+      },
+    }),
+    template: () => html` <div data-component="bindMap">
+      ${['foo', 'bar', 'baz'].map((label) => bindMapItemTemplate({ label }))}
+      ${['foo', 'bar', 'baz'].map((label) => bindMapItem2Template({ label }))}
+    </div>`,
+  };
+};
+BindMapComponentsMultiple.storyName = 'refComponents multiple';
+
 export const BindMapElementArray: Story = () => ({
   component: defineComponent({
     name: 'bindMap',
@@ -136,6 +167,37 @@ export const BindMapComponentsArray: Story = () => {
   };
 };
 BindMapComponentsArray.storyName = 'refComponent Array';
+
+// TODO: type of `getProps` doesn't intersect correctly
+export const BindMapComponentsArrayMultiple: Story = () => {
+  return {
+    component: defineComponent({
+      name: 'bindMap',
+      refs: {
+        fooButton: refComponent(BindMapItem, { ref: 'foo' }),
+        barButton: refComponent(BindMapItem, { ref: 'bar' }),
+        bazButton: refComponent(BindMapItem2, { ref: 'baz' }),
+      },
+      setup({ refs }) {
+        const activeValue = ref<string | null>(null);
+        return [
+          ...bindMap([refs.fooButton, refs.barButton, refs.bazButton], (ref) => ({
+            isActive: computed(() => activeValue.value === ref.component?.props.value),
+            onActivate: () => {
+              console.log('activate');
+              activeValue.value = ref.component?.props.value ?? null;
+            },
+          })),
+        ];
+      },
+    }),
+    template: () => html` <div data-component="bindMap">
+      ${['foo', 'bar'].map((label) => bindMapItemTemplate({ label }, label))}
+      ${['baz'].map((label) => bindMapItem2Template({ label }, label))}
+    </div>`,
+  };
+};
+BindMapComponentsArrayMultiple.storyName = 'refComponent Array Multiple';
 
 export const BindMapLiveList: Story = () => ({
   component: defineComponent({

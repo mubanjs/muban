@@ -5,7 +5,7 @@ import type {
   TypedRefs,
 } from '../refs/refDefinitions.types';
 import typedObjectEntries from '../type-utils/typedObjectEntries';
-import type { PropTypeDefinition, PropTypeInfo } from './propDefinitions.types';
+import type { PropTypeDefinition, PropTypeInfo, SourceOption } from './propDefinitions.types';
 
 export type PropertySource = (componentElement: RefElementType) => {
   sourceName: string;
@@ -18,53 +18,51 @@ function convertToInternalPropInfo(
   propName: string,
   propDefinition: PropTypeDefinition,
   refs: TypedRefs<Record<string, ResolvedComponentRefItem>>,
-): PropTypeInfo {
+): Array<PropTypeInfo> {
   const { type, default: defaultValue, isOptional, validator } = propDefinition;
 
-  let target: RefElementType | undefined;
-  // resolve refs into elements
-  if (propDefinition.sourceOptions?.target) {
-    const targetRef = refs[propDefinition.sourceOptions?.target];
-    if (!targetRef) {
-      // eslint-disable-next-line no-console
-      console.error(
-        `Property "${propName}" would like to use target "${propDefinition.sourceOptions?.target}", but is not found in available refs.`,
-        Object.keys(refs),
-      );
+  const getPropInfo = (sourceOption: SourceOption): PropTypeInfo => {
+    let target: RefElementType | undefined;
+    // resolve refs into elements
+    if (sourceOption?.target) {
+      const targetRef = sourceOption.target ? refs[sourceOption.target] : undefined;
+      if (!targetRef) {
+        // eslint-disable-next-line no-console
+        console.error(
+          `Property "${propName}" would like to use target "${sourceOption?.target}", but is not found in available refs.`,
+          Object.keys(refs),
+        );
+      } else {
+        // TODO: support collections... but how?
+        if (targetRef.type === 'element' && targetRef.element) {
+          target = targetRef.element;
+        }
+        if (targetRef.type === 'component' && targetRef.component?.element) {
+          target = targetRef.component.element;
+        }
+      }
     } else {
-      // TODO: support collections... but how?
-      if (targetRef.type === 'element' && targetRef.element) {
-        target = targetRef.element;
-      }
-      if (targetRef.type === 'component' && targetRef.component?.element) {
-        target = targetRef.component.element;
-      }
+      target = element;
     }
-  } else {
-    target = element;
-  }
 
-  return {
-    name: propName,
-    type,
-    default: defaultValue,
-    isOptional,
-    validator,
-    source: {
-      name:
-        (propDefinition.sourceOptions &&
-          'name' in propDefinition.sourceOptions &&
-          propDefinition.sourceOptions.name) ||
-        propName,
-      target,
-      type: propDefinition.sourceOptions?.type,
-      options:
-        (propDefinition.sourceOptions &&
-          'options' in propDefinition.sourceOptions &&
-          propDefinition.sourceOptions.options) ||
-        undefined,
-    },
+    return {
+      name: propName,
+      type,
+      default: defaultValue,
+      isOptional,
+      validator,
+      source: {
+        name: (sourceOption && 'name' in sourceOption && sourceOption.name) || propName,
+        target,
+        type: sourceOption?.type,
+        options: (sourceOption && 'options' in sourceOption && sourceOption.options) || undefined,
+      },
+    };
   };
+
+  return propDefinition.sourceOptions instanceof Array
+    ? propDefinition.sourceOptions?.map(getPropInfo)
+    : [getPropInfo(propDefinition.sourceOptions as SourceOption)];
 }
 
 function errorUnlessOptional(
@@ -80,7 +78,21 @@ function errorUnlessOptional(
   return undefined;
 }
 
-function getValueFromSource(propInfo: PropTypeInfo, sources: Array<ReturnType<PropertySource>>) {
+export function getValueFromMultipleSources(
+  propInfo: Array<PropTypeInfo>,
+  sources: Array<ReturnType<PropertySource>>,
+): unknown {
+  for (const info of propInfo) {
+    try {
+      return getValueFromSource(info, sources);
+    } catch {}
+  }
+}
+
+export function getValueFromSource(
+  propInfo: PropTypeInfo,
+  sources: Array<ReturnType<PropertySource>>,
+) {
   // if target cannot be found, just return undefined
   if (!propInfo.source.target) {
     return errorUnlessOptional(
@@ -158,10 +170,10 @@ export function getComponentProps(
 
       // TODO: ignore function prop types for some sources?
 
-      let extractedValue;
+      let extractedValue: unknown;
 
       try {
-        extractedValue = getValueFromSource(propInfo, sources);
+        extractedValue = getValueFromMultipleSources(propInfo, sources);
       } catch {
         return accumulator;
       }
@@ -176,7 +188,7 @@ export function getComponentProps(
         if (!propType.validator(extractedValue)) {
           // TODO: should we indeed throw errors here, or resolve the value to undefined?
           throw new Error(
-            `Validation Error: This prop value ("${extractedValue}") is not valid for: ${propInfo.name}`,
+            `Validation Error: This prop value ("${extractedValue}") is not valid for:`,
           );
         }
       }
