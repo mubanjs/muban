@@ -56,4 +56,5 @@ export default defineUserConfig<DefaultThemeOptions>({
       '/': ['' /* / */],
     },
   },
+  plugins: [['@vuepress/plugin-search']],
 });
