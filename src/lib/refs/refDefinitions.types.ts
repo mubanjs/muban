@@ -115,7 +115,7 @@ export type AnyRef<T extends RefElementType> =
 
 // Turn the keys of an object into the types, or a Ref around that type
 export type RefOrValue<T extends Record<string, any>> = {
-  [P in keyof T]: T[P] | Ref<T[P]>;
+  [P in keyof T]: T[P] extends Function ? T[P] | Ref<T[P]> : Ref<T[P]>;
 };
 
 export type ComponentParams<T> = ComponentSetPropsParam<T> &
