@@ -2,10 +2,9 @@ import { html } from '@muban/template';
 import type { Story } from '@muban/storybook';
 import type { ComponentFactory, ComponentRefItem } from '@muban/muban';
 import { bind, defineComponent, computed, ref, refCollection } from '@muban/muban';
-import { screen, userEvent} from '@storybook/testing-library';
+import { screen, userEvent } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
 import type { Binding } from '@muban/muban/types/lib/bindings/bindings.types';
-
 
 export default {
   title: 'bindings/css',
@@ -39,17 +38,17 @@ const cssTemplate = () => html` <div data-component="css">
 </div>`;
 
 const interactiveTest = async () => {
-  await expect(screen.getByTestId('box').classList.value).toBe('box bg-primary');
+  await expect(screen.getByTestId('box')).toHaveClass('box bg-primary');
   await userEvent.click(screen.getByTestId('checkbox-text-success'));
-  await expect(screen.getByTestId('box').classList.value).toBe('box bg-primary text-success');
+  await expect(screen.getByTestId('box')).toHaveClass('box bg-primary text-success');
   await userEvent.click(screen.getByTestId('checkbox-fs-3'));
-  await expect(screen.getByTestId('box').classList.value).toBe('box bg-primary text-success fs-3');
+  await expect(screen.getByTestId('box')).toHaveClass('box bg-primary text-success fs-3');
   await userEvent.click(screen.getByTestId('checkbox-bg-primary'));
-  await expect(screen.getByTestId('box').classList.value).toBe('box text-success fs-3');
+  await expect(screen.getByTestId('box')).toHaveClass('box text-success fs-3');
   await userEvent.click(screen.getByTestId('checkbox-text-success'));
-  await expect(screen.getByTestId('box').classList.value).toBe('box fs-3');
+  await expect(screen.getByTestId('box')).toHaveClass('box fs-3');
   await userEvent.click(screen.getByTestId('checkbox-fs-3'));
-  await expect(screen.getByTestId('box').classList.value).toBe('box');
+  await expect(screen.getByTestId('box')).toHaveClass('box');
 };
 
 const createCssComponent = (
@@ -121,23 +120,21 @@ export const CssObjectWithMultipleClassnames: Story = createCssStory(
     ];
   }),
   async () => {
-    await expect(screen.getByTestId('box').classList.value).toBe('box bg-primary foobar0');
+    await expect(screen.getByTestId('box')).toHaveClass('box bg-primary foobar0');
     await userEvent.click(screen.getByTestId('checkbox-text-success'));
-    await expect(screen.getByTestId('box').classList.value).toBe(
+    await expect(screen.getByTestId('box')).toHaveClass(
       'box bg-primary foobar0 text-success foobar1',
     );
     await userEvent.click(screen.getByTestId('checkbox-fs-3'));
-    await expect(screen.getByTestId('box').classList.value).toBe(
+    await expect(screen.getByTestId('box')).toHaveClass(
       'box bg-primary foobar0 text-success foobar1 fs-3 foobar2',
     );
     await userEvent.click(screen.getByTestId('checkbox-bg-primary'));
-    await expect(screen.getByTestId('box').classList.value).toBe(
-      'box text-success foobar1 fs-3 foobar2',
-    );
+    await expect(screen.getByTestId('box')).toHaveClass('box text-success foobar1 fs-3 foobar2');
     await userEvent.click(screen.getByTestId('checkbox-text-success'));
-    await expect(screen.getByTestId('box').classList.value).toBe('box fs-3 foobar2');
+    await expect(screen.getByTestId('box')).toHaveClass('box fs-3 foobar2');
     await userEvent.click(screen.getByTestId('checkbox-fs-3'));
-    await expect(screen.getByTestId('box').classList.value).toBe('box');
+    await expect(screen.getByTestId('box')).toHaveClass('box');
   },
 );
 
