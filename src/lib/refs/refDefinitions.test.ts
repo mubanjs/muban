@@ -292,6 +292,35 @@ describe('refComponent', () => {
       const element = ref.queryRef(parent);
       expect(element?.dataset.ref).toEqual('foo');
     });
+    it('should return the correct component based on data-component', () => {
+      const parent = createComponentTemplateElement(
+        `<div>
+          <div data-component="child-component">
+            <span data-component="test" data-type="nested-child-component">foo</span>
+          </div>
+          <span data-component="test" data-type="first-child-component">foo</span>
+          <span data-component="test" data-type="second-child-component">foo</span>
+        </div>`,
+      );
+      const ref = refComponent(TestComponent);
+      const element = ref.queryRef(parent);
+      expect(element?.dataset.type).toEqual('first-child-component');
+    });
+    it('should return the correct component element based on data-ref', () => {
+      const parent = createComponentTemplateElement(
+        `<div>
+          <div data-component="child-component">
+            <span data-component="test" data-ref="child-ref" data-type="nested-child-component">foo</span>
+          </div>
+          <span data-component="test" data-type="first-child-component" data-ref="child-ref">foo</span>
+          <span data-component="test" data-type="second-child-component" data-ref="child-ref">foo</span>
+        </div>`,
+      );
+      const ref = refComponent(TestComponent, { ref: 'child-ref' });
+      const element = ref.queryRef(parent);
+      expect(element?.dataset.ref).toEqual('child-ref');
+      expect(element?.dataset.type).toEqual('first-child-component');
+    });
     it('should return null for invalid match', () => {
       const parent = createComponentTemplateElement(`<span data-component="foobar">foo</span>`);
       const ref = refComponent(TestComponent);

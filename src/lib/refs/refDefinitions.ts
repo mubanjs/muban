@@ -113,7 +113,14 @@ export function refElement<T extends RefElementType = HTMLElement>(
         element = refIdOrQuery(parent);
       } else {
         try {
-          element = (parent.querySelector<T>(`[data-ref="${this.ref}"]`) ?? null) as T | null;
+          const elementList = parent.querySelectorAll<T>(
+            `[data-ref="${this.ref}"]`,
+          ) as NodeListOf<T>;
+
+          element =
+            Array.from(elementList).find((elementInList) =>
+              ensureElementIsComponentChild(parent, elementInList, ignoreGuard),
+            ) || null;
         } catch (error) {
           if (error instanceof DOMException) {
             // eslint-disable-next-line no-console
@@ -283,7 +290,12 @@ export function refComponent<T extends ComponentFactory<any>>(
       if (typeof refIdOrQuery === 'function') {
         element = refIdOrQuery(parent);
       } else {
-        element = parent.querySelector<HTMLElement>(getQuery()) ?? null;
+        const elementList = parent.querySelectorAll<HTMLElement>(getQuery());
+
+        element =
+          Array.from(elementList).find((elementInList) =>
+            ensureElementIsComponentChild(parent, elementInList, ignoreGuard),
+          ) || null;
       }
       if (element && !components.some((c) => c.displayName === element?.dataset.component)) {
         console.error(
