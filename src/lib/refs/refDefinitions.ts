@@ -108,19 +108,18 @@ export function refElement<T extends RefElementType = HTMLElement>(
         return parent as T | null;
       }
 
-      let element: T | null;
       if (typeof refIdOrQuery === 'function') {
-        element = refIdOrQuery(parent);
+        const element: T | null = refIdOrQuery(parent);
+        return ensureElementIsComponentChild(parent, element, ignoreGuard);
       } else {
         try {
-          const elementList = parent.querySelectorAll<T>(
-            `[data-ref="${this.ref}"]`,
-          ) as NodeListOf<T>;
+          const elementList = parent.querySelectorAll<T>(`[data-ref="${this.ref}"]`);
 
-          element =
+          return (
             Array.from(elementList).find((elementInList) =>
               ensureElementIsComponentChild(parent, elementInList, ignoreGuard),
-            ) || null;
+            ) || null
+          );
         } catch (error) {
           if (error instanceof DOMException) {
             // eslint-disable-next-line no-console
@@ -134,7 +133,6 @@ If you want to select a custom target, pass a function like;
           throw error;
         }
       }
-      return ensureElementIsComponentChild(parent, element, ignoreGuard);
     },
     createRef(instance) {
       const elementRef = ref<T>();
