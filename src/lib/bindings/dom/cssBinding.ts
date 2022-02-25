@@ -15,11 +15,15 @@ export function cssBinding(
     if (typeof classes === 'string') {
       // first remove the previously set classes, since our binding has changed
       const previousCssValue = (target as any)[previousCssBindingKey];
-      target.classList.remove(...previousCssValue.split(/\s/gi));
+      if (previousCssValue) {
+        target.classList.remove(...previousCssValue.split(/\s/gi));
+      }
 
-      // then store and set our new classes
+      // then store and set our new classes, if they exist.
       (target as any)[previousCssBindingKey] = classes;
-      target.classList.add(...classes.split(/\s/gi));
+      if (classes.length > 0) {
+        target.classList.add(...classes.split(/\s/gi));
+      }
     } else {
       Object.entries(classes).forEach(([name, shouldHaveClass]) => {
         name.split(/\s/gi).forEach((className) => {
