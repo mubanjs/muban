@@ -57,6 +57,8 @@ function createTest<P extends Record<string, PropTypeDefinition> = any>(options:
 const x = createTest({
   props: {
     foo: propType.string,
+    onChange: propType.func.shape<(event: MouseEvent) => void>(),
+    onClick: propType.func.optional.shape<(event: MouseEvent) => void>(),
   },
 });
 const y = createTest({});

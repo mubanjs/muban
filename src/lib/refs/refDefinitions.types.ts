@@ -115,7 +115,8 @@ export type AnyRef<T extends RefElementType> =
 
 // Turn the keys of an object into the types, or a Ref around that type
 export type RefOrValue<T extends Record<string, any>> = {
-  [P in keyof T]: T[P] extends Function ? T[P] | Ref<T[P]> : Ref<T[P]>;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  [P in keyof T]: Exclude<T[P], undefined> extends Function ? T[P] | Ref<T[P]> : Ref<T[P]>;
 };
 
 export type ComponentParams<T> = ComponentSetPropsParam<T> &
