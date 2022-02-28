@@ -45,8 +45,8 @@
   },
   "dependencies": {
     "@types/json-parse-better-errors": "^1.0.0",
-    "@vue/reactivity": "^3.2.22",
-    "@vue/runtime-core": "^3.2.22",
+    "@vue/reactivity": "^3.2.31",
+    "@vue/runtime-core": "^3.2.31",
     "change-case": "^4.1.2",
     "html-extract-data": "^1.2.3",
     "isntnt": "^1.4.4",
