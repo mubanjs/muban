@@ -38,7 +38,8 @@
     "test": "jest ./src/",
     "check-types": "tsc --project tsconfig.json --noEmit --noUnusedLocals",
     "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
+    "docs:build": "vuepress build docs",
+    "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
     "@muban/template": "^1.0.0-alpha.1"
