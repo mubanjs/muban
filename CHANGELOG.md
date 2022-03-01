@@ -99,6 +99,15 @@ the new behaviour. Previously you would have to be explicit about when the `bind
 render immediately or not, while the new implementation does this based on the existence of any HTML
 inside the container. `forceImmediateRender` can override this behaviour.
 
+> **Note:** Previously, `watch` was used to watch for explicit changes to the passed computed.
+> This would have been "shallow" by default, and other reactive data used in the template
+> function would not trigger a rerender.
+>
+> The new implementation uses `watchEffect`, which is triggered by any reactive updates in the
+> `onUpdate` function, but also watches refs that have nested objects deeply by default.
+>
+> To only update changes to the `ref.value`, a `shallowRef` can be used instead.
+
 ### Added
 
 - Allow the `.source()` option of the `propType.` helper to receive an array of source
