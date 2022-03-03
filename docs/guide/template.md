@@ -346,7 +346,7 @@ html`<p>It's &lt; 9000</p>`;
 
 ### False values on data attributes
 
-HTML data attributes with false values will be stringified in the resulting HTML
+HTML `data-` attributes with `false` values will be stringified in the resulting HTML
 
 ```html
 html`<div data-test=${false}>foo</div>`
@@ -370,4 +370,4 @@ Will become
 <div data-test="false">foo</div>
 ```
 
-Non data attributes with a false value will be ignored in the resulting HTML
+Non data attributes with a `false` value will be ignored in the resulting HTML
