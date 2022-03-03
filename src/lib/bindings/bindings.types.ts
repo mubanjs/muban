@@ -53,3 +53,4 @@ export type BindingsHelpers = {
 };
 
 export type DataBinding<T> = (element: HTMLSelectElement, value: T | Ref<T>) => void;
+export type StyleBindingProperty = string | null | undefined | false;
