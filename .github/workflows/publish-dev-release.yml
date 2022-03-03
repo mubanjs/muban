@@ -1,0 +1,38 @@
+name: Publish dev release
+
+on:
+  push:
+    branches: [next]
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'npm'
+
+      - name: Install npm packages
+        run: npm ci
+
+      - name: Setup Git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: bump version
+        run: |
+          echo "$(npm pkg get version | cut -d '"' -f 2 | cut -d '-' -f 1)-dev.$(git rev-parse --short HEAD)" | xargs npm version --no-git-tag-version
+
+      - name: publish
+        run: |
+          npm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
+          npm publish --tag next
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
