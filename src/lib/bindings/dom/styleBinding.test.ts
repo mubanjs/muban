@@ -18,7 +18,7 @@ describe('styleBinding', () => {
       .getAttribute('style')!
       .split(';')
       .filter((property) => property.length > 0)
-      .map((property) => [property.split(':')[0].trim(), property.split(':')[1].trim()]);
+      .map((property) => property.split(':').map((s) => s.trim()));
 
     const styleObject = Object.fromEntries(styleEntries);
 
