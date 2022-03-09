@@ -1,6 +1,7 @@
 import dedent from 'ts-dedent';
 import type { PropertySource } from '../getComponentProps';
 import { convertSourceValue } from './convertSourceValue';
+import flow from 'lodash/flow';
 
 export function createFormPropertySource(): PropertySource {
   return () => {
@@ -8,56 +9,85 @@ export function createFormPropertySource(): PropertySource {
       sourceName: 'form',
       hasProp: (propInfo) => Boolean(propInfo.source.target && propInfo.type !== Function),
       getProp: (propInfo) => {
-        // let value;
-        const element = propInfo.source.target;
-
-        const isForm = element && element.nodeName === 'FORM';
-        const isInput = element && element?.nodeName === 'INPUT';
-
-        if (!isForm && !isInput) {
+        const element = propInfo.source.target!;
+        const isCheckbox =
+          element.nodeName === 'INPUT' && (element as HTMLInputElement).type === 'checkbox';
+        const isForm = element.nodeName === 'FORM';
+        const isInput =
+          ['INPUT', 'TEXTAREA', 'SELECT'].includes(element.nodeName) &&
+          (element as HTMLInputElement).type !== 'checkbox';
+        const isMultiSelect =
+          element.nodeName === 'SELECT' && (element as HTMLSelectElement).multiple;
+        const isFile =
+          element.nodeName === 'INPUT' && (element as HTMLInputElement).type === 'file';
+        const isValidtag = ['INPUT', 'FORM', 'TEXTAREA', 'SELECT'].includes(element.nodeName);
+        if (!isValidtag) {
           console.warn(
-            dedent`The property "${propInfo.name}" of type "${propInfo.type.name}" requires a valid 'form' or 'input' element
+            dedent`The property "${propInfo.name}" of type "${propInfo.type.name}" requires an element of type input, form, textarea, or select. ${element.nodeName} was given
               Returning "undefined".`,
           );
           return undefined;
         }
 
-        if (isForm) {
-          const formData = new FormData(element as HTMLFormElement);
-          const childInputValue = formData.get(propInfo.source.name || '');
+        const formDataValue = (prevValue: unknown) => {
+          if (isForm) {
+            if (propInfo.type !== Object && !propInfo.source.name) {
+              console.warn(
+                dedent`The property "${propInfo.name}" is trying to get a FormData object but is type "${propInfo.type.name}", set it as type "Object"
+                  Returning "undefined".`,
+              );
+              return undefined;
+            }
+            const formData = new FormData(element as HTMLFormElement);
+            const childInputValue = formData.getAll(propInfo.source.name || '');
+            const value =
+              propInfo.type === Array
+                ? childInputValue
+                : convertSourceValue(propInfo, (childInputValue[0] as string) || '');
 
-          if (propInfo.type !== Object && !propInfo.source.name) {
-            console.warn(
-              dedent`The property "${propInfo.name}" is trying to get a FormData object but is type "${propInfo.type.name}", set it as type "Object"
-                Returning "undefined".`,
-            );
-            return undefined;
+            return childInputValue.length ? value : formData;
           }
-          return childInputValue
-            ? convertSourceValue(propInfo, childInputValue as string)
-            : formData;
-        }
+          return prevValue;
+        };
 
-        if (isInput) {
-          return (element as HTMLInputElement).value;
-        }
+        const textInput = (prevValue: unknown) => {
+          const input = element as HTMLInputElement;
+          if (isInput && !input.multiple) return convertSourceValue(propInfo, input.value);
+          return prevValue;
+        };
 
-        return undefined;
+        const checkbox = (prevValue: unknown) => {
+          const input = element as HTMLInputElement;
+          if (isCheckbox) return input.checked;
+          return prevValue;
+        };
 
-        /* if(isValidInput) {
-          const formData = new FormData(element as HTMLFormElement);
-          return formData.get(propInfo.source.name) || formData;
-        }
+        const nonBooleanCheckbox = (prevValue: unknown) => {
+          const input = element as HTMLInputElement;
+          if (isCheckbox && propInfo.type !== Boolean)
+            return convertSourceValue(propInfo, input.value);
+          return prevValue;
+        };
 
-        if(value != undefined) {
-          return convertSourceValue(propInfo, value);
-        } */
+        const multiSelect = (prevValue: unknown) => {
+          if (isMultiSelect) {
+            return Array.from((element as HTMLSelectElement).selectedOptions).map(
+              (option) => option.value,
+            );
+          }
+          return prevValue;
+        };
 
-        //  const getDirectValue = propInfo.source.target?.nodeType
-        /* propInfo.name
-        propInfo.source
-        propInfo.type
-        propInfo.isOptional */
+        const file = (prevValue: unknown) => {
+          const input = element as HTMLInputElement;
+          if (isFile) {
+            if (propInfo.type === Object) input.files?.length ? input.files[0] : undefined;
+            if (propInfo.type === Array) input.files;
+          }
+          return prevValue;
+        };
+
+        return flow([formDataValue, textInput, checkbox, nonBooleanCheckbox, multiSelect, file])();
       },
     };
   };
