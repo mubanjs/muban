@@ -6,6 +6,7 @@ import type { RefElementType } from '../refs/refDefinitions.types';
 export type SourceOption =
   | SourceOptionCss
   | SourceOptionHtmlText
+  | SourceOptionForm
   | {
       type?: 'data' | 'json' | 'attr';
       target?: string;
@@ -17,6 +18,12 @@ export type SourceOptions = SourceOption | Array<SourceOption>;
 export type SourceOptionHtmlText = {
   type: 'text' | 'html';
   target?: string;
+};
+
+export type SourceOptionForm = {
+  type: 'form';
+  target?: string;
+  name?: string;
 };
 
 export type SourceOptionCss = {
@@ -52,7 +59,7 @@ export type PropTypeInfo<T = any> = Pick<
 > & {
   name: string;
   source: {
-    name: string;
+    name?: string;
     target: RefElementType | undefined;
   } & Pick<SourceOption, 'type'> &
     Pick<SourceOptionCss, 'options'>;
