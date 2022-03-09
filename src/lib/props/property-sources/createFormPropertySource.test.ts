@@ -3,22 +3,26 @@ import { createFormPropertySource } from './createFormPropertySource';
 
 const form = document.createElement('form');
 form.innerHTML = `
-  <input type="email" name="email" value="juan.polanco@mediamonks.com"/>
-  <input type="password" name="password" value="123456"/>
-  <textarea name="description">lorem ipsum</textarea>
-  <select name="preference">
-    <option value="foo">foo</option>
+  <input id="email" type="email" name="email" value="juan.polanco@mediamonks.com"/>
+  <input id="password" type="password" name="password" value="123456"/>
+  <textarea id="description" name="description">lorem ipsum</textarea>
+  <select id="preference" name="preference">
+    <option value="foo" selected>foo</option>
     <option value="bar">bar</option>
   </select>
-  <input name="optionA" type="checkbox" />
-  <input name="optionB" type="checkbox" checked />
-  <input name="choices" type="checkbox" value="apple" />
-  <input name="choices" type="checkbox" value="banana" checked />
-  <select name="candidates" multiple>
+  <select id="preferenceBoolean" name="preferenceBoolean">
+    <option value="true" selected>foo</option>
+    <option value="false">bar</option>
+  </select>
+  <input id="optionA" name="optionA" type="checkbox" />
+  <input id="optionB" name="optionB" type="checkbox" value="foo" checked />
+  <input id="choices" name="choices" type="checkbox" value="apple" checked/>
+  <input id="checkedChoices" name="choices" type="checkbox" value="banana" checked />
+  <select id="candidates" name="candidates" multiple>
    <option value="foo" selected>foo</option>
     <option value="bar" selected>bar</option>
   </select>
-  <input name="photo" type="file" />
+  <input id="photo" name="photo" type="file" />
 `;
 
 describe('createFormPropertySource', () => {
@@ -62,17 +66,160 @@ describe('createFormPropertySource', () => {
   });
 
   describe('getProp', () => {
-    it('Should return the input value if the target is an input and the type is not "checkbox"', () => {});
-    it('Should return the checked value if the target is a checkbox and the propType is boolean', () => {});
-    it('Should return the input value if the target is a checked checkbox and the propType is not boolean', () => {});
-    it('Should return the input value if the target is a checked checkbox and the propType is not boolean', () => {});
-    it('Should return the select value if the target is a select that is not multiple', () => {});
-    it('Should return an array of strings if the target is a multiselect', () => {});
-    it('Should return an array of strings if the target is a multiselect', () => {});
-    it('Should return an array of strings if propType is array and the target is a checkbox', () => {});
-    it('Should return a File if the target is an input with type "file"', () => {});
-    it('Should return a FileList if the target is an input with type "file" and is multiple', () => {});
-    it('Should return a FileList if the target is an input with type "file" and is multiple', () => {});
+    it('Should return the input value if the target is an input and the type is not "checkbox"', () => {
+      const emailInput: PropTypeInfo = {
+        name: 'email',
+        type: String,
+        source: {
+          target: form.querySelector('#email')! as HTMLElement,
+          type: 'form',
+        },
+      };
+      const passwordInput: PropTypeInfo = {
+        name: 'password',
+        type: String,
+        source: {
+          target: form.querySelector('#password')! as HTMLElement,
+          type: 'form',
+        },
+      };
+      const descriptionInput: PropTypeInfo = {
+        name: 'description',
+        type: String,
+        source: {
+          target: form.querySelector('#description')! as HTMLElement,
+          type: 'form',
+        },
+      };
+      expect(createFormPropertySource()(form).getProp(emailInput)).toBe(
+        'juan.polanco@mediamonks.com',
+      );
+      expect(createFormPropertySource()(form).getProp(passwordInput)).toBe('123456');
+      expect(createFormPropertySource()(form).getProp(descriptionInput)).toBe('lorem ipsum');
+    });
+    it('Should return the checked value if the target is a checkbox and the propType is boolean', () => {
+      const optionA: PropTypeInfo = {
+        name: 'checkbox',
+        type: Boolean,
+        source: {
+          target: form.querySelector('#optionA')! as HTMLElement,
+          type: 'form',
+        },
+      };
+      const optionB: PropTypeInfo = {
+        name: 'checkbox',
+        type: Boolean,
+        source: {
+          target: form.querySelector('#optionB')! as HTMLElement,
+          type: 'form',
+        },
+      };
+      expect(createFormPropertySource()(form).getProp(optionA)).toBe(false);
+      expect(createFormPropertySource()(form).getProp(optionB)).toBe(true);
+    });
+    it('Should return the input value if the target is a checked checkbox and the propType is not boolean', () => {
+      const optionB: PropTypeInfo = {
+        name: 'checkbox',
+        type: String,
+        source: {
+          target: form.querySelector('#optionB')! as HTMLElement,
+          type: 'form',
+        },
+      };
+      expect(createFormPropertySource()(form).getProp(optionB)).toBe('foo');
+    });
+    it('Should return an array of strings if the target is checkbox and the propType is Array', () => {
+      const choices: PropTypeInfo = {
+        name: 'checkbox',
+        type: Array,
+        source: {
+          target: form,
+          type: 'form',
+          name: 'choices',
+        },
+      };
+      expect(JSON.stringify(createFormPropertySource()(form).getProp(choices))).toStrictEqual(
+        JSON.stringify(['apple', 'banana']),
+      );
+    });
+    it('Should return the select value if the target is a select that is not multiple', () => {
+      const directSelect: PropTypeInfo = {
+        name: 'select',
+        type: String,
+        source: {
+          target: form.querySelector('#preference')! as HTMLElement,
+          type: 'form',
+        },
+      };
+      const formDataSelect: PropTypeInfo = {
+        name: 'select',
+        type: String,
+        source: {
+          target: form,
+          type: 'form',
+          name: 'preference',
+        },
+      };
+      const selectBoolean: PropTypeInfo = {
+        name: 'select',
+        type: Boolean,
+        source: {
+          target: form,
+          type: 'form',
+          name: 'preferenceBoolean',
+        },
+      };
+      expect(createFormPropertySource()(form).getProp(selectBoolean)).toBe(true);
+      expect(createFormPropertySource()(form).getProp(directSelect)).toBe('foo');
+      expect(createFormPropertySource()(form).getProp(formDataSelect)).toBe('foo');
+    });
+    it('Should return an array of strings if the target is a multiselect', () => {
+      const candidates: PropTypeInfo = {
+        name: 'multiselect',
+        type: Array,
+        source: {
+          target: form.querySelector('#candidates')! as HTMLElement,
+          type: 'form',
+        },
+      };
+      const candidatesFromFormData: PropTypeInfo = {
+        name: 'multiselect',
+        type: Array,
+        source: {
+          target: form,
+          type: 'form',
+          name: 'candidates',
+        },
+      };
+      expect(JSON.stringify(createFormPropertySource()(form).getProp(candidates))).toStrictEqual(
+        JSON.stringify(['foo', 'bar']),
+      );
+      expect(
+        JSON.stringify(createFormPropertySource()(form).getProp(candidatesFromFormData)),
+      ).toStrictEqual(JSON.stringify(['foo', 'bar']));
+    });
+    it('Should return a File if the target is an input with type "file"', () => {
+      const photo: PropTypeInfo = {
+        name: 'file',
+        type: Object,
+        source: {
+          target: form.querySelector('#photo')! as HTMLElement,
+          type: 'form',
+        },
+      };
+      expect(createFormPropertySource()(form).getProp(photo)).toBe(undefined);
+    });
+    it('Should return a FileList if the target is an input with type "file" and is type Array', () => {
+      const photoArray: PropTypeInfo = {
+        name: 'file',
+        type: Array,
+        source: {
+          target: form.querySelector('#photo')! as HTMLElement,
+          type: 'form',
+        },
+      };
+      expect(createFormPropertySource()(form).getProp(photoArray)).toBe(undefined);
+    });
     it('Should return undefined when trying to get FormData not using type "Object"', () => {
       const wrongTypePropInfo: PropTypeInfo = {
         name: 'myForm',
@@ -85,7 +232,7 @@ describe('createFormPropertySource', () => {
       expect(createFormPropertySource()(form).getProp(wrongTypePropInfo)).toBe(undefined);
     });
     it('Should return FormData when using type "Object" and an unnamed source', () => {
-      const wrongTypePropInfo: PropTypeInfo = {
+      const validForm: PropTypeInfo = {
         name: 'myForm',
         type: Object,
         source: {
@@ -93,13 +240,13 @@ describe('createFormPropertySource', () => {
           type: 'form',
         },
       };
-      expect(createFormPropertySource()(form).getProp(wrongTypePropInfo)).toBeInstanceOf(FormData);
-      expect(
-        (createFormPropertySource()(form).getProp(wrongTypePropInfo) as FormData).get('email'),
-      ).toBe('juan.polanco@mediamonks.com');
+      expect(createFormPropertySource()(form).getProp(validForm)).toBeInstanceOf(FormData);
+      expect((createFormPropertySource()(form).getProp(validForm) as FormData).get('email')).toBe(
+        'juan.polanco@mediamonks.com',
+      );
     });
     it('Should return the input value when passing a form element and a named source', () => {
-      const formDataValuePropInfo: PropTypeInfo = {
+      const validForm: PropTypeInfo = {
         name: 'myForm',
         type: String,
         source: {
@@ -108,7 +255,7 @@ describe('createFormPropertySource', () => {
           name: 'email',
         },
       };
-      expect(createFormPropertySource()(form).getProp(formDataValuePropInfo)).toBe(
+      expect(createFormPropertySource()(form).getProp(validForm)).toBe(
         'juan.polanco@mediamonks.com',
       );
     });
