@@ -58,13 +58,13 @@ export function createFormPropertySource(): PropertySource {
 
         const checkbox = (prevValue: unknown) => {
           const input = element as HTMLInputElement;
-          if (isCheckbox) return input.checked;
+          if (isCheckbox && propInfo.type === Boolean) return input.checked;
           return prevValue;
         };
 
         const nonBooleanCheckbox = (prevValue: unknown) => {
           const input = element as HTMLInputElement;
-          if (isCheckbox && propInfo.type !== Boolean)
+          if (isCheckbox && propInfo.type !== Boolean && input.checked)
             return convertSourceValue(propInfo, input.value);
           return prevValue;
         };
