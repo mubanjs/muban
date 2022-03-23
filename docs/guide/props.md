@@ -68,8 +68,10 @@ specify exactly what values you want to extract from where.
   
 * The `attr` source is similar to the `data` source, but uses normal attributes to extract data 
   from, and also allows conversion.
+
+* The `form` source allow you to extract _Input state_ from form elements, when targeting an input it will extract the value, when targeting a form it will extract the FormData Object. It allows for value conversion into basic data types as well.
   
-_Input state_ can be extracted using the `attr` binding if needed, but most often you will end 
+Remember, the `form` binding will extract the value from form inputs, but most often you will end 
 up using two-way bindings to manage syncing up these values with the internal component state.
 
 ### Parent components
