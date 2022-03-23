@@ -71,7 +71,7 @@ describe('createFormPropertySource', () => {
         name: 'email',
         type: String,
         source: {
-          target: form.querySelector('#email')! as HTMLElement,
+          target: form.querySelector<HTMLElement>('#email')!,
           type: 'form',
         },
       };
@@ -79,7 +79,7 @@ describe('createFormPropertySource', () => {
         name: 'password',
         type: String,
         source: {
-          target: form.querySelector('#password')! as HTMLElement,
+          target: form.querySelector<HTMLElement>('#password')!,
           type: 'form',
         },
       };
@@ -87,7 +87,7 @@ describe('createFormPropertySource', () => {
         name: 'description',
         type: String,
         source: {
-          target: form.querySelector('#description')! as HTMLElement,
+          target: form.querySelector<HTMLElement>('#description')!,
           type: 'form',
         },
       };
@@ -102,7 +102,7 @@ describe('createFormPropertySource', () => {
         name: 'checkbox',
         type: Boolean,
         source: {
-          target: form.querySelector('#optionA')! as HTMLElement,
+          target: form.querySelector<HTMLElement>('#optionA')!,
           type: 'form',
         },
       };
@@ -110,7 +110,7 @@ describe('createFormPropertySource', () => {
         name: 'checkbox',
         type: Boolean,
         source: {
-          target: form.querySelector('#optionB')! as HTMLElement,
+          target: form.querySelector<HTMLElement>('#optionB')!,
           type: 'form',
         },
       };
@@ -122,7 +122,7 @@ describe('createFormPropertySource', () => {
         name: 'checkbox',
         type: String,
         source: {
-          target: form.querySelector('#optionB')! as HTMLElement,
+          target: form.querySelector<HTMLElement>('#optionB')!,
           type: 'form',
         },
       };
@@ -147,7 +147,7 @@ describe('createFormPropertySource', () => {
         name: 'select',
         type: String,
         source: {
-          target: form.querySelector('#preference')! as HTMLElement,
+          target: form.querySelector<HTMLElement>('#preference')!,
           type: 'form',
         },
       };
@@ -178,7 +178,7 @@ describe('createFormPropertySource', () => {
         name: 'multiselect',
         type: Array,
         source: {
-          target: form.querySelector('#candidates')! as HTMLElement,
+          target: form.querySelector<HTMLElement>('#candidates')!,
           type: 'form',
         },
       };
@@ -203,7 +203,7 @@ describe('createFormPropertySource', () => {
         name: 'file',
         type: Object,
         source: {
-          target: form.querySelector('#photo')! as HTMLElement,
+          target: form.querySelector<HTMLElement>('#photo')!,
           type: 'form',
         },
       };
@@ -214,7 +214,7 @@ describe('createFormPropertySource', () => {
         name: 'file',
         type: Array,
         source: {
-          target: form.querySelector('#photo')! as HTMLElement,
+          target: form.querySelector<HTMLElement>('#photo')!,
           type: 'form',
         },
       };
