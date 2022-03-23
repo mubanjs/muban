@@ -1,7 +1,6 @@
 import dedent from 'ts-dedent';
 import type { PropertySource } from '../getComponentProps';
 import { convertSourceValue } from './convertSourceValue';
-import flow from 'lodash/flow';
 
 export function createFormPropertySource(): PropertySource {
   return () => {
@@ -18,8 +17,6 @@ export function createFormPropertySource(): PropertySource {
           (element as HTMLInputElement).type !== 'checkbox';
         const isMultiSelect =
           element.nodeName === 'SELECT' && (element as HTMLSelectElement).multiple;
-        const isFile =
-          element.nodeName === 'INPUT' && (element as HTMLInputElement).type === 'file';
         const isValidtag = ['INPUT', 'FORM', 'TEXTAREA', 'SELECT'].includes(element.nodeName);
         if (!isValidtag) {
           console.warn(
@@ -78,7 +75,10 @@ export function createFormPropertySource(): PropertySource {
           return prevValue;
         };
 
-        return flow([formDataValue, textInput, checkbox, nonBooleanCheckbox, multiSelect])();
+        return [formDataValue, textInput, checkbox, nonBooleanCheckbox, multiSelect].reduce(
+          (prev, current) => current(prev),
+          undefined,
+        );
       },
     };
   };
