@@ -78,16 +78,7 @@ export function createFormPropertySource(): PropertySource {
           return prevValue;
         };
 
-        const file = (prevValue: unknown) => {
-          const input = element as HTMLInputElement;
-          if (isFile) {
-            if (propInfo.type === Object) input.files?.length ? input.files[0] : undefined;
-            if (propInfo.type === Array) input.files;
-          }
-          return prevValue;
-        };
-
-        return flow([formDataValue, textInput, checkbox, nonBooleanCheckbox, multiSelect, file])();
+        return flow([formDataValue, textInput, checkbox, nonBooleanCheckbox, multiSelect])();
       },
     };
   };
