@@ -70,41 +70,174 @@ export const Form: Story = () => ({
       checkboxOnStringRef: 'checkboxOnStringRef',
       checkboxOnValueStringRef: 'checkboxOnValueStringRef',
       checkboxOffBooleanRef: 'checkboxOffBooleanRef',
-      checkboxOffStringRef: 'checkboxOffStringRef', // This wont show up in the info as it's undefined
-      checkboxOffValueStringRef: 'checkboxOffValueStringRef', // This wont show up in the info as it's undefined
+      checkboxOffStringRef: 'checkboxOffStringRef', // This won't show up in the info as it's undefined
+      checkboxOffValueStringRef: 'checkboxOffValueStringRef', // This won't show up in the info as it's undefined
       selectRef: 'selectRef',
       multiSelectRef: 'multiSelectRef',
       formRef: 'formRef',
     },
   ),
   template: () => html`<div data-component="props">
-    <form data-ref="formRef">
-      <input
-        data-ref="inputTextRef"
-        name="email"
-        type="email"
-        value="juan.polanco@mediamonks.com"
-      /><br />
-      <input data-ref="inputNumberRef" name="age" type="number" value="31" /><br />
-      <input data-ref="inputBooleanRef" type="text" value="true" /><br />
-      <input data-ref="inputDateRef" type="text" value="2022-01-01" /><br />
-      <input data-ref="inputObjectRef" type="text" value='{"foo": "bar"}' /><br />
-      <input data-ref="inputArrayRef" type="text" value="[1, 2, 3, 4]" /><br />
-      <input data-ref="checkboxOnBooleanRef" type="checkbox" checked /><br />
-      <input data-ref="checkboxOnStringRef" type="checkbox" checked /><br />
-      <input data-ref="checkboxOnValueStringRef" type="checkbox" value="foo" checked /><br />
-      <input data-ref="checkboxOffBooleanRef" type="checkbox" /><br />
-      <input data-ref="checkboxOffStringRef" type="checkbox" /><br />
-      <input data-ref="checkboxOffValueStringRef" type="checkbox" value="foo" /><br />
-      <select data-ref="selectRef">
-        <option value="foo" selected>foo</option>
-        <option value="bar">bar</option>
-      </select>
-      <select data-ref="multiSelectRef" multiple>
-        <option value="foo" selected>foo</option>
-        <option value="bar">bar</option>
-      </select>
-      <pre data-ref="info"></pre>
+    <form data-ref="formRef" style="max-width: 500px">
+      <fieldset class="form-group">
+        <legend class="mt-4">Text Inputs</legend>
+        ${inputTemplate('inputTextRef', 'Email', {
+          layout: 'column',
+          value: 'juan.polanco@mediamonks.com',
+          type: 'email',
+        })}
+        ${inputTemplate('inputNumberRef', 'Age', {
+          layout: 'column',
+          value: '31',
+          type: 'number',
+        })}
+        ${inputTemplate('inputBooleanRef', 'Boolean', {
+          layout: 'column',
+          value: 'true',
+        })}
+        ${inputTemplate('inputDateRef', 'Date', {
+          layout: 'column',
+          value: '2022-01-01',
+        })}
+        ${inputTemplate('inputObjectRef', 'Object', {
+          layout: 'column',
+          type: 'textarea',
+          value: '{"foo": "bar"}',
+        })}
+        ${inputTemplate('inputArrayRef', 'Array', {
+          layout: 'column',
+          type: 'textarea',
+          value: '[1, 2, 3, 4]',
+        })}
+      </fieldset>
+      <fieldset class="form-group">
+        <legend class="mt-4">Checkboxes</legend>
+        ${inputTemplate('checkboxOnBooleanRef', 'Checkbox On Boolean', {
+          type: 'checkbox',
+          checked: true,
+        })}
+        ${inputTemplate('checkboxOnStringRef', 'Checkbox On String', {
+          type: 'checkbox',
+          checked: true,
+        })}
+        ${inputTemplate('checkboxOnValueStringRef', 'Checkbox On String Value', {
+          type: 'checkbox',
+          checked: true,
+          value: 'foo',
+        })}
+        ${inputTemplate('checkboxOffBooleanRef', 'Checkbox Off Boolean', {
+          type: 'checkbox',
+        })}
+        ${inputTemplate('checkboxOffStringRef', 'Checkbox Off String', {
+          type: 'checkbox',
+        })}
+        ${inputTemplate('checkboxOffValueStringRef', 'Checkbox Off String Value', {
+          type: 'checkbox',
+          value: 'foo',
+        })}
+      </fieldset>
+      ${inputTemplate('selectRef', 'Single Select', {
+        type: 'select',
+        options: [
+          ['foo', 'foo', true],
+          ['bar', 'bar'],
+        ],
+      })}
+      ${inputTemplate('multiSelectRef', 'Multiple Select', {
+        type: 'select',
+        multiple: true,
+        options: [
+          ['foo', 'foo', true],
+          ['bar', 'bar'],
+          ['bax', 'bax'],
+          ['fox', 'fox', true],
+        ],
+      })}
+      <div class="alert alert-secondary mt-4">
+        <pre data-ref="info"></pre>
+      </div>
     </form>
   </div>`,
 });
+type InputTemplateProps = {
+  name?: string;
+  type?: string;
+  value?: string;
+  layout?: 'row' | 'column';
+  input?: string;
+  checked?: boolean;
+  options?: Array<[value: string, label: string, selected?: true]>;
+  multiple?: boolean;
+};
+function inputTemplate(
+  ref: string,
+  label: string,
+  { layout, name, type, value, checked, options, multiple }: InputTemplateProps,
+) {
+  if (type === 'checkbox') {
+    return html`<div class="form-check">
+      <input
+        data-ref=${ref}
+        class="form-check-input"
+        type="checkbox"
+        id=${ref}
+        name=${ref}
+        checked=${checked}
+        value=${value}
+      />
+      <label class="form-check-label" for=${ref}>${label}</label>
+    </div> `;
+  }
+  if (type === 'select') {
+    // TODO: select in row/column mode
+    return html`<div class="form-group">
+      <label for=${ref} class="form-label mt-4">${label}</label>
+      <select data-ref=${ref} class="form-select" id=${ref} multiple=${multiple}>
+        ${(options ?? []).map(
+          ([value, label, selected]) =>
+            html`<option value=${value} selected=${selected}>${label}</option>`,
+        )}
+      </select>
+    </div>`;
+  }
+  if (layout === 'column') {
+    if (type === 'textarea') {
+      return html`<div class="form-group row">
+        <label for=${ref} class="col-sm-2 col-form-label">${label}</label>
+        <div class="col-sm-10">
+          <textarea data-ref=${ref} class="form-control" id=${ref} name=${name ?? ref}>
+            ${value}
+          </textarea
+          >
+        </div>
+      </div>`;
+    }
+    return html`<div class="form-group row">
+      <label for=${ref} class="col-sm-2 col-form-label">${label}</label>
+      <div class="col-sm-10">
+        <input
+          data-ref=${ref}
+          class="form-control"
+          id=${ref}
+          name=${name ?? ref}
+          type=${type ?? 'text'}
+          value=${value}
+        />
+      </div>
+    </div>`;
+  }
+  if (layout === 'row') {
+    return html`<div class="form-group">
+      <label for=${ref} class="form-label mt-4">${label}</label>
+      <input
+        data-ref=${ref}
+        class="form-control"
+        id=${ref}
+        name=${name ?? ref}
+        type=${type ?? 'text'}
+        value=${value}
+      />
+    </div>`;
+  }
+  return html``;
+}

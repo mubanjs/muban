@@ -12,8 +12,8 @@ describe('createFormPropertySource', () => {
   });
 
   describe('hasProp', () => {
-    const form = document.createElement('form');
     it('should return false if the type is "Function"', () => {
+      const form = document.createElement('form');
       const functionPropInfo: PropTypeInfo = {
         name: 'email',
         type: Function,
