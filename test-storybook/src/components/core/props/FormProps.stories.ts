@@ -58,6 +58,7 @@ export const Form: Story = () => ({
       }),
       selectText: propType.string.source({ type: 'form', target: 'selectRef' }),
       multiSelectText: propType.number.source({ type: 'form', target: 'multiSelectRef' }),
+      radio: propType.string.source({ type: 'form', target: 'radioRef' }),
     },
     {
       inputTextRef: 'inputTextRef',
@@ -75,6 +76,7 @@ export const Form: Story = () => ({
       selectRef: 'selectRef',
       multiSelectRef: 'multiSelectRef',
       formRef: 'formRef',
+      radioRef: 'radioRef',
     },
   ),
   template: () => html`<div data-component="props">
@@ -153,6 +155,15 @@ export const Form: Story = () => ({
           ['fox', 'fox', true],
         ],
       })}
+      <fieldset class="form-group">
+        <legend class="mt-4">Radio button</legend>
+        ${inputTemplate('radioRef', 'Radio button', {
+          layout: 'row',
+          type: 'radio',
+          value: 'foo',
+          checked: true,
+        })}
+      </fieldset>
       <div class="alert alert-secondary mt-4">
         <pre data-ref="info"></pre>
       </div>
@@ -175,6 +186,7 @@ Form.play = async () => {
   await expect(screen.getByTestId('checkboxOffValueStringRef')).not.toBeChecked();
   await expect(screen.getByTestId('selectRef')).toHaveValue('foo');
   await expect(screen.getByTestId('multiSelectRef')).toHaveValue(['foo', 'fox']);
+  await expect(screen.getByTestId('radioRef')).toBeChecked();
 };
 
 type InputTemplateProps = {
@@ -192,7 +204,7 @@ function inputTemplate(
   label: string,
   { layout, name, type, value, checked, options, multiple }: InputTemplateProps,
 ) {
-  if (type === 'checkbox') {
+  if (type === 'checkbox' || type === 'radio') {
     return html`<div class="form-check">
       <input
         data-ref=${ref}
