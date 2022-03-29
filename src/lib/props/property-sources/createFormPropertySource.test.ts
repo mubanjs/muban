@@ -134,6 +134,8 @@ describe('createFormPropertySource', () => {
         form.innerHTML = `
           <input name="choices" type="checkbox" value="apple" checked/>
           <input name="choices" type="checkbox" value="banana" checked />
+          <input name="choices" type="checkbox" value="peach" />
+          <input name="choices" type="checkbox" />
         `;
         const choices: PropTypeInfo = {
           name: 'checkbox',
@@ -144,9 +146,7 @@ describe('createFormPropertySource', () => {
             name: 'choices',
           },
         };
-        expect(JSON.stringify(createFormPropertySource()(form).getProp(choices))).toStrictEqual(
-          JSON.stringify(['apple', 'banana']),
-        );
+        expect(createFormPropertySource()(form).getProp(choices)).toEqual(['apple', 'banana']);
       });
     });
 
