@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Story } from '@muban/storybook/types-6-0';
 import { html } from '@muban/template';
-import { either, test } from 'isntnt';
 import { bind, defineComponent, propType, computed, ref } from '@muban/muban';
 import type { PropTypeDefinition, ComponentRefItem } from '@muban/muban';
+import { screen } from '@storybook/testing-library';
+import { expect } from '@storybook/jest';
 
 export default {
   title: 'core/props/form',
@@ -159,6 +160,24 @@ export const Form: Story = () => ({
     </form>
   </div>`,
 });
+
+Form.play = async () => {
+  await expect(screen.getByTestId('inputTextRef')).toHaveValue('juan.polanco@mediamonks.com');
+  await expect(screen.getByTestId('inputNumberRef')).toHaveValue(31);
+  await expect(screen.getByTestId('inputBooleanRef')).toHaveValue('true');
+  await expect(screen.getByTestId('inputDateRef')).toHaveValue('2022-01-01');
+  await expect(screen.getByTestId('inputObjectRef')).toHaveValue('{"foo": "bar"}');
+  await expect(screen.getByTestId('inputArrayRef')).toHaveValue('[1, 2, 3, 4]');
+  await expect(screen.getByTestId('checkboxOnBooleanRef')).toBeChecked();
+  await expect(screen.getByTestId('checkboxOnStringRef')).toBeChecked();
+  await expect(screen.getByTestId('checkboxOnValueStringRef')).toBeChecked();
+  await expect(screen.getByTestId('checkboxOffBooleanRef')).not.toBeChecked();
+  await expect(screen.getByTestId('checkboxOffStringRef')).not.toBeChecked();
+  await expect(screen.getByTestId('checkboxOffValueStringRef')).not.toBeChecked();
+  await expect(screen.getByTestId('selectRef')).toHaveValue('foo');
+  await expect(screen.getByTestId('multiSelectRef')).toHaveValue(['foo', 'fox']);
+};
+
 type InputTemplateProps = {
   name?: string;
   type?: string;
@@ -178,6 +197,7 @@ function inputTemplate(
     return html`<div class="form-check">
       <input
         data-ref=${ref}
+        data-testid=${ref}
         class="form-check-input"
         type="checkbox"
         id=${ref}
@@ -192,7 +212,7 @@ function inputTemplate(
     // TODO: select in row/column mode
     return html`<div class="form-group">
       <label for=${ref} class="form-label mt-4">${label}</label>
-      <select data-ref=${ref} class="form-select" id=${ref} multiple=${multiple}>
+      <select data-ref=${ref} data-testid=${ref} class="form-select" id=${ref} multiple=${multiple}>
         ${(options ?? []).map(
           ([value, label, selected]) =>
             html`<option value=${value} selected=${selected}>${label}</option>`,
@@ -205,7 +225,13 @@ function inputTemplate(
       return html`<div class="form-group row">
         <label for=${ref} class="col-sm-2 col-form-label">${label}</label>
         <div class="col-sm-10">
-          <textarea data-ref=${ref} class="form-control" id=${ref} name=${name ?? ref}>
+          <textarea
+            data-ref=${ref}
+            data-testid=${ref}
+            class="form-control"
+            id=${ref}
+            name=${name ?? ref}
+          >
             ${value}
           </textarea
           >
@@ -217,6 +243,7 @@ function inputTemplate(
       <div class="col-sm-10">
         <input
           data-ref=${ref}
+          data-testid=${ref}
           class="form-control"
           id=${ref}
           name=${name ?? ref}
@@ -231,6 +258,7 @@ function inputTemplate(
       <label for=${ref} class="form-label mt-4">${label}</label>
       <input
         data-ref=${ref}
+        data-testid=${ref}
         class="form-control"
         id=${ref}
         name=${name ?? ref}
