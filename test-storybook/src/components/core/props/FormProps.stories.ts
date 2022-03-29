@@ -58,7 +58,6 @@ export const Form: Story = () => ({
       }),
       selectText: propType.string.source({ type: 'form', target: 'selectRef' }),
       multiSelectText: propType.number.source({ type: 'form', target: 'multiSelectRef' }),
-      formData: propType.object.source({ type: 'form', target: 'formRef' }),
     },
     {
       inputTextRef: 'inputTextRef',
