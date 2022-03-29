@@ -1,3 +1,4 @@
+import type { PropTypeDefinition } from '../../..';
 import type { PropTypeInfo } from '../propDefinitions.types';
 import { createFormPropertySource } from './createFormPropertySource';
 
@@ -82,66 +83,71 @@ describe('createFormPropertySource', () => {
       expect(createFormPropertySource()(form).getProp(descriptionInput)).toBe('lorem ipsum');
     });
 
-    it('Should return the checked value if the target is a checkbox and the propType is boolean', () => {
+    describe('checkbox', () => {
       const form = document.createElement('form');
       form.innerHTML = `
-        <input id="optionA" name="optionA" type="checkbox" />
-        <input id="optionB" name="optionB" type="checkbox" value="foo" checked />
+        <input id="onBoolean" name="onBoolean" type="checkbox" checked/>
+        <input id="offBoolean" name="offBoolean" type="checkbox" />
+        <input id="onString" name="onString" type="checkbox" checked/>
+        <input id="offString" name="offString" type="checkbox" />
+        <input id="onStringValue" name="onStringValue" type="checkbox" value="foo" checked />
+        <input id="offStringValue" name="offStringValue" type="checkbox" value="foo" />
       `;
-      const optionA: PropTypeInfo = {
-        name: 'checkbox',
-        type: Boolean,
-        source: {
-          target: form.querySelector<HTMLElement>('#optionA')!,
-          type: 'form',
-        },
-      };
-      const optionB: PropTypeInfo = {
-        name: 'checkbox',
-        type: Boolean,
-        source: {
-          target: form.querySelector<HTMLElement>('#optionB')!,
-          type: 'form',
-        },
-      };
-      expect(createFormPropertySource()(form).getProp(optionA)).toBe(false);
-      expect(createFormPropertySource()(form).getProp(optionB)).toBe(true);
-    });
 
-    it('Should return the input value if the target is a checked checkbox and the propType is not boolean', () => {
-      const form = document.createElement('form');
-      form.innerHTML = `
-        <input id="optionB" name="optionB" type="checkbox" value="foo" checked />
-      `;
-      const optionB: PropTypeInfo = {
-        name: 'checkbox',
-        type: String,
-        source: {
-          target: form.querySelector<HTMLElement>('#optionB')!,
-          type: 'form',
+      function checkboxTemplate(
+        config: Pick<PropTypeDefinition, 'type'> & {
+          id: string;
         },
-      };
-      expect(createFormPropertySource()(form).getProp(optionB)).toBe('foo');
-    });
+      ): PropTypeInfo {
+        return {
+          name: 'checkbox',
+          type: config.type,
+          source: {
+            target: form.querySelector<HTMLElement>(`#${config.id}`)!,
+            type: 'form',
+          },
+        };
+      }
 
-    it('Should return an array of strings if the target is checkbox and the propType is Array', () => {
-      const form = document.createElement('form');
-      form.innerHTML = `
-        <input name="choices" type="checkbox" value="apple" checked/>
-        <input name="choices" type="checkbox" value="banana" checked />
-      `;
-      const choices: PropTypeInfo = {
-        name: 'checkbox',
-        type: Array,
-        source: {
-          target: form,
-          type: 'form',
-          name: 'choices',
-        },
-      };
-      expect(JSON.stringify(createFormPropertySource()(form).getProp(choices))).toStrictEqual(
-        JSON.stringify(['apple', 'banana']),
-      );
+      it('Should return the checked value if the target is a checkbox and the propType is boolean', () => {
+        const onBoolean = checkboxTemplate({ id: 'onBoolean', type: Boolean });
+        const offBoolean = checkboxTemplate({ id: 'offBoolean', type: Boolean });
+
+        expect(createFormPropertySource()(form).getProp(onBoolean)).toBe(true);
+        expect(createFormPropertySource()(form).getProp(offBoolean)).toBe(false);
+      });
+
+      it('Should return the input value if the target is a checked checkbox and the propType is not boolean', () => {
+        const onString = checkboxTemplate({ id: 'onString', type: String });
+        const offString = checkboxTemplate({ id: 'offString', type: String });
+        const onStringValue = checkboxTemplate({ id: 'onStringValue', type: String });
+        const offStringValue = checkboxTemplate({ id: 'offStringValue', type: String });
+
+        expect(createFormPropertySource()(form).getProp(onString)).toBe('on');
+        expect(createFormPropertySource()(form).getProp(offString)).toBe(undefined);
+        expect(createFormPropertySource()(form).getProp(onStringValue)).toBe('foo');
+        expect(createFormPropertySource()(form).getProp(offStringValue)).toBe(undefined);
+      });
+
+      it('Should return an array of strings if the target is checkbox and the propType is Array', () => {
+        const form = document.createElement('form');
+        form.innerHTML = `
+          <input name="choices" type="checkbox" value="apple" checked/>
+          <input name="choices" type="checkbox" value="banana" checked />
+        `;
+        const choices: PropTypeInfo = {
+          name: 'checkbox',
+          type: Array,
+          source: {
+            target: form,
+            type: 'form',
+            name: 'choices',
+          },
+        };
+        expect(JSON.stringify(createFormPropertySource()(form).getProp(choices))).toStrictEqual(
+          JSON.stringify(['apple', 'banana']),
+        );
+      });
     });
 
     it('Should return the select value if the target is a select that is not multiple', () => {
