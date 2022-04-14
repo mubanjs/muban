@@ -4,7 +4,9 @@
     "target": "es5",
     "module": "commonjs",
     "allowJs": false,
-    "outDir": "./dist/cjs"
+    "outDir": "./dist/cjs",
+    "declaration": true,
+    "declarationDir": "./types"
   },
   "include": [
     "./src/**/*"

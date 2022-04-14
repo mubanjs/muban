@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-alpha.33] - 2022-04-14
+
+### Fixed
+
+- Fixed importing of non-exported files by also exporting types in `dist/esm` folder.
+
 ## [1.0.0-alpha.32] - 2022-02-28
 
 ### Fixed
