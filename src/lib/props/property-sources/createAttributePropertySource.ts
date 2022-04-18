@@ -8,13 +8,13 @@ export function createAttributePropertySource(): PropertySource {
       Boolean(
         propInfo.source.target &&
           propInfo.type !== Function &&
-          propInfo.source.target.hasAttribute(propInfo.source.name!),
+          propInfo.source.target.hasAttribute(propInfo.source.name),
       ),
     getProp: (propInfo) => {
       let value;
       const rawValue =
         propInfo.type !== Function
-          ? propInfo.source.target!.getAttribute(propInfo.source.name!) ?? undefined
+          ? propInfo.source.target!.getAttribute(propInfo.source.name) ?? undefined
           : undefined;
 
       if (rawValue !== undefined) {

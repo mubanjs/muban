@@ -8,13 +8,13 @@ export function createDataAttributePropertySource(): PropertySource {
       Boolean(
         propInfo.source.target &&
           propInfo.type !== Function &&
-          propInfo.source.name! in propInfo.source.target.dataset,
+          propInfo.source.name in propInfo.source.target.dataset,
       ),
     getProp: (propInfo) => {
       let value;
       const rawValue =
         propInfo.type !== Function
-          ? propInfo.source.target!.dataset[propInfo.source.name!] ?? undefined
+          ? propInfo.source.target!.dataset[propInfo.source.name] ?? undefined
           : undefined;
 
       if (rawValue !== undefined) {

@@ -28,7 +28,7 @@ export function createFormPropertySource(): PropertySource {
 
         const formDataValue = (prevValue: unknown) => {
           if (isForm) {
-            if (propInfo.type !== Object && !propInfo.source.name) {
+            if (propInfo.type !== Object && !propInfo.source.name && propInfo.source.formData) {
               console.warn(
                 dedent`The property "${propInfo.name}" is trying to get a FormData object but is type "${propInfo.type.name}", set it as type "Object"
                   Returning "undefined".`,

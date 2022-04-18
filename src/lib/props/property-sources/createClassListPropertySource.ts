@@ -17,9 +17,9 @@ export function createClassListPropertySource(): PropertySource {
       // in case of boolean, check for existence
       if (propInfo.type === Boolean) {
         const hasValue = Boolean(
-          target.classList.contains(propInfo.source.name!) ||
-            target.classList.contains(camelCase(propInfo.source.name!)) ||
-            target.classList.contains(paramCase(propInfo.source.name!)),
+          target.classList.contains(propInfo.source.name) ||
+            target.classList.contains(camelCase(propInfo.source.name)) ||
+            target.classList.contains(paramCase(propInfo.source.name)),
         );
         // only return false from missing value if this source is used explicitly
         // or if value is found

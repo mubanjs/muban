@@ -56,6 +56,7 @@ describe('createFormPropertySource', () => {
         name: 'email',
         type: String,
         source: {
+          name: '',
           target: form.querySelector<HTMLElement>('#email')!,
           type: 'form',
         },
@@ -64,6 +65,7 @@ describe('createFormPropertySource', () => {
         name: 'password',
         type: String,
         source: {
+          name: '',
           target: form.querySelector<HTMLElement>('#password')!,
           type: 'form',
         },
@@ -72,6 +74,7 @@ describe('createFormPropertySource', () => {
         name: 'description',
         type: String,
         source: {
+          name: '',
           target: form.querySelector<HTMLElement>('#description')!,
           type: 'form',
         },
@@ -103,6 +106,7 @@ describe('createFormPropertySource', () => {
           name: 'checkbox',
           type: config.type,
           source: {
+            name: '',
             target: form.querySelector<HTMLElement>(`#${config.id}`)!,
             type: 'form',
           },
@@ -166,6 +170,7 @@ describe('createFormPropertySource', () => {
         name: 'select',
         type: String,
         source: {
+          name: '',
           target: form.querySelector<HTMLElement>('#preference')!,
           type: 'form',
         },
@@ -205,6 +210,7 @@ describe('createFormPropertySource', () => {
         name: 'multiselect',
         type: Array,
         source: {
+          name: '',
           target: form.querySelector<HTMLElement>('#candidates')!,
           type: 'form',
         },
@@ -232,8 +238,10 @@ describe('createFormPropertySource', () => {
         name: 'myForm',
         type: String, // This should be Object
         source: {
+          name: '',
           target: form,
           type: 'form',
+          formData: true,
         },
       };
       expect(createFormPropertySource()(form).getProp(wrongTypePropInfo)).toBe(undefined);
@@ -248,8 +256,10 @@ describe('createFormPropertySource', () => {
         name: 'myForm',
         type: Object,
         source: {
+          name: '',
           target: form,
           type: 'form',
+          formData: true,
         },
       };
       expect(createFormPropertySource()(form).getProp(validForm)).toBeInstanceOf(FormData);
