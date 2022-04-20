@@ -59,6 +59,7 @@ export const Form: Story = () => ({
       selectText: propType.string.source({ type: 'form', target: 'selectRef' }),
       multiSelectText: propType.number.source({ type: 'form', target: 'multiSelectRef' }),
       radio: propType.string.source({ type: 'form', target: 'radioRef' }),
+      radioChecked: propType.string.source({ type: 'form', target: 'radioRefChecked' }),
     },
     {
       inputTextRef: 'inputTextRef',
@@ -77,6 +78,7 @@ export const Form: Story = () => ({
       multiSelectRef: 'multiSelectRef',
       formRef: 'formRef',
       radioRef: 'radioRef',
+      radioRefChecked: 'radioRefChecked',
     },
   ),
   template: () => html`<div data-component="props">
@@ -157,11 +159,18 @@ export const Form: Story = () => ({
       })}
       <fieldset class="form-group">
         <legend class="mt-4">Radio button</legend>
-        ${inputTemplate('radioRef', 'Radio button', {
+        ${inputTemplate('radioRef', 'Radio unchecked', {
           layout: 'row',
           type: 'radio',
           value: 'foo',
+          name: 'radio',
+        })}
+        ${inputTemplate('radioRefChecked', 'Radio checked', {
+          layout: 'row',
+          type: 'radio',
+          value: 'bar',
           checked: true,
+          name: 'radio',
         })}
       </fieldset>
       <div class="alert alert-secondary mt-4">
@@ -203,6 +212,7 @@ Form.play = async () => {
   await expect(extractedJson.multiSelectText).toEqual(['foo', 'fox']);
   await expect(screen.getByTestId('radioRef')).toBeChecked();
   await expect(extractedJson.radio).toBe('foo');
+  await expect(extractedJson.radioChecked).toBe('bar');
 };
 
 type InputTemplateProps = {
@@ -226,9 +236,9 @@ function inputTemplate(
         data-ref=${ref}
         data-testid=${ref}
         class="form-check-input"
-        type="checkbox"
+        type=${type}
         id=${ref}
-        name=${ref}
+        name=${name || ref}
         checked=${checked}
         value=${value}
       />
