@@ -38,13 +38,18 @@ export function createFormPropertySource(): PropertySource {
               return undefined;
             }
             const formData = new FormData(element as HTMLFormElement);
-            const childInputValue = formData.getAll(propInfo.source.name || '');
-            const value =
-              propInfo.type === Array
-                ? childInputValue
-                : convertSourceValue(propInfo, (childInputValue[0] as string) || '');
+            const childInputValues = formData.getAll(propInfo.source.name || '');
 
-            return childInputValue.length > 0 ? value : formData;
+            const getValue = (inputValues: Array<FormDataEntryValue>) => {
+              const hasValues = inputValues.length > 0;
+              if (!hasValues) return undefined;
+
+              return propInfo.type === Array
+                ? inputValues
+                : convertSourceValue(propInfo, (inputValues[0] as string) || '');
+            };
+
+            return getValue(childInputValues) || formData;
           }
           return previousValue;
         };
