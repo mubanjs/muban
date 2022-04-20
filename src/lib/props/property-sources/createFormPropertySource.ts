@@ -19,6 +19,7 @@ export function createFormPropertySource(): PropertySource {
           element.nodeName === 'SELECT' && (element as HTMLSelectElement).multiple;
         const isValidtag = ['INPUT', 'FORM', 'TEXTAREA', 'SELECT'].includes(element.nodeName);
         if (!isValidtag) {
+          // eslint-disable-next-line no-console
           console.warn(
             dedent`The property "${propInfo.name}" of type "${propInfo.type.name}" requires an element of type input, form, textarea, or select. ${element.nodeName} was given
               Returning "undefined".`,
@@ -26,9 +27,10 @@ export function createFormPropertySource(): PropertySource {
           return undefined;
         }
 
-        const formDataValue = (prevValue: unknown) => {
+        const formDataValue = (previousValue: unknown) => {
           if (isForm) {
-            if (propInfo.type !== Object && !propInfo.source.name && propInfo.source.formData) {
+            if (propInfo.type !== Object && propInfo.source.formData) {
+              // eslint-disable-next-line no-console
               console.warn(
                 dedent`The property "${propInfo.name}" is trying to get a FormData object but is type "${propInfo.type.name}", set it as type "Object"
                   Returning "undefined".`,
@@ -42,41 +44,41 @@ export function createFormPropertySource(): PropertySource {
                 ? childInputValue
                 : convertSourceValue(propInfo, (childInputValue[0] as string) || '');
 
-            return childInputValue.length ? value : formData;
+            return childInputValue.length > 0 ? value : formData;
           }
-          return prevValue;
+          return previousValue;
         };
 
-        const textInput = (prevValue: unknown) => {
+        const textInput = (previousValue: unknown) => {
           const input = element as HTMLInputElement;
           if (isInput && !input.multiple) return convertSourceValue(propInfo, input.value);
-          return prevValue;
+          return previousValue;
         };
 
-        const checkbox = (prevValue: unknown) => {
+        const checkbox = (previousValue: unknown) => {
           const input = element as HTMLInputElement;
           if (isCheckbox && propInfo.type === Boolean) return input.checked;
-          return prevValue;
+          return previousValue;
         };
 
-        const nonBooleanCheckbox = (prevValue: unknown) => {
+        const nonBooleanCheckbox = (previousValue: unknown) => {
           const input = element as HTMLInputElement;
           if (isCheckbox && propInfo.type !== Boolean && input.checked)
             return convertSourceValue(propInfo, input.value);
-          return prevValue;
+          return previousValue;
         };
 
-        const multiSelect = (prevValue: unknown) => {
+        const multiSelect = (previousValue: unknown) => {
           if (isMultiSelect) {
             return Array.from((element as HTMLSelectElement).selectedOptions).map(
               (option) => option.value,
             );
           }
-          return prevValue;
+          return previousValue;
         };
 
         return [formDataValue, textInput, checkbox, nonBooleanCheckbox, multiSelect].reduce(
-          (prev, current) => current(prev),
+          (previous, current) => current(previous),
           undefined,
         );
       },

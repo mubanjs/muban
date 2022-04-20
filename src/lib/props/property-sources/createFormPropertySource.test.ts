@@ -134,8 +134,8 @@ describe('createFormPropertySource', () => {
       });
 
       it('Should return an array of strings if the target is checkbox and the propType is Array', () => {
-        const form = document.createElement('form');
-        form.innerHTML = `
+        const checkboxesForm = document.createElement('form');
+        checkboxesForm.innerHTML = `
           <input name="choices" type="checkbox" value="apple" checked/>
           <input name="choices" type="checkbox" value="banana" checked />
           <input name="choices" type="checkbox" value="peach" />
@@ -145,12 +145,15 @@ describe('createFormPropertySource', () => {
           name: 'checkbox',
           type: Array,
           source: {
-            target: form,
+            target: checkboxesForm,
             type: 'form',
             name: 'choices',
           },
         };
-        expect(createFormPropertySource()(form).getProp(choices)).toEqual(['apple', 'banana']);
+        expect(createFormPropertySource()(checkboxesForm).getProp(choices)).toEqual([
+          'apple',
+          'banana',
+        ]);
       });
     });
 
