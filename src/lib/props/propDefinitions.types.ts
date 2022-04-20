@@ -24,7 +24,6 @@ export type SourceOptionForm = {
   type: 'form';
   target?: string;
   name?: string;
-  formData?: boolean;
 };
 
 export type SourceOptionCss = {
@@ -63,8 +62,7 @@ export type PropTypeInfo<T = any> = Pick<
     name: string;
     target: RefElementType | undefined;
   } & Pick<SourceOption, 'type'> &
-    Pick<SourceOptionCss, 'options'> &
-    Pick<SourceOptionForm, 'formData'>;
+    Pick<SourceOptionCss, 'options'>;
 };
 
 // type OptionalPropertyKeys<T> = {

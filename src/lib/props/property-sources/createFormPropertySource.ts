@@ -28,29 +28,27 @@ export function createFormPropertySource(): PropertySource {
         }
 
         const formDataValue = (previousValue: unknown) => {
-          if (isForm) {
-            if (propInfo.type !== Object && propInfo.source.formData) {
-              // eslint-disable-next-line no-console
-              console.warn(
-                dedent`The property "${propInfo.name}" is trying to get a FormData object but is type "${propInfo.type.name}", set it as type "Object"
+          if (!isForm) return previousValue;
+
+          const formData = new FormData(element as HTMLFormElement);
+          const childInputValues = formData.getAll(propInfo.source.name || '');
+
+          if (propInfo.type === Object && propInfo.source.name) {
+            // eslint-disable-next-line no-console
+            console.warn(
+              dedent`The property "${propInfo.name}" is trying to get a FormData object but is passing "${propInfo.source.name}" as "name", remove the name if you want the full FormData object
                   Returning "undefined".`,
-              );
-              return undefined;
-            }
-            const formData = new FormData(element as HTMLFormElement);
-            const childInputValues = formData.getAll(propInfo.source.name || '');
-
-            const getValue = (inputValues: Array<FormDataEntryValue>) => {
-              const hasValues = inputValues.length > 0;
-              if (!hasValues) return undefined;
-
-              return propInfo.type === Array
-                ? inputValues
-                : convertSourceValue(propInfo, (inputValues[0] as string) || '');
-            };
-
-            return getValue(childInputValues) || formData;
+            );
+            return undefined;
           }
+
+          if (propInfo.type === Object && !propInfo.source.name) return formData;
+
+          if (propInfo.type !== Object && propInfo.source.name) {
+            if (propInfo.type === Array) return childInputValues;
+            return convertSourceValue(propInfo, (childInputValues[0] as string) || '');
+          }
+
           return previousValue;
         };
 

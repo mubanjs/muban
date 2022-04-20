@@ -210,8 +210,9 @@ Form.play = async () => {
   await expect(extractedJson.selectText).toBe('foo');
   await expect(screen.getByTestId('multiSelectRef')).toHaveValue(['foo', 'fox']);
   await expect(extractedJson.multiSelectText).toEqual(['foo', 'fox']);
-  await expect(screen.getByTestId('radioRef')).toBeChecked();
+  await expect(screen.getByTestId('radioRef')).not.toBeChecked();
   await expect(extractedJson.radio).toBe('foo');
+  await expect(screen.getByTestId('radioRefChecked')).toBeChecked();
   await expect(extractedJson.radioChecked).toBe('bar');
 };
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { PropTypeDefinition } from '../../..';
 import type { PropTypeInfo } from '../propDefinitions.types';
 import { createFormPropertySource } from './createFormPropertySource';
@@ -244,7 +245,6 @@ describe('createFormPropertySource', () => {
           name: '',
           target: form,
           type: 'form',
-          formData: true,
         },
       };
       expect(createFormPropertySource()(form).getProp(wrongTypePropInfo)).toBe(undefined);
@@ -262,7 +262,6 @@ describe('createFormPropertySource', () => {
           name: '',
           target: form,
           type: 'form',
-          formData: true,
         },
       };
       expect(createFormPropertySource()(form).getProp(validForm)).toBeInstanceOf(FormData);
