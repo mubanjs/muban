@@ -165,28 +165,44 @@ export const Form: Story = () => ({
         })}
       </fieldset>
       <div class="alert alert-secondary mt-4">
-        <pre data-ref="info"></pre>
+        <pre data-ref="info" data-testid="infoJson"></pre>
       </div>
     </form>
   </div>`,
 });
 
 Form.play = async () => {
+  const extractedJson = JSON.parse(screen.getByTestId('infoJson').innerText);
   await expect(screen.getByTestId('inputTextRef')).toHaveValue('juan.polanco@mediamonks.com');
+  await expect(extractedJson.inputText).toBe('juan.polanco@mediamonks.com');
   await expect(screen.getByTestId('inputNumberRef')).toHaveValue(31);
+  await expect(extractedJson.inputNumber).toBe(31);
   await expect(screen.getByTestId('inputBooleanRef')).toHaveValue('true');
+  await expect(extractedJson.inputBoolean).toBe(true);
   await expect(screen.getByTestId('inputDateRef')).toHaveValue('2022-01-01');
+  await expect(extractedJson.inputDate).toBe('2022-01-01T00:00:00.000Z');
   await expect(screen.getByTestId('inputObjectRef')).toHaveValue('{"foo": "bar"}');
+  await expect(extractedJson.inputObject).toEqual({ foo: 'bar' });
   await expect(screen.getByTestId('inputArrayRef')).toHaveValue('[1, 2, 3, 4]');
+  await expect(extractedJson.inputArray).toEqual([1, 2, 3, 4]);
   await expect(screen.getByTestId('checkboxOnBooleanRef')).toBeChecked();
+  await expect(extractedJson.checkboxOnBoolean).toBe(true);
   await expect(screen.getByTestId('checkboxOnStringRef')).toBeChecked();
+  await expect(extractedJson.checkboxOnString).toBe('on');
   await expect(screen.getByTestId('checkboxOnValueStringRef')).toBeChecked();
+  await expect(extractedJson.checkboxOnValueString).toBe('foo');
   await expect(screen.getByTestId('checkboxOffBooleanRef')).not.toBeChecked();
+  await expect(extractedJson.checkboxOffBoolean).toBe(false);
   await expect(screen.getByTestId('checkboxOffStringRef')).not.toBeChecked();
+  await expect(extractedJson.checkboxOffString).toBe(undefined);
   await expect(screen.getByTestId('checkboxOffValueStringRef')).not.toBeChecked();
+  await expect(extractedJson.checkboxOffValueString).toBe(undefined);
   await expect(screen.getByTestId('selectRef')).toHaveValue('foo');
+  await expect(extractedJson.selectText).toBe('foo');
   await expect(screen.getByTestId('multiSelectRef')).toHaveValue(['foo', 'fox']);
+  await expect(extractedJson.multiSelectText).toEqual(['foo', 'fox']);
   await expect(screen.getByTestId('radioRef')).toBeChecked();
+  await expect(extractedJson.radio).toBe('foo');
 };
 
 type InputTemplateProps = {
