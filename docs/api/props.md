@@ -547,6 +547,11 @@ defineComponent({
     form: propType.object.source(
       { target: 'form', type: 'form'},
     ),
+    // Extract the 'email' property from the form ref FormData object
+    // outputs "user@company.com"
+    form: propType.object.source(
+      { target: 'form', type: 'form', name: 'email'},
+    ),
     // get the value from the email ref
     // outputs "user@company.com"
     email: propType.string.source(
