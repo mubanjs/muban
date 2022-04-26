@@ -2,46 +2,7 @@
 import type { PropTypeDefinition } from '../../..';
 import type { PropTypeInfo } from '../propDefinitions.types';
 import { createFormPropertySource } from './createFormPropertySource';
-
-function getPropTypeInfo(
-  name: string,
-  form: HTMLFormElement,
-  type:
-    | typeof Number
-    | typeof String
-    | typeof Boolean
-    | typeof Date
-    | typeof Array
-    | typeof Object
-    | typeof Function,
-  sourceName?: string,
-) {
-  const finalSourceName = sourceName || name;
-  const inputTarget: PropTypeInfo = {
-    name,
-    type,
-    source: {
-      name: finalSourceName,
-      target: form.querySelector<HTMLElement>(`#${finalSourceName}`)!,
-      type: 'form',
-    },
-  };
-
-  const formTarget: PropTypeInfo = {
-    name,
-    type,
-    source: {
-      name: finalSourceName,
-      target: form,
-      type: 'form',
-    },
-  };
-
-  return {
-    asForm: formTarget,
-    asInput: inputTarget,
-  };
-}
+import { getFullPropTypeInfo } from './createFormPropertySource.testutils';
 
 describe('createFormPropertySource', () => {
   describe('function itself', () => {
@@ -93,25 +54,68 @@ describe('createFormPropertySource', () => {
         <input id="password" type="password" name="password" value="123456"/>
         <textarea id="description" name="description">lorem ipsum</textarea>
       `;
-      const email = getPropTypeInfo('email', form, String);
-      const password = getPropTypeInfo('password', form, String);
-      const description = getPropTypeInfo('description', form, String);
+      const email = getFullPropTypeInfo('email', form);
+      const password = getFullPropTypeInfo('password', form);
+      const description = getFullPropTypeInfo('description', form);
       const formSource = createFormPropertySource()(form);
 
-      describe('input ref', () => {
+      describe('type String with an input target', () => {
         it('Should return the input value if the target is a text input', () => {
-          expect(formSource.getProp(email.asInput)).toBe('juan.polanco@mediamonks.com');
-          expect(formSource.getProp(password.asInput)).toBe('123456');
-          expect(formSource.getProp(description.asInput)).toBe('lorem ipsum');
+          expect(formSource.getProp(email.string.asInput)).toBe('juan.polanco@mediamonks.com');
+          expect(formSource.getProp(password.string.asInput)).toBe('123456');
+          expect(formSource.getProp(description.string.asInput)).toBe('lorem ipsum');
         });
       });
 
-      describe('form ref', () => {
+      describe('type String with a form target', () => {
         it('Should return the child input value if the target form', () => {
-          expect(formSource.getProp(email.asForm)).toBe('juan.polanco@mediamonks.com');
-          expect(formSource.getProp(password.asForm)).toBe('123456');
-          expect(formSource.getProp(description.asForm)).toBe('lorem ipsum');
+          expect(formSource.getProp(email.string.asForm)).toBe('juan.polanco@mediamonks.com');
+          expect(formSource.getProp(password.string.asForm)).toBe('123456');
+          expect(formSource.getProp(description.string.asForm)).toBe('lorem ipsum');
         });
+      });
+    });
+
+    describe('Non String text inputs', () => {
+      const form = document.createElement('form');
+      form.innerHTML = `
+        <input type="text" name="age" id="age" value="32"/>
+        <input type="text" name="height" id="height" value="1.70"/>
+        <input type="text" name="terms" id="terms" value="true"/>
+        <input type="text" name="kids" id="kids" value="false"/>
+        <input type="text" name="birthday" id="birthday" value="2022/06/06"/>
+        <input type="text" name="pets" id="pets" value='["Armin", "Trico"]'/>
+        <input type="text" name="area" id="area" value='{ "zip": "110010", "latlong": 1293847}'/>
+      `;
+
+      const age = getFullPropTypeInfo('age', form);
+      const height = getFullPropTypeInfo('height', form);
+      const terms = getFullPropTypeInfo('terms', form);
+      const kids = getFullPropTypeInfo('kids', form);
+      const birthday = getFullPropTypeInfo('birthday', form);
+      const pets = getFullPropTypeInfo('pets', form);
+      const area = getFullPropTypeInfo('area', form);
+      const source = createFormPropertySource()(form);
+
+      it('Should return transformed input values for all possible types', () => {
+        expect(source.getProp(age.number.asInput)).toBe(32);
+        expect(source.getProp(height.number.asInput)).toBe(1.7);
+        expect(source.getProp(terms.boolean.asInput)).toBe(true);
+        expect(source.getProp(kids.boolean.asInput)).toBe(false);
+        expect(source.getProp(birthday.date.asInput)).toBeInstanceOf(Date);
+        expect(source.getProp(pets.array.asInput)).toEqual(['Armin', 'Trico']);
+        expect(source.getProp(area.object.asInput)).toEqual({ zip: '110010', latlong: 1293847 });
+      });
+
+      it('Should return the same transformed input values when passing an input element target and a form element target', () => {
+        expect(source.getProp(age.number.asInput)).toBe(source.getProp(age.number.asForm));
+        expect(source.getProp(age.number.asInput)).toBe(source.getProp(age.number.asForm));
+        expect(source.getProp(height.number.asInput)).toBe(source.getProp(height.number.asForm));
+        expect(source.getProp(terms.boolean.asInput)).toBe(source.getProp(terms.boolean.asForm));
+        expect(source.getProp(kids.boolean.asInput)).toBe(source.getProp(kids.boolean.asForm));
+        expect(source.getProp(birthday.date.asInput)).toEqual(source.getProp(birthday.date.asForm));
+        expect(source.getProp(pets.array.asInput)).toEqual(source.getProp(pets.array.asForm));
+        expect(source.getProp(area.object.asInput)).toEqual(source.getProp(area.object.asForm));
       });
     });
 
