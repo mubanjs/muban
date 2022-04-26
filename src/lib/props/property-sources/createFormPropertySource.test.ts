@@ -236,18 +236,18 @@ describe('createFormPropertySource', () => {
       ).toStrictEqual(JSON.stringify(['foo', 'bar']));
     });
 
-    it('Should return undefined when trying to get FormData not using type "Object"', () => {
+    it('Should return undefined when passing a form an an unmatching name', () => {
       const form = document.createElement('form');
-      const wrongTypePropInfo: PropTypeInfo = {
+      const unmatchingName: PropTypeInfo = {
         name: 'myForm',
-        type: String, // This should be Object
+        type: String,
         source: {
-          name: '',
+          name: 'nomatch',
           target: form,
           type: 'form',
         },
       };
-      expect(createFormPropertySource()(form).getProp(wrongTypePropInfo)).toBe(undefined);
+      expect(createFormPropertySource()(form).getProp(unmatchingName)).toBe(undefined);
     });
 
     it('Should return FormData when using type "Object" and an unnamed source', () => {

@@ -42,10 +42,11 @@ export function createFormPropertySource(): PropertySource {
             return undefined;
           }
 
-          if (propInfo.type === Object && !propInfo.source.name) return formData;
+          if (propInfo.type === Object) return formData;
 
-          if (propInfo.type !== Object && propInfo.source.name) {
+          if (propInfo.type !== Object) {
             if (propInfo.type === Array) return childInputValues;
+            if (childInputValues.length === 0) return undefined;
             return convertSourceValue(propInfo, (childInputValues[0] as string) || '');
           }
 
