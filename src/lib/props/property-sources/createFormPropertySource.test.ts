@@ -182,6 +182,7 @@ describe('createFormPropertySource', () => {
       `;
       const select = getFullPropTypeInfo('select', form, 'preference');
       const selectBoolean = getFullPropTypeInfo('select', form, 'preferenceBoolean');
+
       expect(createFormPropertySource()(form).getProp(selectBoolean.boolean.asInput)).toBe(true);
       expect(createFormPropertySource()(form).getProp(selectBoolean.boolean.asForm)).toBe(true);
       expect(createFormPropertySource()(form).getProp(select.string.asInput)).toBe('foo');
@@ -196,30 +197,16 @@ describe('createFormPropertySource', () => {
           <option value="bar" selected>bar</option>
         </select>
       `;
-      const candidates: PropTypeInfo = {
-        name: 'multiselect',
-        type: Array,
-        source: {
-          name: '',
-          target: form.querySelector<HTMLElement>('#candidates')!,
-          type: 'form',
-        },
-      };
-      const candidatesFromFormData: PropTypeInfo = {
-        name: 'multiselect',
-        type: Array,
-        source: {
-          target: form,
-          type: 'form',
-          name: 'candidates',
-        },
-      };
-      expect(JSON.stringify(createFormPropertySource()(form).getProp(candidates))).toStrictEqual(
-        JSON.stringify(['foo', 'bar']),
-      );
-      expect(
-        JSON.stringify(createFormPropertySource()(form).getProp(candidatesFromFormData)),
-      ).toStrictEqual(JSON.stringify(['foo', 'bar']));
+      const candidates = getFullPropTypeInfo('multiselect', form, 'candidates');
+
+      expect(createFormPropertySource()(form).getProp(candidates.array.asForm)).toEqual([
+        'foo',
+        'bar',
+      ]);
+      expect(createFormPropertySource()(form).getProp(candidates.array.asInput)).toEqual([
+        'foo',
+        'bar',
+      ]);
     });
 
     it('Should return undefined when passing a form an an unmatching name', () => {
