@@ -29,7 +29,6 @@ function getMixedPropTypeInfo(
   };
   const inputTarget: PropTypeInfo = { ...formTarget };
   const inputField = form.querySelector<HTMLElement>(`#${finalSourceName}`);
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   if (inputField) inputTarget.source.target = inputField;
 
   return {

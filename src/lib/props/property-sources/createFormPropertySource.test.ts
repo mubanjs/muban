@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-import type { PropTypeDefinition } from '../../..';
 import type { PropTypeInfo } from '../propDefinitions.types';
 import { createFormPropertySource } from './createFormPropertySource';
 import { getFullPropTypeInfo } from './createFormPropertySource.testutils';
@@ -168,99 +166,70 @@ describe('createFormPropertySource', () => {
       });
     });
 
-    it('Should return the select value if the target is a select that is not multiple', () => {
-      const form = document.createElement('form');
-      form.innerHTML = `
-        <select id="preference" name="preference">
-          <option value="foo" selected>foo</option>
-          <option value="bar">bar</option>
-        </select>
-        <select id="preferenceBoolean" name="preferenceBoolean">
-          <option value="true" selected>foo</option>
-          <option value="false">bar</option>
-        </select>
-      `;
-      const select = getFullPropTypeInfo('select', form, 'preference');
-      const selectBoolean = getFullPropTypeInfo('select', form, 'preferenceBoolean');
+    describe('select', () => {
+      it('Should return the select value if the target is a select that is not multiple', () => {
+        const form = document.createElement('form');
+        form.innerHTML = `
+          <select id="preference" name="preference">
+            <option value="foo" selected>foo</option>
+            <option value="bar">bar</option>
+          </select>
+          <select id="preferenceBoolean" name="preferenceBoolean">
+            <option value="true" selected>foo</option>
+            <option value="false">bar</option>
+          </select>
+        `;
+        const select = getFullPropTypeInfo('select', form, 'preference');
+        const selectBoolean = getFullPropTypeInfo('select', form, 'preferenceBoolean');
 
-      expect(createFormPropertySource()(form).getProp(selectBoolean.boolean.asInput)).toBe(true);
-      expect(createFormPropertySource()(form).getProp(selectBoolean.boolean.asForm)).toBe(true);
-      expect(createFormPropertySource()(form).getProp(select.string.asInput)).toBe('foo');
-      expect(createFormPropertySource()(form).getProp(select.string.asForm)).toBe('foo');
+        expect(createFormPropertySource()(form).getProp(selectBoolean.boolean.asInput)).toBe(true);
+        expect(createFormPropertySource()(form).getProp(selectBoolean.boolean.asForm)).toBe(true);
+        expect(createFormPropertySource()(form).getProp(select.string.asInput)).toBe('foo');
+        expect(createFormPropertySource()(form).getProp(select.string.asForm)).toBe('foo');
+      });
+
+      it('Should return an array of strings if the target is a multiselect', () => {
+        const form = document.createElement('form');
+        form.innerHTML = `
+          <select id="candidates" name="candidates" multiple>
+            <option value="foo" selected>foo</option>
+            <option value="bar" selected>bar</option>
+          </select>
+        `;
+        const candidates = getFullPropTypeInfo('multiselect', form, 'candidates');
+
+        expect(createFormPropertySource()(form).getProp(candidates.array.asForm)).toEqual([
+          'foo',
+          'bar',
+        ]);
+        expect(createFormPropertySource()(form).getProp(candidates.array.asInput)).toEqual([
+          'foo',
+          'bar',
+        ]);
+      });
     });
 
-    it('Should return an array of strings if the target is a multiselect', () => {
-      const form = document.createElement('form');
-      form.innerHTML = `
-        <select id="candidates" name="candidates" multiple>
-          <option value="foo" selected>foo</option>
-          <option value="bar" selected>bar</option>
-        </select>
-      `;
-      const candidates = getFullPropTypeInfo('multiselect', form, 'candidates');
+    describe('form', () => {
+      it('Should return undefined when passing a form as target and an unmatching child input', () => {
+        const form = document.createElement('form');
+        const unmatchingName = getFullPropTypeInfo('myForm', form, 'nomatch');
 
-      expect(createFormPropertySource()(form).getProp(candidates.array.asForm)).toEqual([
-        'foo',
-        'bar',
-      ]);
-      expect(createFormPropertySource()(form).getProp(candidates.array.asInput)).toEqual([
-        'foo',
-        'bar',
-      ]);
-    });
+        expect(createFormPropertySource()(form).getProp(unmatchingName.string.asForm)).toBe(
+          undefined,
+        );
+      });
 
-    it('Should return undefined when passing a form an an unmatching name', () => {
-      const form = document.createElement('form');
-      const unmatchingName: PropTypeInfo = {
-        name: 'myForm',
-        type: String,
-        source: {
-          name: 'nomatch',
-          target: form,
-          type: 'form',
-        },
-      };
-      expect(createFormPropertySource()(form).getProp(unmatchingName)).toBe(undefined);
-    });
+      it('Should return FormData object when using type "Object" and formData: true', () => {
+        const form = document.createElement('form');
+        form.innerHTML = `
+          <input id="email" type="email" name="email" value="juan.polanco@mediamonks.com"/>
+        `;
+        const validForm = getFullPropTypeInfo('validForm', form, undefined, true);
+        const formData = createFormPropertySource()(form).getProp(validForm.object.asForm);
 
-    it('Should return FormData when using type "Object" and an unnamed source', () => {
-      const form = document.createElement('form');
-      form.innerHTML = `
-        <input id="email" type="email" name="email" value="juan.polanco@mediamonks.com"/>
-      `;
-      const validForm: PropTypeInfo = {
-        name: 'myForm',
-        type: Object,
-        source: {
-          name: '',
-          target: form,
-          type: 'form',
-          formData: true,
-        },
-      };
-      expect(createFormPropertySource()(form).getProp(validForm)).toBeInstanceOf(FormData);
-      expect((createFormPropertySource()(form).getProp(validForm) as FormData).get('email')).toBe(
-        'juan.polanco@mediamonks.com',
-      );
-    });
-
-    it('Should return the input value when passing a form element and a named source', () => {
-      const form = document.createElement('form');
-      form.innerHTML = `
-        <input id="email" type="email" name="email" value="juan.polanco@mediamonks.com"/>
-      `;
-      const validForm: PropTypeInfo = {
-        name: 'myForm',
-        type: String,
-        source: {
-          target: form,
-          type: 'form',
-          name: 'email',
-        },
-      };
-      expect(createFormPropertySource()(form).getProp(validForm)).toBe(
-        'juan.polanco@mediamonks.com',
-      );
+        expect(formData).toBeInstanceOf(FormData);
+        expect((formData as FormData).get('email')).toBe('juan.polanco@mediamonks.com');
+      });
     });
   });
 });
