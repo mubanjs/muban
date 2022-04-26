@@ -262,6 +262,7 @@ describe('createFormPropertySource', () => {
           name: '',
           target: form,
           type: 'form',
+          formData: true,
         },
       };
       expect(createFormPropertySource()(form).getProp(validForm)).toBeInstanceOf(FormData);

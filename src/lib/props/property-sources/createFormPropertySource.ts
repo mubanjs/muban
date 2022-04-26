@@ -42,7 +42,7 @@ export function createFormPropertySource(): PropertySource {
             return undefined;
           }
 
-          if (propInfo.type === Object) return formData;
+          if (propInfo.type === Object && propInfo.source.formData) return formData;
 
           if (propInfo.type !== Object) {
             if (propInfo.type === Array) return childInputValues;
