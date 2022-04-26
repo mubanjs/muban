@@ -545,11 +545,11 @@ defineComponent({
     // get the FormData from the form ref
     // outputs FormData {}
     form: propType.object.source(
-      { target: 'form', type: 'form'},
+      { target: 'form', type: 'form', formData: true},
     ),
     // Extract the 'email' property from the form ref FormData object
     // outputs "user@company.com"
-    form: propType.object.source(
+    form: propType.string.source(
       { target: 'form', type: 'form', name: 'email'},
     ),
     // get the value from the email ref
@@ -557,7 +557,7 @@ defineComponent({
     email: propType.string.source(
       { target: 'email', type: 'form'},
     ),
-    // conversions to Booleans, Numbers and Dates also works
+    // conversions to Booleans, Numbers and Dates also work
     // outputs "986868" (as a number)
     phone: propType.number.source(
       { target: 'phone', type: 'form'},
