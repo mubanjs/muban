@@ -3,6 +3,46 @@ import type { PropTypeDefinition } from '../../..';
 import type { PropTypeInfo } from '../propDefinitions.types';
 import { createFormPropertySource } from './createFormPropertySource';
 
+function getPropTypeInfo(
+  name: string,
+  form: HTMLFormElement,
+  type:
+    | typeof Number
+    | typeof String
+    | typeof Boolean
+    | typeof Date
+    | typeof Array
+    | typeof Object
+    | typeof Function,
+  sourceName?: string,
+) {
+  const finalSourceName = sourceName || name;
+  const inputTarget: PropTypeInfo = {
+    name,
+    type,
+    source: {
+      name: finalSourceName,
+      target: form.querySelector<HTMLElement>(`#${finalSourceName}`)!,
+      type: 'form',
+    },
+  };
+
+  const formTarget: PropTypeInfo = {
+    name,
+    type,
+    source: {
+      name: finalSourceName,
+      target: form,
+      type: 'form',
+    },
+  };
+
+  return {
+    asForm: formTarget,
+    asInput: inputTarget,
+  };
+}
+
 describe('createFormPropertySource', () => {
   describe('function itself', () => {
     it('should create without errors', () => {
@@ -46,45 +86,33 @@ describe('createFormPropertySource', () => {
   });
 
   describe('getProp', () => {
-    it('Should return the input value if the target is a text input', () => {
+    describe('Text inputs', () => {
       const form = document.createElement('form');
       form.innerHTML = `
         <input id="email" type="email" name="email" value="juan.polanco@mediamonks.com"/>
         <input id="password" type="password" name="password" value="123456"/>
         <textarea id="description" name="description">lorem ipsum</textarea>
       `;
-      const emailInput: PropTypeInfo = {
-        name: 'email',
-        type: String,
-        source: {
-          name: '',
-          target: form.querySelector<HTMLElement>('#email')!,
-          type: 'form',
-        },
-      };
-      const passwordInput: PropTypeInfo = {
-        name: 'password',
-        type: String,
-        source: {
-          name: '',
-          target: form.querySelector<HTMLElement>('#password')!,
-          type: 'form',
-        },
-      };
-      const descriptionInput: PropTypeInfo = {
-        name: 'description',
-        type: String,
-        source: {
-          name: '',
-          target: form.querySelector<HTMLElement>('#description')!,
-          type: 'form',
-        },
-      };
-      expect(createFormPropertySource()(form).getProp(emailInput)).toBe(
-        'juan.polanco@mediamonks.com',
-      );
-      expect(createFormPropertySource()(form).getProp(passwordInput)).toBe('123456');
-      expect(createFormPropertySource()(form).getProp(descriptionInput)).toBe('lorem ipsum');
+      const email = getPropTypeInfo('email', form, String);
+      const password = getPropTypeInfo('password', form, String);
+      const description = getPropTypeInfo('description', form, String);
+      const formSource = createFormPropertySource()(form);
+
+      describe('input ref', () => {
+        it('Should return the input value if the target is a text input', () => {
+          expect(formSource.getProp(email.asInput)).toBe('juan.polanco@mediamonks.com');
+          expect(formSource.getProp(password.asInput)).toBe('123456');
+          expect(formSource.getProp(description.asInput)).toBe('lorem ipsum');
+        });
+      });
+
+      describe('form ref', () => {
+        it('Should return the child input value if the target form', () => {
+          expect(formSource.getProp(email.asForm)).toBe('juan.polanco@mediamonks.com');
+          expect(formSource.getProp(password.asForm)).toBe('123456');
+          expect(formSource.getProp(description.asForm)).toBe('lorem ipsum');
+        });
+      });
     });
 
     describe('checkbox', () => {
