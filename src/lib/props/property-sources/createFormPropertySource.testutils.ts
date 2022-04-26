@@ -37,6 +37,17 @@ function getMixedPropTypeInfo(
   };
 }
 
+/**
+ * For a given form return an object containg two PropTypeInfo, one where the
+ * target is the form itself and one where the target is the form's child input
+ *
+ * Useful for testing value extraction for a form and it's child inputs
+ * @param {string} name prop info name
+ * @param {HTMLFormElement} html target element
+ * @param {string} sourceName to be used as source.name
+ * @param {boolean } formData to be used as source.formData
+ * @returns {FullPropTypeInfo}
+ */
 export function getFullPropTypeInfo(
   name: string,
   form: HTMLFormElement,
