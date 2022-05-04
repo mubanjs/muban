@@ -219,6 +219,13 @@ describe('createFormPropertySource', () => {
         );
       });
 
+      it('Should return undefined when using formData: true and a type different than Object', () => {
+        const form = document.createElement('form');
+        const validForm = getFullPropTypeInfo('validForm', form, undefined, true);
+        const formData = createFormPropertySource()(form).getProp(validForm.number.asForm);
+        expect(formData).toBe(undefined);
+      });
+
       it('Should return FormData object when using type "Object" and formData: true', () => {
         const form = document.createElement('form');
         form.innerHTML = `

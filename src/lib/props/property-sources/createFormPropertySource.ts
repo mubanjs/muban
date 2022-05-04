@@ -33,10 +33,10 @@ export function createFormPropertySource(): PropertySource {
           const formData = new FormData(element as HTMLFormElement);
           const childInputValues = formData.getAll(propInfo.source.name || '');
 
-          if (propInfo.type === Object && propInfo.source.name) {
+          if (propInfo.type !== Object && propInfo.source.formData) {
             // eslint-disable-next-line no-console
             console.warn(
-              dedent`The property "${propInfo.name}" is trying to get a FormData object but is passing "${propInfo.source.name}" as "name", remove the name if you want the full FormData object
+              dedent`The property "${propInfo.name}" is trying to get a FormData object but is type "${propInfo.type.name}" use type "Object" if you want the full FormData object
                   Returning "undefined".`,
             );
             return undefined;
