@@ -40,9 +40,10 @@ export function createFormPropertySource(): PropertySource {
           }
 
           const formData = new FormData(element as HTMLFormElement);
-          const childInputValues = formData.getAll(propInfo.source.name || '');
 
           if (propInfo.type === Object && propInfo.source.formData) return formData;
+
+          const childInputValues = formData.getAll(propInfo.source.name || '');
 
           if (propInfo.type !== Object) {
             if (propInfo.type === Array) return childInputValues;
