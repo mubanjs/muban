@@ -1,4 +1,4 @@
-import type { PropTypeInfo } from '../propDefinitions.types';
+import type { PropTypeDefinition, PropTypeInfo } from '../propDefinitions.types';
 
 type PossibleTypes = 'number' | 'string' | 'boolean' | 'date' | 'array' | 'object';
 type MixedProptypeInfo = {
@@ -12,7 +12,7 @@ type FullPropTypeInfo = {
 function getMixedPropTypeInfo(
   name: string,
   form: HTMLFormElement,
-  type: typeof Number | typeof String | typeof Boolean | typeof Date | typeof Array | typeof Object,
+  type: PropTypeDefinition['type'],
   sourceName?: string,
   formData?: boolean,
 ): MixedProptypeInfo {

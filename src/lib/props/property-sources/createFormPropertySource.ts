@@ -30,9 +30,6 @@ export function createFormPropertySource(): PropertySource {
         const formDataValue = (previousValue: unknown) => {
           if (!isForm) return previousValue;
 
-          const formData = new FormData(element as HTMLFormElement);
-          const childInputValues = formData.getAll(propInfo.source.name || '');
-
           if (propInfo.type !== Object && propInfo.source.formData) {
             // eslint-disable-next-line no-console
             console.warn(
@@ -41,6 +38,9 @@ export function createFormPropertySource(): PropertySource {
             );
             return undefined;
           }
+
+          const formData = new FormData(element as HTMLFormElement);
+          const childInputValues = formData.getAll(propInfo.source.name || '');
 
           if (propInfo.type === Object && propInfo.source.formData) return formData;
 
