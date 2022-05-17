@@ -11,6 +11,8 @@ export function createFormPropertySource(): PropertySource {
         const element = propInfo.source.target!;
         const isCheckbox =
           element.nodeName === 'INPUT' && (element as HTMLInputElement).type === 'checkbox';
+        const isRadio =
+          element.nodeName === 'INPUT' && (element as HTMLInputElement).type === 'radio';
         const isForm = element.nodeName === 'FORM';
         const isInput =
           ['INPUT', 'TEXTAREA', 'SELECT'].includes(element.nodeName) &&
@@ -57,6 +59,15 @@ export function createFormPropertySource(): PropertySource {
 
         const textInput = (previousValue: unknown) => {
           const input = element as HTMLInputElement;
+
+          if (isRadio && !isForm) {
+            // eslint-disable-next-line no-console
+            console.warn(
+              dedent`The property "${propInfo.name}" is trying to get a radio button value but the target is not the parent form, if you have multiple radio buttons with a shared name use the parent form as target
+                    Returning the input value "${input.value}" despite the fact it could be unchecked.`,
+            );
+          }
+
           if (isInput && !input.multiple) return convertSourceValue(propInfo, input.value);
           return previousValue;
         };

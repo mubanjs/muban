@@ -1,3 +1,4 @@
+import dedent from 'ts-dedent';
 import type { PropTypeInfo } from '../propDefinitions.types';
 import { createFormPropertySource } from './createFormPropertySource';
 import { getFullPropTypeInfo } from './createFormPropertySource.testutils';
@@ -163,6 +164,35 @@ describe('createFormPropertySource', () => {
           'apple',
           'banana',
         ]);
+      });
+    });
+
+    describe('radio', () => {
+      const form = document.createElement('form');
+      form.innerHTML = `
+        <input id="onBoolean" value="single" name="maritalStatus" type="radio" checked/>
+        <input id="offBoolean" value="married" name="maritalStatus" type="radio" />
+      `;
+
+      const radioDirectValue = getFullPropTypeInfo('offBoolean', form);
+      const radioFormDataValue = getFullPropTypeInfo('onBoolean', form, 'maritalStatus');
+
+      it('Should show a warning message and return the input value when trying to get a radio button value directly', () => {
+        const consoleSpy = jest.spyOn(console, 'warn');
+
+        expect(createFormPropertySource()(form).getProp(radioDirectValue.string.asInput)).toBe(
+          'married',
+        );
+
+        expect(consoleSpy)
+          .toHaveBeenCalledWith(dedent`The property "offBoolean" is trying to get a radio button value but the target is not the parent form, if you have multiple radio buttons with a shared name use the parent form as target
+          Returning the input value "married" despite the fact it could be unchecked.`);
+      });
+
+      it('Should return the selected radio value when using the parent form as a target', () => {
+        expect(createFormPropertySource()(form).getProp(radioFormDataValue.string.asForm)).toBe(
+          'single',
+        );
       });
     });
 
