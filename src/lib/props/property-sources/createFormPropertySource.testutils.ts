@@ -1,3 +1,4 @@
+import getPropTypeInfo from '../../test-utils/propTypes';
 import type { PropTypeDefinition, PropTypeInfo } from '../propDefinitions.types';
 
 type PossibleTypes = 'number' | 'string' | 'boolean' | 'date' | 'array' | 'object';
@@ -13,22 +14,22 @@ function getMixedPropTypeInfo(
   name: string,
   form: HTMLFormElement,
   type: PropTypeDefinition['type'],
-  sourceName?: string,
   formData?: boolean,
+  sourceName: string = '',
 ): MixedProptypeInfo {
-  const finalSourceName = sourceName || name;
-  const formTarget: PropTypeInfo = {
+  const formTarget: PropTypeInfo = getPropTypeInfo({
     name,
     type,
     source: {
-      name: finalSourceName,
+      name: sourceName,
       target: form,
       type: 'form',
       formData,
     },
-  };
+  });
+
   const inputTarget: PropTypeInfo = { ...formTarget };
-  const inputField = form.querySelector<HTMLElement>(`#${finalSourceName}`);
+  const inputField = form.querySelector<HTMLElement>(`#${formTarget.source.name}`);
   if (inputField) inputTarget.source.target = inputField;
 
   return {
@@ -55,11 +56,11 @@ export function getFullPropTypeInfo(
   formData?: boolean,
 ): FullPropTypeInfo {
   return {
-    number: getMixedPropTypeInfo(name, form, Number, sourceName, formData),
-    string: getMixedPropTypeInfo(name, form, String, sourceName, formData),
-    boolean: getMixedPropTypeInfo(name, form, Boolean, sourceName, formData),
-    date: getMixedPropTypeInfo(name, form, Date, sourceName, formData),
-    array: getMixedPropTypeInfo(name, form, Array, sourceName, formData),
-    object: getMixedPropTypeInfo(name, form, Object, sourceName, formData),
+    number: getMixedPropTypeInfo(name, form, Number, formData, sourceName),
+    string: getMixedPropTypeInfo(name, form, String, formData, sourceName),
+    boolean: getMixedPropTypeInfo(name, form, Boolean, formData, sourceName),
+    date: getMixedPropTypeInfo(name, form, Date, formData, sourceName),
+    array: getMixedPropTypeInfo(name, form, Array, formData, sourceName),
+    object: getMixedPropTypeInfo(name, form, Object, formData, sourceName),
   };
 }
