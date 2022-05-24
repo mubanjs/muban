@@ -1,6 +1,6 @@
 {
   "name": "@muban/muban",
-  "version": "1.0.0-alpha.32",
+  "version": "1.0.0-alpha.33",
   "description": "Writing components for server-rendered HTML",
   "keywords": [
     "muban",
@@ -27,12 +27,11 @@
   "scripts": {
     "dev": "npm-run-all -p dev:*",
     "dev:esm": "tsc -p ./tsconfig.build.esm.json --watch",
-    "build": "npm-run-all -s clean build:* clean:build",
+    "build": "npm-run-all -s clean build:*",
     "build:ts-cjs": "tsc -p ./tsconfig.build.cjs.json",
     "build:ts-esm": "tsc -p ./tsconfig.build.esm.json",
     "clean": "npm-run-all clean:*",
     "clean:test": "shx rm -rf coverage .nyc_output",
-    "clean:build": "shx rm -rf tmp",
     "clean:npm": "shx rm -rf dist types",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
     "test": "jest ./src/",

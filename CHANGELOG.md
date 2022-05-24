@@ -11,6 +11,18 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add `form` source
 
+## [1.0.0-alpha.34] - 2022-04-15
+
+### Fixed
+
+- Fixed Jest compatibility by renaming the `global` const.
+
+## [1.0.0-alpha.33] - 2022-04-14
+
+### Fixed
+
+- Fixed importing of non-exported files by also exporting types in `dist/esm` folder.
+
 ## [1.0.0-alpha.32] - 2022-02-28
 
 ### Fixed

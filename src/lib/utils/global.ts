@@ -41,10 +41,12 @@ declare global {
   }
 }
 
-const global = (globalThis || window || {}) as unknown as Window;
+// can't be called just "global", jest won't allow it
+// https://github.com/facebook/jest/issues/10565
+const globalScope = (globalThis || window || {}) as unknown as Window;
 
 // eslint-disable-next-line no-multi-assign
-const globalInstance = (global.__muban__ = global.__muban__ ?? new MubanGlobal());
+const globalInstance = (globalScope.__muban__ = globalScope.__muban__ ?? new MubanGlobal());
 export function getGlobalMubanInstance(): MubanGlobal {
   return globalInstance;
 }
