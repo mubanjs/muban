@@ -49,7 +49,7 @@ export function createFormPropertySource(): PropertySource {
           const childInputValues = formData.getAll(propInfo.source.name || '');
           let valueIsStringifiedArray = false;
 
-          if (childInputValues.length > 0) {
+          if (childInputValues.length > 0 && propInfo.type === Array) {
             try {
               const parsedValue = JSON.parse(childInputValues[0] as string);
               if (Array.isArray(parsedValue)) valueIsStringifiedArray = true;
