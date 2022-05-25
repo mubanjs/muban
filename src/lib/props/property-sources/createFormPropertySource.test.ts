@@ -49,9 +49,9 @@ describe('createFormPropertySource', () => {
     describe('Text inputs', () => {
       const form = document.createElement('form');
       form.innerHTML = `
-        <input id="email" type="email" name="email" value="juan.polanco@mediamonks.com"/>
-        <input id="password" type="password" name="password" value="123456"/>
-        <textarea id="description" name="description">lorem ipsum</textarea>
+        <input type="email" name="email" value="juan.polanco@mediamonks.com"/>
+        <input type="password" name="password" value="123456"/>
+        <textarea name="description">lorem ipsum</textarea>
       `;
       const email = getFullPropTypeInfo('email', form);
       const password = getFullPropTypeInfo('password', form);
@@ -78,13 +78,13 @@ describe('createFormPropertySource', () => {
     describe('Non String text inputs', () => {
       const form = document.createElement('form');
       form.innerHTML = `
-        <input type="text" name="age" id="age" value="32"/>
-        <input type="text" name="height" id="height" value="1.70"/>
-        <input type="text" name="terms" id="terms" value="true"/>
-        <input type="text" name="kids" id="kids" value="false"/>
-        <input type="text" name="birthday" id="birthday" value="2022/06/06"/>
-        <input type="text" name="pets" id="pets" value='["Armin", "Trico"]'/>
-        <input type="text" name="area" id="area" value='{ "zip": "110010", "latlong": 1293847}'/>
+        <input type="text" name="age" value="32"/>
+        <input type="text" name="height" value="1.70"/>
+        <input type="text" name="terms" value="true"/>
+        <input type="text" name="kids" value="false"/>
+        <input type="text" name="birthday" value="2022/06/06"/>
+        <input type="text" name="pets" value='["Armin", "Trico"]'/>
+        <input type="text" name="area" value='{ "zip": "110010", "latlong": 1293847}'/>
       `;
 
       const age = getFullPropTypeInfo('age', form);
@@ -121,12 +121,12 @@ describe('createFormPropertySource', () => {
     describe('checkbox', () => {
       const form = document.createElement('form');
       form.innerHTML = `
-        <input id="onBoolean" name="onBoolean" type="checkbox" checked/>
-        <input id="offBoolean" name="offBoolean" type="checkbox" />
-        <input id="onString" name="onString" type="checkbox" checked/>
-        <input id="offString" name="offString" type="checkbox" />
-        <input id="onStringValue" name="onStringValue" type="checkbox" value="foo" checked />
-        <input id="offStringValue" name="offStringValue" type="checkbox" value="foo" />
+        <input name="onBoolean" type="checkbox" checked/>
+        <input name="offBoolean" type="checkbox" />
+        <input name="onString" type="checkbox" checked/>
+        <input name="offString" type="checkbox" />
+        <input name="onStringValue" type="checkbox" value="foo" checked />
+        <input name="offStringValue" type="checkbox" value="foo" />
       `;
 
       const onBoolean = getFullPropTypeInfo('onBoolean', form);
@@ -170,11 +170,13 @@ describe('createFormPropertySource', () => {
     describe('radio', () => {
       const form = document.createElement('form');
       form.innerHTML = `
-        <input id="onBoolean" value="single" name="maritalStatus" type="radio" checked/>
+        <input value="single" name="maritalStatus" type="radio" checked/>
         <input id="offBoolean" value="married" name="maritalStatus" type="radio" />
       `;
 
-      const radioDirectValue = getFullPropTypeInfo('offBoolean', form);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const offBooleanElement = form.querySelector('#offBoolean')!;
+      const radioDirectValue = getFullPropTypeInfo('offBoolean', offBooleanElement);
       const radioFormDataValue = getFullPropTypeInfo('onBoolean', form, 'maritalStatus');
 
       it('Should show a warning message and return the input value when trying to get a radio button value directly', () => {
@@ -200,11 +202,11 @@ describe('createFormPropertySource', () => {
       it('Should return the select value if the target is a select that is not multiple', () => {
         const form = document.createElement('form');
         form.innerHTML = `
-          <select id="preference" name="preference">
+          <select name="preference">
             <option value="foo" selected>foo</option>
             <option value="bar">bar</option>
           </select>
-          <select id="preferenceBoolean" name="preferenceBoolean">
+          <select name="preferenceBoolean">
             <option value="true" selected>foo</option>
             <option value="false">bar</option>
           </select>
@@ -221,7 +223,7 @@ describe('createFormPropertySource', () => {
       it('Should return an array of strings if the target is a multiselect', () => {
         const form = document.createElement('form');
         form.innerHTML = `
-          <select id="candidates" name="candidates" multiple>
+          <select name="candidates" multiple>
             <option value="foo" selected>foo</option>
             <option value="bar" selected>bar</option>
           </select>
@@ -259,7 +261,7 @@ describe('createFormPropertySource', () => {
       it('Should return FormData object when using type "Object" and formData: true', () => {
         const form = document.createElement('form');
         form.innerHTML = `
-          <input id="email" type="email" name="email" value="juan.polanco@mediamonks.com"/>
+          <input type="email" name="email" value="juan.polanco@mediamonks.com"/>
         `;
         const validForm = getFullPropTypeInfo('validForm', form, undefined, true);
         const formData = createFormPropertySource()(form).getProp(validForm.object.asForm);

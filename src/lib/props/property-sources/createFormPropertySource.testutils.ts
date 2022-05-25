@@ -12,7 +12,7 @@ type FullPropTypeInfo = {
 
 function getMixedPropTypeInfo(
   name: string,
-  form: HTMLFormElement,
+  targetElement: HTMLElement,
   type: PropTypeDefinition['type'],
   formData?: boolean,
   sourceName: string = '',
@@ -22,15 +22,24 @@ function getMixedPropTypeInfo(
     type,
     source: {
       name: sourceName,
-      target: form,
+      target: targetElement,
       type: 'form',
       formData,
     },
   });
 
-  const inputTarget: PropTypeInfo = { ...formTarget };
-  const inputField = form.querySelector<HTMLElement>(`#${formTarget.source.name}`);
-  if (inputField) inputTarget.source.target = inputField;
+  const inputTarget: PropTypeInfo = getPropTypeInfo({
+    name,
+    type,
+    source: {
+      name: sourceName,
+      target:
+        targetElement.querySelector<HTMLElement>(`[name='${formTarget.source.name}']`) ||
+        targetElement,
+      type: 'form',
+      formData,
+    },
+  });
 
   return {
     asForm: formTarget,
@@ -44,23 +53,25 @@ function getMixedPropTypeInfo(
  *
  * Useful for testing value extraction for a form and it's child inputs
  * @param {string} name prop info name
- * @param {HTMLFormElement} html target element
+ * @param {Element} targetElement target element
  * @param {string} sourceName to be used as source.name
  * @param {boolean } formData to be used as source.formData
  * @returns {FullPropTypeInfo}
  */
 export function getFullPropTypeInfo(
   name: string,
-  form: HTMLFormElement,
+  targetElement: Element,
   sourceName?: string,
   formData?: boolean,
 ): FullPropTypeInfo {
+  const target = targetElement as HTMLElement;
+
   return {
-    number: getMixedPropTypeInfo(name, form, Number, formData, sourceName),
-    string: getMixedPropTypeInfo(name, form, String, formData, sourceName),
-    boolean: getMixedPropTypeInfo(name, form, Boolean, formData, sourceName),
-    date: getMixedPropTypeInfo(name, form, Date, formData, sourceName),
-    array: getMixedPropTypeInfo(name, form, Array, formData, sourceName),
-    object: getMixedPropTypeInfo(name, form, Object, formData, sourceName),
+    number: getMixedPropTypeInfo(name, target, Number, formData, sourceName),
+    string: getMixedPropTypeInfo(name, target, String, formData, sourceName),
+    boolean: getMixedPropTypeInfo(name, target, Boolean, formData, sourceName),
+    date: getMixedPropTypeInfo(name, target, Date, formData, sourceName),
+    array: getMixedPropTypeInfo(name, target, Array, formData, sourceName),
+    object: getMixedPropTypeInfo(name, target, Object, formData, sourceName),
   };
 }

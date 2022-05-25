@@ -47,14 +47,19 @@ export function createFormPropertySource(): PropertySource {
           }
 
           const childInputValues = formData.getAll(propInfo.source.name || '');
+          let valueIsStringifiedArray = false;
 
-          if (propInfo.type !== Object) {
-            if (propInfo.type === Array) return childInputValues;
-            if (childInputValues.length === 0) return undefined;
-            return convertSourceValue(propInfo, (childInputValues[0] as string) || '');
+          if (childInputValues.length > 0) {
+            try {
+              const parsedValue = JSON.parse(childInputValues[0] as string);
+              if (Array.isArray(parsedValue)) valueIsStringifiedArray = true;
+              // eslint-disable-next-line no-empty
+            } catch {}
           }
 
-          return previousValue;
+          if (propInfo.type === Array && !valueIsStringifiedArray) return childInputValues;
+          if (childInputValues.length === 0) return previousValue;
+          return convertSourceValue(propInfo, (childInputValues[0] as string) || '');
         };
 
         const textInput = (previousValue: unknown) => {
