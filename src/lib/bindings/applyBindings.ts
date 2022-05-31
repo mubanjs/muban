@@ -139,8 +139,8 @@ export const applyBindings = (
             // eslint-disable-next-line no-shadow
             reff?.forEach((ref) => {
               watchEffect(() => {
-                if (['css', 'style', 'attr'].includes(propName)) {
-                  bindingsList[propName as 'css' | 'style' | 'attr']?.(
+                if (['css', 'style', 'attr', 'event'].includes(propName)) {
+                  bindingsList[propName as 'css' | 'style' | 'attr' | 'event']?.(
                     unref(ref).element,
                     bindingValue as any,
                   );
