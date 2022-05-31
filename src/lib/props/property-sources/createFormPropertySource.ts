@@ -47,17 +47,19 @@ export function createFormPropertySource(): PropertySource {
           }
 
           const childInputValues = formData.getAll(propInfo.source.name || '');
-          let valueIsStringifiedArray = false;
 
           if (childInputValues.length > 0 && propInfo.type === Array) {
+            let valueIsStringifiedArray = false;
+
             try {
               const parsedValue = JSON.parse(childInputValues[0] as string);
               if (Array.isArray(parsedValue)) valueIsStringifiedArray = true;
               // eslint-disable-next-line no-empty
             } catch {}
+
+            if (!valueIsStringifiedArray) return childInputValues;
           }
 
-          if (propInfo.type === Array && !valueIsStringifiedArray) return childInputValues;
           if (childInputValues.length === 0) return previousValue;
           return convertSourceValue(propInfo, (childInputValues[0] as string) || '');
         };
