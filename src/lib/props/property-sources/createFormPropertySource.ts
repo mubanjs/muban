@@ -60,7 +60,7 @@ export function createFormPropertySource(): PropertySource {
             if (!valueIsStringifiedArray) return childInputValues;
           }
 
-          if (childInputValues.length === 0) return previousValue;
+          if (childInputValues.length === 0) return undefined;
           return convertSourceValue(propInfo, (childInputValues[0] as string) || '');
         };
 
