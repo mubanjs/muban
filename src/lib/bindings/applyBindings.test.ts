@@ -1,23 +1,24 @@
-import { bind, refComponents, refElement } from '../..';
+import dedent from 'ts-dedent';
+import { bind, refComponents, refComponent } from '../..';
 import { defineComponent } from '../Component';
 
 describe('Apply event bindings', () => {
+  const ButtonComponent = defineComponent({ name: 'button-component' });
+
   it('should apply event bindings to a component', () => {
     const element = document.createElement('div');
-    const button = document.createElement('button');
-
     element.setAttribute('data-component', 'my-component');
-    button.setAttribute('data-ref', 'button');
-
-    element.append(button);
+    element.innerHTML = dedent`
+      <button data-component="button-component">Click me!</button>
+    `;
     document.body.appendChild(element);
 
     const handleClick = jest.fn();
 
-    defineComponent({
+    const MyComponent = defineComponent({
       name: 'my-component',
       refs: {
-        button: refElement('button'),
+        button: refComponent(ButtonComponent),
       },
       setup({ refs }) {
         return [
@@ -30,33 +31,23 @@ describe('Apply event bindings', () => {
       },
     })(element);
 
-    button.click();
+    MyComponent.element.querySelector('button')?.click();
     expect(handleClick).toBeCalledTimes(1);
   });
 
   it('should apply event bindings to a component collection', () => {
-    const ButtonComponent = defineComponent({
-      name: 'button-component',
-    });
-
     const element = document.createElement('div');
-    const firstButton = document.createElement('button');
-    const secondButton = document.createElement('button');
-    const thirdButton = document.createElement('button');
-
     element.setAttribute('data-component', 'my-component');
-    firstButton.setAttribute('data-component', 'button-component');
-    secondButton.setAttribute('data-component', 'button-component');
-    thirdButton.setAttribute('data-component', 'button-component');
-
-    element.append(firstButton);
-    element.append(secondButton);
-    element.append(thirdButton);
+    element.innerHTML = dedent`
+      <button data-component="button-component">Click me!</button>
+      <button data-component="button-component">Click me!</button>
+      <button data-component="button-component">Click me!</button>
+    `;
     document.body.appendChild(element);
 
     const handleClick = jest.fn();
 
-    defineComponent({
+    const MyComponent = defineComponent({
       name: 'my-component',
       refs: {
         buttons: refComponents(ButtonComponent),
@@ -72,10 +63,7 @@ describe('Apply event bindings', () => {
       },
     })(element);
 
-    firstButton.click();
-    secondButton.click();
-    thirdButton.click();
-
+    MyComponent.element.querySelectorAll('button').forEach((button) => button.click());
     expect(handleClick).toBeCalledTimes(3);
   });
 });
