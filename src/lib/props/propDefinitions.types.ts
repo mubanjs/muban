@@ -28,6 +28,11 @@ export type SourceOptionCss = {
   };
 };
 
+export type SourceOptionCustom = {
+  target?: string;
+  customSource?: (element: HTMLElement | Array<HTMLElement> | undefined) => unknown;
+};
+
 export type PropTypeDefinition<T = any> = {
   type:
     | typeof Number
@@ -55,7 +60,8 @@ export type PropTypeInfo<T = any> = Pick<
     name: string;
     target: RefElementType | undefined;
   } & Pick<SourceOption, 'type'> &
-    Pick<SourceOptionCss, 'options'>;
+    Pick<SourceOptionCss, 'options'> &
+    Pick<SourceOptionCustom, 'customSource'>;
 };
 
 // type OptionalPropertyKeys<T> = {
