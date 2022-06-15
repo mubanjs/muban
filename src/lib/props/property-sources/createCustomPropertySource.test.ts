@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import dedent from 'ts-dedent';
 import { defineComponent } from '../../Component';
-import type { RefElementType } from '../../refs/refDefinitions.types';
 import { propType } from '../propDefinitions';
 import type { PropTypeInfo } from '../propDefinitions.types';
 import { createCustomPropertySource } from './createCustomPropertySource';
@@ -47,13 +46,13 @@ describe('createFormPropertySource', () => {
   });
 
   describe('getProp function', () => {
-    const getCharactersCount = (element: RefElementType | Array<RefElementType> | undefined) =>
+    const getCharactersCount = (element: HTMLElement | Array<HTMLElement> | undefined) =>
       (element as HTMLElement).querySelector('#title')!.innerHTML.length;
 
-    const getAttributesCount = (element: RefElementType | Array<RefElementType> | undefined) =>
+    const getAttributesCount = (element: HTMLElement | Array<HTMLElement> | undefined) =>
       (element as HTMLElement).querySelector('#attrs')!.attributes.length;
 
-    const getChildrenCount = (element: RefElementType | Array<RefElementType> | undefined) =>
+    const getChildrenCount = (element: HTMLElement | Array<HTMLElement> | undefined) =>
       (element as HTMLElement).querySelector('#parent')!.children.length;
 
     it('should return the return value of the given function', () => {
@@ -154,13 +153,13 @@ describe('createFormPropertySource', () => {
   });
 
   describe('source definition inside defineComponent', () => {
-    const getCharactersCount = (element: RefElementType | Array<RefElementType> | undefined) =>
+    const getCharactersCount = (element: HTMLElement | Array<HTMLElement> | undefined) =>
       (element as HTMLElement).innerHTML.length;
 
-    const getAttributesCount = (element: RefElementType | Array<RefElementType> | undefined) =>
+    const getAttributesCount = (element: HTMLElement | Array<HTMLElement> | undefined) =>
       (element as HTMLElement)!.attributes.length;
 
-    const getChildrenCount = (element: RefElementType | Array<RefElementType> | undefined) =>
+    const getChildrenCount = (element: HTMLElement | Array<HTMLElement> | undefined) =>
       (element as HTMLElement)!.children.length;
 
     it('should return the return value of the given function', () => {

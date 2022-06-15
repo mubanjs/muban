@@ -534,8 +534,6 @@ defineComponent({
 #### Use `custom`
 
 ```ts
-import { RefElementType } from '@muban/muban';
-
 defineComponent({
   name: 'my-component',
   refs: {
@@ -549,7 +547,7 @@ defineComponent({
       target: 'title',
       type: 'custom', 
       options: {
-        customSource: (element: RefElementType | Array<RefElementType> | undefined) =>
+        customSource: (element: HTMLElement | Array<HTMLElement> | undefined) =>
           (element as HTMLElement).!.innerHTML.length;
       }
     })

@@ -33,7 +33,7 @@ export type SourceOptionCustom = {
   type: 'custom';
   target?: string;
   options?: {
-    customSource?: (element?: RefElementType | Array<RefElementType> | undefined) => any;
+    customSource?: (element?: HTMLElement | Array<HTMLElement> | undefined) => any;
   };
 };
 

@@ -18,7 +18,9 @@ export function createCustomPropertySource(): PropertySource {
           return undefined;
         }
 
-        const rawValue = propInfo.source.options?.customSource(propInfo.source.target);
+        const rawValue = propInfo.source.options?.customSource(
+          propInfo.source.target as HTMLElement,
+        );
         return rawValue !== undefined ? convertSourceValue(propInfo, String(rawValue)) : rawValue;
       },
     };
