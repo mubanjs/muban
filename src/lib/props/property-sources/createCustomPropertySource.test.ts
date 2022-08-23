@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-non-null-assertion, max-lines */
 import dedent from 'ts-dedent';
 import { defineComponent } from '../../Component';
+import { refElement, refComponent, refComponents, refCollection } from '../../refs/refDefinitions';
 import { propType } from '../propDefinitions';
 import type { PropTypeInfo } from '../propDefinitions.types';
 import { createCustomPropertySource } from './createCustomPropertySource';
@@ -272,6 +273,71 @@ describe('createFormPropertySource', () => {
 
       expect(MyComponent.props.characterCountNumber).toBe(32);
       expect(MyComponent.props.characterCountString).toBe('32');
+    });
+
+    it('should extract values from ref elements', () => {
+      const myElement = document.createElement('div');
+      myElement.setAttribute('data-component', 'my-component');
+      myElement.innerHTML = dedent`
+        <p data-ref="paragraph">a paragraph</p>
+      `;
+      document.body.appendChild(myElement);
+
+      const MyComponent = defineComponent({
+        name: 'my-component',
+        refs: {
+          paragraph: refElement('paragraph'),
+        },
+        props: {
+          characterCount: propType.number.source({
+            type: 'custom',
+            target: 'paragraph',
+            options: {
+              customSource: getCharactersCount,
+            },
+          }),
+        },
+        setup() {
+          return [];
+        },
+      })(myElement);
+
+      expect(MyComponent.props.characterCount).toBe(11);
+    });
+
+    it('should extract values from component refs', () => {
+      const FirstComponent = defineComponent({ name: 'first-component' });
+
+      const myElement = document.createElement('div');
+      myElement.setAttribute('data-component', 'my-component');
+      myElement.innerHTML = dedent`
+        <p>some extra html</p>
+        <div data-component="first-component" data-ref="child-component">child component</div>
+      `;
+      document.body.appendChild(myElement);
+
+      const MyComponent = defineComponent({
+        name: 'my-component',
+        refs: {
+          paragraph: refComponent(FirstComponent, {
+            ref: 'child-component',
+          }),
+        },
+        props: {
+          characterCount: propType.number.source({
+            type: 'custom',
+            target: 'paragraph',
+            options: {
+              customSource: getCharactersCount,
+            },
+          }),
+        },
+        setup() {
+          return [];
+        },
+      })(myElement);
+
+      expect(MyComponent.props.characterCount).toBe(15);
     });
   });
 });
