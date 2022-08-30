@@ -339,5 +339,53 @@ describe('createFormPropertySource', () => {
 
       expect(MyComponent.props.characterCount).toBe(15);
     });
+
+    it('should log a warning message when using a collection as a target', () => {
+      const SomeComponent = defineComponent({ name: 'some-component' });
+      const myElement = document.createElement('div');
+      myElement.setAttribute('data-component', 'my-component');
+      myElement.innerHTML = dedent`
+        <p data-ref="paragraph">a paragraph</p>
+        <p data-ref="paragraph">a paragraph</p>
+        <div data-component="some-component" data-ref="child-component"></div>
+        <div data-component="some-component" data-ref="child-component"></div>
+      `;
+      document.body.appendChild(myElement);
+
+      defineComponent({
+        name: 'my-component',
+        refs: {
+          paragraph: refCollection('paragraph'),
+          childComponents: refComponents(SomeComponent),
+        },
+        props: {
+          characterCount: propType.number.source({
+            type: 'custom',
+            target: 'paragraph',
+            options: {
+              customSource: getCharactersCount,
+            },
+          }),
+          componentCharacterCount: propType.number.source({
+            type: 'custom',
+            target: 'childComponents',
+            options: {
+              customSource: getCharactersCount,
+            },
+          }),
+        },
+        setup() {
+          return [];
+        },
+      })(myElement);
+
+      const consoleSpy = jest.spyOn(console, 'warn');
+      expect(consoleSpy).toHaveBeenCalledWith(
+        dedent`Property "characterCount" would like to use the collection "paragraph" as target, using collections as target is not supported yet, please use a single element/component as target.`,
+      );
+      expect(consoleSpy).toHaveBeenCalledWith(
+        dedent`Property "componentCharacterCount" would like to use the collection "childComponents" as target, using collections as target is not supported yet, please use a single element/component as target.`,
+      );
+    });
   });
 });

@@ -40,6 +40,12 @@ function convertToInternalPropInfo(
         if (targetRef.type === 'component' && targetRef.component?.element) {
           target = targetRef.component.element;
         }
+        if (targetRef.type === 'collection' || targetRef.type === 'componentCollection') {
+          // eslint-disable-next-line no-console
+          console.warn(
+            `Property "${propName}" would like to use the collection "${sourceOption?.target}" as target, using collections as target is not supported yet, please use a single element/component as target.`,
+          );
+        }
       }
     } else {
       target = element;
