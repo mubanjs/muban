@@ -117,13 +117,17 @@ export const applyBindings = (
       if (binding.type === 'component') {
         typedObjectEntries(binding.props).forEach(([propName, bindingValue]) => {
           watchEffect(() => {
-            if (['css', 'style', 'attr', 'event'].includes(propName)) {
-              const element = unref(binding.ref)?.element;
-              if (element) {
-                bindingsList[propName as 'css' | 'style' | 'attr' | 'event']?.(
-                  element,
-                  bindingValue as any,
-                );
+            if (propName === '$element') {
+              for (const [elementBindingKey, elementBindingValue] of Object.entries(bindingValue)) {
+                if (['css', 'style', 'attr', 'event'].includes(elementBindingKey)) {
+                  const element = unref(binding.ref)?.element;
+                  if (element) {
+                    bindingsList[elementBindingKey as 'css' | 'style' | 'attr' | 'event']?.(
+                      element,
+                      elementBindingValue as any,
+                    );
+                  }
+                }
               }
             } else {
               unref(binding.ref)?.setProps({
@@ -139,11 +143,17 @@ export const applyBindings = (
             // eslint-disable-next-line no-shadow
             reff?.forEach((ref) => {
               watchEffect(() => {
-                if (['css', 'style', 'attr'].includes(propName)) {
-                  bindingsList[propName as 'css' | 'style' | 'attr']?.(
-                    unref(ref).element,
-                    bindingValue as any,
-                  );
+                if (propName === '$element') {
+                  for (const [elementBindingKey, elementBindingValue] of Object.entries(
+                    bindingValue,
+                  )) {
+                    if (['css', 'style', 'attr'].includes(elementBindingKey)) {
+                      bindingsList[elementBindingKey as 'css' | 'style' | 'attr']?.(
+                        unref(ref).element,
+                        elementBindingValue as any,
+                      );
+                    }
+                  }
                 } else {
                   ref?.setProps({
                     [propName]: unref(bindingValue),
