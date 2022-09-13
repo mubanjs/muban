@@ -95,6 +95,13 @@ bind(refs.filter, {
   // selectedIndex is the name of the component prop, but also a reactive `ref`
   selectedIndex,
   onChange: (newValue) => setNewValue(newValue),
+  // You can also have access to the allowed bindings of the ref component using the special $element key
+  // Allowed bindings for component refs are: 'css' | 'style' | 'attr' | 'event'
+  $element: {
+    css: computed(() => ({
+      'is-active': true
+    }))
+  }
 })
 ```
 
