@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Breaking
+
+#### Namespace element bindings on component refs
+
+To avoid child component props to clash with the parent component props when using a reserved binding name
+the new `$element` namespace was created, inside you'll have access to the ref component element bindings,
+outside, the component props
+
+```javascript
+  setup({ refs }) {
+    return [
+      bind(refs.child, {
+         // component prop
+        style: computed(() => 'some-value'),
+        // element bindings
+        $element: {
+          style: computed(() => { 'font-weight': 400 }),
+        }
+      }),
+    ];
+  },
+```
+
+If you have a component that is accessing the child component's element bindings, you'll need to move those bindings inside the `$element` namespace
+
 ## [1.0.0-alpha.34] - 2022-04-15
 
 ### Fixed
