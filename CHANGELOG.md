@@ -10,6 +10,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - Add `event` binding to refComponents
+- Add the `'custom'` `propType.source` for user-defined extraction functions
 
 ### Changed
 
