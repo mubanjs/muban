@@ -11,9 +11,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 #### Namespace element bindings on component refs
 
-To avoid child component props to clash with the parent component props when using a reserved binding name
-the new `$element` namespace was created, inside you'll have access to the ref component element bindings,
-outside, the component props
+To avoid child component props to clash with DOM bindings when using a reserved binding name
+the new `$element` namespace was created. Inside you'll have access to the ref component element bindings,
+and outside the component props are available.
 
 ```javascript
   setup({ refs }) {
