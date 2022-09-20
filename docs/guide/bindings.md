@@ -105,7 +105,7 @@ Read more on the [Component bindings API](../api/bindings.html#component-binding
 ### bindMap
 
 ```ts
-bindMap(refCollection, (ref?, index?) => props)
+...bindMap(refCollection, (ref?, index?) => props)
 ```
 
 The `bindMap` helper is specifically designed for ref collections that require slightly
@@ -118,14 +118,14 @@ passing the individual item ref and its index in the collection as parameters.
 
 ```ts
 // bind to multiple dom elements
-bindMap(refs.items, (ref, index) => ({
+...bindMap(refs.items, (ref, index) => ({
   // use the `index` in each individual binding
   css: computed(() => ({ active: index === selectedIndex.value })),
   click: () => (selectedIndex.value = index),
 }))
 
 // bind to multiple components, setting props or passing callbacks
-bindMap(refs.slides, (ref, index) => ({
+...bindMap(refs.slides, (ref, index) => ({
   onChange: (isExpanded) => {
     activeIndex.value = isExpanded ? index : null;
     // you could use `ref.component?.props` to access the individual component's props

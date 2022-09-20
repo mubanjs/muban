@@ -81,6 +81,15 @@ export type ComponentReturnValue<P extends Record<string, any> = Record<string, 
   __instance: InternalComponentInstance;
 };
 
+export type DefineComponentSetupContext<
+  P extends Record<string, PropTypeDefinition>,
+  R extends Record<string, ComponentRefItem>,
+> = {
+  props: Readonly<TypedProps<P>>;
+  refs: TypedRefs<R>;
+  element: HTMLElement;
+};
+
 export type DefineComponentOptions<
   P extends Record<string, PropTypeDefinition> = {},
   R extends Record<string, ComponentRefItem> = {},
@@ -90,11 +99,7 @@ export type DefineComponentOptions<
   components?: Array<ComponentFactory | LazyComponent>;
   props?: P;
   refs?: R;
-  setup?: (context: {
-    props: Readonly<TypedProps<P>>;
-    refs: TypedRefs<R>;
-    element: HTMLElement;
-  }) => undefined | null | Array<Binding>;
+  setup?: (context: DefineComponentSetupContext<P, R>) => undefined | null | Array<Binding>;
 };
 
 export type LazyComponent<
