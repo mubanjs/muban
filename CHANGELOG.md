@@ -9,7 +9,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- Add `form` source
+- Add `form` source, allowing you to easily extract initial values from forms or inputs
 
 ## [1.0.0-alpha.34] - 2022-04-15
 
