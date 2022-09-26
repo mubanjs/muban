@@ -33,7 +33,7 @@ export type PropTypeDefinition<T = any> = {
   shapeType?: Function;
   sourceOptions?: {
     target?: string;
-    type?: 'data' | 'json' | 'attr' | 'css' | 'text' | 'html' | 'form';
+    type?: 'data' | 'json' | 'attr' | 'css' | 'text' | 'html' | 'form' | 'custom';
     name?: string;
     options?: {
       cssPredicate?: Array<string>;
@@ -265,7 +265,7 @@ HTML besides the default behaviour.
 ```ts
 declare function source(options: {
   target?: string;
-  type?: 'data' | 'json' | 'attr' | 'css' | 'text' | 'html' | 'form';
+  type?: 'data' | 'json' | 'attr' | 'css' | 'text' | 'html' | 'form' | 'custom';
   name?: string;
   options?: { 
     cssPredicate?: Array<string>;
@@ -276,7 +276,8 @@ declare function source(options: {
 * `target?: string` – The refName (those you configure as part of the component options)
   from which you want to extract this property.
   Defaults to the data-component element.
-* `type?: 'data' | 'json' | 'attr' | 'css' | 'text' | 'html' | 'form'` - The type source you want to extract.
+* `type?: 'data' | 'json' | 'attr' | 'css' | 'text' | 'html' | 'form' | 'custom'` - The type source 
+  you want to extract.
   Defaults to the `data + json + css` source (`css` only for boolean props).
   * `data` – Reads the `data-attribute` from your target element.
   * `json` – Reads the object key from a `<script type="application/json">` JSON block that is 
@@ -571,5 +572,34 @@ defineComponent({
     <input type="text" data-ref="email" value="user@company.com"/>
     <input type="text" data-ref="phone" value="986868"/>
   </form>
+</div>
+```
+
+#### Use `custom`
+
+```ts
+defineComponent({
+  name: 'my-component',
+  refs: {
+    // this is needed for the source-target
+    title: 'title',
+  },
+  props: {
+    // grab the length of the title component.
+    // outputs "32" (as a number)
+    characterCount: propType.number.source({ 
+      target: 'title',
+      type: 'custom', 
+      options: {
+        customSource: (element: HTMLElement | Array<HTMLElement> | undefined) =>
+          (element as HTMLElement).!.innerHTML.length;
+      }
+    })
+  },
+})
+```
+```html
+<div data-component="my-component">
+  <h1 data-ref="title">This title is 32 characters long</h1>
 </div>
 ```
