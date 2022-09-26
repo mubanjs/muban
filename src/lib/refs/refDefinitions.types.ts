@@ -119,8 +119,11 @@ export type RefOrValue<T extends Record<string, any>> = {
   [P in keyof T]: Exclude<T[P], undefined> extends Function ? T[P] | Ref<T[P]> : Ref<T[P]>;
 };
 
-export type ComponentParams<T> = ComponentSetPropsParam<T> &
-  Pick<BindProps, 'css' | 'style' | 'attr' | 'event'>;
+type ComponentElementParams = {
+  $element?: Pick<BindProps, 'css' | 'style' | 'attr' | 'event'>;
+};
+
+export type ComponentParams<T> = ComponentSetPropsParam<T> & ComponentElementParams;
 
 /**
  * Extracts the props from a component if it is one
