@@ -14,6 +14,8 @@ import { createClassListPropertySource } from '../props/property-sources/createC
 import { createDataAttributePropertySource } from '../props/property-sources/createDataAttributePropertySource';
 import { createJsonScriptPropertySource } from '../props/property-sources/createJsonScriptPropertySource';
 import { createReactivePropertySource } from '../props/property-sources/createReactivePropertySource';
+import { createCustomPropertySource } from '../props/property-sources/createCustomPropertySource';
+import { createFormPropertySource } from '../props/property-sources/createFormPropertySource';
 
 // TODO: Move to "App"?
 class MubanGlobal {
@@ -28,6 +30,8 @@ class MubanGlobal {
     createAttributePropertySource(),
     createTextPropertySource(),
     createHtmlPropertySource(),
+    createCustomPropertySource(),
+    createFormPropertySource(),
   ];
 }
 

@@ -1,11 +1,11 @@
 import { camelCase } from 'change-case';
 import { unref, watchEffect } from '@vue/runtime-core';
 import type { Ref } from '@vue/reactivity';
-import type { BindingMap } from '../bindings.types';
+import type { BindingMap, StyleBindingProperty } from '../bindings.types';
 
-export function styleBinding(target: HTMLElement, valueAccessor: BindingMap<string>) {
+export function styleBinding(target: HTMLElement, valueAccessor: BindingMap<StyleBindingProperty>) {
   return watchEffect(() => {
-    const styles = unref<Record<string, string> | Record<string, Ref<string>>>(valueAccessor);
+    const styles = unref<Record<string, StyleBindingProperty> | Record<string, Ref<StyleBindingProperty>>>(valueAccessor);
     Object.entries(styles).forEach(([name, value]) => {
       let styleValue = unref(value);
 

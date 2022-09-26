@@ -15,7 +15,13 @@ export { bind, bindMap, bindTemplate } from './lib/bindings/bindingDefinitions';
 export { registerDomBinding } from './lib/bindings/bindings';
 
 // types that are often used (exposing too much internal stuff makes refactoring more difficult later)
-export type { ComponentFactory, ComponentApi, LazyComponent } from './lib/Component.types';
+export type {
+  ComponentFactory,
+  ComponentApi,
+  LazyComponent,
+  DefineComponentOptions,
+  DefineComponentSetupContext,
+} from './lib/Component.types';
 export type { App } from './lib/api/apiCreateApp';
 export type {
   TypedRefs,
@@ -35,7 +41,7 @@ export type {
   ComponentSetPropsParam,
 } from './lib/refs/refDefinitions.types';
 export type { TypedProps, TypedProp, PropTypeDefinition } from './lib/props/propDefinitions.types';
-export type { BindProps } from './lib/bindings/bindings.types';
+export type { BindProps, Binding } from './lib/bindings/bindings.types';
 
 // re-export types of those libs, so they don't have to be installed separately
 export * from '@vue/reactivity';

@@ -148,8 +148,8 @@ export const applyBindings = (
                 if (propName === '$element') {
                   typedObjectEntries(bindingValue).forEach(
                     ([elementBindingKey, elementBindingValue]) => {
-                      if (['css', 'style', 'attr'].includes(elementBindingKey)) {
-                        bindingsList[elementBindingKey as 'css' | 'style' | 'attr']?.(
+                      if (['css', 'style', 'attr', 'event'].includes(elementBindingKey)) {
+                        bindingsList[elementBindingKey as 'css' | 'style' | 'attr' | 'event']?.(
                           unref(ref).element,
                           elementBindingValue as any,
                         );

@@ -9,7 +9,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Breaking
 
-#### Namespace element bindings on component refs
+#### Namespace `$element` bindings on component refs
 
 To avoid child component props to clash with DOM bindings when using a reserved binding name
 the new `$element` namespace was created. Inside you'll have access to the ref component element bindings,
@@ -31,6 +31,17 @@ and outside the component props are available.
 ```
 
 If you have a component that is accessing the child component's element bindings, you'll need to move those bindings inside the `$element` namespace
+
+### Added
+
+- Add `event` binding to refComponents
+- Add the `'custom'` `propType.source` for user-defined extraction functions
+- Add `form` source, allowing you to easily extract initial values from forms or inputs
+
+### Changed
+
+- Change style binding types to support `null` and `undefined` values
+- Namespace `$element` bindings on component refs
 
 ## [1.0.0-alpha.34] - 2022-04-15
 
