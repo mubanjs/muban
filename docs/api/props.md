@@ -33,7 +33,7 @@ export type PropTypeDefinition<T = any> = {
   shapeType?: Function;
   sourceOptions?: {
     target?: string;
-    type?: 'data' | 'json' | 'attr' | 'css' | 'text' | 'html' | 'custom';
+    type?: 'data' | 'json' | 'attr' | 'css' | 'text' | 'html' | 'form' | 'custom';
     name?: string;
     options?: {
       cssPredicate?: Array<string>;
@@ -265,7 +265,7 @@ HTML besides the default behaviour.
 ```ts
 declare function source(options: {
   target?: string;
-  type?: 'data' | 'json' | 'attr' | 'css' | 'text' | 'html', | 'custom';
+  type?: 'data' | 'json' | 'attr' | 'css' | 'text' | 'html' | 'form' | 'custom';
   name?: string;
   options?: { 
     cssPredicate?: Array<string>;
@@ -276,7 +276,8 @@ declare function source(options: {
 * `target?: string` – The refName (those you configure as part of the component options)
   from which you want to extract this property.
   Defaults to the data-component element.
-* `type?: 'data' | 'json' | 'attr' | 'css' | 'text' | 'html' | 'custom'` - The type source you want to extract.
+* `type?: 'data' | 'json' | 'attr' | 'css' | 'text' | 'html' | 'form' | 'custom'` - The type source 
+  you want to extract.
   Defaults to the `data + json + css` source (`css` only for boolean props).
   * `data` – Reads the `data-attribute` from your target element.
   * `json` – Reads the object key from a `<script type="application/json">` JSON block that is 
@@ -290,6 +291,7 @@ declare function source(options: {
     to all values.
   * `text` – Reads the `textContents` from the target element.
   * `html` – Reads the `innerHTML` from the target element.
+  * `form` – Reads the `value` from the target element when targeting a form input and `FormData` when targeting a form element 
 * `name?: string` – For the `data`, `json`, `attr` and `css` source types, by default it will use 
   the 
   propName for the name of the (data) attribute or class name. For situations where the name
@@ -528,6 +530,48 @@ defineComponent({
   </p>
   <span data-ref="status">Success</span>
   <span data-ref="value">12.45</span>
+</div>
+```
+#### Use `form`
+```ts
+defineComponent({
+  name: 'my-component',
+  refs: {
+    // this is needed for the source-target
+    form: 'form',
+    email: 'email',
+    phone: 'phone',
+  },
+  props: {
+    // get the FormData from the form ref
+    // outputs FormData {}
+    form: propType.object.source(
+      { target: 'form', type: 'form', formData: true},
+    ),
+    // get the value from the email ref
+    // outputs "user@company.com"
+    email: propType.string.source(
+      { target: 'email', type: 'form'},
+    ),
+    // Extract the 'email' property from the form ref FormData object
+    // outputs "user@company.com"
+    emailAddress: propType.string.source(
+      { target: 'form', type: 'form', name: 'email'},
+    ),
+    // conversions to Booleans, Numbers and Dates also work
+    // outputs "986868" (as a number)
+    phone: propType.number.source(
+      { target: 'phone', type: 'form'},
+    ),
+  },
+})
+```
+```html
+<div data-component="my-component">
+  <form data-ref="form">
+    <input type="text" data-ref="email" value="user@company.com"/>
+    <input type="text" data-ref="phone" value="986868"/>
+  </form>
 </div>
 ```
 

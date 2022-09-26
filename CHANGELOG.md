@@ -11,6 +11,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add `event` binding to refComponents
 - Add the `'custom'` `propType.source` for user-defined extraction functions
+- Add `form` source, allowing you to easily extract initial values from forms or inputs
 
 ### Changed
 
