@@ -60,8 +60,10 @@ export const Default: Story = () => ({
         bind(refs.btnComponent, {
           label: computed(() => 'label1'),
           to: computed(() => 'to1'),
-          event: {
-            click: () => console.log('clicked'),
+          $element: {
+            event: {
+              click: () => console.log('clicked'),
+            },
           },
         }),
         bind(refs.btnRef, { label: computed(() => 'label2'), to: computed(() => 'to2') }),
@@ -190,20 +192,24 @@ export const Default4: Story<{ toRender?: 'button' | 'link' }> = () => ({
     setup({ refs }) {
       return [
         bind(refs.noPropsComponent, {
-          event: {
-            click: () => {
-              // This would throw a typescript error because NoProps component has no `props` object.
-              // eslint-disable-next-line no-console
-              console.log('click no-props');
+          $element: {
+            event: {
+              click: () => {
+                // This would throw a typescript error because NoProps component has no `props` object.
+                // eslint-disable-next-line no-console
+                console.log('click no-props');
+              },
             },
           },
         }),
         bind(refs.propsComponent, {
-          event: {
-            click: () => {
-              // This will work like expected because the `PropsComponent` has an empty `props` object.
-              // eslint-disable-next-line no-console
-              console.log('click props');
+          $element: {
+            event: {
+              click: () => {
+                // This will work like expected because the `PropsComponent` has an empty `props` object.
+                // eslint-disable-next-line no-console
+                console.log('click props');
+              },
             },
           },
         }),
