@@ -23,8 +23,10 @@ describe('Apply event bindings', () => {
       setup({ refs }) {
         return [
           bind(refs.button, {
-            event: {
-              click: handleClick,
+            $element: {
+              event: {
+                click: handleClick,
+              },
             },
           }),
         ];
@@ -55,8 +57,10 @@ describe('Apply event bindings', () => {
       setup({ refs }) {
         return [
           bind(refs.buttons, {
-            event: {
-              click: handleClick,
+            $element: {
+              event: {
+                click: handleClick,
+              },
             },
           }),
         ];
