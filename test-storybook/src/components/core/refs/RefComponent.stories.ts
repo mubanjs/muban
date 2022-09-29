@@ -174,12 +174,12 @@ export const SvgRef: Story = () => ({
 SvgRef.storyName = 'SVG Ref';
 
 // The most basic version of a component throws a typescript error
-export const NoPropsComponent = defineComponent({
+const NoPropsComponent = defineComponent({
   name: 'no-props-component',
 });
 
 // Adding the empty props makes sure it works.
-export const PropsComponent = defineComponent({
+const PropsComponent = defineComponent({
   name: 'props-component',
   props: {},
 });
