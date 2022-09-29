@@ -166,7 +166,9 @@ export const SvgRef: Story = () => ({
     },
   }),
   template: () => html` <div data-component="ref-component">
-    <svg date-ref="mask-svg"></svg>
+    <svg data-ref="mask-svg" width="100" height="100">
+      <circle cx="50" cy="50" r="40" stroke="grey" stroke-width="4" fill="lightblue" />
+    </svg>
   </div>`,
 });
 SvgRef.storyName = 'SVG Ref';
