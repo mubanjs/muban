@@ -5,11 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased [1.0.0-alpha.35] - 2022-09-28
+## [1.0.0-alpha.35] - 2022-09-30
 
 ### Breaking
 
 Highlights of breaking changes from the log further down:
+
+#### Namespace `$element` bindings on component refs
+
+To avoid child component props to clash with DOM bindings when using a reserved binding name
+the new `$element` namespace was created. Inside you'll have access to the ref component element bindings,
+and outside the component props are available.
+
+```javascript
+  setup({ refs }) {
+    return [
+      bind(refs.child, {
+         // component prop
+        style: computed(() => 'some-value'),
+        // element bindings
+        $element: {
+          style: computed(() => { 'font-weight': 400 }),
+        }
+      }),
+    ];
+  },
+```
+
+If you have a component that is accessing the child component's element bindings, you'll need to move those bindings inside the `$element` namespace
+
+### Highlights
+
+New and exciting additions from the log further down:
 
 #### New `custom` prop type source
 
@@ -70,29 +97,6 @@ defineComponent({
 
 See the docs for [propType source](https://mubanjs.github.io/muban/api/props.html#use-form) for
 more details.
-
-#### Namespace `$element` bindings on component refs
-
-To avoid child component props to clash with DOM bindings when using a reserved binding name
-the new `$element` namespace was created. Inside you'll have access to the ref component element bindings,
-and outside the component props are available.
-
-```javascript
-  setup({ refs }) {
-    return [
-      bind(refs.child, {
-         // component prop
-        style: computed(() => 'some-value'),
-        // element bindings
-        $element: {
-          style: computed(() => { 'font-weight': 400 }),
-        }
-      }),
-    ];
-  },
-```
-
-If you have a component that is accessing the child component's element bindings, you'll need to move those bindings inside the `$element` namespace
 
 ### Added
 
