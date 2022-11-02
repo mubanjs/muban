@@ -60,8 +60,10 @@ export const Default: Story = () => ({
         bind(refs.btnComponent, {
           label: computed(() => 'label1'),
           to: computed(() => 'to1'),
-          event: {
-            click: () => console.log('clicked'),
+          $element: {
+            event: {
+              click: () => console.log('clicked'),
+            },
           },
         }),
         bind(refs.btnRef, { label: computed(() => 'label2'), to: computed(() => 'to2') }),
@@ -164,18 +166,20 @@ export const SvgRef: Story = () => ({
     },
   }),
   template: () => html` <div data-component="ref-component">
-    <svg date-ref="mask-svg"></svg>
+    <svg data-ref="mask-svg" width="100" height="100">
+      <circle cx="50" cy="50" r="40" stroke="grey" stroke-width="4" fill="lightblue" />
+    </svg>
   </div>`,
 });
 SvgRef.storyName = 'SVG Ref';
 
 // The most basic version of a component throws a typescript error
-export const NoPropsComponent = defineComponent({
+const NoPropsComponent = defineComponent({
   name: 'no-props-component',
 });
 
 // Adding the empty props makes sure it works.
-export const PropsComponent = defineComponent({
+const PropsComponent = defineComponent({
   name: 'props-component',
   props: {},
 });
@@ -190,20 +194,24 @@ export const Default4: Story<{ toRender?: 'button' | 'link' }> = () => ({
     setup({ refs }) {
       return [
         bind(refs.noPropsComponent, {
-          event: {
-            click: () => {
-              // This would throw a typescript error because NoProps component has no `props` object.
-              // eslint-disable-next-line no-console
-              console.log('click no-props');
+          $element: {
+            event: {
+              click: () => {
+                // This would throw a typescript error because NoProps component has no `props` object.
+                // eslint-disable-next-line no-console
+                console.log('click no-props');
+              },
             },
           },
         }),
         bind(refs.propsComponent, {
-          event: {
-            click: () => {
-              // This will work like expected because the `PropsComponent` has an empty `props` object.
-              // eslint-disable-next-line no-console
-              console.log('click props');
+          $element: {
+            event: {
+              click: () => {
+                // This will work like expected because the `PropsComponent` has an empty `props` object.
+                // eslint-disable-next-line no-console
+                console.log('click props');
+              },
             },
           },
         }),

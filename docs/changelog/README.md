@@ -5,6 +5,110 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-alpha.35] - 2022-11-02
+
+### Breaking
+
+Highlights of breaking changes from the log further down:
+
+#### Namespace `$element` bindings on component refs
+
+To avoid child component props to clash with DOM bindings when using a reserved binding name
+the new `$element` namespace was created. Inside you'll have access to the ref component element bindings,
+and outside the component props are available.
+
+```javascript
+  setup({ refs }) {
+    return [
+      bind(refs.child, {
+         // component prop
+        style: computed(() => 'some-value'),
+        // element bindings
+        $element: {
+          style: computed(() => { 'font-weight': 400 }),
+        }
+      }),
+    ];
+  },
+```
+
+If you have a component that is accessing the child component's element bindings, you'll need to move those bindings inside the `$element` namespace
+
+### Highlights
+
+New and exciting additions from the log further down:
+
+#### New `custom` prop type source
+
+If you need to extract a value not supported by the other source types you can use the new `custom` source
+
+```javascript
+defineComponent({
+  name: 'my-component',
+  refs: { title: 'title' },
+  props: {
+    // grab the length of the title component.
+    // outputs "32" (as a number)
+    characterCount: propType.number.source({ 
+      target: 'title',
+      type: 'custom', 
+      options: {
+        // function used for extracting the value
+        customSource: (element: HTMLElement | Array<HTMLElement> | undefined) =>
+          (element as HTMLElement)!.innerHTML.length;
+      }
+    })
+  },
+})
+```
+```html
+<div data-component="my-component">
+  <h1 data-ref="title">This title is 32 characters long</h1>
+</div>
+```
+
+See the docs for [propType source](https://mubanjs.github.io/muban/api/props.html#use-custom) for
+more details.
+
+#### New `form` source for extracting values from inputs
+
+For extraction of initial input values you can use the new `form` source
+
+```javascript
+defineComponent({
+  name: 'my-component',
+  refs: {
+    email: 'email',
+  },
+  props: {
+    // get the value from the email ref
+    // outputs "user@company.com"
+    email: propType.string.source(
+      { target: 'email', type: 'form'},
+    ),
+  },
+})
+```
+```html
+<div data-component="my-component">
+  <input type="text" data-ref="email" value="user@company.com"/>
+</div>
+```
+
+See the docs for [propType source](https://mubanjs.github.io/muban/api/props.html#use-form) for
+more details.
+
+### Added
+
+- Add `event` binding to refComponents
+- Add the `'custom'` `propType.source` for user-defined extraction functions
+- Add `form` source, allowing you to easily extract initial values from forms or inputs
+
+### Changed
+
+- Change style binding types to support `null` and `undefined` values
+- Namespace `$element` bindings on component refs
+
 ## [1.0.0-alpha.34] - 2022-04-15
 
 ### Fixed

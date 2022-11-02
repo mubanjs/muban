@@ -35,7 +35,7 @@ const DoubleEventsComponent = defineComponent({
   components: [CfA2Icon],
   refs: {
     button: refCollection('button', { minimumItemsRequired: 1 }),
-    textComponent: refComponent(TextComponent),
+    textComponent: refComponent(TextComponent, { isRequired: false }),
   },
   setup({ refs }) {
     return [
@@ -64,6 +64,6 @@ export const DoubleEventsSelf: Story = () => ({
 export const DoubleEventsIcon: Story = () => ({
   component: DoubleEventsComponent,
   template: () => html`<div data-component="double-events">
-    <button data-ref="button">Check! ${cfA2IconTemplate({ name: 'checkmark' })}</button>
+    <button data-ref="button">Check! ${cfA2IconTemplate({ name: 'arrow-up' })}</button>
   </div>`,
 });

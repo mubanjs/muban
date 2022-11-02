@@ -592,7 +592,7 @@ defineComponent({
       type: 'custom', 
       options: {
         customSource: (element: HTMLElement | Array<HTMLElement> | undefined) =>
-          (element as HTMLElement).!.innerHTML.length;
+          (element as HTMLElement)!.innerHTML.length;
       }
     })
   },

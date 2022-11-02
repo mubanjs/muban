@@ -5,9 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [1.0.0-alpha.35] - 2022-11-02
 
 ### Breaking
+
+Highlights of breaking changes from the log further down:
 
 #### Namespace `$element` bindings on component refs
 
@@ -31,6 +33,70 @@ and outside the component props are available.
 ```
 
 If you have a component that is accessing the child component's element bindings, you'll need to move those bindings inside the `$element` namespace
+
+### Highlights
+
+New and exciting additions from the log further down:
+
+#### New `custom` prop type source
+
+If you need to extract a value not supported by the other source types you can use the new `custom` source
+
+```javascript
+defineComponent({
+  name: 'my-component',
+  refs: { title: 'title' },
+  props: {
+    // grab the length of the title component.
+    // outputs "32" (as a number)
+    characterCount: propType.number.source({ 
+      target: 'title',
+      type: 'custom', 
+      options: {
+        // function used for extracting the value
+        customSource: (element: HTMLElement | Array<HTMLElement> | undefined) =>
+          (element as HTMLElement)!.innerHTML.length;
+      }
+    })
+  },
+})
+```
+```html
+<div data-component="my-component">
+  <h1 data-ref="title">This title is 32 characters long</h1>
+</div>
+```
+
+See the docs for [propType source](https://mubanjs.github.io/muban/api/props.html#use-custom) for
+more details.
+
+#### New `form` source for extracting values from inputs
+
+For extraction of initial input values you can use the new `form` source
+
+```javascript
+defineComponent({
+  name: 'my-component',
+  refs: {
+    email: 'email',
+  },
+  props: {
+    // get the value from the email ref
+    // outputs "user@company.com"
+    email: propType.string.source(
+      { target: 'email', type: 'form'},
+    ),
+  },
+})
+```
+```html
+<div data-component="my-component">
+  <input type="text" data-ref="email" value="user@company.com"/>
+</div>
+```
+
+See the docs for [propType source](https://mubanjs.github.io/muban/api/props.html#use-form) for
+more details.
 
 ### Added
 
