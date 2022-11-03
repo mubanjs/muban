@@ -1,0 +1,1 @@
+const e={key:"v-1375a279",path:"/research/component-dynamic-templates.html",title:"Dynamic Templates",lang:"en-US",frontmatter:{},excerpt:"",headers:[],git:{updatedTime:1605473824e3,contributors:[{name:"Arjan van Wijk",email:"thanarie@gmail.com",commits:1}]},filePathRelative:"research/component-dynamic-templates.md"};export{e as data};
