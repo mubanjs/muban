@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "storybook": "start-storybook -p 6006",
-    "check-types": "tsc --project tsconfig.json --noEmit --noUnusedLocals"
+    "check-types": "tsc --project tsconfig.json --noEmit --noUnusedLocals",
+    "test-storybook": "test-storybook"
   },
   "dependencies": {
     "@muban/hooks": "^1.0.0-alpha.3",
@@ -27,6 +28,7 @@
     "typescript": "4.1.2"
   },
   "devDependencies": {
+    "@storybook/test-runner": "^0.7.2",
     "@testing-library/jest-dom": "^5.16.1"
   }
 }
