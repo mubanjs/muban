@@ -1,9 +1,8 @@
 import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { bind, defineComponent, computed, ref } from '@muban/muban';
-import { expect } from '@storybook/jest';
 import { screen, queryByAttribute, userEvent } from '@storybook/testing-library';
-import { wait, waitToBe } from '../../../utils/timers';
+import { waitToBe } from '../../../utils/timers';
 
 export default {
   title: 'bindings/disable',

@@ -2,7 +2,7 @@ import { expect } from '@storybook/jest';
 
 const wait = (miliseconds) => new Promise((r) => setTimeout(r, miliseconds));
 const waitToBe = async (
-  element: Element,
+  element: Object,
   property: string,
   expectedValue: unknown,
   waitTime = 100,
