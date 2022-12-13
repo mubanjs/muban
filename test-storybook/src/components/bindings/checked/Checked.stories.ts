@@ -9,7 +9,7 @@ import {
 import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { bind, defineComponent, refCollection, computed, ref, watch } from '@muban/muban';
-import { wait } from '../../../utils/timers';
+import { wait, waitToBe } from '../../../utils/timers';
 
 export default {
   title: 'bindings/checked',
@@ -148,9 +148,7 @@ CheckedValue.play = async () => {
   ]
     .map((isChecked) => (isChecked ? newValue : undefined))
     .join(' - ');
-  await wait(200);
-  expect(info?.textContent).toBe(checkboxesValue);
-  userEvent.click(checkbox1a);
+  await waitToBe(info!, 'textContent', checkboxesValue);
 };
 
 export const ValueCheckedValue: Story = () => ({
@@ -187,8 +185,7 @@ ValueCheckedValue.play = async () => {
   const newValue = 'hello';
   userEvent.type(value, newValue);
   userEvent.click(checkbox);
-  await wait(500);
-  expect(info?.textContent).toBe(newValue);
+  await waitToBe(info!, 'textContent', newValue);
 };
 
 export const CheckedArray: Story = () => ({
@@ -442,8 +439,7 @@ Radio.play = async () => {
   expect(info?.value).toBe('');
   for (const radio of radios) {
     userEvent.click(radio);
-    await wait(100);
-    expect(info.value).toBe(radio.value);
+    await waitToBe(info, 'value', radio.value);
   }
 };
 

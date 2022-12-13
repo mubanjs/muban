@@ -1,6 +1,9 @@
 import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { bind, defineComponent, computed, ref } from '@muban/muban';
+import { expect } from '@storybook/jest';
+import { screen, queryByAttribute, userEvent } from '@storybook/testing-library';
+import { wait, waitToBe } from '../../../utils/timers';
 
 export default {
   title: 'bindings/disable',
@@ -26,7 +29,7 @@ export const Default: Story = () => ({
       ];
     },
   }),
-  template: () => html` <div data-component="disable">
+  template: () => html` <div data-component="disable" data-testid="disabled-story">
     <div>
       <label><input type="checkbox" data-ref="check" /> Is Enabled?</label>
     </div>
@@ -35,3 +38,12 @@ export const Default: Story = () => ({
     <div><button data-ref="btn">do something</button></div>
   </div>`,
 });
+Default.play = async () => {
+  const storyContainer = screen.getByTestId('disabled-story');
+  const check = queryByAttribute('data-ref', storyContainer, 'check') as HTMLInputElement;
+  const field = queryByAttribute('data-ref', storyContainer, 'field') as HTMLInputElement;
+  userEvent.click(check);
+  await waitToBe(field, 'disabled', false);
+  userEvent.click(check);
+  await waitToBe(field, 'disabled', true);
+};

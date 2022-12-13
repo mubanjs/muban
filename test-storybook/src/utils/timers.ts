@@ -1,3 +1,14 @@
-const wait = (miliseconds) => new Promise((r) => setTimeout(r, miliseconds));
+import { expect } from '@storybook/jest';
 
-export { wait };
+const wait = (miliseconds) => new Promise((r) => setTimeout(r, miliseconds));
+const waitToBe = async (
+  element: Element,
+  property: string,
+  expectedValue: unknown,
+  waitTime = 100,
+) => {
+  await wait(waitTime);
+  expect(element[property]).toBe(expectedValue);
+};
+
+export { wait, waitToBe };
