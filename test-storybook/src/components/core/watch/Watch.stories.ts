@@ -14,6 +14,7 @@ import {
   watch,
   ref,
 } from '@muban/muban';
+import { wait } from '../../../utils/timers';
 
 export default {
   title: 'core/watch/watch',
@@ -112,16 +113,15 @@ Default.play = async () => {
   const storyContainer = screen.getByTestId('watch-story');
   const mountButton = queryByAttribute('data-ref', storyContainer, 'btnMount');
   const unmountButton = queryByAttribute('data-ref', storyContainer, 'btnUnmount');
-  const waitASecond = () => new Promise((r) => setTimeout(r, 1000));
   const getComponent = () => queryByAttribute('data-component', storyContainer, 'test');
 
   unmountButton?.click();
   await waitForElementToBeRemoved(getComponent());
-  await waitASecond();
+  await wait(1000);
   expect(watchEffectMock).toBeCalledTimes(0);
 
   mountButton?.click();
   await getComponent();
-  await waitASecond();
+  await wait(1000);
   expect(watchEffectMock).toBeCalledTimes(1);
 };
