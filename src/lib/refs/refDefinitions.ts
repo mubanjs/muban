@@ -142,7 +142,7 @@ If you want to select a custom target, pass a function like;
 
         if (isRequired && !element && (initial || elementRef.value !== element)) {
           // eslint-disable-next-line no-console
-          console.error('Element not found', this.ref);
+          console.error('Element not found', this.ref, instance);
         }
         return element;
       };
@@ -207,6 +207,7 @@ If you want to select a custom target, pass a function like;
           console.error(
             `Expected at least "${minimumItemsRequired}" elements, but found "${elements.length}"`,
             `[data-ref="${this.ref}"]`,
+            instance,
           );
         }
 
@@ -314,7 +315,7 @@ export function refComponent<T extends ComponentFactory<any>>(
 
         if (initialRender && isRequired && !element) {
           // eslint-disable-next-line no-console
-          console.error('Component not found in DOM', getQuery());
+          console.error('Component not found in DOM', getQuery(), instance);
         }
 
         // return if instance was already created for this element
@@ -413,6 +414,7 @@ export function refComponents<T extends ComponentFactory<any>>(
           console.error(
             `Expected at least "${minimumItemsRequired}" elements, but found "${elements.length}"`,
             `[data-ref="${this.ref}"]`,
+            instance
           );
         }
 
