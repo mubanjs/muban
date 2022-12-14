@@ -5,7 +5,7 @@ const waitToBe = async (
   element: Object,
   property: string,
   expectedValue: unknown,
-  waitTime = 100,
+  waitTime = 50,
 ) => {
   await wait(waitTime);
   expect(element[property]).toBe(expectedValue);

@@ -1,6 +1,9 @@
 import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { bind, defineComponent, ref } from '@muban/muban';
+import { screen, queryByAttribute, userEvent } from '@storybook/testing-library';
+import { expect } from '@storybook/jest';
+import { waitToBe } from '../../../utils/timers';
 
 export default {
   title: 'bindings/textInput',
@@ -36,7 +39,7 @@ export const Default: Story = () => ({
       ];
     },
   }),
-  template: () => html`<div data-component="textInput">
+  template: () => html`<div data-component="textInput" data-testid="text-input-story">
     <p>value: <span data-ref="info"></span></p>
     <div><input data-ref="field" /></div>
     <div><textarea data-ref="textarea"></textarea></div>
@@ -46,3 +49,20 @@ export const Default: Story = () => ({
     </div>
   </div>`,
 });
+Default.play = async () => {
+  const storyContainer = screen.getByTestId('text-input-story');
+  const field = queryByAttribute('data-ref', storyContainer, 'field') as HTMLInputElement;
+  const textarea = queryByAttribute('data-ref', storyContainer, 'textarea') as HTMLTextAreaElement;
+  const resetBtn = queryByAttribute('data-ref', storyContainer, 'btn-reset');
+  const clearBtn = queryByAttribute('data-ref', storyContainer, 'btn-undefined');
+  userEvent.type(field, 'foo');
+  await waitToBe(textarea, 'value', 'foo');
+  userEvent.type(textarea, 'bar');
+  await waitToBe(field, 'value', 'foobar');
+  userEvent.click(resetBtn!);
+  await waitToBe(field, 'value', 'hello');
+  await waitToBe(textarea, 'value', 'hello');
+  userEvent.click(clearBtn!);
+  await waitToBe(field, 'value', '');
+  await waitToBe(textarea, 'value', '');
+};
