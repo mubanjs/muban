@@ -2,6 +2,9 @@
 import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { bind, defineComponent, ref } from '@muban/muban';
+import { expect } from '@storybook/jest';
+import { screen, queryByAttribute, userEvent } from '@storybook/testing-library';
+import { waitToBe } from '../../../utils/timers';
 
 export default {
   title: 'bindings/value',
@@ -29,7 +32,7 @@ export const Default: Story = () => ({
       ];
     },
   }),
-  template: () => html`<div data-component="value">
+  template: () => html`<div data-component="value" data-testid="value-default-story">
     <p>Value binding: <input data-ref="info" /></p>
     <div>User Input:<input data-ref="field" value="hello" /></div>
     <div>
@@ -39,6 +42,19 @@ export const Default: Story = () => ({
     </div>
   </div>`,
 });
+Default.play = async () => {
+  const storyContainer = screen.getByTestId('value-default-story');
+  const field = queryByAttribute('data-ref', storyContainer, 'field')!;
+  const resetBtn = queryByAttribute('data-ref', storyContainer, 'btn-reset')!;
+  const clearBtn = queryByAttribute('data-ref', storyContainer, 'btn-undefined')!;
+  const fooBtn = queryByAttribute('data-ref', storyContainer, 'btn-foo')!;
+  userEvent.click(fooBtn);
+  await waitToBe(field, 'value', 'foo');
+  userEvent.click(clearBtn);
+  await waitToBe(field, 'value', '');
+  userEvent.click(resetBtn);
+  await waitToBe(field, 'value', 'hello');
+};
 
 export const Select: Story = () => ({
   component: defineComponent({
@@ -57,14 +73,14 @@ export const Select: Story = () => ({
       return [
         bind(refs.info, { text: value }),
         bind(refs.field, { value }),
-        bind(refs.resetBtn, { click: () => (value.value = 'hello') }),
+        bind(refs.resetBtn, { click: () => (value.value = 'bar') }),
         bind(refs.undefinedBtn, { click: () => (value.value = undefined) }),
         bind(refs.fooBtn, { click: () => (value.value = 'foo') }),
         bind(refs.select, { value }),
       ];
     },
   }),
-  template: () => html`<div data-component="value">
+  template: () => html`<div data-component="value" data-testid="value-select-story">
     <p>Value: <span data-ref="info"></span></p>
     <div><input data-ref="field" /></div>
     <div>
@@ -81,6 +97,19 @@ export const Select: Story = () => ({
     </div>
   </div>`,
 });
+Select.play = async () => {
+  const storyContainer = screen.getByTestId('value-select-story');
+  const select = queryByAttribute('data-ref', storyContainer, 'select-field') as HTMLSelectElement;
+  const resetBtn = queryByAttribute('data-ref', storyContainer, 'btn-reset')!;
+  const clearBtn = queryByAttribute('data-ref', storyContainer, 'btn-undefined')!;
+  const fooBtn = queryByAttribute('data-ref', storyContainer, 'btn-foo')!;
+  userEvent.click(fooBtn);
+  await waitToBe(select, 'value', 'foo');
+  userEvent.click(clearBtn);
+  await waitToBe(select, 'value', '');
+  userEvent.click(resetBtn);
+  await waitToBe(select, 'value', 'bar');
+};
 
 export const AllowUnset: Story = () => ({
   component: defineComponent({
@@ -109,7 +138,7 @@ export const AllowUnset: Story = () => ({
       ];
     },
   }),
-  template: () => html`<div data-component="value">
+  template: () => html`<div data-component="value" data-testid="value-allow-unset-story">
     <p>Value: <span data-ref="info"></span></p>
     <div><input data-ref="field" value="hello" /></div>
     <div>
@@ -137,3 +166,26 @@ export const AllowUnset: Story = () => ({
     </div>
   </div>`,
 });
+AllowUnset.play = async () => {
+  const storyContainer = screen.getByTestId('value-allow-unset-story');
+  const select = queryByAttribute('data-ref', storyContainer, 'select-field') as HTMLSelectElement;
+  const resetBtn = queryByAttribute('data-ref', storyContainer, 'btn-reset')!;
+  const clearBtn = queryByAttribute('data-ref', storyContainer, 'btn-undefined')!;
+  const fooBtn = queryByAttribute('data-ref', storyContainer, 'btn-foo')!;
+  const allowUnset = queryByAttribute('data-ref', storyContainer, 'allow-unset-checkbox')!;
+  userEvent.click(clearBtn);
+  await waitToBe(select, 'value', '');
+  userEvent.click(fooBtn);
+  await waitToBe(select, 'value', 'foo');
+  userEvent.click(resetBtn);
+  await waitToBe(select, 'value', '');
+
+  userEvent.click(allowUnset);
+
+  userEvent.click(clearBtn);
+  await waitToBe(select, 'value', '');
+  userEvent.click(fooBtn);
+  await waitToBe(select, 'value', 'foo');
+  userEvent.click(resetBtn);
+  await waitToBe(select, 'value', 'foo');
+};
