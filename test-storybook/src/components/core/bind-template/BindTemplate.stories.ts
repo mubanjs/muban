@@ -2,6 +2,14 @@ import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { bind, bindMap, bindTemplate, defineComponent, refCollection, ref } from '@muban/muban';
 import type { ComponentRefItemCollection, RefElementType, TypedRefs } from '@muban/muban';
+import {
+  screen,
+  queryAllByAttribute,
+  queryByAttribute,
+  userEvent,
+} from '@storybook/testing-library';
+import { expect } from '@storybook/jest';
+import { wait } from '../../../utils/timers';
 
 export default {
   title: 'core/bind/bindTemplate',
@@ -39,6 +47,34 @@ function useItemControls({
   };
 }
 
+const playFunction = (containerId: string) => async () => {
+  const storyContainer = screen.getByTestId(containerId);
+
+  const getRemoveButtons = () => queryAllByAttribute('data-ref', storyContainer, 'removeButton');
+
+  const addButton = queryByAttribute('data-ref', storyContainer, 'addButton')!;
+  const itemsToAdd = 5;
+  const initialItems = getRemoveButtons().length;
+  let itemsLeft = itemsToAdd + initialItems;
+
+  for (let index = 0; index < itemsToAdd; index++) {
+    userEvent.click(addButton);
+  }
+
+  await wait();
+  expect(getRemoveButtons().length).toBe(itemsLeft);
+
+  (async function removeOne() {
+    const removeButtons = getRemoveButtons();
+    if (removeButtons.length === 0) return;
+    userEvent.click(removeButtons[0]);
+    itemsLeft--;
+    await wait();
+    expect(getRemoveButtons().length).toBe(itemsLeft);
+    removeOne();
+  })();
+};
+
 export const ServerRenderedAuto: Story = () => ({
   component: defineComponent({
     name: 'bindTemplate',
@@ -67,7 +103,7 @@ export const ServerRenderedAuto: Story = () => ({
       ];
     },
   }),
-  template: () => html` <div data-component="bindTemplate">
+  template: () => html` <div data-component="bindTemplate" data-testid="server-rendered-auto-story">
     <h3>filled container</h3>
     <div><button data-ref="addButton">add item</button></div>
     <div data-ref="container">
@@ -75,6 +111,7 @@ export const ServerRenderedAuto: Story = () => ({
     </div>
   </div>`,
 });
+ServerRenderedAuto.play = playFunction('server-rendered-auto-story');
 
 export const ServerRenderedForce: Story = () => ({
   component: defineComponent({
@@ -105,7 +142,10 @@ export const ServerRenderedForce: Story = () => ({
       ];
     },
   }),
-  template: () => html` <div data-component="bindTemplate">
+  template: () => html` <div
+    data-component="bindTemplate"
+    data-testid="server-rendered-force-story"
+  >
     <h3>filled container</h3>
     <div><button data-ref="addButton">add item</button></div>
     <div data-ref="container">
@@ -113,6 +153,7 @@ export const ServerRenderedForce: Story = () => ({
     </div>
   </div>`,
 });
+ServerRenderedForce.play = playFunction('server-rendered-force-story');
 
 export const ClientRenderedAuto: Story = () => ({
   component: defineComponent({
@@ -134,9 +175,10 @@ export const ClientRenderedAuto: Story = () => ({
       ];
     },
   }),
-  template: () => html` <div data-component="bindTemplate">
+  template: () => html` <div data-component="bindTemplate" data-testid="client-rendered-auto-story">
     <h3>filled container</h3>
     <div><button data-ref="addButton">add item</button></div>
     <div data-ref="container"></div>
   </div>`,
 });
+ClientRenderedAuto.play = playFunction('client-rendered-auto-story');
