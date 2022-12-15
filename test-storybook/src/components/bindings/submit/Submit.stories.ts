@@ -49,6 +49,6 @@ Default.play = async () => {
   const storyContainer = screen.getByTestId('submit-story');
   const submit = queryByAttribute('data-ref', storyContainer, 'submit') as HTMLInputElement;
   userEvent.click(submit);
-  await wait(500);
+  await wait();
   expect(onSubmit).toBeCalled();
 };

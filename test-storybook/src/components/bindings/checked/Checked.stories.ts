@@ -148,7 +148,7 @@ CheckedValue.play = async () => {
   ]
     .map((isChecked) => (isChecked ? newValue : undefined))
     .join(' - ');
-  await waitToBe(info!, 'textContent', checkboxesValue);
+  await waitToBe(info!, 'textContent', checkboxesValue, 0);
 };
 
 export const ValueCheckedValue: Story = () => ({
@@ -246,7 +246,7 @@ CheckedArray.play = async () => {
     'checkbox',
   ) as Array<HTMLInputElement>;
   checkboxes.forEach((checkbox) => userEvent.click(checkbox));
-  await wait(500);
+  await wait();
   expect(JSON.parse(info?.value)).toStrictEqual(checkboxes.map((checkbox) => checkbox.value));
 };
 
@@ -314,7 +314,7 @@ CheckedArrayDefaultHtml.play = async () => {
     storyContainer,
     'checkbox',
   ) as Array<HTMLInputElement>;
-  await wait(500);
+  await wait();
   expect(JSON.parse(info?.value)).toStrictEqual(
     checkboxes
       .map((checkbox) => (checkbox.checked ? checkbox.value : undefined))
@@ -384,7 +384,7 @@ CheckedArrayDefaultBinding.play = async () => {
   ) as Array<HTMLInputElement>;
   expect(info?.value).toBe('');
   checkboxes.forEach((checkbox) => userEvent.click(checkbox));
-  await wait(500);
+  await wait();
   expect(JSON.parse(info?.value)).toStrictEqual(
     checkboxes
       .map((checkbox) => (checkbox.checked ? checkbox.value : undefined))
