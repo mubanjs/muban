@@ -4,6 +4,8 @@ import { html } from '@muban/template';
 import { either, test } from 'isntnt';
 import { bind, defineComponent, propType, computed } from '@muban/muban';
 import type { PropTypeDefinition, ComponentRefItem } from '@muban/muban';
+import { screen, queryByAttribute } from '@storybook/testing-library';
+import { expect } from '@storybook/jest';
 
 export default {
   title: 'core/props/css',
@@ -44,12 +46,21 @@ export const CssBoolean: Story = () => ({
       props2: 'props2',
     },
   ),
-  template: () => html` <div data-component="props">
+  template: () => html` <div data-component="props" data-testid="props-css-boolean-story">
     <div data-ref="props1" class="isActive is-expanded"></div>
     <div data-ref="props2" class="isActive is-expanded"></div>
     <pre data-ref="info"></pre>
   </div>`,
 });
+CssBoolean.play = async () => {
+  const storyContainer = screen.getByTestId('props-css-boolean-story')!;
+  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const parsedInfo = JSON.parse(info.textContent!);
+  expect(parsedInfo.isActive).toBe(true);
+  expect(parsedInfo.isExpanded).toBe(true);
+  expect(parsedInfo.isActive2).toBe(true);
+  expect(parsedInfo.isExpanded2).toBe(true);
+};
 
 export const CssString: Story = () => ({
   component: createPropsComponent(
@@ -74,11 +85,18 @@ export const CssString: Story = () => ({
       props: 'props',
     },
   ),
-  template: () => html` <div data-component="props">
+  template: () => html` <div data-component="props" data-testid="props-css-string-story">
     <div data-ref="props" class="item item-recipe"></div>
     <pre data-ref="info"></pre>
   </div>`,
 });
+CssString.play = async () => {
+  const storyContainer = screen.getByTestId('props-css-string-story')!;
+  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const parsedInfo = JSON.parse(info.textContent!);
+  expect(parsedInfo.itemTypeArray).toBe('item-recipe');
+  expect(parsedInfo.itemTypeRegexp).toBe('item-recipe');
+};
 
 export const CssArray: Story = () => ({
   component: createPropsComponent(
@@ -89,11 +107,18 @@ export const CssArray: Story = () => ({
       props: 'props',
     },
   ),
-  template: () => html` <div data-component="props">
+  template: () => html` <div data-component="props" data-testid="props-css-array-story">
     <div data-ref="props" class="item recipe"></div>
     <pre data-ref="info"></pre>
   </div>`,
 });
+CssArray.play = async () => {
+  const storyContainer = screen.getByTestId('props-css-array-story')!;
+  const props = queryByAttribute('data-ref', storyContainer, 'props') as HTMLDivElement;
+  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const parsedInfo = JSON.parse(info.textContent!);
+  expect(parsedInfo.valuesValue).toStrictEqual(Array.from(props.classList));
+};
 
 export const CssObject: Story = () => ({
   component: createPropsComponent(
@@ -104,8 +129,20 @@ export const CssObject: Story = () => ({
       props: 'props',
     },
   ),
-  template: () => html` <div data-component="props">
+  template: () => html` <div data-component="props" data-testid="props-css-object-story">
     <div data-ref="props" class="item recipe"></div>
     <pre data-ref="info"></pre>
   </div>`,
 });
+CssObject.play = async () => {
+  const storyContainer = screen.getByTestId('props-css-object-story')!;
+  const props = queryByAttribute('data-ref', storyContainer, 'props') as HTMLDivElement;
+  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const parsedInfo = JSON.parse(info.textContent!);
+  const classesObject = Array.from(props.classList).reduce(
+    (prev, className) => ({ ...prev, [className]: true }),
+    {},
+  );
+  console.log(parsedInfo.resultValue, classesObject);
+  expect(parsedInfo.resultValue).toStrictEqual(classesObject);
+};
