@@ -2,6 +2,13 @@
 import type { Story } from '@muban/storybook/types-6-0';
 import { html } from '@muban/template';
 import { bind, defineComponent, propType, refComponent, refElement, computed } from '@muban/muban';
+import {
+  screen,
+  queryByAttribute,
+  queryAllByAttribute,
+  userEvent,
+} from '@storybook/testing-library';
+import { expect, jest } from '@storybook/jest';
 
 export default {
   title: 'core/refs/refComponent',
@@ -81,7 +88,7 @@ export const Default: Story = () => ({
       ];
     },
   }),
-  template: () => html` <div data-component="ref-component">
+  template: () => html` <div data-component="ref-component" data-testid="ref-component-story">
     <div>${buttonTemplate({})}</div>
     <div>${buttonTemplate({}, 'btn')}</div>
     <div>${buttonTemplate({}, 'btn2')}</div>
@@ -91,6 +98,23 @@ export const Default: Story = () => ({
     <div>${linkTemplate({}, 'linkTarget')}</div>
   </div>`,
 });
+Default.play = async () => {
+  const storyContainer = screen.getByTestId('ref-component-story')!;
+  const buttons = queryAllByAttribute(
+    'data-component',
+    storyContainer,
+    'button',
+  ) as Array<HTMLButtonElement>;
+  const links = queryAllByAttribute(
+    'data-component',
+    storyContainer,
+    'link',
+  ) as Array<HTMLAnchorElement>;
+  const expectedButtonLabels = ['label1', 'label2', '', 'label5'];
+  const expectedLinkLabels = ['label3', 'label4', 'label6'];
+  expect(buttons.map((button) => button.textContent)).toStrictEqual(expectedButtonLabels);
+  expect(links.map((link) => link.textContent)).toStrictEqual(expectedLinkLabels);
+};
 
 export const Default2: Story = () => ({
   component: defineComponent({
@@ -113,12 +137,19 @@ export const Default2: Story = () => ({
       ];
     },
   }),
-  template: () => html` <div data-component="ref-component">
+  template: () => html` <div data-component="ref-component" data-testid="multi-with-ref-story">
     <div>${buttonTemplate({}, 'btnTarget')}</div>
     <div>${linkTemplate({}, 'linkTarget')}</div>
   </div>`,
 });
 Default2.storyName = 'Multi with ref';
+Default2.play = async () => {
+  const storyContainer = screen.getByTestId('multi-with-ref-story')!;
+  const button = queryByAttribute('data-component', storyContainer, 'button');
+  const link = queryByAttribute('data-component', storyContainer, 'link');
+  expect(button?.textContent).toBe('label5');
+  expect(link?.textContent).toBe('label6');
+};
 
 export const Default3: Story<{ toRender?: 'button' | 'link' }> = () => ({
   component: defineComponent({
@@ -138,6 +169,7 @@ export const Default3: Story<{ toRender?: 'button' | 'link' }> = () => ({
   }),
   template: ({ toRender = 'button' }: { toRender?: 'button' | 'link' }) => html` <div
     data-component="ref-component"
+    data-testid="multi-without-ref-story"
   >
     <div>${toRender === 'button' ? buttonTemplate({}) : linkTemplate({})}</div>
   </div>`,
@@ -154,6 +186,11 @@ Default3.argTypes = {
   },
 };
 Default3.storyName = 'Multi without ref';
+Default3.play = async () => {
+  const storyContainer = screen.getByTestId('multi-without-ref-story')!;
+  const button = queryByAttribute('data-component', storyContainer, 'button');
+  expect(button?.textContent).toBe('custom label');
+};
 
 export const SvgRef: Story = () => ({
   component: defineComponent({
@@ -161,17 +198,28 @@ export const SvgRef: Story = () => ({
     refs: {
       maskSvg: refElement<SVGElement>('mask-svg'),
     },
-    setup() {
-      return [];
+    setup({ refs }) {
+      return [
+        bind(refs.maskSvg, {
+          attr: {
+            enabled: computed(() => true),
+          },
+        }),
+      ];
     },
   }),
-  template: () => html` <div data-component="ref-component">
+  template: () => html` <div data-component="ref-component" data-testid="svg-ref-story">
     <svg data-ref="mask-svg" width="100" height="100">
       <circle cx="50" cy="50" r="40" stroke="grey" stroke-width="4" fill="lightblue" />
     </svg>
   </div>`,
 });
 SvgRef.storyName = 'SVG Ref';
+SvgRef.play = async () => {
+  const storyContainer = screen.getByTestId('svg-ref-story')!;
+  const svg = queryByAttribute('data-ref', storyContainer, 'mask-svg');
+  expect(svg?.getAttribute('enabled')).toBe('true');
+};
 
 // The most basic version of a component throws a typescript error
 const NoPropsComponent = defineComponent({
@@ -184,6 +232,7 @@ const PropsComponent = defineComponent({
   props: {},
 });
 
+const noPropsStoryClickHandler = jest.fn();
 export const Default4: Story<{ toRender?: 'button' | 'link' }> = () => ({
   component: defineComponent({
     name: 'ref-component',
@@ -200,6 +249,7 @@ export const Default4: Story<{ toRender?: 'button' | 'link' }> = () => ({
                 // This would throw a typescript error because NoProps component has no `props` object.
                 // eslint-disable-next-line no-console
                 console.log('click no-props');
+                noPropsStoryClickHandler();
               },
             },
           },
@@ -211,6 +261,7 @@ export const Default4: Story<{ toRender?: 'button' | 'link' }> = () => ({
                 // This will work like expected because the `PropsComponent` has an empty `props` object.
                 // eslint-disable-next-line no-console
                 console.log('click props');
+                noPropsStoryClickHandler();
               },
             },
           },
@@ -218,9 +269,17 @@ export const Default4: Story<{ toRender?: 'button' | 'link' }> = () => ({
       ];
     },
   }),
-  template: () => html` <div data-component="ref-component">
+  template: () => html` <div data-component="ref-component" data-testid="without-props-story">
     <div data-component="no-props-component">no-props-component</div>
     <div data-component="props-component">props-component</div>
   </div>`,
 });
 Default4.storyName = 'Components without props';
+Default4.play = async () => {
+  const storyContainer = screen.getByTestId('without-props-story')!;
+  const noPropsComponent = queryByAttribute('data-component', storyContainer, 'no-props-component');
+  const propsComponent = queryByAttribute('data-component', storyContainer, 'props-component');
+  userEvent.click(propsComponent!);
+  userEvent.click(noPropsComponent!);
+  expect(noPropsStoryClickHandler).toBeCalledTimes(2);
+};
