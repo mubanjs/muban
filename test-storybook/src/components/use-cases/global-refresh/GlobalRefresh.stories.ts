@@ -4,6 +4,8 @@ import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { computed, ref } from '@vue/reactivity';
 import { bind, defineComponent, propType, refComponent } from '@muban/muban';
+import { screen, queryAllByAttribute } from '@muban/testing-library';
+import { expect } from '@storybook/jest';
 
 export default {
   title: 'use-cases/global-refresh',
@@ -50,7 +52,7 @@ export const GlobalRefresh: Story = () => ({
       return [bind(refs.child, { content: updatedContent })];
     },
   }),
-  template: () => html` <div data-component="global-refresh">
+  template: () => html` <div data-component="global-refresh" data-testid="global-refresh">
     <div data-component="child">
       <h1>Test</h1>
       <div data-ref="content">Foo ##tooltip1## bar ##tooltip2##.</div>
@@ -58,9 +60,19 @@ export const GlobalRefresh: Story = () => ({
   </div>`,
 });
 
+const globalRefreshPlayFunction = async () => {
+  const storyContainer = screen.getByTestId('global-refresh');
+  const tooltips = queryAllByAttribute('data-component', storyContainer, 'tooltip');
+  expect(tooltips.length).toBe(2);
+  expect(tooltips[0].textContent).toBe('tooltip1');
+  expect(tooltips[1].textContent).toBe('tooltip2');
+};
+GlobalRefresh.play = globalRefreshPlayFunction;
+
 export const GlobalRefreshDecorator = GlobalRefresh.bind({});
 GlobalRefreshDecorator.decorators = [
   createDecoratorComponent(({ template }) => ({
     template: () => html`<div data-foo="bar">${template}</div>`,
   })),
 ];
+GlobalRefreshDecorator.play = globalRefreshPlayFunction;
