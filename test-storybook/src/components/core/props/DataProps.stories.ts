@@ -3,7 +3,7 @@ import type { Story } from '@muban/storybook/types-6-0';
 import { html } from '@muban/template';
 import { bind, defineComponent, propType, computed } from '@muban/muban';
 import type { PropTypeDefinition, ComponentRefItem } from '@muban/muban';
-import { screen, queryByAttribute } from '@storybook/testing-library';
+import { queryByRef, screen } from '@muban/testing-library';
 import { expect } from '@storybook/jest';
 import isValidJson from '../../../utils/isValidJson';
 
@@ -50,8 +50,8 @@ export const DataString: Story = () => ({
 });
 DataString.play = async () => {
   const storyContainer = screen.getByTestId('props-data-string-story')!;
-  const props = queryByAttribute('data-ref', storyContainer, 'props') as HTMLDivElement;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const props = queryByRef(storyContainer, 'props') as HTMLDivElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   expect(info.textContent).not.toBe(undefined);
   expect(isValidJson(info.textContent!)).toBe(true);
   const parsedInfo = JSON.parse(info.textContent!);
@@ -75,8 +75,8 @@ export const DataNumber: Story = () => ({
 });
 DataNumber.play = async () => {
   const storyContainer = screen.getByTestId('props-data-number-story')!;
-  const props = queryByAttribute('data-ref', storyContainer, 'props') as HTMLDivElement;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const props = queryByRef(storyContainer, 'props') as HTMLDivElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   expect(info.textContent).not.toBe(undefined);
   expect(isValidJson(info.textContent!)).toBe(true);
   const parsedInfo = JSON.parse(info.textContent!);
@@ -100,8 +100,8 @@ export const DataBoolean: Story = () => ({
 });
 DataBoolean.play = async () => {
   const storyContainer = screen.getByTestId('props-data-boolean-story')!;
-  const props = queryByAttribute('data-ref', storyContainer, 'props') as HTMLDivElement;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const props = queryByRef(storyContainer, 'props') as HTMLDivElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   expect(info.textContent).not.toBe(undefined);
   expect(isValidJson(info.textContent!)).toBe(true);
   const parsedInfo = JSON.parse(info.textContent!);
@@ -125,8 +125,8 @@ export const DataDate: Story = () => ({
 });
 DataDate.play = async () => {
   const storyContainer = screen.getByTestId('props-data-date-story')!;
-  const props = queryByAttribute('data-ref', storyContainer, 'props') as HTMLDivElement;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const props = queryByRef(storyContainer, 'props') as HTMLDivElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   expect(info.textContent).not.toBe(undefined);
   expect(isValidJson(info.textContent!)).toBe(true);
   const parsedInfo = JSON.parse(info.textContent!);
@@ -150,8 +150,8 @@ export const DataArray: Story = () => ({
 });
 DataArray.play = async () => {
   const storyContainer = screen.getByTestId('props-data-array-story')!;
-  const props = queryByAttribute('data-ref', storyContainer, 'props') as HTMLDivElement;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const props = queryByRef(storyContainer, 'props') as HTMLDivElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   expect(info.textContent).not.toBe(undefined);
   expect(isValidJson(info.textContent!)).toBe(true);
   const parsedInfo = JSON.parse(info.textContent!);
@@ -184,8 +184,8 @@ export const DataObject: Story = () => ({
 });
 DataObject.play = async () => {
   const storyContainer = screen.getByTestId('props-data-object-story')!;
-  const props = queryByAttribute('data-ref', storyContainer, 'props') as HTMLDivElement;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const props = queryByRef(storyContainer, 'props') as HTMLDivElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   expect(info.textContent).not.toBe(undefined);
   expect(isValidJson(info.textContent!)).toBe(true);
   const parsedInfo = JSON.parse(info.textContent!);
@@ -215,7 +215,7 @@ export const DataAny: Story = () => ({
 });
 DataAny.play = async () => {
   const storyContainer = screen.getByTestId('props-data-any-story')!;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   expect(info.textContent).not.toBe(undefined);
   expect(isValidJson(info.textContent!)).toBe(true);
   const parsedInfo = JSON.parse(info.textContent!);

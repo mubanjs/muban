@@ -3,7 +3,7 @@ import type { Story } from '@muban/storybook/types-6-0';
 import { html } from '@muban/template';
 import { bind, defineComponent, propType, computed } from '@muban/muban';
 import type { PropTypeDefinition, ComponentRefItem } from '@muban/muban';
-import { screen, queryByAttribute } from '@storybook/testing-library';
+import { queryByRef, screen } from '@muban/testing-library';
 import { expect } from '@storybook/jest';
 import isValidJson from '../../../utils/isValidJson';
 
@@ -52,9 +52,9 @@ export const HtmlString: Story = () => ({
 });
 HtmlString.play = async () => {
   const storyContainer = screen.getByTestId('props-html-string-story')!;
-  const props = queryByAttribute('data-ref', storyContainer, 'props') as HTMLDivElement;
-  const props2 = queryByAttribute('data-ref', storyContainer, 'props2') as HTMLDivElement;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const props = queryByRef(storyContainer, 'props') as HTMLDivElement;
+  const props2 = queryByRef(storyContainer, 'props2') as HTMLDivElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   expect(info.textContent).not.toBe(undefined);
   expect(isValidJson(info.textContent!)).toBe(true);
   const parsedInfo = JSON.parse(info.textContent!);

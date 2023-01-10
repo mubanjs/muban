@@ -2,7 +2,8 @@
 import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { bind, defineComponent, ref } from '@muban/muban';
-import { screen, queryByAttribute, userEvent } from '@storybook/testing-library';
+import { queryByRef, screen } from '@muban/testing-library';
+import { userEvent } from '@storybook/testing-library';
 import { waitToBe } from '../../../utils/timers';
 
 export default {
@@ -43,10 +44,10 @@ export const Default: Story = () => ({
 });
 Default.play = async () => {
   const storyContainer = screen.getByTestId('value-default-story');
-  const field = queryByAttribute('data-ref', storyContainer, 'field')!;
-  const resetBtn = queryByAttribute('data-ref', storyContainer, 'btn-reset')!;
-  const clearBtn = queryByAttribute('data-ref', storyContainer, 'btn-undefined')!;
-  const fooBtn = queryByAttribute('data-ref', storyContainer, 'btn-foo')!;
+  const field = queryByRef(storyContainer, 'field')!;
+  const resetBtn = queryByRef(storyContainer, 'btn-reset')!;
+  const clearBtn = queryByRef(storyContainer, 'btn-undefined')!;
+  const fooBtn = queryByRef(storyContainer, 'btn-foo')!;
   userEvent.click(fooBtn);
   await waitToBe(field, 'value', 'foo');
   userEvent.click(clearBtn);
@@ -98,10 +99,10 @@ export const Select: Story = () => ({
 });
 Select.play = async () => {
   const storyContainer = screen.getByTestId('value-select-story');
-  const select = queryByAttribute('data-ref', storyContainer, 'select-field') as HTMLSelectElement;
-  const resetBtn = queryByAttribute('data-ref', storyContainer, 'btn-reset')!;
-  const clearBtn = queryByAttribute('data-ref', storyContainer, 'btn-undefined')!;
-  const fooBtn = queryByAttribute('data-ref', storyContainer, 'btn-foo')!;
+  const select = queryByRef(storyContainer, 'select-field') as HTMLSelectElement;
+  const resetBtn = queryByRef(storyContainer, 'btn-reset')!;
+  const clearBtn = queryByRef(storyContainer, 'btn-undefined')!;
+  const fooBtn = queryByRef(storyContainer, 'btn-foo')!;
   userEvent.click(fooBtn);
   await waitToBe(select, 'value', 'foo');
   userEvent.click(clearBtn);
@@ -167,11 +168,11 @@ export const AllowUnset: Story = () => ({
 });
 AllowUnset.play = async () => {
   const storyContainer = screen.getByTestId('value-allow-unset-story');
-  const select = queryByAttribute('data-ref', storyContainer, 'select-field') as HTMLSelectElement;
-  const resetBtn = queryByAttribute('data-ref', storyContainer, 'btn-reset')!;
-  const clearBtn = queryByAttribute('data-ref', storyContainer, 'btn-undefined')!;
-  const fooBtn = queryByAttribute('data-ref', storyContainer, 'btn-foo')!;
-  const allowUnset = queryByAttribute('data-ref', storyContainer, 'allow-unset-checkbox')!;
+  const select = queryByRef(storyContainer, 'select-field') as HTMLSelectElement;
+  const resetBtn = queryByRef(storyContainer, 'btn-reset')!;
+  const clearBtn = queryByRef(storyContainer, 'btn-undefined')!;
+  const fooBtn = queryByRef(storyContainer, 'btn-foo')!;
+  const allowUnset = queryByRef(storyContainer, 'allow-unset-checkbox')!;
   userEvent.click(clearBtn);
   await waitToBe(select, 'value', '');
   userEvent.click(fooBtn);

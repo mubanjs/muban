@@ -3,7 +3,7 @@ import type { Story } from '@muban/storybook/types-6-0';
 import { html } from '@muban/template';
 import { bind, defineComponent, propType, computed } from '@muban/muban';
 import type { PropTypeDefinition, ComponentRefItem } from '@muban/muban';
-import { screen, queryByAttribute } from '@storybook/testing-library';
+import { queryByRef, screen } from '@muban/testing-library';
 import { expect } from '@storybook/jest';
 
 export default {
@@ -49,8 +49,8 @@ export const DataString: Story = () => ({
 });
 DataString.play = async () => {
   const storyContainer = screen.getByTestId('props-attr-data-string-story')!;
-  const input = queryByAttribute('data-ref', storyContainer, 'input') as HTMLInputElement;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const input = queryByRef(storyContainer, 'input') as HTMLInputElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   const initialValue = input.value;
   const extractedValue = JSON.parse(info.textContent!);
   expect(extractedValue.value).toBe(initialValue.toString());
@@ -74,8 +74,8 @@ export const DataNumber: Story = () => ({
 });
 DataNumber.play = async () => {
   const storyContainer = screen.getByTestId('props-attr-data-number-story')!;
-  const input = queryByAttribute('data-ref', storyContainer, 'input') as HTMLInputElement;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const input = queryByRef(storyContainer, 'input') as HTMLInputElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   const initialValue = input.value;
   const extractedValue = JSON.parse(info.textContent!);
   expect(extractedValue.value).toBe(parseInt(initialValue));
@@ -110,8 +110,8 @@ export const DataBoolean: Story = () => ({
 });
 DataBoolean.play = async () => {
   const storyContainer = screen.getByTestId('props-attr-data-boolean-story')!;
-  const check = queryByAttribute('data-ref', storyContainer, 'input-checked') as HTMLInputElement;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const check = queryByRef(storyContainer, 'input-checked') as HTMLInputElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   const initialCheckedValue = check.checked;
   const extractedValue = JSON.parse(info.textContent!);
   expect(extractedValue.checked).toBe(initialCheckedValue);
@@ -135,8 +135,8 @@ export const DataDate: Story = () => ({
 });
 DataDate.play = async () => {
   const storyContainer = screen.getByTestId('props-attr-data-date-story')!;
-  const input = queryByAttribute('data-ref', storyContainer, 'input') as HTMLInputElement;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const input = queryByRef(storyContainer, 'input') as HTMLInputElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   const initialValue = input.value;
   const extractedValue = JSON.parse(info.textContent!);
   expect(new Date(extractedValue.value).getTime()).toBe(new Date(initialValue).getTime());

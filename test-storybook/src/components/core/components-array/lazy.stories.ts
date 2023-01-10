@@ -2,7 +2,7 @@ import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { defineComponent, lazy } from '@muban/muban';
 import { LazyComponentTemplate } from './LazyComponent.template';
-import { screen, queryByAttribute } from '@storybook/testing-library';
+import { queryByAttribute, screen } from '@muban/testing-library';
 import { expect } from '@storybook/jest';
 
 export default {

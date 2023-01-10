@@ -2,12 +2,8 @@ import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { bind, bindMap, bindTemplate, defineComponent, refCollection, ref } from '@muban/muban';
 import type { ComponentRefItemCollection, RefElementType, TypedRefs } from '@muban/muban';
-import {
-  screen,
-  queryAllByAttribute,
-  queryByAttribute,
-  userEvent,
-} from '@storybook/testing-library';
+import { queryByRef, queryAllByRef, screen } from '@muban/testing-library';
+import { userEvent } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
 import { wait } from '../../../utils/timers';
 
@@ -50,9 +46,9 @@ function useItemControls({
 const playFunction = (containerId: string) => async () => {
   const storyContainer = screen.getByTestId(containerId);
 
-  const getRemoveButtons = () => queryAllByAttribute('data-ref', storyContainer, 'removeButton');
+  const getRemoveButtons = () => queryAllByRef(storyContainer, 'removeButton');
 
-  const addButton = queryByAttribute('data-ref', storyContainer, 'addButton')!;
+  const addButton = queryByRef(storyContainer, 'addButton')!;
   const itemsToAdd = 5;
   const initialItems = getRemoveButtons().length;
   let itemsLeft = itemsToAdd + initialItems;

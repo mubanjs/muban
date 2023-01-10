@@ -4,7 +4,7 @@ import { html } from '@muban/template';
 import { either, test } from 'isntnt';
 import { bind, defineComponent, propType, computed } from '@muban/muban';
 import type { PropTypeDefinition, ComponentRefItem } from '@muban/muban';
-import { screen, queryByAttribute } from '@storybook/testing-library';
+import { queryByRef, screen } from '@muban/testing-library';
 import { expect } from '@storybook/jest';
 
 export default {
@@ -54,7 +54,7 @@ export const CssBoolean: Story = () => ({
 });
 CssBoolean.play = async () => {
   const storyContainer = screen.getByTestId('props-css-boolean-story')!;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   const parsedInfo = JSON.parse(info.textContent!);
   expect(parsedInfo.isActive).toBe(true);
   expect(parsedInfo.isExpanded).toBe(true);
@@ -92,7 +92,7 @@ export const CssString: Story = () => ({
 });
 CssString.play = async () => {
   const storyContainer = screen.getByTestId('props-css-string-story')!;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   const parsedInfo = JSON.parse(info.textContent!);
   expect(parsedInfo.itemTypeArray).toBe('item-recipe');
   expect(parsedInfo.itemTypeRegexp).toBe('item-recipe');
@@ -114,8 +114,8 @@ export const CssArray: Story = () => ({
 });
 CssArray.play = async () => {
   const storyContainer = screen.getByTestId('props-css-array-story')!;
-  const props = queryByAttribute('data-ref', storyContainer, 'props') as HTMLDivElement;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const props = queryByRef(storyContainer, 'props') as HTMLDivElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   const parsedInfo = JSON.parse(info.textContent!);
   expect(parsedInfo.valuesValue).toStrictEqual(Array.from(props.classList));
 };
@@ -136,8 +136,8 @@ export const CssObject: Story = () => ({
 });
 CssObject.play = async () => {
   const storyContainer = screen.getByTestId('props-css-object-story')!;
-  const props = queryByAttribute('data-ref', storyContainer, 'props') as HTMLDivElement;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const props = queryByRef(storyContainer, 'props') as HTMLDivElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   const parsedInfo = JSON.parse(info.textContent!);
   const classesObject = Array.from(props.classList).reduce(
     (prev, className) => ({ ...prev, [className]: true }),

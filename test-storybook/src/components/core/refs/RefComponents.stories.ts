@@ -2,7 +2,7 @@
 import type { Story } from '@muban/storybook/types-6-0';
 import { html } from '@muban/template';
 import { bind, defineComponent, propType, refComponents, computed } from '@muban/muban';
-import { screen, queryByAttribute } from '@storybook/testing-library';
+import { screen, queryByAttribute } from '@muban/testing-library';
 import { expect } from '@storybook/jest';
 
 export default {

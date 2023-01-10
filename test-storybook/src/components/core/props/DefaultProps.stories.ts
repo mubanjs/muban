@@ -3,7 +3,7 @@ import type { Story } from '@muban/storybook/types-6-0';
 import { html, jsonScriptTemplate } from '@muban/template';
 import { bind, defineComponent, propType, computed } from '@muban/muban';
 import type { PropTypeDefinition } from '@muban/muban';
-import { screen, queryByAttribute } from '@storybook/testing-library';
+import { queryByRef, screen } from '@muban/testing-library';
 import { expect } from '@storybook/jest';
 import isValidJson from '../../../utils/isValidJson';
 
@@ -46,7 +46,7 @@ export const DataString: Story = () => ({
 });
 DataString.play = async () => {
   const storyContainer = screen.getByTestId('props-default-data-string-story')!;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   expect(info.textContent).not.toBe(undefined);
   expect(isValidJson(info.textContent!)).toBe(true);
   const parsedInfo = JSON.parse(info.textContent!);
@@ -69,7 +69,7 @@ export const DataNumber: Story = () => ({
 });
 DataNumber.play = async () => {
   const storyContainer = screen.getByTestId('props-default-data-number-story')!;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   expect(info.textContent).not.toBe(undefined);
   expect(isValidJson(info.textContent!)).toBe(true);
   const parsedInfo = JSON.parse(info.textContent!);
@@ -97,7 +97,7 @@ export const DataBoolean: Story = () => ({
 });
 DataBoolean.play = async () => {
   const storyContainer = screen.getByTestId('props-default-data-boolean-story')!;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   expect(info.textContent).not.toBe(undefined);
   expect(isValidJson(info.textContent!)).toBe(true);
   const parsedInfo = JSON.parse(info.textContent!);
@@ -125,7 +125,7 @@ export const DataArray: Story = () => ({
 });
 DataArray.play = async () => {
   const storyContainer = screen.getByTestId('props-default-data-array-story')!;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   expect(info.textContent).not.toBe(undefined);
   expect(isValidJson(info.textContent!)).toBe(true);
   const parsedInfo = JSON.parse(info.textContent!);
@@ -153,7 +153,7 @@ export const DataObject: Story = () => ({
 });
 DataObject.play = async () => {
   const storyContainer = screen.getByTestId('props-default-data-object-story')!;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   expect(info.textContent).not.toBe(undefined);
   expect(isValidJson(info.textContent!)).toBe(true);
   const parsedInfo = JSON.parse(info.textContent!);
@@ -176,7 +176,7 @@ export const DataDate: Story = () => ({
 });
 DataDate.play = async () => {
   const storyContainer = screen.getByTestId('props-default-data-date-story')!;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   expect(info.textContent).not.toBe(undefined);
   expect(isValidJson(info.textContent!)).toBe(true);
   const parsedInfo = JSON.parse(info.textContent!);
@@ -207,7 +207,7 @@ export const JsonData: Story = () => ({
 });
 JsonData.play = async () => {
   const storyContainer = screen.getByTestId('props-default-data-json-story')!;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   expect(info.textContent).not.toBe(undefined);
   expect(isValidJson(info.textContent!)).toBe(true);
   const parsedInfo = JSON.parse(info.textContent!);
@@ -236,7 +236,7 @@ export const CssBoolean: Story = () => ({
 });
 CssBoolean.play = async () => {
   const storyContainer = screen.getByTestId('props-default-css-boolean-story')!;
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLPreElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
   expect(info.textContent).not.toBe(undefined);
   expect(isValidJson(info.textContent!)).toBe(true);
   const parsedInfo = JSON.parse(info.textContent!);

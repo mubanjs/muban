@@ -10,12 +10,8 @@ import {
   refCollection,
   refElement,
 } from '@muban/muban';
-import {
-  screen,
-  queryAllByAttribute,
-  queryByAttribute,
-  userEvent,
-} from '@storybook/testing-library';
+import { queryByRef, queryAllByRef, screen } from '@muban/testing-library';
+import { userEvent } from '@storybook/testing-library';
 import { expect, jest } from '@storybook/jest';
 import { wait } from '../../../utils/timers';
 
@@ -28,9 +24,9 @@ const playFunction =
   async () => {
     const logSpy = jest.spyOn(console, 'log');
     const storyContainer = screen.getByTestId(containerId);
-    const addButton = queryByAttribute('data-ref', storyContainer, 'btnAdd')!;
-    const removeButton = queryByAttribute('data-ref', storyContainer, 'btnRemove')!;
-    const getTestButtons = () => queryAllByAttribute('data-ref', storyContainer, 'testButton');
+    const addButton = queryByRef(storyContainer, 'btnAdd')!;
+    const removeButton = queryByRef(storyContainer, 'btnRemove')!;
+    const getTestButtons = () => queryAllByRef(storyContainer, 'testButton');
 
     for (let index = 0; index < howManyToAdd; index++) userEvent.click(addButton);
 

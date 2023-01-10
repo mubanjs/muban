@@ -1,7 +1,8 @@
 import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { bind, defineComponent, computed, ref } from '@muban/muban';
-import { screen, queryByAttribute, userEvent } from '@storybook/testing-library';
+import { queryByRef, screen } from '@muban/testing-library';
+import { userEvent } from '@storybook/testing-library';
 import { waitToBe } from '../../../utils/timers';
 
 export default {
@@ -39,8 +40,8 @@ export const Default: Story = () => ({
 });
 Default.play = async () => {
   const storyContainer = screen.getByTestId('disabled-story');
-  const check = queryByAttribute('data-ref', storyContainer, 'check') as HTMLInputElement;
-  const field = queryByAttribute('data-ref', storyContainer, 'field') as HTMLInputElement;
+  const check = queryByRef(storyContainer, 'check') as HTMLInputElement;
+  const field = queryByRef(storyContainer, 'field') as HTMLInputElement;
   userEvent.click(check);
   await waitToBe(field, 'disabled', false);
   userEvent.click(check);

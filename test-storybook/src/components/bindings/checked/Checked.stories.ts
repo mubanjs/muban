@@ -1,11 +1,7 @@
 /* eslint-disable max-lines */
 import { expect } from '@storybook/jest';
-import {
-  screen,
-  queryByAttribute,
-  queryAllByAttribute,
-  userEvent,
-} from '@storybook/testing-library';
+import { userEvent } from '@storybook/testing-library';
+import { queryByRef, queryAllByRef, screen } from '@muban/testing-library';
 import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { bind, defineComponent, refCollection, computed, ref, watch } from '@muban/muban';
@@ -62,11 +58,11 @@ export const Checkbox: Story = () => ({
 
 Checkbox.play = () => {
   const storyContainer = screen.getByTestId('checked-story');
-  const checkbox1a = queryByAttribute('data-ref', storyContainer, 'checkbox1a') as HTMLInputElement;
-  const checkbox1b = queryByAttribute('data-ref', storyContainer, 'checkbox1b') as HTMLInputElement;
-  const checkbox2a = queryByAttribute('data-ref', storyContainer, 'checkbox2a') as HTMLInputElement;
-  const checkbox2b = queryByAttribute('data-ref', storyContainer, 'checkbox2b') as HTMLInputElement;
-  const info = queryByAttribute('data-ref', storyContainer, 'info');
+  const checkbox1a = queryByRef(storyContainer, 'checkbox1a') as HTMLInputElement;
+  const checkbox1b = queryByRef(storyContainer, 'checkbox1b') as HTMLInputElement;
+  const checkbox2a = queryByRef(storyContainer, 'checkbox2a') as HTMLInputElement;
+  const checkbox2b = queryByRef(storyContainer, 'checkbox2b') as HTMLInputElement;
+  const info = queryByRef(storyContainer, 'info');
   expect(info?.textContent).toBe(
     [checkbox1a.checked, checkbox1b.checked, checkbox2a.checked, checkbox2b.checked].join(' - '),
   );
@@ -131,12 +127,12 @@ export const CheckedValue: Story = () => ({
 CheckedValue.storyName = 'Checkbox checkedValue';
 CheckedValue.play = async () => {
   const storyContainer = screen.getByTestId('checked-value-story');
-  const value = queryByAttribute('data-ref', storyContainer, 'checkedValue') as HTMLInputElement;
-  const info = queryByAttribute('data-ref', storyContainer, 'info');
-  const checkbox1a = queryByAttribute('data-ref', storyContainer, 'checkbox1a') as HTMLInputElement;
-  const checkbox1b = queryByAttribute('data-ref', storyContainer, 'checkbox1b') as HTMLInputElement;
-  const checkbox2a = queryByAttribute('data-ref', storyContainer, 'checkbox2a') as HTMLInputElement;
-  const checkbox2b = queryByAttribute('data-ref', storyContainer, 'checkbox2b') as HTMLInputElement;
+  const value = queryByRef(storyContainer, 'checkedValue') as HTMLInputElement;
+  const info = queryByRef(storyContainer, 'info');
+  const checkbox1a = queryByRef(storyContainer, 'checkbox1a') as HTMLInputElement;
+  const checkbox1b = queryByRef(storyContainer, 'checkbox1b') as HTMLInputElement;
+  const checkbox2a = queryByRef(storyContainer, 'checkbox2a') as HTMLInputElement;
+  const checkbox2b = queryByRef(storyContainer, 'checkbox2b') as HTMLInputElement;
   const newValue = 'Some new value';
   userEvent.type(value, newValue);
   userEvent.click(checkbox1a);
@@ -179,9 +175,9 @@ export const ValueCheckedValue: Story = () => ({
 ValueCheckedValue.storyName = 'Checkbox value forwards checkedValue';
 ValueCheckedValue.play = async () => {
   const storyContainer = screen.getByTestId('value-checked-value-story');
-  const value = queryByAttribute('data-ref', storyContainer, 'value') as HTMLInputElement;
-  const info = queryByAttribute('data-ref', storyContainer, 'info');
-  const checkbox = queryByAttribute('data-ref', storyContainer, 'checkbox') as HTMLInputElement;
+  const value = queryByRef(storyContainer, 'value') as HTMLInputElement;
+  const info = queryByRef(storyContainer, 'info');
+  const checkbox = queryByRef(storyContainer, 'checkbox') as HTMLInputElement;
   const newValue = 'hello';
   userEvent.type(value, newValue);
   userEvent.click(checkbox);
@@ -239,12 +235,8 @@ export const CheckedArray: Story = () => ({
 CheckedArray.storyName = 'Checkbox Array';
 CheckedArray.play = async () => {
   const storyContainer = screen.getByTestId('checked-array-story');
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLTextAreaElement;
-  const checkboxes = queryAllByAttribute(
-    'data-ref',
-    storyContainer,
-    'checkbox',
-  ) as Array<HTMLInputElement>;
+  const info = queryByRef(storyContainer, 'info') as HTMLTextAreaElement;
+  const checkboxes = queryAllByRef(storyContainer, 'checkbox') as Array<HTMLInputElement>;
   checkboxes.forEach((checkbox) => userEvent.click(checkbox));
   await wait();
   expect(JSON.parse(info?.value)).toStrictEqual(checkboxes.map((checkbox) => checkbox.value));
@@ -308,12 +300,8 @@ export const CheckedArrayDefaultHtml: Story = () => ({
 CheckedArrayDefaultHtml.storyName = 'Checkbox Array Default HTML';
 CheckedArrayDefaultHtml.play = async () => {
   const storyContainer = screen.getByTestId('checked-array-default-story');
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLTextAreaElement;
-  const checkboxes = queryAllByAttribute(
-    'data-ref',
-    storyContainer,
-    'checkbox',
-  ) as Array<HTMLInputElement>;
+  const info = queryByRef(storyContainer, 'info') as HTMLTextAreaElement;
+  const checkboxes = queryAllByRef(storyContainer, 'checkbox') as Array<HTMLInputElement>;
   await wait();
   expect(JSON.parse(info?.value)).toStrictEqual(
     checkboxes
@@ -376,12 +364,8 @@ export const CheckedArrayDefaultBinding: Story = () => ({
 CheckedArrayDefaultBinding.storyName = 'Checkbox Array Default Binding';
 CheckedArrayDefaultBinding.play = async () => {
   const storyContainer = screen.getByTestId('checked-array-default-binding-story');
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLTextAreaElement;
-  const checkboxes = queryAllByAttribute(
-    'data-ref',
-    storyContainer,
-    'checkbox',
-  ) as Array<HTMLInputElement>;
+  const info = queryByRef(storyContainer, 'info') as HTMLTextAreaElement;
+  const checkboxes = queryAllByRef(storyContainer, 'checkbox') as Array<HTMLInputElement>;
   expect(info?.value).toBe('');
   checkboxes.forEach((checkbox) => userEvent.click(checkbox));
   await wait();
@@ -430,12 +414,8 @@ export const Radio: Story = () => ({
 });
 Radio.play = async () => {
   const storyContainer = screen.getByTestId('radio-story');
-  const info = queryByAttribute('data-ref', storyContainer, 'info') as HTMLTextAreaElement;
-  const radios = queryAllByAttribute(
-    'data-ref',
-    storyContainer,
-    'radio',
-  ) as Array<HTMLInputElement>;
+  const info = queryByRef(storyContainer, 'info') as HTMLTextAreaElement;
+  const radios = queryAllByRef(storyContainer, 'radio') as Array<HTMLInputElement>;
   expect(info?.value).toBe('');
   for (const radio of radios) {
     userEvent.click(radio);
@@ -459,6 +439,6 @@ export const ReadOnlyRefs: Story = () => ({
 });
 ReadOnlyRefs.play = async () => {
   const storyContainer = screen.getByTestId('read-only-story');
-  const checkbox = queryByAttribute('data-ref', storyContainer, 'checkbox1a') as HTMLInputElement;
+  const checkbox = queryByRef(storyContainer, 'checkbox1a') as HTMLInputElement;
   expect(checkbox?.checked).toBe(false);
 };

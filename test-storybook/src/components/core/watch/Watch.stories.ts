@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useToggle } from '@muban/hooks';
 import { expect, jest } from '@storybook/jest';
-import { screen, queryByAttribute, waitForElementToBeRemoved } from '@storybook/testing-library';
+import { screen, queryByAttribute, queryByRef } from '@muban/testing-library';
+import { waitForElementToBeRemoved } from '@storybook/testing-library';
 import type { Story } from '@muban/storybook';
 import { html } from '@muban/template';
 import {
@@ -111,8 +112,8 @@ export const Default: Story = {
 
 Default.play = async () => {
   const storyContainer = screen.getByTestId('watch-story');
-  const mountButton = queryByAttribute('data-ref', storyContainer, 'btnMount');
-  const unmountButton = queryByAttribute('data-ref', storyContainer, 'btnUnmount');
+  const mountButton = queryByRef(storyContainer, 'btnMount');
+  const unmountButton = queryByRef(storyContainer, 'btnUnmount');
   const getComponent = () => queryByAttribute('data-component', storyContainer, 'test');
 
   unmountButton?.click();

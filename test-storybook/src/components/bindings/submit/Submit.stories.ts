@@ -2,7 +2,8 @@ import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { bind, defineComponent, ref } from '@muban/muban';
 import { expect, jest } from '@storybook/jest';
-import { screen, queryByAttribute, userEvent } from '@storybook/testing-library';
+import { queryByRef, screen } from '@muban/testing-library';
+import { userEvent } from '@storybook/testing-library';
 import { wait } from '../../../utils/timers';
 
 export default {
@@ -47,7 +48,7 @@ export const Default: Story = () => ({
 });
 Default.play = async () => {
   const storyContainer = screen.getByTestId('submit-story');
-  const submit = queryByAttribute('data-ref', storyContainer, 'submit') as HTMLInputElement;
+  const submit = queryByRef(storyContainer, 'submit') as HTMLInputElement;
   userEvent.click(submit);
   await wait();
   expect(onSubmit).toBeCalled();

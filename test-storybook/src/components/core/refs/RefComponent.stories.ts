@@ -2,12 +2,8 @@
 import type { Story } from '@muban/storybook/types-6-0';
 import { html } from '@muban/template';
 import { bind, defineComponent, propType, refComponent, refElement, computed } from '@muban/muban';
-import {
-  screen,
-  queryByAttribute,
-  queryAllByAttribute,
-  userEvent,
-} from '@storybook/testing-library';
+import { queryByRef, screen, queryByAttribute, queryAllByAttribute } from '@muban/testing-library';
+import { userEvent } from '@storybook/testing-library';
 import { expect, jest } from '@storybook/jest';
 
 export default {
@@ -217,7 +213,7 @@ export const SvgRef: Story = () => ({
 SvgRef.storyName = 'SVG Ref';
 SvgRef.play = async () => {
   const storyContainer = screen.getByTestId('svg-ref-story')!;
-  const svg = queryByAttribute('data-ref', storyContainer, 'mask-svg');
+  const svg = queryByRef(storyContainer, 'mask-svg');
   expect(svg?.getAttribute('enabled')).toBe('true');
 };
 

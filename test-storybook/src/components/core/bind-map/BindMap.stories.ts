@@ -1,11 +1,7 @@
 import type { Story } from '@muban/storybook/types-6-0';
 import { html } from '@muban/template';
-import {
-  screen,
-  queryAllByAttribute,
-  queryByAttribute,
-  userEvent,
-} from '@storybook/testing-library';
+import { queryByRef, queryAllByRef, queryAllByAttribute, screen } from '@muban/testing-library';
+import { userEvent } from '@storybook/testing-library';
 import { expect, jest } from '@storybook/jest';
 import {
   bind,
@@ -60,7 +56,7 @@ export const BindMapElements: Story = () => ({
 BindMapElements.storyName = 'refCollection';
 BindMapElements.play = async () => {
   const storyContainer = screen.getByTestId('ref-collection-story');
-  const activateButtons = queryAllByAttribute('data-ref', storyContainer, 'activateButton');
+  const activateButtons = queryAllByRef(storyContainer, 'activateButton');
   for (const currentButton of activateButtons) {
     userEvent.click(currentButton);
     const otherButtons = activateButtons.filter((button) => button !== currentButton);
@@ -105,7 +101,7 @@ BindMapComponents.play = async () => {
   const storyContainer = screen.getByTestId('ref-components-story');
   const components = queryAllByAttribute('data-component', storyContainer, 'item');
   for (const component of components) {
-    const button = queryByAttribute('data-ref', component, 'btn')!;
+    const button = queryByRef(component, 'btn')!;
     userEvent.click(button);
     await waitToBe(button, 'textContent', `${component.dataset.value} [active]`);
   }
@@ -161,13 +157,13 @@ BindMapComponentsMultiple.play = async () => {
   }
 
   for (const item of items) {
-    const button = queryByAttribute('data-ref', item, 'btn')!;
+    const button = queryByRef(item, 'btn')!;
     userEvent.click(button);
     await waitToBe(item, 'textContent', `${item.dataset.value} [active]`);
   }
 
   for (const item of items2) {
-    const button = queryByAttribute('data-ref', item, 'btn')!;
+    const button = queryByRef(item, 'btn')!;
     userEvent.click(button);
     await waitToBe(item, 'textContent', item.dataset.value);
   }
@@ -203,7 +199,7 @@ BindMapElementArray.storyName = 'refElement Array';
 BindMapElementArray.play = async () => {
   const storyContainer = screen.getByTestId('ref-element-array-story');
   for (const ref of ['foo', 'bar', 'baz']) {
-    const element = queryByAttribute('data-ref', storyContainer, ref)!;
+    const element = queryByRef(storyContainer, ref)!;
     userEvent.click(element);
     await waitToBe(element, 'textContent', `activate [active]`);
   }
@@ -241,7 +237,7 @@ BindMapComponentsArray.play = async () => {
   const storyContainer = screen.getByTestId('ref-component-array-story');
   const components = queryAllByAttribute('data-component', storyContainer, 'item');
   for (const component of components) {
-    const button = queryByAttribute('data-ref', component, 'btn')!;
+    const button = queryByRef(component, 'btn')!;
     userEvent.click(button);
     await waitToBe(button, 'textContent', `${component.dataset.value} [active]`);
     const otherComponents = components.filter((otherComponent) => otherComponent != component);
@@ -289,14 +285,14 @@ BindMapComponentsArrayMultiple.play = async () => {
   const items = queryAllByAttribute('data-component', storyContainer, 'item');
   const items2 = queryAllByAttribute('data-component', storyContainer, 'item2');
   for (const item of items) {
-    const button = queryByAttribute('data-ref', item, 'btn')!;
+    const button = queryByRef(item, 'btn')!;
     userEvent.click(button);
     await waitToBe(button, 'textContent', `${item.dataset.value} [active]`);
     const otherItems = items.filter((otherItem) => otherItem != item);
     otherItems.forEach((otherItem) => expect(otherItem.textContent).toBe(otherItem.dataset.value));
   }
   for (const item of items2) {
-    const button = queryByAttribute('data-ref', item, 'btn')!;
+    const button = queryByRef(item, 'btn')!;
     userEvent.click(button);
     await waitToBe(button, 'textContent', `${item.dataset.value}`);
   }
@@ -343,13 +339,13 @@ export const BindMapLiveList: Story = () => ({
 BindMapLiveList.storyName = 'Reactive updates to refs';
 BindMapLiveList.play = async () => {
   const storyContainer = screen.getByTestId('reactive-updates-to-refs-story');
-  const addButton = queryByAttribute('data-ref', storyContainer, 'addButton')!;
+  const addButton = queryByRef(storyContainer, 'addButton')!;
   const itemsToAdd = 5;
   for (let index = 0; index < itemsToAdd; index++) {
     userEvent.click(addButton);
   }
   await wait();
-  const getRemoveButtons = () => queryAllByAttribute('data-ref', storyContainer, 'removeButton');
+  const getRemoveButtons = () => queryAllByRef(storyContainer, 'removeButton');
   expect(getRemoveButtons().length).toBe(itemsToAdd);
   let itemsLeft = 5;
   const removeOne = async () => {
