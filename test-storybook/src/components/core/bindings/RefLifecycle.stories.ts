@@ -11,9 +11,8 @@ import {
   refElement,
 } from '@muban/muban';
 import { queryByRef, queryAllByRef, screen } from '@muban/testing-library';
-import { userEvent } from '@storybook/testing-library';
+import { userEvent, waitFor } from '@storybook/testing-library';
 import { expect, jest } from '@storybook/jest';
-import { wait } from '../../../utils/timers';
 
 export default {
   title: 'core/bindings/ref-lifecycle',
@@ -30,19 +29,15 @@ const playFunction =
 
     for (let index = 0; index < howManyToAdd; index++) userEvent.click(addButton);
 
-    await wait();
     const testButtons = getTestButtons()!;
-    expect(testButtons.length).toBe(howManyToAdd);
-
+    await waitFor(() => expect(testButtons.length).toBe(howManyToAdd));
     for (const testButton of testButtons) {
       userEvent.click(testButton);
-      await wait();
-      expect(logSpy).toHaveBeenCalledWith(expect.stringMatching(/^test/));
+      await waitFor(() => expect(logSpy).toHaveBeenCalledWith(expect.stringMatching(/^test/)));
     }
 
     userEvent.click(removeButton);
-    await wait();
-    expect(getTestButtons().length).toBe(0);
+    await waitFor(() => expect(getTestButtons().length).toBe(0));
   };
 
 export const Element: Story = () => ({

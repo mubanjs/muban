@@ -1,7 +1,7 @@
 import type { Story } from '@muban/storybook/types-6-0';
 import { html } from '@muban/template';
 import { queryByRef, queryAllByRef, queryAllByAttribute, screen } from '@muban/testing-library';
-import { userEvent } from '@storybook/testing-library';
+import { userEvent, waitFor } from '@storybook/testing-library';
 import { expect, jest } from '@storybook/jest';
 import {
   bind,
@@ -16,7 +16,6 @@ import {
   ref,
 } from '@muban/muban';
 import { BindMapItem, BindMapItem2, bindMapItem2Template, bindMapItemTemplate } from './Item';
-import { wait, waitToBe } from '../../../utils/timers';
 
 export default {
   title: 'core/bind/bindMap',
@@ -60,9 +59,9 @@ BindMapElements.play = async () => {
   for (const currentButton of activateButtons) {
     userEvent.click(currentButton);
     const otherButtons = activateButtons.filter((button) => button !== currentButton);
-    await waitToBe(currentButton, 'textContent', 'activate [active]');
+    await waitFor(() => expect(currentButton).toHaveTextContent('activate [active]'));
     otherButtons.forEach((otherButton) => {
-      expect(otherButton.textContent).toBe('activate');
+      expect(otherButton).toHaveTextContent('activate');
     });
   }
 };
@@ -103,7 +102,7 @@ BindMapComponents.play = async () => {
   for (const component of components) {
     const button = queryByRef(component, 'btn')!;
     userEvent.click(button);
-    await waitToBe(button, 'textContent', `${component.dataset.value} [active]`);
+    await waitFor(() => expect(button).toHaveTextContent(`${component.dataset.value} [active]`));
   }
 };
 
@@ -159,13 +158,13 @@ BindMapComponentsMultiple.play = async () => {
   for (const item of items) {
     const button = queryByRef(item, 'btn')!;
     userEvent.click(button);
-    await waitToBe(item, 'textContent', `${item.dataset.value} [active]`);
+    await waitFor(() => expect(item).toHaveTextContent(`${item.dataset.value} [active]`));
   }
 
   for (const item of items2) {
     const button = queryByRef(item, 'btn')!;
     userEvent.click(button);
-    await waitToBe(item, 'textContent', item.dataset.value);
+    await waitFor(() => expect(item).toHaveTextContent(item.dataset.value));
   }
 };
 
@@ -201,7 +200,7 @@ BindMapElementArray.play = async () => {
   for (const ref of ['foo', 'bar', 'baz']) {
     const element = queryByRef(storyContainer, ref)!;
     userEvent.click(element);
-    await waitToBe(element, 'textContent', `activate [active]`);
+    await waitFor(() => expect(element).toHaveTextContent('activate [active]'));
   }
 };
 
@@ -239,10 +238,10 @@ BindMapComponentsArray.play = async () => {
   for (const component of components) {
     const button = queryByRef(component, 'btn')!;
     userEvent.click(button);
-    await waitToBe(button, 'textContent', `${component.dataset.value} [active]`);
+    await waitFor(() => expect(button).toHaveTextContent(`${component.dataset.value} [active]`));
     const otherComponents = components.filter((otherComponent) => otherComponent != component);
     otherComponents.forEach((otherComponent) =>
-      expect(otherComponent.textContent).toBe(otherComponent.dataset.value),
+      expect(otherComponent).toHaveTextContent(otherComponent.dataset.value),
     );
   }
 };
@@ -287,14 +286,14 @@ BindMapComponentsArrayMultiple.play = async () => {
   for (const item of items) {
     const button = queryByRef(item, 'btn')!;
     userEvent.click(button);
-    await waitToBe(button, 'textContent', `${item.dataset.value} [active]`);
+    await waitFor(() => expect(button).toHaveTextContent(`${item.dataset.value} [active]`));
     const otherItems = items.filter((otherItem) => otherItem != item);
     otherItems.forEach((otherItem) => expect(otherItem.textContent).toBe(otherItem.dataset.value));
   }
   for (const item of items2) {
     const button = queryByRef(item, 'btn')!;
     userEvent.click(button);
-    await waitToBe(button, 'textContent', `${item.dataset.value}`);
+    await waitFor(() => expect(button).toHaveTextContent(`${item.dataset.value}`));
   }
 };
 
@@ -344,18 +343,16 @@ BindMapLiveList.play = async () => {
   for (let index = 0; index < itemsToAdd; index++) {
     userEvent.click(addButton);
   }
-  await wait();
   const getRemoveButtons = () => queryAllByRef(storyContainer, 'removeButton');
-  expect(getRemoveButtons().length).toBe(itemsToAdd);
+  await waitFor(() => expect(getRemoveButtons().length).toBe(itemsToAdd));
   let itemsLeft = 5;
   const removeOne = async () => {
     const removeButtons = getRemoveButtons();
     if (removeButtons.length === 0) return;
     userEvent.click(removeButtons[0]);
     itemsLeft--;
-    await wait();
-    expect(getRemoveButtons().length).toBe(itemsLeft);
+    await waitFor(() => expect(getRemoveButtons().length).toBe(itemsLeft));
     removeOne();
   };
-  removeOne();
+  await removeOne();
 };

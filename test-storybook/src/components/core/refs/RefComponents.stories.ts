@@ -73,6 +73,6 @@ Default.play = async () => {
   const storyContainer = screen.getByTestId('ref-components-story')!;
   const button = queryByAttribute('data-component', storyContainer, 'button');
   const link = queryByAttribute('data-component', storyContainer, 'link');
-  expect(button?.textContent).toBe('label5');
-  expect(link?.textContent).toBe('label5');
+  expect(button).toHaveTextContent('label5');
+  expect(link).toHaveTextContent('label5');
 };

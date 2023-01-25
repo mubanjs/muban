@@ -3,6 +3,8 @@ import type { Story } from '@muban/storybook';
 import { bind, computed, defineComponent, lazy, propType } from '@muban/muban';
 import { cfA1HeadingTemplate } from './cf-a1-heading/CfA1Heading.template';
 import { cfA2IconTemplate } from './cf-a2-icon/CfA2Icon.template';
+import { screen, queryAllByAttribute } from '@muban/testing-library';
+import { expect } from '@storybook/jest';
 
 export default {
   title: 'use-cases/performance',
@@ -19,7 +21,7 @@ export const Icons: Story = {
           return [];
         },
       }),
-      template: () => html` <div data-component="global-refresh">
+      template: () => html` <div data-component="global-refresh" data-testid="performance-icons">
         <div data-component="child">
           ${cfA1HeadingTemplate({
             title: 'The quick brown fox jumped over the lazy dog',
@@ -31,6 +33,12 @@ export const Icons: Story = {
       </div>`,
     };
   },
+};
+
+Icons.play = () => {
+  const storyContainer = screen.getByTestId('performance-icons');
+  const icons = queryAllByAttribute('data-component', storyContainer, 'cf-a2-icon');
+  expect(icons.length).toBe(1001);
 };
 
 const TextTest = defineComponent({
@@ -54,7 +62,7 @@ export const Text: Story = {
           return [];
         },
       }),
-      template: () => html` <div data-component="global-refresh">
+      template: () => html` <div data-component="global-refresh" data-testid="performance-text">
         <div data-component="child">
           ${cfA1HeadingTemplate({
             title: 'The quick brown fox jumped over the lazy dog',
@@ -69,4 +77,10 @@ export const Text: Story = {
       </div>`,
     };
   },
+};
+
+Text.play = () => {
+  const storyContainer = screen.getByTestId('performance-text');
+  const texts = queryAllByAttribute('data-component', storyContainer, 'text-test');
+  expect(texts.length).toBe(2000);
 };

@@ -64,8 +64,8 @@ const globalRefreshPlayFunction = async () => {
   const storyContainer = screen.getByTestId('global-refresh');
   const tooltips = queryAllByAttribute('data-component', storyContainer, 'tooltip');
   expect(tooltips.length).toBe(2);
-  expect(tooltips[0].textContent).toBe('tooltip1');
-  expect(tooltips[1].textContent).toBe('tooltip2');
+  expect(tooltips[0]).toHaveTextContent('tooltip1');
+  expect(tooltips[1]).toHaveTextContent('tooltip2');
 };
 GlobalRefresh.play = globalRefreshPlayFunction;
 

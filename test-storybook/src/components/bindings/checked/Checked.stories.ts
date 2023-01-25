@@ -1,11 +1,10 @@
 /* eslint-disable max-lines */
 import { expect } from '@storybook/jest';
-import { userEvent } from '@storybook/testing-library';
+import { userEvent, waitFor } from '@storybook/testing-library';
 import { queryByRef, queryAllByRef, screen } from '@muban/testing-library';
 import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { bind, defineComponent, refCollection, computed, ref, watch } from '@muban/muban';
-import { wait, waitToBe } from '../../../utils/timers';
 
 export default {
   title: 'bindings/checked',
@@ -144,7 +143,7 @@ CheckedValue.play = async () => {
   ]
     .map((isChecked) => (isChecked ? newValue : undefined))
     .join(' - ');
-  await waitToBe(info!, 'textContent', checkboxesValue, 0);
+  await waitFor(() => expect(info?.textContent).toBe(checkboxesValue));
 };
 
 export const ValueCheckedValue: Story = () => ({
@@ -168,7 +167,7 @@ export const ValueCheckedValue: Story = () => ({
   }),
   template: () => html` <div data-component="checked" data-testid="value-checked-value-story">
     <p>Value: <input data-ref="value" /></p>
-    <p>Info: <span data-ref="info" /></p>
+    <p>Info: <span data-ref="info" data-testid="info-container" /></p>
     <input data-ref="checkbox" type="checkbox" value="foo" />
   </div>`,
 });
@@ -176,12 +175,11 @@ ValueCheckedValue.storyName = 'Checkbox value forwards checkedValue';
 ValueCheckedValue.play = async () => {
   const storyContainer = screen.getByTestId('value-checked-value-story');
   const value = queryByRef(storyContainer, 'value') as HTMLInputElement;
-  const info = queryByRef(storyContainer, 'info');
   const checkbox = queryByRef(storyContainer, 'checkbox') as HTMLInputElement;
   const newValue = 'hello';
   userEvent.type(value, newValue);
   userEvent.click(checkbox);
-  await waitToBe(info!, 'textContent', newValue);
+  await waitFor(() => expect(screen.getByTestId('info-container')).toHaveTextContent('hello'));
 };
 
 export const CheckedArray: Story = () => ({
@@ -238,8 +236,9 @@ CheckedArray.play = async () => {
   const info = queryByRef(storyContainer, 'info') as HTMLTextAreaElement;
   const checkboxes = queryAllByRef(storyContainer, 'checkbox') as Array<HTMLInputElement>;
   checkboxes.forEach((checkbox) => userEvent.click(checkbox));
-  await wait();
-  expect(JSON.parse(info?.value)).toStrictEqual(checkboxes.map((checkbox) => checkbox.value));
+  await waitFor(() =>
+    expect(JSON.parse(info?.value)).toStrictEqual(checkboxes.map((checkbox) => checkbox.value)),
+  );
 };
 
 export const CheckedArrayDefaultHtml: Story = () => ({
@@ -302,11 +301,12 @@ CheckedArrayDefaultHtml.play = async () => {
   const storyContainer = screen.getByTestId('checked-array-default-story');
   const info = queryByRef(storyContainer, 'info') as HTMLTextAreaElement;
   const checkboxes = queryAllByRef(storyContainer, 'checkbox') as Array<HTMLInputElement>;
-  await wait();
-  expect(JSON.parse(info?.value)).toStrictEqual(
-    checkboxes
-      .map((checkbox) => (checkbox.checked ? checkbox.value : undefined))
-      .filter((value) => value),
+  await waitFor(() =>
+    expect(JSON.parse(info?.value)).toStrictEqual(
+      checkboxes
+        .map((checkbox) => (checkbox.checked ? checkbox.value : undefined))
+        .filter((value) => value),
+    ),
   );
 };
 
@@ -368,11 +368,12 @@ CheckedArrayDefaultBinding.play = async () => {
   const checkboxes = queryAllByRef(storyContainer, 'checkbox') as Array<HTMLInputElement>;
   expect(info?.value).toBe('');
   checkboxes.forEach((checkbox) => userEvent.click(checkbox));
-  await wait();
-  expect(JSON.parse(info?.value)).toStrictEqual(
-    checkboxes
-      .map((checkbox) => (checkbox.checked ? checkbox.value : undefined))
-      .filter((value) => value),
+  await waitFor(() =>
+    expect(JSON.parse(info?.value)).toStrictEqual(
+      checkboxes
+        .map((checkbox) => (checkbox.checked ? checkbox.value : undefined))
+        .filter((value) => value),
+    ),
   );
 };
 
@@ -419,7 +420,7 @@ Radio.play = async () => {
   expect(info?.value).toBe('');
   for (const radio of radios) {
     userEvent.click(radio);
-    await waitToBe(info, 'value', radio.value);
+    await waitFor(() => expect(info.value).toBe(radio.value));
   }
 };
 
@@ -440,5 +441,5 @@ export const ReadOnlyRefs: Story = () => ({
 ReadOnlyRefs.play = async () => {
   const storyContainer = screen.getByTestId('read-only-story');
   const checkbox = queryByRef(storyContainer, 'checkbox1a') as HTMLInputElement;
-  expect(checkbox?.checked).toBe(false);
+  expect(checkbox).not.toBeChecked();
 };

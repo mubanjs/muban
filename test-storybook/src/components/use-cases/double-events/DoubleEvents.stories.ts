@@ -12,8 +12,7 @@ import {
 import { screen, queryByRef } from '@muban/testing-library';
 import { CfA2Icon } from '../performance/cf-a2-icon/CfA2Icon';
 import { cfA2IconTemplate } from '../performance/cf-a2-icon/CfA2Icon.template';
-import { userEvent } from '@storybook/testing-library';
-import { wait } from '../../../utils/timers';
+import { userEvent, waitFor } from '@storybook/testing-library';
 import { jest, expect } from '@storybook/jest';
 
 export default {
@@ -35,6 +34,7 @@ const TextComponent = defineComponent({
 });
 
 const clickFunction = jest.fn();
+
 const DoubleEventsComponent = defineComponent({
   name: 'double-events',
   components: [CfA2Icon],
@@ -70,8 +70,8 @@ DoubleEventsSelf.play = async () => {
   const storyContainer = screen.getByTestId('double-events-self');
   const button = queryByRef(storyContainer, 'button')!;
   userEvent.click(button);
-  await wait();
-  expect(clickFunction).toBeCalledTimes(1);
+  await waitFor(() => expect(clickFunction).toHaveBeenCalledTimes(1));
+  clickFunction.mockClear();
 };
 
 export const DoubleEventsIcon: Story = () => ({
@@ -84,6 +84,6 @@ DoubleEventsIcon.play = async () => {
   const storyContainer = screen.getByTestId('double-events-icon');
   const button = queryByRef(storyContainer, 'button')!;
   userEvent.click(button);
-  await wait();
-  expect(clickFunction).toBeCalledTimes(1);
+  await waitFor(() => expect(clickFunction).toHaveBeenCalledTimes(1));
+  clickFunction.mockClear();
 };

@@ -2,8 +2,8 @@ import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { bind, defineComponent, computed, ref } from '@muban/muban';
 import { queryByRef, screen } from '@muban/testing-library';
-import { userEvent } from '@storybook/testing-library';
-import { waitToBe } from '../../../utils/timers';
+import { userEvent, waitFor } from '@storybook/testing-library';
+import { expect } from '@storybook/jest';
 
 export default {
   title: 'bindings/disable',
@@ -43,7 +43,7 @@ Default.play = async () => {
   const check = queryByRef(storyContainer, 'check') as HTMLInputElement;
   const field = queryByRef(storyContainer, 'field') as HTMLInputElement;
   userEvent.click(check);
-  await waitToBe(field, 'disabled', false);
+  await waitFor(() => expect(field).not.toBeDisabled());
   userEvent.click(check);
-  await waitToBe(field, 'disabled', true);
+  await waitFor(() => expect(field).toBeDisabled());
 };

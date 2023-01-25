@@ -143,8 +143,8 @@ Default2.play = async () => {
   const storyContainer = screen.getByTestId('multi-with-ref-story')!;
   const button = queryByAttribute('data-component', storyContainer, 'button');
   const link = queryByAttribute('data-component', storyContainer, 'link');
-  expect(button?.textContent).toBe('label5');
-  expect(link?.textContent).toBe('label6');
+  expect(button).toHaveTextContent('label5');
+  expect(link).toHaveTextContent('label6');
 };
 
 export const Default3: Story<{ toRender?: 'button' | 'link' }> = () => ({
@@ -185,7 +185,7 @@ Default3.storyName = 'Multi without ref';
 Default3.play = async () => {
   const storyContainer = screen.getByTestId('multi-without-ref-story')!;
   const button = queryByAttribute('data-component', storyContainer, 'button');
-  expect(button?.textContent).toBe('custom label');
+  expect(button).toHaveTextContent('custom label');
 };
 
 export const SvgRef: Story = () => ({

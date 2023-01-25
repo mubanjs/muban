@@ -2,7 +2,8 @@ import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { bind, defineComponent, computed, ref, watchEffect } from '@muban/muban';
 import { queryByRef, screen } from '@muban/testing-library';
-import { waitToBe } from '../../../utils/timers';
+import { expect } from '@storybook/jest';
+import { waitFor } from '@storybook/testing-library';
 
 export default {
   title: 'bindings/focus',
@@ -45,5 +46,5 @@ export const Default: Story = () => ({
 Default.play = async () => {
   const storyContainer = screen.getByTestId('focus-story');
   const field = queryByRef(storyContainer, 'field') as HTMLInputElement;
-  await waitToBe(document, 'activeElement', field, 2100);
+  await waitFor(() => expect(document.activeElement).toBe(field), { timeout: 2100 });
 };

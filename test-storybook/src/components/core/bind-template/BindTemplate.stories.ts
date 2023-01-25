@@ -3,9 +3,8 @@ import type { Story } from '@muban/storybook/types-6-0';
 import { bind, bindMap, bindTemplate, defineComponent, refCollection, ref } from '@muban/muban';
 import type { ComponentRefItemCollection, RefElementType, TypedRefs } from '@muban/muban';
 import { queryByRef, queryAllByRef, screen } from '@muban/testing-library';
-import { userEvent } from '@storybook/testing-library';
+import { userEvent, waitFor } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
-import { wait } from '../../../utils/timers';
 
 export default {
   title: 'core/bind/bindTemplate',
@@ -57,18 +56,17 @@ const playFunction = (containerId: string) => async () => {
     userEvent.click(addButton);
   }
 
-  await wait();
-  expect(getRemoveButtons().length).toBe(itemsLeft);
-
-  (async function removeOne() {
+  await waitFor(() => expect(getRemoveButtons().length).toBe(itemsLeft));
+  const removeOne = async () => {
     const removeButtons = getRemoveButtons();
     if (removeButtons.length === 0) return;
     userEvent.click(removeButtons[0]);
     itemsLeft--;
-    await wait();
-    expect(getRemoveButtons().length).toBe(itemsLeft);
+    await waitFor(() => expect(getRemoveButtons().length).toBe(itemsLeft));
     removeOne();
-  })();
+  };
+
+  await removeOne();
 };
 
 export const ServerRenderedAuto: Story = () => ({

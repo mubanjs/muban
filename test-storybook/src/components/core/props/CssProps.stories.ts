@@ -143,6 +143,5 @@ CssObject.play = async () => {
     (prev, className) => ({ ...prev, [className]: true }),
     {},
   );
-  console.log(parsedInfo.resultValue, classesObject);
   expect(parsedInfo.resultValue).toStrictEqual(classesObject);
 };

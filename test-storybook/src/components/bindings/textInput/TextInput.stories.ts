@@ -1,9 +1,9 @@
 import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { bind, defineComponent, ref } from '@muban/muban';
-import { userEvent } from '@storybook/testing-library';
+import { userEvent, waitFor } from '@storybook/testing-library';
 import { queryByRef, screen } from '@muban/testing-library';
-import { waitToBe } from '../../../utils/timers';
+import { expect } from '@storybook/jest';
 
 export default {
   title: 'bindings/textInput',
@@ -56,13 +56,13 @@ Default.play = async () => {
   const resetBtn = queryByRef(storyContainer, 'btn-reset');
   const clearBtn = queryByRef(storyContainer, 'btn-undefined');
   userEvent.type(field, 'foo');
-  await waitToBe(textarea, 'value', 'foo');
+  await waitFor(() => expect(textarea.value).toBe('foo'));
   userEvent.type(textarea, 'bar');
-  await waitToBe(field, 'value', 'foobar');
+  await waitFor(() => expect(field.value).toBe('foobar'));
   userEvent.click(resetBtn!);
-  await waitToBe(field, 'value', 'hello');
-  await waitToBe(textarea, 'value', 'hello');
+  await waitFor(() => expect(field.value).toBe('hello'));
+  await waitFor(() => expect(textarea.value).toBe('hello'));
   userEvent.click(clearBtn!);
-  await waitToBe(field, 'value', '');
-  await waitToBe(textarea, 'value', '');
+  await waitFor(() => expect(field.value).toBe(''));
+  await waitFor(() => expect(textarea.value).toBe(''));
 };

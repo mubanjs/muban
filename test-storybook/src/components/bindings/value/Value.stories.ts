@@ -3,8 +3,8 @@ import { html } from '@muban/template';
 import type { Story } from '@muban/storybook/types-6-0';
 import { bind, defineComponent, ref } from '@muban/muban';
 import { queryByRef, screen } from '@muban/testing-library';
-import { userEvent } from '@storybook/testing-library';
-import { waitToBe } from '../../../utils/timers';
+import { userEvent, waitFor } from '@storybook/testing-library';
+import { expect } from '@storybook/jest';
 
 export default {
   title: 'bindings/value',
@@ -44,16 +44,16 @@ export const Default: Story = () => ({
 });
 Default.play = async () => {
   const storyContainer = screen.getByTestId('value-default-story');
-  const field = queryByRef(storyContainer, 'field')!;
+  const field = queryByRef(storyContainer, 'field')! as HTMLInputElement;
   const resetBtn = queryByRef(storyContainer, 'btn-reset')!;
   const clearBtn = queryByRef(storyContainer, 'btn-undefined')!;
   const fooBtn = queryByRef(storyContainer, 'btn-foo')!;
   userEvent.click(fooBtn);
-  await waitToBe(field, 'value', 'foo');
+  await waitFor(() => expect(field).toHaveValue('foo'));
   userEvent.click(clearBtn);
-  await waitToBe(field, 'value', '');
+  await waitFor(() => expect(field).toHaveValue(''));
   userEvent.click(resetBtn);
-  await waitToBe(field, 'value', 'hello');
+  await waitFor(() => expect(field).toHaveValue('hello'));
 };
 
 export const Select: Story = () => ({
@@ -104,11 +104,11 @@ Select.play = async () => {
   const clearBtn = queryByRef(storyContainer, 'btn-undefined')!;
   const fooBtn = queryByRef(storyContainer, 'btn-foo')!;
   userEvent.click(fooBtn);
-  await waitToBe(select, 'value', 'foo');
+  await waitFor(() => expect(select).toHaveValue('foo'));
   userEvent.click(clearBtn);
-  await waitToBe(select, 'value', '');
+  await waitFor(() => expect(select).toHaveValue(''));
   userEvent.click(resetBtn);
-  await waitToBe(select, 'value', 'bar');
+  await waitFor(() => expect(select).toHaveValue('bar'));
 };
 
 export const AllowUnset: Story = () => ({
@@ -174,18 +174,18 @@ AllowUnset.play = async () => {
   const fooBtn = queryByRef(storyContainer, 'btn-foo')!;
   const allowUnset = queryByRef(storyContainer, 'allow-unset-checkbox')!;
   userEvent.click(clearBtn);
-  await waitToBe(select, 'value', '');
+  await waitFor(() => expect(select).toHaveValue(''));
   userEvent.click(fooBtn);
-  await waitToBe(select, 'value', 'foo');
+  await waitFor(() => expect(select).toHaveValue('foo'));
   userEvent.click(resetBtn);
-  await waitToBe(select, 'value', '');
+  await waitFor(() => expect(select).toHaveValue(undefined));
 
   userEvent.click(allowUnset);
-
   userEvent.click(clearBtn);
-  await waitToBe(select, 'value', '');
+
+  await waitFor(() => expect(select).toHaveValue(''));
   userEvent.click(fooBtn);
-  await waitToBe(select, 'value', 'foo');
+  await waitFor(() => expect(select).toHaveValue('foo'));
   userEvent.click(resetBtn);
-  await waitToBe(select, 'value', 'foo');
+  await waitFor(() => expect(select).toHaveValue('foo'));
 };

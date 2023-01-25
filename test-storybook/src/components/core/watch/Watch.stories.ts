@@ -2,7 +2,7 @@
 import { useToggle } from '@muban/hooks';
 import { expect, jest } from '@storybook/jest';
 import { screen, queryByAttribute, queryByRef } from '@muban/testing-library';
-import { waitForElementToBeRemoved } from '@storybook/testing-library';
+import { waitForElementToBeRemoved, waitFor } from '@storybook/testing-library';
 import type { Story } from '@muban/storybook';
 import { html } from '@muban/template';
 import {
@@ -15,7 +15,6 @@ import {
   watch,
   ref,
 } from '@muban/muban';
-import { wait } from '../../../utils/timers';
 
 export default {
   title: 'core/watch/watch',
@@ -114,15 +113,12 @@ Default.play = async () => {
   const storyContainer = screen.getByTestId('watch-story');
   const mountButton = queryByRef(storyContainer, 'btnMount');
   const unmountButton = queryByRef(storyContainer, 'btnUnmount');
-  const getComponent = () => queryByAttribute('data-component', storyContainer, 'test');
+  const component = queryByAttribute('data-component', storyContainer, 'test');
 
   unmountButton?.click();
-  await waitForElementToBeRemoved(getComponent());
-  await wait(1000);
-  expect(watchEffectMock).toBeCalledTimes(0);
+  await waitForElementToBeRemoved(component);
+  await waitFor(() => expect(watchEffectMock).toHaveBeenCalledTimes(0));
 
   mountButton?.click();
-  await getComponent();
-  await wait(1000);
-  expect(watchEffectMock).toBeCalledTimes(1);
+  await waitFor(() => expect(watchEffectMock).toHaveBeenCalledTimes(1));
 };
