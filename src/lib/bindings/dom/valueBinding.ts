@@ -83,7 +83,7 @@ export function valueBinding(
     checkInitialBindingState(
       'value',
       target.value,
-      model.value,
+      String(model.value),
       unref(bindingHelpers.getBinding('initialValueSource')),
     ) === 'binding'
   ) {
