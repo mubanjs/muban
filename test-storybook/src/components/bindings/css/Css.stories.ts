@@ -86,7 +86,7 @@ export const CssObject: Story = createCssStory(
   createCssComponent(({ refs }) => {
     const classList = Array.from(
       refs.checkboxes.getElements(),
-      (checkbox) => (<HTMLInputElement>checkbox).defaultValue,
+      (checkbox: HTMLInputElement) => checkbox.defaultValue,
     );
     const checkedClasses = ref(['box', 'bg-primary']);
     const selectedClasses = computed(() =>
@@ -104,7 +104,7 @@ export const CssObjectWithMultipleClassnames: Story = createCssStory(
   createCssComponent(({ refs }) => {
     const classList = Array.from(
       refs.checkboxes.getElements(),
-      (checkbox) => (<HTMLInputElement>checkbox).defaultValue,
+      (checkbox: HTMLInputElement) => checkbox.defaultValue,
     );
     const checkedClasses = ref(['box', 'bg-primary']);
     const selectedClasses = computed(() =>
