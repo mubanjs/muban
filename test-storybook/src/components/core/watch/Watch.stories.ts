@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useToggle } from '@muban/hooks';
+import { expect, jest } from '@storybook/jest';
+import { screen, queryByAttribute, queryByRef } from '@muban/testing-library';
+import { waitForElementToBeRemoved, waitFor } from '@storybook/testing-library';
 import type { Story } from '@muban/storybook';
 import { html } from '@muban/template';
 import {
@@ -17,11 +20,14 @@ export default {
   title: 'core/watch/watch',
 };
 
+const watchEffectMock = jest.fn();
+
 const Test = defineComponent({
   name: 'test',
   setup() {
     const num = ref(0);
     watchEffect(() => {
+      watchEffectMock();
       console.log('watchEffect', num.value);
     });
     watch(
@@ -89,7 +95,7 @@ export const Default: Story = {
           ];
         },
       }),
-      template: () => html` <div data-component="story">
+      template: () => html` <div data-component="story" data-testid="watch-story">
         <p style="max-width: 350px">
           Watch the console.log. After unmounting the component, the logging should stop. Even
           thought the interval keeps updating the ref, the watchEffect is not being executed
@@ -101,4 +107,18 @@ export const Default: Story = {
       </div>`,
     };
   },
+};
+
+Default.play = async () => {
+  const storyContainer = screen.getByTestId('watch-story');
+  const mountButton = queryByRef(storyContainer, 'btnMount');
+  const unmountButton = queryByRef(storyContainer, 'btnUnmount');
+  const component = queryByAttribute('data-component', storyContainer, 'test');
+
+  unmountButton?.click();
+  await waitForElementToBeRemoved(component);
+  await waitFor(() => expect(watchEffectMock).toHaveBeenCalledTimes(0));
+
+  mountButton?.click();
+  await waitFor(() => expect(watchEffectMock).toHaveBeenCalledTimes(1));
 };

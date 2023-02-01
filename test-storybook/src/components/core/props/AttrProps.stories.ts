@@ -3,6 +3,8 @@ import type { Story } from '@muban/storybook/types-6-0';
 import { html } from '@muban/template';
 import { bind, defineComponent, propType, computed } from '@muban/muban';
 import type { PropTypeDefinition, ComponentRefItem } from '@muban/muban';
+import { queryByRef, screen } from '@muban/testing-library';
+import { expect } from '@storybook/jest';
 
 export default {
   title: 'core/props/attr',
@@ -40,11 +42,20 @@ export const DataString: Story = () => ({
       input: 'input',
     },
   ),
-  template: () => html` <div data-component="props">
+  template: () => html` <div data-component="props" data-testid="props-attr-data-string-story">
     <input data-ref="input" value="success" />
     <pre data-ref="info"></pre>
   </div>`,
 });
+DataString.play = async () => {
+  const storyContainer = screen.getByTestId('props-attr-data-string-story')!;
+  const input = queryByRef(storyContainer, 'input') as HTMLInputElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
+  const initialValue = input.value;
+  const extractedValue = JSON.parse(info.textContent!);
+  expect(extractedValue.value).toBe(initialValue.toString());
+  expect(extractedValue.namedValue).toBe(initialValue.toString());
+};
 
 export const DataNumber: Story = () => ({
   component: createPropsComponent(
@@ -56,11 +67,20 @@ export const DataNumber: Story = () => ({
       input: 'input',
     },
   ),
-  template: () => html` <div data-component="props">
+  template: () => html` <div data-component="props" data-testid="props-attr-data-number-story">
     <input type="number" data-ref="input" value="42" />
     <pre data-ref="info"></pre>
   </div>`,
 });
+DataNumber.play = async () => {
+  const storyContainer = screen.getByTestId('props-attr-data-number-story')!;
+  const input = queryByRef(storyContainer, 'input') as HTMLInputElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
+  const initialValue = input.value;
+  const extractedValue = JSON.parse(info.textContent!);
+  expect(extractedValue.value).toBe(parseInt(initialValue));
+  expect(extractedValue.namedValue).toBe(parseInt(initialValue));
+};
 
 export const DataBoolean: Story = () => ({
   component: createPropsComponent(
@@ -82,12 +102,21 @@ export const DataBoolean: Story = () => ({
       inputUnchecked: 'input-unchecked',
     },
   ),
-  template: () => html` <div data-component="props">
+  template: () => html` <div data-component="props" data-testid="props-attr-data-boolean-story">
     <input type="checkbox" data-ref="input-checked" checked />
     <input type="checkbox" data-ref="input-unchecked" />
     <pre data-ref="info"></pre>
   </div>`,
 });
+DataBoolean.play = async () => {
+  const storyContainer = screen.getByTestId('props-attr-data-boolean-story')!;
+  const check = queryByRef(storyContainer, 'input-checked') as HTMLInputElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
+  const initialCheckedValue = check.checked;
+  const extractedValue = JSON.parse(info.textContent!);
+  expect(extractedValue.checked).toBe(initialCheckedValue);
+  expect(extractedValue.checkedValue).toBe(initialCheckedValue);
+};
 
 export const DataDate: Story = () => ({
   component: createPropsComponent(
@@ -99,8 +128,17 @@ export const DataDate: Story = () => ({
       input: 'input',
     },
   ),
-  template: () => html` <div data-component="props">
+  template: () => html` <div data-component="props" data-testid="props-attr-data-date-story">
     <input type="date" data-ref="input" value="2021-11-24" />
     <pre data-ref="info"></pre>
   </div>`,
 });
+DataDate.play = async () => {
+  const storyContainer = screen.getByTestId('props-attr-data-date-story')!;
+  const input = queryByRef(storyContainer, 'input') as HTMLInputElement;
+  const info = queryByRef(storyContainer, 'info') as HTMLPreElement;
+  const initialValue = input.value;
+  const extractedValue = JSON.parse(info.textContent!);
+  expect(new Date(extractedValue.value).getTime()).toBe(new Date(initialValue).getTime());
+  expect(new Date(extractedValue.namedValue).getTime()).toBe(new Date(initialValue).getTime());
+};

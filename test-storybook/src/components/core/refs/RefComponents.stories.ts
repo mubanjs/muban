@@ -2,6 +2,8 @@
 import type { Story } from '@muban/storybook/types-6-0';
 import { html } from '@muban/template';
 import { bind, defineComponent, propType, refComponents, computed } from '@muban/muban';
+import { screen, queryByAttribute } from '@muban/testing-library';
+import { expect } from '@storybook/jest';
 
 export default {
   title: 'core/refs/refComponents',
@@ -61,9 +63,16 @@ export const Default: Story = () => ({
       ];
     },
   }),
-  template: () => html` <div data-component="ref-component">
+  template: () => html` <div data-component="ref-component" data-testid="ref-components-story">
     <div>${buttonTemplate({}, 'btnTarget')}</div>
     <div>${linkTemplate({}, 'linkTarget')}</div>
   </div>`,
 });
 Default.storyName = 'Multiple components inside single ref';
+Default.play = async () => {
+  const storyContainer = screen.getByTestId('ref-components-story')!;
+  const button = queryByAttribute('data-component', storyContainer, 'button');
+  const link = queryByAttribute('data-component', storyContainer, 'link');
+  expect(button).toHaveTextContent('label5');
+  expect(link).toHaveTextContent('label5');
+};

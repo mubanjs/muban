@@ -10,10 +10,35 @@ import {
   refCollection,
   refElement,
 } from '@muban/muban';
+import { queryByRef, queryAllByRef, screen } from '@muban/testing-library';
+import { userEvent, waitFor } from '@storybook/testing-library';
+import { expect, jest } from '@storybook/jest';
 
 export default {
   title: 'core/bindings/ref-lifecycle',
 };
+
+const playFunction =
+  (containerId: string, howManyToAdd = 1) =>
+  async () => {
+    const logSpy = jest.spyOn(console, 'log');
+    const storyContainer = screen.getByTestId(containerId);
+    const addButton = queryByRef(storyContainer, 'btnAdd')!;
+    const removeButton = queryByRef(storyContainer, 'btnRemove')!;
+    const getTestButtons = () => queryAllByRef(storyContainer, 'testButton');
+
+    for (let index = 0; index < howManyToAdd; index++) userEvent.click(addButton);
+
+    const testButtons = getTestButtons()!;
+    await waitFor(() => expect(testButtons.length).toBe(howManyToAdd));
+    for (const testButton of testButtons) {
+      userEvent.click(testButton);
+      await waitFor(() => expect(logSpy).toHaveBeenCalledWith(expect.stringMatching(/^test/)));
+    }
+
+    userEvent.click(removeButton);
+    await waitFor(() => expect(getTestButtons().length).toBe(0));
+  };
 
 export const Element: Story = () => ({
   component: defineComponent({
@@ -58,13 +83,17 @@ export const Element: Story = () => ({
       ];
     },
   }),
-  template: () => html` <div data-component="ref-lifecycle">
+  template: () => html` <div
+    data-component="ref-lifecycle"
+    data-testid="ref-lifecycle-element-story"
+  >
     <button data-ref="btnAdd">add</button>
     <button data-ref="btnRemove">remove</button>
     <button data-ref="btnDestroy">destroy</button>
     <div data-ref="container"></div>
   </div>`,
 });
+Element.play = playFunction('ref-lifecycle-element-story');
 
 export const Collection: Story = () => ({
   component: defineComponent({
@@ -111,13 +140,17 @@ export const Collection: Story = () => ({
       ];
     },
   }),
-  template: () => html` <div data-component="ref-lifecycle">
+  template: () => html` <div
+    data-component="ref-lifecycle"
+    data-testid="ref-lifecycle-collection-story"
+  >
     <button data-ref="btnAdd">add</button>
     <button data-ref="btnRemove">remove</button>
     <button data-ref="btnDestroy">destroy</button>
     <div data-ref="container"></div>
   </div>`,
 });
+Collection.play = playFunction('ref-lifecycle-collection-story');
 
 export const Map: Story = () => ({
   component: defineComponent({
@@ -164,10 +197,11 @@ export const Map: Story = () => ({
       ];
     },
   }),
-  template: () => html` <div data-component="ref-lifecycle">
+  template: () => html` <div data-component="ref-lifecycle" data-testid="ref-lifecycle-map-story">
     <button data-ref="btnAdd">add</button>
     <button data-ref="btnRemove">remove</button>
     <button data-ref="btnDestroy">destroy</button>
     <div data-ref="container"></div>
   </div>`,
 });
+Map.play = playFunction('ref-lifecycle-map-story', 5);

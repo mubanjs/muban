@@ -1,5 +1,8 @@
 import type { Story } from '@muban/storybook/types-6-0';
 import { html } from '@muban/template';
+import { queryByRef, queryAllByRef, queryAllByAttribute, screen } from '@muban/testing-library';
+import { userEvent, waitFor } from '@storybook/testing-library';
+import { expect, jest } from '@storybook/jest';
 import {
   bind,
   bindMap,
@@ -12,7 +15,7 @@ import {
   computed,
   ref,
 } from '@muban/muban';
-import { BindMapItem, BindMapItem2, bindMapItem2Template, bindMapItemTemplate } from "./Item";
+import { BindMapItem, BindMapItem2, bindMapItem2Template, bindMapItemTemplate } from './Item';
 
 export default {
   title: 'core/bind/bindMap',
@@ -42,7 +45,7 @@ export const BindMapElements: Story = () => ({
       ];
     },
   }),
-  template: () => html` <div data-component="bindMap">
+  template: () => html` <div data-component="bindMap" data-testid="ref-collection-story">
     ${['foo', 'bar', 'baz'].map(
       (item) =>
         html` <p><span>${item} </span><button data-ref="activateButton">activate</button></p>`,
@@ -50,6 +53,18 @@ export const BindMapElements: Story = () => ({
   </div>`,
 });
 BindMapElements.storyName = 'refCollection';
+BindMapElements.play = async () => {
+  const storyContainer = screen.getByTestId('ref-collection-story');
+  const activateButtons = queryAllByRef(storyContainer, 'activateButton');
+  for (const currentButton of activateButtons) {
+    userEvent.click(currentButton);
+    const otherButtons = activateButtons.filter((button) => button !== currentButton);
+    await waitFor(() => expect(currentButton).toHaveTextContent('activate [active]'));
+    otherButtons.forEach((otherButton) => {
+      expect(otherButton).toHaveTextContent('activate');
+    });
+  }
+};
 
 export const BindMapComponents: Story = () => {
   return {
@@ -66,19 +81,32 @@ export const BindMapComponents: Story = () => {
             onActivate() {
               activeValue.value = ref.component?.props.value ?? null;
             },
-            event: {
-              mouseenter: () => console.log('mouse enter'),
+            $element: {
+              event: {
+                mouseenter: () => console.log('mouse enter'),
+              },
             },
           })),
         ];
       },
     }),
-    template: () => html` <div data-component="bindMap">
+    template: () => html` <div data-component="bindMap" data-testid="ref-components-story">
       ${['foo', 'bar', 'baz'].map((label) => bindMapItemTemplate({ label }))}
     </div>`,
   };
 };
 BindMapComponents.storyName = 'refComponents';
+BindMapComponents.play = async () => {
+  const storyContainer = screen.getByTestId('ref-components-story');
+  const components = queryAllByAttribute('data-component', storyContainer, 'item');
+  for (const component of components) {
+    const button = queryByRef(component, 'btn')!;
+    userEvent.click(button);
+    await waitFor(() => expect(button).toHaveTextContent(`${component.dataset.value} [active]`));
+  }
+};
+
+const componentsMultipleHandleMouseEnter = jest.fn();
 
 // TODO: type of `getProps` doesn't intersect correctly
 export const BindMapComponentsMultiple: Story = () => {
@@ -96,20 +124,49 @@ export const BindMapComponentsMultiple: Story = () => {
             onActivate() {
               activeValue.value = ref.component?.props.value ?? null;
             },
-            event: {
-              mouseenter: () => console.log('mouse enter'),
+            $element: {
+              event: {
+                mouseenter: () => {
+                  componentsMultipleHandleMouseEnter();
+                  console.log('mouse enter');
+                },
+              },
             },
           })),
         ];
       },
     }),
-    template: () => html` <div data-component="bindMap">
+    template: () => html` <div data-component="bindMap" data-testid="ref-components-multiple-story">
       ${['foo', 'bar', 'baz'].map((label) => bindMapItemTemplate({ label }))}
       ${['foo', 'bar', 'baz'].map((label) => bindMapItem2Template({ label }))}
     </div>`,
   };
 };
 BindMapComponentsMultiple.storyName = 'refComponents multiple';
+BindMapComponentsMultiple.play = async () => {
+  const storyContainer = screen.getByTestId('ref-components-multiple-story');
+  const items = queryAllByAttribute('data-component', storyContainer, 'item');
+  const items2 = queryAllByAttribute('data-component', storyContainer, 'item2');
+  const allItems = [...items, ...items2];
+  let mouseEnterCounter = 0;
+  for (const item of allItems) {
+    mouseEnterCounter++;
+    userEvent.hover(item);
+    expect(componentsMultipleHandleMouseEnter).toBeCalledTimes(mouseEnterCounter);
+  }
+
+  for (const item of items) {
+    const button = queryByRef(item, 'btn')!;
+    userEvent.click(button);
+    await waitFor(() => expect(item).toHaveTextContent(`${item.dataset.value} [active]`));
+  }
+
+  for (const item of items2) {
+    const button = queryByRef(item, 'btn')!;
+    userEvent.click(button);
+    await waitFor(() => expect(item).toHaveTextContent(item.dataset.value));
+  }
+};
 
 export const BindMapElementArray: Story = () => ({
   component: defineComponent({
@@ -131,13 +188,21 @@ export const BindMapElementArray: Story = () => ({
       ];
     },
   }),
-  template: () => html` <div data-component="bindMap">
+  template: () => html` <div data-component="bindMap" data-testid="ref-element-array-story">
     ${['foo', 'bar', 'baz'].map(
       (item) => html` <p><span>${item} </span><button data-ref=${item}>activate</button></p>`,
     )}
   </div>`,
 });
 BindMapElementArray.storyName = 'refElement Array';
+BindMapElementArray.play = async () => {
+  const storyContainer = screen.getByTestId('ref-element-array-story');
+  for (const ref of ['foo', 'bar', 'baz']) {
+    const element = queryByRef(storyContainer, ref)!;
+    userEvent.click(element);
+    await waitFor(() => expect(element).toHaveTextContent('activate [active]'));
+  }
+};
 
 export const BindMapComponentsArray: Story = () => {
   return {
@@ -161,12 +226,25 @@ export const BindMapComponentsArray: Story = () => {
         ];
       },
     }),
-    template: () => html` <div data-component="bindMap">
+    template: () => html` <div data-component="bindMap" data-testid="ref-component-array-story">
       ${['foo', 'bar', 'baz'].map((label) => bindMapItemTemplate({ label }, label))}
     </div>`,
   };
 };
 BindMapComponentsArray.storyName = 'refComponent Array';
+BindMapComponentsArray.play = async () => {
+  const storyContainer = screen.getByTestId('ref-component-array-story');
+  const components = queryAllByAttribute('data-component', storyContainer, 'item');
+  for (const component of components) {
+    const button = queryByRef(component, 'btn')!;
+    userEvent.click(button);
+    await waitFor(() => expect(button).toHaveTextContent(`${component.dataset.value} [active]`));
+    const otherComponents = components.filter((otherComponent) => otherComponent != component);
+    otherComponents.forEach((otherComponent) =>
+      expect(otherComponent).toHaveTextContent(otherComponent.dataset.value),
+    );
+  }
+};
 
 // TODO: type of `getProps` doesn't intersect correctly
 export const BindMapComponentsArrayMultiple: Story = () => {
@@ -191,13 +269,33 @@ export const BindMapComponentsArrayMultiple: Story = () => {
         ];
       },
     }),
-    template: () => html` <div data-component="bindMap">
+    template: () => html` <div
+      data-component="bindMap"
+      data-testid="ref-component-array-multiple-story"
+    >
       ${['foo', 'bar'].map((label) => bindMapItemTemplate({ label }, label))}
       ${['baz'].map((label) => bindMapItem2Template({ label }, label))}
     </div>`,
   };
 };
 BindMapComponentsArrayMultiple.storyName = 'refComponent Array Multiple';
+BindMapComponentsArrayMultiple.play = async () => {
+  const storyContainer = screen.getByTestId('ref-component-array-multiple-story');
+  const items = queryAllByAttribute('data-component', storyContainer, 'item');
+  const items2 = queryAllByAttribute('data-component', storyContainer, 'item2');
+  for (const item of items) {
+    const button = queryByRef(item, 'btn')!;
+    userEvent.click(button);
+    await waitFor(() => expect(button).toHaveTextContent(`${item.dataset.value} [active]`));
+    const otherItems = items.filter((otherItem) => otherItem != item);
+    otherItems.forEach((otherItem) => expect(otherItem.textContent).toBe(otherItem.dataset.value));
+  }
+  for (const item of items2) {
+    const button = queryByRef(item, 'btn')!;
+    userEvent.click(button);
+    await waitFor(() => expect(button).toHaveTextContent(`${item.dataset.value}`));
+  }
+};
 
 export const BindMapLiveList: Story = () => ({
   component: defineComponent({
@@ -232,9 +330,29 @@ export const BindMapLiveList: Story = () => ({
       ];
     },
   }),
-  template: () => html` <div data-component="bindMap">
+  template: () => html` <div data-component="bindMap" data-testid="reactive-updates-to-refs-story">
     <div><button data-ref="addButton">add item</button></div>
     <div data-ref="container"></div>
   </div>`,
 });
 BindMapLiveList.storyName = 'Reactive updates to refs';
+BindMapLiveList.play = async () => {
+  const storyContainer = screen.getByTestId('reactive-updates-to-refs-story');
+  const addButton = queryByRef(storyContainer, 'addButton')!;
+  const itemsToAdd = 5;
+  for (let index = 0; index < itemsToAdd; index++) {
+    userEvent.click(addButton);
+  }
+  const getRemoveButtons = () => queryAllByRef(storyContainer, 'removeButton');
+  await waitFor(() => expect(getRemoveButtons().length).toBe(itemsToAdd));
+  let itemsLeft = 5;
+  const removeOne = async () => {
+    const removeButtons = getRemoveButtons();
+    if (removeButtons.length === 0) return;
+    userEvent.click(removeButtons[0]);
+    itemsLeft--;
+    await waitFor(() => expect(getRemoveButtons().length).toBe(itemsLeft));
+    removeOne();
+  };
+  await removeOne();
+};
