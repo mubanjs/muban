@@ -1,6 +1,6 @@
 import { bind, computed, defineComponent, propType } from '../../..';
 
-describe('styleBinding', () => {
+describe('valueBinding', () => {
   it('should apply the binding', () => {
     const myInput = document.createElement('input');
     myInput.setAttribute('data-component', 'my-input');
