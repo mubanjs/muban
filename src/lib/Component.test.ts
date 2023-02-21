@@ -16,6 +16,7 @@ describe("Child component defined as 'ref' twice", () => {
       text: propType.string.optional,
       parentAttr: propType.string.optional,
       grandParentAttr: propType.string.optional,
+      isActive: propType.boolean.optional,
     },
     setup({ refs, props }) {
       onMounted(mountChild);
@@ -24,6 +25,9 @@ describe("Child component defined as 'ref' twice", () => {
         bind(refs.self, {
           click: (event) => props.onClick(event),
           text: computed(() => props.text),
+          css: {
+            active: computed(() => Boolean(props.isActive)),
+          },
           attr: {
             parent: computed(() => props.parentAttr),
             grandparent: computed(() => props.grandParentAttr),
@@ -43,12 +47,14 @@ describe("Child component defined as 'ref' twice", () => {
     setup({ refs }) {
       const childText = ref('text from parent');
       const childAttribute = ref('attr from parent');
+      const isActive = ref(true);
 
       return [
         bind(refs.child, {
           onClick: handleChildClickFromParent,
           text: childText,
           parentAttr: childAttribute,
+          isActive,
         }),
       ];
     },
@@ -87,7 +93,7 @@ describe("Child component defined as 'ref' twice", () => {
     },
   })(grandParentElement);
 
-  it('should trigger child events in both the parent and grandParent components', async () => {
+  it('should execute child bindings in both the parent and grandParent components', async () => {
     const child = GrandParentComponent.element.querySelector<HTMLButtonElement>(
       '[data-component=child-component]',
     );
@@ -111,6 +117,8 @@ describe("Child component defined as 'ref' twice", () => {
       expect(child.getAttribute('grandparent')).toBe('attr from grandparent');
       // The grandparent bindings for ChildComponent overwrite the ones declared in the parent component
       expect(child.getAttribute('parent')).toBe(null);
+      // The active class was applied in the parent component and wasn't overwritten in the grandparent
+      expect(child.classList.contains('active')).toBe(true);
     }
   });
 });
