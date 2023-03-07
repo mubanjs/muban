@@ -118,7 +118,7 @@ describe("Child component defined as 'ref' twice", () => {
       // The grandparent bindings for ChildComponent overwrite the ones declared in the parent component
       expect(child.getAttribute('parent')).toBe(null);
       // The active class was applied in the parent component and wasn't overwritten in the grandparent
-      expect(child.classList.contains('active')).toBe(true);
+      expect(child).toHaveClass('active');
     }
   });
 });

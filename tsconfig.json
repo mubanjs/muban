@@ -75,7 +75,8 @@
 //    "jsxFragmentFactory": "Fragment"
   },
   "include": [
-    "./src/**/*.ts"
+    "./src/**/*.ts",
+    "./test-utils/setupTests.ts"
   ],
   "exclude": [
     "./src/**/*.types.test.ts"
