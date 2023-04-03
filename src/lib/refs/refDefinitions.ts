@@ -80,12 +80,9 @@ function getExistingGlobalRefComponent<T extends ComponentApi>(
       existingComponent.__instance.parent = instance;
       refInstance = existingComponent as T;
     } else {
-      // TODO: not sure what to do here, for now we just let the component be
-      //  re-created, which shows additional warnings
-      // eslint-disable-next-line no-console
-      console.error(
-        'This refComponent does already exist as part of another parent',
-        existingComponent.__instance.parent,
+      throw new Error(
+        `This refComponent does already exist as part of another parent
+        ${existingComponent.__instance.parent}`,
       );
     }
   }
