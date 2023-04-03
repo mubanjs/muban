@@ -412,6 +412,24 @@ describe('refComponent', () => {
     //     });
     //   });
   });
+  describe('When nesting refs', () => {
+    it('should throw an error', () => {
+      const parent = createComponentTemplateElement(`<div data-component="test"></div>`);
+      const refItem = refComponent(TestComponent);
+      const instance = createComponentInstance({}, parent, { name: 'parent', setup: () => [] });
+      refItem.createRef(instance);
+
+      const createSecondRef = () => {
+        const secondRefItem = refComponent(TestComponent);
+        const secondInstance = createComponentInstance({}, parent, {
+          name: 'parent',
+          setup: () => [],
+        });
+        secondRefItem.createRef(secondInstance);
+      };
+      expect(createSecondRef).toThrow();
+    });
+  });
 });
 
 describe('refComponents', () => {
