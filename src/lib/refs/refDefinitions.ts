@@ -11,7 +11,11 @@ import {
   bindElement,
 } from '../bindings/bindingDefinitions';
 import { getParentComponentElement } from '../utils/domUtils';
-import { getComponentForElement } from '../utils/global';
+import {
+  getComponentForElement,
+  getComponentForElementRef,
+  registerComponentForElementRef,
+} from '../utils/global';
 import type {
   RefElementType,
   ComponentRefItemCollection,
@@ -91,6 +95,16 @@ function getExistingGlobalRefComponent<T extends ComponentApi>(
   return refInstance;
 }
 
+function getExistingGlobalRefElement(element: RefElementType) {
+  const existingComponent = getComponentForElementRef(element);
+  if (existingComponent) {
+    throw new Error(
+      `This refElement does already exist as part of another parent
+      ${existingComponent}`,
+    );
+  }
+}
+
 export function refElement<T extends RefElementType = HTMLElement>(
   refIdOrQuery: string | ComponentRefItemElement<T>['queryRef'],
   { isRequired = true, ignoreGuard }: RefOptions<{ isRequired?: boolean }> = {},
@@ -108,27 +122,26 @@ export function refElement<T extends RefElementType = HTMLElement>(
       if (typeof refIdOrQuery === 'function') {
         const element: T | null = refIdOrQuery(parent);
         return ensureElementIsComponentChild(parent, element, ignoreGuard);
-      } else {
-        try {
-          const elementList = parent.querySelectorAll<T>(`[data-ref="${this.ref}"]`);
+      }
+      try {
+        const elementList = parent.querySelectorAll<T>(`[data-ref="${this.ref}"]`);
 
-          return (
-            Array.from(elementList).find((elementInList) =>
-              ensureElementIsComponentChild(parent, elementInList, ignoreGuard),
-            ) || null
-          );
-        } catch (error) {
-          if (error instanceof DOMException) {
-            // eslint-disable-next-line no-console
-            console.warn(`
+        return (
+          Array.from(elementList).find((elementInList) =>
+            ensureElementIsComponentChild(parent, elementInList, ignoreGuard),
+          ) || null
+        );
+      } catch (error) {
+        if (error instanceof DOMException) {
+          // eslint-disable-next-line no-console
+          console.warn(`
 [Error querying ref] The first argument of refElement should be the value of a data-ref in the DOM, not a querySelector.
 If you want to select a custom target, pass a function like;
 
   refElement((parent) => parent.querySelector('${this.ref}'));
             `);
-          }
-          throw error;
         }
+        throw error;
       }
     },
     createRef(instance) {
@@ -144,6 +157,11 @@ If you want to select a custom target, pass a function like;
         return element;
       };
       elementRef.value = getElement(true) ?? undefined;
+
+      if (elementRef.value && instance) {
+        getExistingGlobalRefElement(elementRef.value);
+        registerComponentForElementRef(elementRef.value, instance);
+      }
 
       return {
         type: 'element',
