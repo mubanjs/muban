@@ -95,7 +95,7 @@ function getExistingGlobalRefComponent<T extends ComponentApi>(
   return refInstance;
 }
 
-function getExistingGlobalRefElement(element: RefElementType) {
+function checkForExistingGlobalRefElement(element: RefElementType) {
   const existingComponent = getComponentForElementRef(element);
   if (existingComponent) {
     throw new Error(
@@ -158,8 +158,8 @@ If you want to select a custom target, pass a function like;
       };
       elementRef.value = getElement(true) ?? undefined;
 
-      if (elementRef.value && instance) {
-        getExistingGlobalRefElement(elementRef.value);
+      if (elementRef.value) {
+        checkForExistingGlobalRefElement(elementRef.value);
         registerComponentForElementRef(elementRef.value, instance);
       }
 
@@ -229,6 +229,11 @@ If you want to select a custom target, pass a function like;
         return elements.map((element) => ref(element) as Ref<T>);
       };
       elementsRef.value = getElements();
+
+      elementsRef.value.forEach((element) => {
+        checkForExistingGlobalRefElement(element.value);
+        registerComponentForElementRef(element.value, instance);
+      });
 
       return {
         type: 'collection',
