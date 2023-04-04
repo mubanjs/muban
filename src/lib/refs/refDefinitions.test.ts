@@ -133,7 +133,7 @@ describe('refElement', () => {
       });
     });
   });
-  describe('when nesting refs', () => {
+  describe('when having multiple owners of a ref', () => {
     it('should throw an error', () => {
       const parent = createComponentTemplateElement(`<div data-ref="test"></div>`);
       const refItem = refElement('test');
@@ -248,6 +248,25 @@ describe('refCollection', () => {
       it('should return the same element when not changed', () => {
         // TODO after other PR is merged that updates this API interface
       });
+    });
+  });
+  describe('when having multiple owners of a ref', () => {
+    it('should throw an error', () => {
+      const parent = createComponentTemplateElement(`<div data-ref="test"></div>`);
+      const refItems = refCollection('test');
+      const instance = createComponentInstance({}, parent, { name: 'parent', setup: () => [] });
+      refItems.createRef(instance);
+
+      const createSecondRef = () => {
+        const secondRefItems = refCollection('test');
+        const secondInstance = createComponentInstance({}, parent, {
+          name: 'parent',
+          setup: () => [],
+        });
+        secondRefItems.createRef(secondInstance);
+      };
+
+      expect(createSecondRef).toThrow();
     });
   });
 });
@@ -431,7 +450,7 @@ describe('refComponent', () => {
     //     });
     //   });
   });
-  describe('When nesting refs', () => {
+  describe('when having multiple owners of a ref', () => {
     it('should throw an error', () => {
       const parent = createComponentTemplateElement(`<div data-component="test"></div>`);
       const refItem = refComponent(TestComponent);
