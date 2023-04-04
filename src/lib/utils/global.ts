@@ -16,11 +16,13 @@ import { createJsonScriptPropertySource } from '../props/property-sources/create
 import { createReactivePropertySource } from '../props/property-sources/createReactivePropertySource';
 import { createCustomPropertySource } from '../props/property-sources/createCustomPropertySource';
 import { createFormPropertySource } from '../props/property-sources/createFormPropertySource';
+import type { RefElementType } from '../refs/refDefinitions.types';
 
 // TODO: Move to "App"?
 class MubanGlobal {
   public readonly components = new Map<string, ComponentFactory | LazyComponent>();
   public readonly instances = new Map<HTMLElement, ComponentApi>();
+  public readonly elementRefs = new Map<RefElementType, InternalComponentInstance>();
   public readonly loadingElements = new Set<HTMLElement>();
   public readonly propertySources: Array<PropertySource> = [
     createClassListPropertySource(),
@@ -179,4 +181,15 @@ export function setComponentElementLoadingState(element: HTMLElement, isLoading:
 
 function isComponentElementLoadingOrInitialized(element: HTMLElement): boolean {
   return globalInstance.instances.has(element) || globalInstance.loadingElements.has(element);
+}
+
+export function getComponentForElementRef(element: RefElementType) {
+  return globalInstance.elementRefs.get(element);
+}
+
+export function registerComponentForElementRef(
+  element: RefElementType,
+  component: InternalComponentInstance,
+) {
+  globalInstance.elementRefs.set(element, component);
 }
