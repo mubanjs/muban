@@ -99,7 +99,7 @@ function checkForExistingGlobalRefElement(element: RefElementType) {
   const existingComponent = getComponentForElementRef(element);
   if (existingComponent) {
     throw new Error(
-      `This refElement does already exist as part of another parent
+      `refElement ${element} does already exist as part of another parent
       ${existingComponent}`,
     );
   }
