@@ -85,7 +85,7 @@ function getExistingGlobalRefComponent<T extends ComponentApi>(
       refInstance = existingComponent as T;
     } else {
       throw new Error(
-        `This refComponent does already exist as part of another parent
+        `This refComponent ${element} does already exist as part of another parent
         ${existingComponent.__instance.parent}`,
       );
     }
