@@ -2,6 +2,16 @@ import type { ComponentApi } from '../Component.types';
 import type { RefElementType } from '../refs/refDefinitions.types';
 import { getComponentForElement } from './global';
 
+export const wrapperBoundaryName = 'data-wrapper-boundary';
+
+export function recursiveParentComponentLookup(element: Element): Element | null {
+  const closestParent = element.parentElement?.closest(`[data-component]`) ?? null;
+  if (closestParent && closestParent.hasAttribute(wrapperBoundaryName)) {
+    return recursiveParentComponentLookup(closestParent);
+  }
+  return closestParent;
+}
+
 export function getDirectChildComponents(container: HTMLElement): Array<HTMLElement> {
   return Array.from(container.querySelectorAll<HTMLElement>(`[data-component]`)).filter(
     (element) =>
