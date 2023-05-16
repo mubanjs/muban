@@ -6,9 +6,12 @@ export const wrapperBoundaryName = 'data-wrapper-boundary';
 
 export function getOwnerComponent(element: Element): Element | null {
   const closestParent = element.parentElement?.closest(`[data-component]`) ?? null;
-  if (closestParent && closestParent.hasAttribute(wrapperBoundaryName)) {
+  const closestBoundary = element.parentElement?.closest(`[${wrapperBoundaryName}]`) ?? null;
+
+  if (closestBoundary && closestParent) {
     return getOwnerComponent(closestParent);
   }
+
   return closestParent;
 }
 
