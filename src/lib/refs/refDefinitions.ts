@@ -29,6 +29,8 @@ declare module '@vue/reactivity' {
   }
 }
 
+export const wrapperBoundaryName = 'data-wrapper-boundary';
+
 /**
  * Ensures that the passed element is a direct child of the parent, so that the
  * parent is the "owner" of that child. If correct, return the element, otherwise

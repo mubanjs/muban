@@ -6,6 +6,7 @@ import {
   refComponent,
   refComponents,
   refElement,
+  wrapperBoundaryName,
 } from './refDefinitions';
 
 function createComponentTemplateElement(content: string) {
@@ -57,6 +58,35 @@ describe('ensureElementIsComponentChild', () => {
 
     const result = ensureElementIsComponentChild(parent, element);
     expect(result).toBeNull();
+  });
+
+  describe('wrapper component', () => {
+    it('should ignore the wrapper when looking for the closest parent', () => {
+      const parent = createComponentTemplateElement(
+        `<div data-component="some-wrapper" ${wrapperBoundaryName}>
+          <span data-ref="foo">label</span>
+        </div>`,
+      );
+
+      const element = parent.querySelector<HTMLElement>('[data-ref="foo"]')!;
+      const result = ensureElementIsComponentChild(parent, element);
+      expect(result).toEqual(element);
+    });
+    it('should recursively ignore the wrapper when looking for the closest parent', () => {
+      const parent = createComponentTemplateElement(
+        `<div data-component="some-wrapper" ${wrapperBoundaryName}>
+          <div data-component="some-wrapper-2" ${wrapperBoundaryName}>
+            <div data-component="some-wrapper-3" ${wrapperBoundaryName}>
+              <span data-ref="foo">label</span>
+            </div>
+          </div>
+        </div>`,
+      );
+
+      const element = parent.querySelector<HTMLElement>('[data-ref="foo"]')!;
+      const result = ensureElementIsComponentChild(parent, element);
+      expect(result).toEqual(element);
+    });
   });
 });
 
