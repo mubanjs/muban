@@ -4,17 +4,17 @@ import { getComponentForElement } from './global';
 
 export const wrapperBoundaryName = 'data-wrapper-boundary';
 
-export function recursiveParentComponentLookup(element: Element): Element | null {
+export function getOwnerComponent(element: Element): Element | null {
   const closestParent = element.parentElement?.closest(`[data-component]`) ?? null;
   if (closestParent && closestParent.hasAttribute(wrapperBoundaryName)) {
-    return recursiveParentComponentLookup(closestParent);
+    return getOwnerComponent(closestParent);
   }
   return closestParent;
 }
 
 export function getDirectChildComponents(container: HTMLElement): Array<HTMLElement> {
   return Array.from(container.querySelectorAll<HTMLElement>(`[data-component]`)).filter(
-    (element) => recursiveParentComponentLookup(element) === container.closest(`[data-component]`),
+    (element) => getOwnerComponent(element) === container.closest(`[data-component]`),
   );
 }
 
@@ -23,7 +23,7 @@ export function getDirectChildComponents(container: HTMLElement): Array<HTMLElem
  * @param element
  */
 export function getParentComponentElement(element: RefElementType): HTMLElement | null {
-  return (recursiveParentComponentLookup(element) as HTMLElement) ?? null;
+  return (getOwnerComponent(element) as HTMLElement) ?? null;
 }
 
 /**

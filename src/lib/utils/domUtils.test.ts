@@ -1,6 +1,6 @@
-import { recursiveParentComponentLookup, wrapperBoundaryName } from './domUtils';
+import { getOwnerComponent, wrapperBoundaryName } from './domUtils';
 
-describe('recursiveParentComponentLookup', () => {
+describe('getOwnerComponent', () => {
   it('should recursively look for parent components', () => {
     const element = document.createElement('div');
     element.dataset.component = 'my-component';
@@ -14,7 +14,7 @@ describe('recursiveParentComponentLookup', () => {
       </div>
     `;
     const ref = element.querySelector('[data-ref=foo]')!;
-    const parent = recursiveParentComponentLookup(ref);
+    const parent = getOwnerComponent(ref);
     expect(parent).not.toBeNull();
     expect(parent?.getAttribute('data-component')).toBe('my-component');
   });
