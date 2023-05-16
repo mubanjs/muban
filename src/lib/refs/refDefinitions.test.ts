@@ -87,6 +87,30 @@ describe('ensureElementIsComponentChild', () => {
       const result = ensureElementIsComponentChild(parent, element);
       expect(result).toEqual(element);
     });
+    it('should recursively look for parent components only for elements inside the boundary', () => {
+      const parent = createComponentTemplateElement(
+        `<div data-component="some-wrapper">
+          <button data-ref="toggle">Toggle Content</button>
+            <div data-ref="content" ${wrapperBoundaryName}>
+              <span data-ref="foo">label</span>
+            </div>
+          </div>`,
+      );
+      const fooElement = parent.querySelector<HTMLElement>('[data-ref="foo"]')!;
+      const toggleElement = parent.querySelector<HTMLElement>('[data-ref="toggle"]')!;
+      const contentElement = parent.querySelector<HTMLElement>('[data-ref="content"]')!;
+      const wrapperElement = parent.querySelector<HTMLElement>('[data-component="some-wrapper"]')!;
+      const fooResult = ensureElementIsComponentChild(parent, fooElement);
+      const toggleResult = ensureElementIsComponentChild(parent, toggleElement);
+      const contentResult = ensureElementIsComponentChild(parent, contentElement);
+      const toggleWrapperResult = ensureElementIsComponentChild(wrapperElement, toggleElement);
+      const contentWrapperResult = ensureElementIsComponentChild(wrapperElement, contentElement);
+      expect(fooResult).toEqual(fooElement);
+      expect(toggleResult).toBeNull();
+      expect(contentResult).toBeNull();
+      expect(toggleWrapperResult).toEqual(toggleElement);
+      expect(contentWrapperResult).toEqual(contentElement);
+    });
   });
 });
 

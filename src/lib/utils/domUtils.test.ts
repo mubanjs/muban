@@ -18,24 +18,29 @@ describe('getOwnerComponent', () => {
     expect(parent).not.toBeNull();
     expect(parent?.getAttribute('data-component')).toBe('my-component');
   });
-  it('should recursively look for parent components and stop if there is a wrapper component without the boundary', () => {
+  it('should recursively look for parent components only for elements inside the boundary', () => {
     const element = document.createElement('div');
     element.dataset.component = 'my-component';
     element.innerHTML = `
       <div data-component="some-wrapper">
         <button data-ref="toggle">Toggle Content</button>
-        <div data-ref="toggle-content" data-wrapper-boundary>
+        <div data-ref="toggle-content" ${wrapperBoundaryName}>
           <span data-ref="foo">label</span>
         </div>
       </div>
     `;
+
+    const toggleRef = element.querySelector('[data-ref=toggle]')!;
+    const toggleContentRef = element.querySelector('[data-ref=toggle-content]')!;
     const fooRef = element.querySelector('[data-ref=foo]')!;
-    const toggleRef = element.querySelector('[data-ref=foo]')!;
-    const fooRefParent = getOwnerComponent(fooRef);
     const toggleRefParent = getOwnerComponent(toggleRef);
-    expect(fooRefParent).not.toBeNull();
+    const toggleContentRefParent = getOwnerComponent(toggleContentRef);
+    const fooRefParent = getOwnerComponent(fooRef);
     expect(toggleRefParent).not.toBeNull();
-    expect(fooRefParent?.getAttribute('data-component')).toBe('some-wrapper');
+    expect(toggleContentRefParent).not.toBeNull();
+    expect(fooRefParent).not.toBeNull();
     expect(toggleRefParent?.getAttribute('data-component')).toBe('some-wrapper');
+    expect(toggleContentRefParent?.getAttribute('data-component')).toBe('some-wrapper');
+    expect(fooRefParent?.getAttribute('data-component')).toBe('my-component');
   });
 });
