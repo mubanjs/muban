@@ -14,8 +14,7 @@ export function recursiveParentComponentLookup(element: Element): Element | null
 
 export function getDirectChildComponents(container: HTMLElement): Array<HTMLElement> {
   return Array.from(container.querySelectorAll<HTMLElement>(`[data-component]`)).filter(
-    (element) =>
-      element.parentElement?.closest(`[data-component]`) === container.closest(`[data-component]`),
+    (element) => recursiveParentComponentLookup(element) === container.closest(`[data-component]`),
   );
 }
 
@@ -24,7 +23,7 @@ export function getDirectChildComponents(container: HTMLElement): Array<HTMLElem
  * @param element
  */
 export function getParentComponentElement(element: RefElementType): HTMLElement | null {
-  return element.parentElement?.closest<HTMLElement>(`[data-component]`) ?? null;
+  return (recursiveParentComponentLookup(element) as HTMLElement) ?? null;
 }
 
 /**

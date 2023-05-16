@@ -1,12 +1,12 @@
 /* eslint-disable max-lines */
 import { createComponentInstance, defineComponent } from '../Component';
+import { wrapperBoundaryName } from '../utils/domUtils';
 import {
   ensureElementIsComponentChild,
   refCollection,
   refComponent,
   refComponents,
   refElement,
-  wrapperBoundaryName,
 } from './refDefinitions';
 
 function createComponentTemplateElement(content: string) {
