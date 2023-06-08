@@ -16,7 +16,7 @@ describe('getOwnerComponent', () => {
     const ref = element.querySelector('[data-ref=foo]')!;
     const parent = getOwnerComponent(ref);
     expect(parent).not.toBeNull();
-    expect(parent?.getAttribute('data-component')).toBe('my-component');
+    expect(parent).toHaveAttribute('data-component', 'my-component');
   });
   it('should recursively look for parent components only for elements inside the boundary', () => {
     const element = document.createElement('div');
@@ -39,8 +39,8 @@ describe('getOwnerComponent', () => {
     expect(toggleRefParent).not.toBeNull();
     expect(toggleContentRefParent).not.toBeNull();
     expect(fooRefParent).not.toBeNull();
-    expect(toggleRefParent?.getAttribute('data-component')).toBe('some-wrapper');
-    expect(toggleContentRefParent?.getAttribute('data-component')).toBe('some-wrapper');
-    expect(fooRefParent?.getAttribute('data-component')).toBe('my-component');
+    expect(toggleRefParent).toHaveAttribute('data-component', 'some-wrapper');
+    expect(toggleContentRefParent).toHaveAttribute('data-component', 'some-wrapper');
+    expect(fooRefParent).toHaveAttribute('data-component', 'my-component');
   });
 });
