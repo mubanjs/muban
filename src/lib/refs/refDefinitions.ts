@@ -85,8 +85,8 @@ function getExistingGlobalRefComponent<T extends ComponentApi>(
       refInstance = existingComponent as T;
     } else {
       throw new Error(
-        `This refComponent ${element} does already exist as part of another parent
-        ${existingComponent.__instance.parent}`,
+        `This refComponent ${element.outerHTML} does already exist as part of another parent:
+        "${existingComponent.__instance.parent?.name}"`,
       );
     }
   }
@@ -99,8 +99,8 @@ function checkForExistingGlobalRefElement(element: RefElementType) {
   const existingComponent = getComponentForElementRef(element);
   if (existingComponent) {
     throw new Error(
-      `refElement ${element} does already exist as part of another parent
-      ${existingComponent}`,
+      `refElement ${element.outerHTML} does already exist as part of another parent:
+      "${existingComponent.name}"`,
     );
   }
 }
