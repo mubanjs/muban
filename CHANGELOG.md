@@ -7,6 +7,35 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 
+### Breaking
+
+- Disallow multiple owners of a single ref, defining a ref already owned by other component will
+  throw an error
+
+### Added
+
+#### Wrapper component
+
+Wrapper components can be described as components that render content that is passed down from
+above, and is owned by a parent.
+
+Examples are:
+
+- A Form wrapper
+- Content components, like Tabs, Accordions, Carousels, etc
+- Layout components
+- Context components
+
+The `data-wrapper-boundary`attribute can be used to define a wrapper
+
+```html
+<div data-component="my-component">
+  <div data-component="some-wrapper" data-wrapper-boundary>
+    <span data-ref="foo">label</span>
+  </div>
+</div>
+```
+
 ### Changed
 
 - Update valueBinding() to automatically parse the passed model value to String
@@ -19,8 +48,8 @@ Highlights of breaking changes from the log further down:
 
 #### Namespace `$element` bindings on component refs
 
-To avoid child component props to clash with DOM bindings when using a reserved binding name
-the new `$element` namespace was created. Inside you'll have access to the ref component element bindings,
+To avoid child component props to clash with DOM bindings when using a reserved binding name the new
+`$element` namespace was created. Inside you'll have access to the ref component element bindings,
 and outside the component props are available.
 
 ```javascript
@@ -38,7 +67,8 @@ and outside the component props are available.
   },
 ```
 
-If you have a component that is accessing the child component's element bindings, you'll need to move those bindings inside the `$element` namespace
+If you have a component that is accessing the child component's element bindings, you'll need to
+move those bindings inside the `$element` namespace
 
 ### Highlights
 
@@ -46,7 +76,8 @@ New and exciting additions from the log further down:
 
 #### New `custom` prop type source
 
-If you need to extract a value not supported by the other source types you can use the new `custom` source
+If you need to extract a value not supported by the other source types you can use the new `custom`
+source
 
 ```javascript
 defineComponent({
@@ -55,9 +86,9 @@ defineComponent({
   props: {
     // grab the length of the title component.
     // outputs "32" (as a number)
-    characterCount: propType.number.source({ 
+    characterCount: propType.number.source({
       target: 'title',
-      type: 'custom', 
+      type: 'custom',
       options: {
         // function used for extracting the value
         customSource: (element: HTMLElement | Array<HTMLElement> | undefined) =>
@@ -67,6 +98,7 @@ defineComponent({
   },
 })
 ```
+
 ```html
 <div data-component="my-component">
   <h1 data-ref="title">This title is 32 characters long</h1>
@@ -89,20 +121,19 @@ defineComponent({
   props: {
     // get the value from the email ref
     // outputs "user@company.com"
-    email: propType.string.source(
-      { target: 'email', type: 'form'},
-    ),
+    email: propType.string.source({ target: 'email', type: 'form' }),
   },
-})
+});
 ```
+
 ```html
 <div data-component="my-component">
-  <input type="text" data-ref="email" value="user@company.com"/>
+  <input type="text" data-ref="email" value="user@company.com" />
 </div>
 ```
 
-See the docs for [propType source](https://mubanjs.github.io/muban/api/props.html#use-form) for
-more details.
+See the docs for [propType source](https://mubanjs.github.io/muban/api/props.html#use-form) for more
+details.
 
 ### Added
 
@@ -221,9 +252,9 @@ the new behaviour. Previously you would have to be explicit about when the `bind
 render immediately or not, while the new implementation does this based on the existence of any HTML
 inside the container. `forceImmediateRender` can override this behaviour.
 
-> **Note:** Previously, `watch` was used to watch for explicit changes to the passed computed.
-> This would have been "shallow" by default, and other reactive data used in the template
-> function would not trigger a rerender.
+> **Note:** Previously, `watch` was used to watch for explicit changes to the passed computed. This
+> would have been "shallow" by default, and other reactive data used in the template function would
+> not trigger a rerender.
 >
 > The new implementation uses `watchEffect`, which is triggered by any reactive updates in the
 > `onUpdate` function, but also watches refs that have nested objects deeply by default.

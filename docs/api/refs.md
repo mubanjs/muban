@@ -498,3 +498,50 @@ defineComponent({
   },
 });
 ```
+
+## Wrapper component
+
+Wrapper Components can be described as components that render content that is passed down from above, and is owned by a parent.
+
+Examples are:
+
+- A Form wrapper
+- Content components, like Tabs, Accordions, Carousels, etc
+- Layout components
+- Context components
+
+```html
+<div data-component="my-component">
+  <div data-component="some-wrapper">
+    <span data-ref="foo">label</span>
+  </div>
+</div>
+```
+
+In this example, the `data-ref="foo"` wants to be managed by `the data-component="my-component"`, but `data-component="some-wrapper"` is in the way (unless ignoreGuard is passed).
+
+To indicate `data-component="some-wrapper"` as a wrapper use the `data-wrapper-boundary`attribute
+
+```html
+<div data-component="my-component">
+  <div data-component="some-wrapper" data-wrapper-boundary>
+    <span data-ref="foo">label</span>
+  </div>
+</div>
+```
+
+Marking a component as wrapper make its "children" resolve to its parent.
+
+```html
+<div data-component="my-component">
+  <div data-component="some-wrapper" data-wrapper-boundary>
+    <div data-component="some-wrapper-2" data-wrapper-boundary>
+      <div data-component="some-wrapper-3" data-wrapper-boundary>
+        <span data-ref="foo">label</span>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+In this example, the `data-ref="foo"` will be managed by `data-component="my-component"`, the three surrounding wrappers will be skipped
